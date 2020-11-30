@@ -149,29 +149,26 @@ workflows:
   check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting
-      - build-and-test:
-          filters:
-            branches:
-              only: master
+      - build-and-test
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
               - build-and-test
           filters:
              branches:
-               only: master
+               only: main
       - terraform-init-and-apply-to-staging:
           requires:
             - assume-role-staging
           filters:
             branches:
-              only: master
+              only: main
       - deploy-to-staging:
           requires:
             - assume-role-staging
           filters:
             branches:
-              only: master
+              only: main
 #       - permit-production-terraform-release:
 #           type: approval
 #           requires:
@@ -182,24 +179,24 @@ workflows:
 #               - permit-production-terraform-release
 #           filters:
 #              branches:
-#                only: master
+#                only: main
 #       - terraform-init-and-apply-to-production:
 #           requires:
 #             - assume-role-production
 #           filters:
 #             branches:
-#               only: master
+#               only: main
 #       - permit-production-release:
 #           type: approval
 #           requires:
 #             - deploy-to-staging
 #           filters:
 #             branches:
-#               only: master
+#               only: main
 #       - deploy-to-production:
 #           requires:
 #             - permit-production-release
 #             - assume-role-production
 #           filters:
 #             branches:
-#               only: master
+#               only: main
