@@ -25,7 +25,7 @@ terraform {
     bucket  = "terraform-state-staging-apis"
     encrypt = true
     region  = "eu-west-2"
-    key     = "services/documents-api/state"
+    key     = "services/evidence-api/state"
   }
 }
 
@@ -47,37 +47,37 @@ data "aws_subnet_ids" "staging" {
 
 /*    POSTGRES SET UP    */
 
-data "aws_ssm_parameter" "documents_postgres_db_password" {
-  name = "/documents-api/staging/postgres-password"
+data "aws_ssm_parameter" "evidence_postgres_db_password" {
+  name = "/evidence-api/staging/postgres-password"
 }
 
-data "aws_ssm_parameter" "documents_postgres_username" {
-  name = "/documents-api/staging/postgres-username"
+data "aws_ssm_parameter" "evidence_postgres_username" {
+  name = "/evidence-api/staging/postgres-username"
 }
 
-data "aws_ssm_parameter" "documents_postgres_hostname" {
-  name = "/documents-api/staging/postgres-hostname"
+data "aws_ssm_parameter" "evidence_postgres_hostname" {
+  name = "/evidence-api/staging/postgres-hostname"
 }
 
-data "aws_ssm_parameter" "documents_postgres_port" {
-  name = "/documents-api/staging/postgres-port"
+data "aws_ssm_parameter" "evidence_postgres_port" {
+  name = "/evidence-api/staging/postgres-port"
 }
 
 module "postgres_db_staging" {
   source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
   environment_name     = "staging"
   vpc_id               = data.aws_vpc.staging_vpc.id
-  db_identifier        = "documents-api"
-  db_name              = "documents_api"
-  db_port              = data.aws_ssm_parameter.documents_postgres_port.value
+  db_identifier        = "evidence-api"
+  db_name              = "evidence_api"
+  db_port              = data.aws_ssm_parameter.evidence_postgres_port.value
   subnet_ids           = data.aws_subnet_ids.staging.ids
   db_engine            = "postgres"
   db_engine_version    = "11.8"
   db_instance_class    = "db.t2.micro"
   db_allocated_storage = 40
   maintenance_window   = "sun:10:00-sun:10:30"
-  db_username          = data.aws_ssm_parameter.documents_postgres_username.value
-  db_password          = data.aws_ssm_parameter.documents_postgres_db_password.value
+  db_username          = data.aws_ssm_parameter.evidence_postgres_username.value
+  db_password          = data.aws_ssm_parameter.evidence_postgres_db_password.value
   storage_encrypted    = false
   multi_az             = false //only true if production deployment
   publicly_accessible  = false

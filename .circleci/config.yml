@@ -77,13 +77,13 @@ commands:
       - run:
           name: Build lambda
           command: |
-            cd ./DocumentsApi/
+            cd ./EvidenceApi/
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./DocumentsApi/
+            cd ./EvidenceApi/
             sls deploy --stage <<parameters.stage>> --conceal
 
 jobs:
@@ -105,10 +105,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build documents-api-test
+          command: docker-compose build evidence-api-test
       - run:
           name: Run tests
-          command: docker-compose run documents-api-test
+          command: docker-compose run evidence-api-test
 
   assume-role-staging:
     executor: docker-python

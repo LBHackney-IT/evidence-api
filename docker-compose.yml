@@ -1,10 +1,10 @@
 version: "3.2"
 
 services:
-  documents-api:
-    image: documents-api
+  evidence-api:
+    image: evidence-api
     build:
-      context: DocumentsApi/
+      context: EvidenceApi/
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
@@ -19,11 +19,11 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  documents-api-test:
-    image: documents-api-test
+  evidence-api-test:
+    image: evidence-api-test
     build:
       context: .
-      dockerfile: DocumentsApi.Tests/Dockerfile
+      dockerfile: EvidenceApi.Tests/Dockerfile
     environment:
       - DB_HOST=test-database
       - DB_PORT=5432

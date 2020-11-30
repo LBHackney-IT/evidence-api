@@ -4,19 +4,19 @@ setup:
 
 .PHONY: build
 build:
-	docker-compose build documents-api
+	docker-compose build evidence-api
 
 .PHONY: serve
 serve:
-	docker-compose build documents-api && docker-compose up documents-api
+	docker-compose build evidence-api && docker-compose up evidence-api
 
 .PHONY: shell
 shell:
-	docker-compose run documents-api bash
+	docker-compose run evidence-api bash
 
 .PHONY: test
 test:
-	docker-compose up test-database & docker-compose build documents-api-test && docker-compose up documents-api-test
+	docker-compose up test-database & docker-compose build evidence-api-test && docker-compose up evidence-api-test
 
 .PHONY: lint
 lint:

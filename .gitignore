@@ -59,7 +59,7 @@ bin/
 .idea/
 tmp/
 .vs/
-/documents-api.Tests/Properties/launchSettings.json
+/evidence-api.Tests/Properties/launchSettings.json
 
 .fake
 .ionide

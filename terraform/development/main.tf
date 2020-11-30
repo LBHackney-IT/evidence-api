@@ -25,7 +25,7 @@ terraform {
     bucket  = "terraform-state-development-apis"
     encrypt = true
     region  = "eu-west-2"
-    key     = "services/documents-api/state"
+    key     = "services/evidence-api/state"
   }
 }
 
@@ -47,24 +47,24 @@ data "aws_subnet_ids" "development" {
 
 /*    POSTGRES SET UP    */
 
-data "aws_ssm_parameter" "documents_postgres_db_password" {
-  name = "/documents-api/development/postgres-password"
+data "aws_ssm_parameter" "evidence_postgres_db_password" {
+  name = "/evidence-api/development/postgres-password"
 }
 
-data "aws_ssm_parameter" "documents_postgres_username" {
-  name = "/documents-api/development/postgres-username"
+data "aws_ssm_parameter" "evidence_postgres_username" {
+  name = "/evidence-api/development/postgres-username"
 }
 
-data "aws_ssm_parameter" "documents_postgres_hostname" {
-  name = "/documents-api/development/postgres-hostname"
+data "aws_ssm_parameter" "evidence_postgres_hostname" {
+  name = "/evidence-api/development/postgres-hostname"
 }
 
 module "postgres_db_development" {
   source               = "github.com/LBHackney-IT/aws-hackney-common-terraform.git//modules/database/postgres"
   environment_name     = "development"
   vpc_id               = data.aws_vpc.development_vpc.id
-  db_identifier        = "documents-api"
-  db_name              = "documents_api"
+  db_identifier        = "evidence-api"
+  db_name              = "evidence_api"
   db_port              = 5502
   subnet_ids           = data.aws_subnet_ids.development.ids
   db_engine            = "postgres"
@@ -72,8 +72,8 @@ module "postgres_db_development" {
   db_instance_class    = "db.t2.micro"
   db_allocated_storage = 40
   maintenance_window   = "sun:10:00-sun:10:30"
-  db_username          = data.aws_ssm_parameter.documents_postgres_username.value
-  db_password          = data.aws_ssm_parameter.documents_postgres_db_password.value
+  db_username          = data.aws_ssm_parameter.evidence_postgres_username.value
+  db_password          = data.aws_ssm_parameter.evidence_postgres_db_password.value
   storage_encrypted    = false
   multi_az             = false //only true if production deployment
   publicly_accessible  = false
