@@ -28,8 +28,8 @@ namespace EvidenceApi.Tests.V1.Controllers
         [Test]
         public void ReturnsAllDocumentTypes()
         {
-            var docType = new DocumentType {Title = "Passport", Id = "passport"};
-            var docTypes = new List<DocumentType> {docType};
+            var docType = new DocumentType { Title = "Passport", Id = "passport" };
+            var docTypes = new List<DocumentType> { docType };
 
             _mock.Setup(s => s.GetAll()).Returns(docTypes);
 

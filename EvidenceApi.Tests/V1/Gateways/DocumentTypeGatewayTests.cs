@@ -35,8 +35,8 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void GetDocumentTypeByIdReturnsTheDocumentTypeIfItExists()
         {
-            var docType = new DocumentType {Id = "passport", Title = "Passport"};
-            var docTypes = new List<DocumentType> {docType};
+            var docType = new DocumentType { Id = "passport", Title = "Passport" };
+            var docTypes = new List<DocumentType> { docType };
             _fileReaderMock.Setup(s => s.GetData()).Returns(docTypes);
 
             var response = _classUnderTest.GetDocumentTypeById(docType.Id);
@@ -57,9 +57,9 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void GetAllReturnsDataIfDataPresent()
         {
-            var docType = new DocumentType {Id = "passport", Title = "Passport"};
-            var anotherDocType = new DocumentType {Id = "utility_bill", Title = "Utility Bill"};
-            var docTypes = new List<DocumentType> {docType, anotherDocType};
+            var docType = new DocumentType { Id = "passport", Title = "Passport" };
+            var anotherDocType = new DocumentType { Id = "utility_bill", Title = "Utility Bill" };
+            var docTypes = new List<DocumentType> { docType, anotherDocType };
             _fileReaderMock.Setup(s => s.GetData()).Returns(docTypes);
 
             var response = _classUnderTest.GetAll();
