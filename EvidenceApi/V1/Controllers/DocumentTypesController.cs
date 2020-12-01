@@ -1,4 +1,5 @@
 using EvidenceApi.V1.Boundary.Response;
+using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,46 +7,27 @@ using Microsoft.AspNetCore.Mvc;
 namespace EvidenceApi.V1.Controllers
 {
     [ApiController]
-    //TODO: Rename to match the APIs endpoint
-    [Route("api/v1/residents")]
+    [Route("api/v1/document_types")]
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    //TODO: rename class to match the API name
-    public class EvidenceApiController : BaseController
+    public class DocumentTypesController : BaseController
     {
-        private readonly IGetAllUseCase _getAllUseCase;
-        private readonly IGetByIdUseCase _getByIdUseCase;
-        public EvidenceApiController(IGetAllUseCase getAllUseCase, IGetByIdUseCase getByIdUseCase)
+        private readonly IDocumentTypeGateway _gateway;
+        public DocumentTypesController(IDocumentTypeGateway gateway)
         {
-            _getAllUseCase = getAllUseCase;
-            _getByIdUseCase = getByIdUseCase;
+            _gateway = gateway;
         }
 
-        //TODO: add xml comments containing information that will be included in the auto generated swagger docs (https://github.com/LBHackney-IT/lbh-base-api/wiki/Controllers-and-Response-Objects)
         /// <summary>
-        /// ...
+        /// Returns all recognised document types
         /// </summary>
-        /// <response code="200">...</response>
-        /// <response code="400">Invalid Query Parameter.</response>
+        /// <response code="200">OK</response>
+        [HttpGet]
         [ProducesResponseType(typeof(ResponseObjectList), StatusCodes.Status200OK)]
         [HttpGet]
-        public IActionResult ListContacts()
+        public IActionResult GetDocumentTypes()
         {
-            return Ok(_getAllUseCase.Execute());
-        }
-
-        /// <summary>
-        /// ...
-        /// </summary>
-        /// <response code="200">...</response>
-        /// <response code="404">No ? found for the specified ID</response>
-        [ProducesResponseType(typeof(ResponseObject), StatusCodes.Status200OK)]
-        [HttpGet]
-        //TODO: rename to match the identifier that will be used
-        [Route("{yourId}")]
-        public IActionResult ViewRecord(int yourId)
-        {
-            return Ok(_getByIdUseCase.Execute(yourId));
+            return Ok(_gateway.GetAll());
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Infrastructure;
 using EvidenceApi.V1.UseCase;
@@ -31,8 +32,7 @@ namespace EvidenceApi
 
         public IConfiguration Configuration { get; }
         private static List<ApiVersionDescription> _apiVersions { get; set; }
-        //TODO update the below to the name of your API
-        private const string ApiName = "Your API Name";
+        private const string ApiName = "Evidence API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(IServiceCollection services)
@@ -106,8 +106,9 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
             ConfigureDbContext(services);
+            ConfigureFileReaders(services);
             RegisterGateways(services);
-            RegisterUseCases(services);
+            // RegisterUseCases(services);
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
@@ -118,15 +119,21 @@ namespace EvidenceApi
                 opt => opt.UseNpgsql(connectionString));
         }
 
-        private static void RegisterGateways(IServiceCollection services)
+        private static void ConfigureFileReaders(IServiceCollection services)
         {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
+            string path = Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json");
+            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(path));
         }
 
-        private static void RegisterUseCases(IServiceCollection services)
+        private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+            services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
+        }
+
+        private static void RegisterUseCases()
+        {
+            // services.AddScoped<IGetAllUseCase, GetAllUseCase>();
+            // services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
