@@ -1,11 +1,11 @@
 [
   {
-    "id": "passport_scan",
+    "id": "passport-scan",
     "title": "Passport"
   },
   {
-    "id": "driving-license",
-    "title": "Driving license"
+    "id": "drivers-licence",
+    "title": "Drivers licence"
   },
   {
     "id": "bank-statement",
