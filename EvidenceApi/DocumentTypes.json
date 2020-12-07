@@ -1,0 +1,14 @@
+[
+  {
+    "id": "passport-scan",
+    "title": "Passport"
+  },
+  {
+    "id": "drivers-licence",
+    "title": "Drivers licence"
+  },
+  {
+    "id": "bank-statement",
+    "title": "Bank statement"
+  }
+]
