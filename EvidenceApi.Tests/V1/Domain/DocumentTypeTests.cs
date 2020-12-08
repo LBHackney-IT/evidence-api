@@ -15,7 +15,7 @@ namespace EvidenceApi.Tests.V1.Domain
             const string title = "Passport";
             const string id = "passport";
 
-            var docType = new DocumentType {Title = title, Id = id};
+            var docType = new DocumentType { Title = title, Id = id };
 
             docType.Id.Should().BeSameAs(id);
             docType.Title.Should().BeSameAs(title);
