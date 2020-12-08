@@ -12,11 +12,10 @@ namespace EvidenceApi.Tests.V1.Domain
         [Test]
         public void DocumentTypesHaveCorrectAttributes()
         {
-            var docType = new DocumentType();
             const string title = "Passport";
             const string id = "passport";
-            docType.Title = title;
-            docType.Id = id;
+
+            var docType = new DocumentType {Title = title, Id = id};
 
             docType.Id.Should().BeSameAs(id);
             docType.Title.Should().BeSameAs(title);

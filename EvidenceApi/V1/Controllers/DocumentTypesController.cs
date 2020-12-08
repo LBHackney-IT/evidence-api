@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Response;
+using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -23,8 +26,7 @@ namespace EvidenceApi.V1.Controllers
         /// </summary>
         /// <response code="200">OK</response>
         [HttpGet]
-        [ProducesResponseType(typeof(ResponseObjectList), StatusCodes.Status200OK)]
-        [HttpGet]
+        [ProducesResponseType(typeof(List<DocumentType>), StatusCodes.Status200OK)]
         public IActionResult GetDocumentTypes()
         {
             return Ok(_gateway.GetAll());
