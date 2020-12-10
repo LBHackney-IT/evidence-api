@@ -46,10 +46,10 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void CreatingAnEvidenceRequestShouldReturnTheCreatedRequest()
         {
-           var found = RecordQuery().First();
+            var found = RecordQuery().First();
 
-           _created.Id.Should().Be(found.Id);
-           _created.CreatedAt.Should().Be(found.CreatedAt);
+            _created.Id.Should().Be(found.Id);
+            _created.CreatedAt.Should().Be(found.CreatedAt);
 
         }
 

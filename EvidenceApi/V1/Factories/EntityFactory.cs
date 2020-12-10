@@ -14,7 +14,7 @@ namespace EvidenceApi.V1.Factories
                 CreatedAt = domain.CreatedAt,
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString()),
                 DocumentTypes = domain.DocumentTypes.ConvertAll(x => x.Id),
-                ServiceRequestedBy =  domain.ServiceRequestedBy,
+                ServiceRequestedBy = domain.ServiceRequestedBy,
                 ResidentId = domain.Resident.Id
             };
         }

@@ -30,7 +30,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var request = _fixture.Create<ResidentRequest>();
             var entity = new ResidentEntity()
             {
-                Name = request.Name, Email = request.Email, PhoneNumber = request.PhoneNumber
+                Name = request.Name,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber
             };
 
             DatabaseContext.Residents.Add(entity);

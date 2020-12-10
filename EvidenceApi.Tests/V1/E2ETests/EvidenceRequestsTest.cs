@@ -39,17 +39,17 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
             string expected = "{"
-                              +   "\"resident\":{"
-                              +       $"\"id\":\"{resident.Id}\","
-                              +       "\"name\":\"Frodo Baggins\","
-                              +       "\"email\":\"frodo@bagend.com,\","
-                              +       "\"phoneNumber\":\"+447123456789\""
-                              +   "},"
-                              +   "\"deliveryMethods\":[\"SMS\"],"
-                              +   "\"documentTypes\":[\"passport-scan\"],"
-                              +   "\"serviceRequestedBy\":\"development-team-staging\","
-                              +   $"\"id\":\"{created.Id}\","
-                              +   $"\"createdAt\":{formattedCreatedAt}"
+                              + "\"resident\":{"
+                              + $"\"id\":\"{resident.Id}\","
+                              + "\"name\":\"Frodo Baggins\","
+                              + "\"email\":\"frodo@bagend.com,\","
+                              + "\"phoneNumber\":\"+447123456789\""
+                              + "},"
+                              + "\"deliveryMethods\":[\"SMS\"],"
+                              + "\"documentTypes\":[\"passport-scan\"],"
+                              + "\"serviceRequestedBy\":\"development-team-staging\","
+                              + $"\"id\":\"{created.Id}\","
+                              + $"\"createdAt\":{formattedCreatedAt}"
                               + "}";
 
             json.Should().Be(expected);

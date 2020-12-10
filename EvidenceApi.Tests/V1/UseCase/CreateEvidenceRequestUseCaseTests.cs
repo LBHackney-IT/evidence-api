@@ -87,7 +87,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _created = _fixture.Create<EvidenceRequest>();
 
             _request = _fixture.Build<EvidenceRequestRequest>()
-                .With(x => x.DeliveryMethods, new List<string> {"EMAIL"})
+                .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
                 .Create();
 
             _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<ResidentRequest>())).Returns(_resident);

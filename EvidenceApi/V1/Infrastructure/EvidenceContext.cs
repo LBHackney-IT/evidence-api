@@ -23,8 +23,8 @@ namespace EvidenceApi.V1.Infrastructure
 
             foreach (var entityEntry in entries)
             {
-                ((IEntity)entityEntry.Entity).CreatedAt = DateTime.Now;
-                ((IEntity)entityEntry.Entity).Id = Guid.NewGuid();
+                ((IEntity) entityEntry.Entity).CreatedAt = DateTime.Now;
+                ((IEntity) entityEntry.Entity).Id = Guid.NewGuid();
             }
 
             return base.SaveChanges();

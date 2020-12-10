@@ -26,7 +26,9 @@ namespace EvidenceApi.V1.Gateways
 
             var entity = new ResidentEntity()
             {
-                Email = request.Email, Name = request.Name, PhoneNumber = request.PhoneNumber
+                Email = request.Email,
+                Name = request.Name,
+                PhoneNumber = request.PhoneNumber
             };
             _databaseContext.Residents.Add(entity);
             _databaseContext.SaveChanges();
@@ -45,8 +47,12 @@ namespace EvidenceApi.V1.Gateways
 
         private static Resident EntityToDomain(ResidentEntity entity)
         {
-            return new Resident() {
-                Email = entity.Email, Id = entity.Id, Name = entity.Name, PhoneNumber = entity.PhoneNumber
+            return new Resident()
+            {
+                Email = entity.Email,
+                Id = entity.Id,
+                Name = entity.Name,
+                PhoneNumber = entity.PhoneNumber
             };
         }
     }

@@ -22,7 +22,10 @@ namespace EvidenceApi.V1.Factories
         {
             return new ResidentResponse()
             {
-                Id = domain.Id, Name = domain.Name, Email = domain.Email, PhoneNumber = domain.PhoneNumber
+                Id = domain.Id,
+                Name = domain.Name,
+                Email = domain.Email,
+                PhoneNumber = domain.PhoneNumber
             };
         }
     }

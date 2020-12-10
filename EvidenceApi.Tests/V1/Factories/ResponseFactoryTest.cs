@@ -16,13 +16,13 @@ namespace EvidenceApi.Tests.V1.Factories
         [Test]
         public void CanMapAnEvidenceRequestDomainObjectToAResponseObject()
         {
-            var documentType = new DocumentType() {Id = "passport", Title = "Passport"};
+            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
 
-            var documentTypes = new List<DocumentType> {new DocumentType() {Id = "passport", Title = "Passport"}};
+            var documentTypes = new List<DocumentType> { new DocumentType() { Id = "passport", Title = "Passport" } };
             var domain = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, documentTypes)
                 .With(x => x.DeliveryMethods,
-                    new List<EvidenceRequest.DeliveryMethod> {EvidenceRequest.DeliveryMethod.Email})
+                    new List<EvidenceRequest.DeliveryMethod> { EvidenceRequest.DeliveryMethod.Email })
                 .Create();
 
             var response = domain.ToResponse();
