@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Request;
+using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Gateways;
+using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.TestHelper;
+using Moq;
 using NUnit.Framework;
 
 namespace EvidenceApi.Tests.V1.UseCase
@@ -13,13 +17,18 @@ namespace EvidenceApi.Tests.V1.UseCase
         private EvidenceRequestValidator _classUnderTest;
         private EvidenceRequestRequest _request;
         private ResidentRequestValidator _residentValidator;
+        private Mock<IDocumentTypeGateway> _mockDocumentGateway;
 
         [SetUp]
         public void SetUp()
         {
+            _mockDocumentGateway = new Mock<IDocumentTypeGateway>();
+            SetupDocumentTypesGatewayMock();
+
             _residentValidator = new ResidentRequestValidator();
-            _classUnderTest = new EvidenceRequestValidator(_residentValidator);
+            _classUnderTest = new EvidenceRequestValidator(_residentValidator, _mockDocumentGateway.Object);
             _request = CreateRequest();
+
         }
 
         #region DeliveryMethods Validations
@@ -63,23 +72,31 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public void IsInvalidWhenDocumentTypeIsNull()
         {
-            _request.DocumentType = null;
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.DocumentType, _request)
-                .WithErrorMessage("'Document Type' must not be empty.");
+            _request.DocumentTypes = null;
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.DocumentTypes, _request)
+                .WithErrorMessage("'Document Types' must not be empty.");
         }
 
         [Test]
         public void IsInvalidWhenDocumentTypeIsEmpty()
         {
-            _request.DocumentType = "";
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.DocumentType, _request)
-                .WithErrorMessage("'Document Type' must not be empty.");
+            _request.DocumentTypes = new List<string> { };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.DocumentTypes, _request)
+                .WithErrorMessage("'Document Types' must not be empty.");
         }
+
+        [Test]
+        public void IsInvalidWhenDocumentTypeIsInvalid()
+        {
+            _request.DocumentTypes = new List<string> { "invalid-document-type", "passport-scan" };
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.DocumentTypes, _request)
+                .WithErrorMessage("'Document Types' must only contain valid document type IDs.");
+        }
+
         [Test]
         public void IsValidWhenDocumentTypeIsPresent()
         {
-            _request.DocumentType = "passport-scan";
-            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.DocumentType, _request);
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.DocumentTypes, _request);
         }
 
         #endregion
@@ -139,6 +156,14 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         #endregion
 
+        private void SetupDocumentTypesGatewayMock()
+        {
+            var documentType = new DocumentType() { Title = "Passport", Id = "passport-scan" };
+            var documentTypes = new List<DocumentType>() { documentType };
+            _mockDocumentGateway.Setup(x => x.GetAll()).Returns(documentTypes);
+
+        }
+
         private static EvidenceRequestRequest CreateRequest()
         {
             return new EvidenceRequestRequest()
@@ -151,7 +176,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                     Email = "tom@hackney.gov.uk",
                     PhoneNumber = "+447123456789"
                 },
-                DocumentType = "passport-scan"
+                DocumentTypes = new List<string> { "passport-scan" }
             };
         }
     }

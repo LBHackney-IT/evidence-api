@@ -1,4 +1,3 @@
-using System;
 using EvidenceApi.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;

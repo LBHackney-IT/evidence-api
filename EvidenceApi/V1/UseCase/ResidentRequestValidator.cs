@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class ResidentRequestValidator : AbstractValidator<ResidentRequest>
+    public class ResidentRequestValidator : AbstractValidator<ResidentRequest>, IResidentRequestValidator
     {
         public ResidentRequestValidator()
         {

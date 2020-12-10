@@ -1,4 +1,5 @@
 using System.IO;
+using EvidenceApi.V1.Infrastructure.Interfaces;
 using Newtonsoft.Json;
 
 namespace EvidenceApi.V1.Infrastructure

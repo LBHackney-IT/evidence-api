@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Gateways;
-using EvidenceApi.V1.UseCase.Interfaces;
+using EvidenceApi.V1.Gateways.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

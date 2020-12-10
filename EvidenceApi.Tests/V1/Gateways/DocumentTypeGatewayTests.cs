@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using AutoFixture;
-using EvidenceApi.Tests.V1.Helper;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
-using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.Infrastructure.Interfaces;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
