@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using EvidenceApi.V1.Boundary.Request;
-using EvidenceApi.V1.Boundary.Response;
-using EvidenceApi.V1.Domain;
 using FluentAssertions;
+using FluentAssertions.Common;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -26,7 +24,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""phoneNumber"": ""+447123456789""
                 },
                 ""deliveryMethods"": [""SMS""],
-                ""documentType"": ""passport-scan"",
+                ""documentTypes"": [""passport-scan""],
                 ""serviceRequestedBy"": ""development-team-staging""
             }";
 
@@ -35,9 +33,26 @@ namespace EvidenceApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(201);
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var data = JsonConvert.DeserializeObject<EvidenceRequestResponse>(json);
 
-            data.Id.Should().BeOfType<string>();
+            var created = DatabaseContext.EvidenceRequests.First();
+            var resident = DatabaseContext.Residents.First();
+
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
+            string expected = "{"
+                              +   "\"resident\":{"
+                              +       $"\"id\":\"{resident.Id}\","
+                              +       "\"name\":\"Frodo Baggins\","
+                              +       "\"email\":\"frodo@bagend.com,\","
+                              +       "\"phoneNumber\":\"+447123456789\""
+                              +   "},"
+                              +   "\"deliveryMethods\":[\"SMS\"],"
+                              +   "\"documentTypes\":[\"passport-scan\"],"
+                              +   "\"serviceRequestedBy\":\"development-team-staging\","
+                              +   $"\"id\":\"{created.Id}\","
+                              +   $"\"createdAt\":{formattedCreatedAt}"
+                              + "}";
+
+            json.Should().Be(expected);
         }
 
         [Test]
@@ -52,7 +67,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""phoneNumber"": ""+447123456789""
                 },
                 ""deliveryMethods"": [""FOO""],
-                ""documentType"": ""passport-scan"",
+                ""documentTypes"": [""passport-scan""],
                 ""serviceRequestedBy"": ""development-team-staging""
             }";
 
@@ -73,7 +88,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""phoneNumber"": ""+447123456789""
                 },
                 ""deliveryMethods"": [""SMS""],
-                ""documentType"": ""passport-scan"",
+                ""documentTypes"": [""passport-scan""],
                 ""serviceRequestedBy"": ""development-team-staging""
             }";
 

@@ -1,7 +1,10 @@
-using System.Threading.Tasks;
+using System;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
+using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Factories;
+using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.UseCase
@@ -9,12 +12,23 @@ namespace EvidenceApi.V1.UseCase
     public class CreateEvidenceRequestUseCase : ICreateEvidenceRequestUseCase
     {
         private readonly IEvidenceRequestValidator _validator;
-        public CreateEvidenceRequestUseCase(IEvidenceRequestValidator validator)
+        private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IResidentsGateway _residentsGateway;
+        private readonly IEvidenceGateway _evidenceGateway;
+
+        public CreateEvidenceRequestUseCase(
+            IEvidenceRequestValidator validator,
+            IDocumentTypeGateway documentTypeGateway,
+            IResidentsGateway residentsGateway,
+            IEvidenceGateway evidenceGateway)
         {
             _validator = validator;
+            _documentTypeGateway = documentTypeGateway;
+            _residentsGateway = residentsGateway;
+            _evidenceGateway = evidenceGateway;
         }
 
-        public async Task<EvidenceRequestResponse> ExecuteAsync(EvidenceRequestRequest request)
+        public EvidenceRequestResponse Execute(EvidenceRequestRequest request)
         {
             var validation = _validator.Validate(request);
             if (!validation.IsValid)
@@ -22,10 +36,30 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException(validation);
             }
 
-            // TODO: Remove this when we have asynchronous database tasks to perform
-            await Task.Delay(100).ConfigureAwait(true);
+            var evidenceRequest = CreateEvidenceRequest(request);
+            var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
+            return created.ToResponse();
+        }
 
-            return new EvidenceRequestResponse();
+        private EvidenceRequest CreateEvidenceRequest(EvidenceRequestRequest request)
+        {
+            return new EvidenceRequest
+            {
+                DocumentTypes = request.DocumentTypes.ConvertAll(FindDocumentType),
+                DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
+                ServiceRequestedBy = request.ServiceRequestedBy,
+                Resident = _residentsGateway.FindOrCreateResident(request.Resident)
+            };
+        }
+
+        private DocumentType FindDocumentType(string documentTypeId)
+        {
+            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+        }
+
+        private EvidenceRequest.DeliveryMethod ParseDeliveryMethod(string deliveryMethod)
+        {
+            return Enum.Parse<EvidenceRequest.DeliveryMethod>(deliveryMethod, true);
         }
     }
 }

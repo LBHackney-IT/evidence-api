@@ -1,7 +1,9 @@
+using System.Data;
+using System.Data.Common;
 using System.Net.Http;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using NUnit.Framework;
 
@@ -10,12 +12,11 @@ namespace EvidenceApi.Tests
     public class IntegrationTests<TStartup> where TStartup : class
     {
         protected HttpClient Client { get; private set; }
-        protected DatabaseContext DatabaseContext { get; private set; }
+        protected EvidenceContext DatabaseContext { get; private set; }
 
         private MockWebApplicationFactory<TStartup> _factory;
         private NpgsqlConnection _connection;
-        private IDbContextTransaction _transaction;
-        private DbContextOptionsBuilder _builder;
+        private DbTransaction _transaction;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -25,10 +26,6 @@ namespace EvidenceApi.Tests
             var npgsqlCommand = _connection.CreateCommand();
             npgsqlCommand.CommandText = "SET deadlock_timeout TO 30";
             npgsqlCommand.ExecuteNonQuery();
-
-            _builder = new DbContextOptionsBuilder();
-            _builder.UseNpgsql(_connection);
-
         }
 
         [SetUp]
@@ -36,9 +33,10 @@ namespace EvidenceApi.Tests
         {
             _factory = new MockWebApplicationFactory<TStartup>(_connection);
             Client = _factory.CreateClient();
-            DatabaseContext = new DatabaseContext(_builder.Options);
-            DatabaseContext.Database.EnsureCreated();
-            _transaction = DatabaseContext.Database.BeginTransaction();
+            DatabaseContext = _factory.Server.Host.Services.GetRequiredService<EvidenceContext>();
+
+            _transaction = _connection.BeginTransaction(IsolationLevel.RepeatableRead);
+            DatabaseContext.Database.UseTransaction(_transaction);
         }
 
         [TearDown]
