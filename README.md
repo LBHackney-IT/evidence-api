@@ -1,15 +1,11 @@
-# LBH Base API
+# Evidence API
 
-Base API is a boilerplate code for being reused for new APIs for LBH
+Evidence API is a Platform API to allow services to request and upload evidence from members of the borough.
 
 ## Stack
 
--   .NET Core as a web framework.
--   nUnit as a test framework.
-
-## Dependencies
-
--   Universal Housing Simulator
+- .NET Core as a web framework.
+- nUnit as a test framework.
 
 ## Contributing
 
@@ -20,31 +16,6 @@ Base API is a boilerplate code for being reused for new APIs for LBH
 3. Clone this repository.
 4. Rename the initial template.
 5. Open it in your IDE.
-
-### Renaming
-
-The renaming of `evidence-api` into `SomethingElseApi` can be done by running a Renamer powershell script. To do so:
-
-1. Open the powershell and navigate to this directory's root.
-2. Run the script using the following command:
-
-```
-.\Renamer.ps1 -apiName My_Api
-```
-
-If your **_script execution policy_** prevents you from running the script, you can temporarily **_bypass_** that with:
-
-```
-powershell -noprofile -ExecutionPolicy Bypass -file .\Renamer.ps1 -apiName My_Api
-```
-
-Or you can change your execution policy, prior to running the script, permanently with _(this disables security so, be cautious)_:
-
-```
-Set-ExecutionPolicy Unrestricted
-```
-
-After the renaming is done, the **_script will ask you if you want to delete it as well_**, as it's useless now - It's your choice.
 
 ### Development
 
@@ -151,6 +122,11 @@ If changes to the database schema are made then the docker image for the databas
 -   **Selwyn Preston**, Lead Developer at London Borough of Hackney (selwyn.preston@hackney.gov.uk)
 -   **Mirela Georgieva**, Lead Developer at London Borough of Hackney (mirela.georgieva@hackney.gov.uk)
 -   **Matt Keyworth**, Lead Developer at London Borough of Hackney (matthew.keyworth@hackney.gov.uk)
+
+### Contributors
+
+- **Sam Garson**, Senior Engineer at Made Tech (sam.garson@hackney.gov.uk)
+- **Bogdan Zaharia**, Senior Engineer at Made Tech (bogdan.zaharia@hackney.gov.uk)
 
 ### Other Contacts
 
