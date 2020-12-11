@@ -5,7 +5,7 @@ using EvidenceApi.V1.Infrastructure.Interfaces;
 
 namespace EvidenceApi.V1.Infrastructure
 {
-    [Table("evidence_request")]
+    [Table("evidence_requests")]
     public class EvidenceRequestEntity : IEntity
     {
         [Column("id")]

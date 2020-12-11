@@ -51,7 +51,7 @@ namespace EvidenceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("evidence_request");
+                    b.ToTable("evidence_requests");
                 });
 
             modelBuilder.Entity("EvidenceApi.V1.Infrastructure.ResidentEntity", b =>
@@ -79,7 +79,7 @@ namespace EvidenceApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("resident");
+                    b.ToTable("residents");
                 });
 #pragma warning restore 612, 618
         }

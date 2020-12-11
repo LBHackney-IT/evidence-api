@@ -9,7 +9,7 @@ namespace EvidenceApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "evidence_request",
+                name: "evidence_requests",
                 columns: table => new
                 {
                     id = table.Column<Guid>(nullable: false),
@@ -21,11 +21,11 @@ namespace EvidenceApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_evidence_request", x => x.id);
+                    table.PrimaryKey("PK_evidence_requests", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "resident",
+                name: "residents",
                 columns: table => new
                 {
                     id = table.Column<Guid>(nullable: false),
@@ -36,17 +36,17 @@ namespace EvidenceApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_resident", x => x.id);
+                    table.PrimaryKey("PK_residents", x => x.id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "evidence_request");
+                name: "evidence_requests");
 
             migrationBuilder.DropTable(
-                name: "resident");
+                name: "residents");
         }
     }
 }
