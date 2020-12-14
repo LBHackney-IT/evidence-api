@@ -1,9 +1,8 @@
 using System;
 using EvidenceApi.V1.Boundary.Request;
-using EvidenceApi.V1.Boundary.Response;
-using EvidenceApi.V1.Gateways;
+using EvidenceApi.V1.Boundary.Response.Exceptions;
+using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvidenceApi.V1.Controllers
@@ -15,9 +14,12 @@ namespace EvidenceApi.V1.Controllers
     public class EvidenceRequestsController : BaseController
     {
         private readonly IDocumentTypeGateway _gateway;
-        public EvidenceRequestsController(IDocumentTypeGateway gateway)
+        private readonly ICreateEvidenceRequestUseCase _creator;
+
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator)
         {
             _gateway = gateway;
+            _creator = creator;
         }
 
         /// <summary>
@@ -29,8 +31,15 @@ namespace EvidenceApi.V1.Controllers
         [HttpPost]
         public IActionResult CreateEvidenceRequest([FromBody] EvidenceRequestRequest request)
         {
-            // TODO: Implement this controller action
-            return Created(new Uri("/evidence_requests/123", UriKind.Relative), request);
+            try
+            {
+                var result = _creator.Execute(request);
+                return Created(new Uri($"/evidence_requests/{result.Id}", UriKind.Relative), result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.ValidationResponse.Errors);
+            }
         }
     }
 }

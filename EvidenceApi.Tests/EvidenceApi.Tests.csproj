@@ -27,4 +27,8 @@
     <ProjectReference Include="..\EvidenceApi\EvidenceApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="V1\Helper" />
+  </ItemGroup>
+
 </Project>

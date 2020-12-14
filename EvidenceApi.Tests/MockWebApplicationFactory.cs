@@ -1,5 +1,4 @@
 using System.Data.Common;
-using EvidenceApi;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -27,11 +26,11 @@ namespace EvidenceApi.Tests
             {
                 var dbBuilder = new DbContextOptionsBuilder();
                 dbBuilder.UseNpgsql(_connection);
-                var context = new DatabaseContext(dbBuilder.Options);
+                var context = new EvidenceContext(dbBuilder.Options);
                 services.AddSingleton(context);
 
                 var serviceProvider = services.BuildServiceProvider();
-                var dbContext = serviceProvider.GetRequiredService<DatabaseContext>();
+                var dbContext = serviceProvider.GetRequiredService<EvidenceContext>();
 
                 dbContext.Database.EnsureCreated();
             });
