@@ -1,4 +1,4 @@
-namespace EvidenceApi.V1.Infrastructure
+namespace EvidenceApi.V1.Infrastructure.Interfaces
 {
     public interface IFileReader<T>
     {

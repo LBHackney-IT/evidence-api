@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
+using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.Infrastructure.Interfaces;
 using EvidenceApi.V1.UseCase;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.Versioning;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -108,15 +112,15 @@ namespace EvidenceApi
             ConfigureDbContext(services);
             ConfigureFileReaders(services);
             RegisterGateways(services);
-            // RegisterUseCases(services);
+            RegisterUseCases(services);
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString));
+            services.AddDbContext<EvidenceContext>(
+                opt => opt.UseNpgsql(connectionString!));
         }
 
         private static void ConfigureFileReaders(IServiceCollection services)
@@ -128,12 +132,15 @@ namespace EvidenceApi
         private static void RegisterGateways(IServiceCollection services)
         {
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
+            services.AddScoped<IResidentsGateway, ResidentsGateway>();
+            services.AddScoped<IEvidenceGateway, EvidenceGateway>();
         }
 
-        private static void RegisterUseCases()
+        private static void RegisterUseCases(IServiceCollection services)
         {
-            // services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            // services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+            services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();
+            services.AddScoped<IValidator<ResidentRequest>, ResidentRequestValidator>();
+            services.AddScoped<IEvidenceRequestValidator, EvidenceRequestValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

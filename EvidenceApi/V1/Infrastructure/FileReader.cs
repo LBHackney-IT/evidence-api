@@ -1,4 +1,5 @@
 using System.IO;
+using EvidenceApi.V1.Infrastructure.Interfaces;
 using Newtonsoft.Json;
 
 namespace EvidenceApi.V1.Infrastructure
@@ -10,7 +11,7 @@ namespace EvidenceApi.V1.Infrastructure
             _data = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
         }
 
-        private T _data { get; set; }
+        private readonly T _data;
 
         public T GetData()
         {

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using EvidenceApi.V1.Controllers;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Gateways;
-using EvidenceApi.V1.UseCase;
+using EvidenceApi.V1.Gateways.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
