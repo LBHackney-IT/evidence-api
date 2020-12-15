@@ -26,4 +26,21 @@ CREATE TABLE residents (
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20201209135358_InitialCreate', '3.1.7');
 
+CREATE TABLE communications (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    delivery_method text NULL,
+    notify_id text NULL,
+    template_id text NULL,
+    reason text NULL,
+    evidence_request_id uuid NOT NULL,
+    CONSTRAINT "PK_communications" PRIMARY KEY (id),
+    CONSTRAINT "FK_communications_evidence_requests_evidence_request_id" FOREIGN KEY (evidence_request_id) REFERENCES evidence_requests (id) ON DELETE CASCADE
+);
+
+CREATE INDEX "IX_communications_evidence_request_id" ON communications (evidence_request_id);
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20201214150433_CreateCommunications', '3.1.7');
+
 

@@ -13,9 +13,9 @@ namespace EvidenceApi.V1.Factories
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt,
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString()),
-                DocumentTypes = domain.DocumentTypes.ConvertAll(x => x.Id),
+                DocumentTypes = domain.DocumentTypeIds,
                 ServiceRequestedBy = domain.ServiceRequestedBy,
-                ResidentId = domain.Resident.Id
+                ResidentId = domain.ResidentId
             };
         }
 
@@ -28,6 +28,20 @@ namespace EvidenceApi.V1.Factories
                 PhoneNumber = domain.PhoneNumber,
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt
+            };
+        }
+
+        public static CommunicationEntity ToEntity(this Communication domain)
+        {
+            return new CommunicationEntity()
+            {
+                CreatedAt = domain.CreatedAt,
+                DeliveryMethod = domain.DeliveryMethod.ToString(),
+                EvidenceRequestId = domain.EvidenceRequestId,
+                Id = domain.Id,
+                Reason = domain.Reason.ToString(),
+                NotifyId = domain.NotifyId,
+                TemplateId = domain.TemplateId
             };
         }
     }

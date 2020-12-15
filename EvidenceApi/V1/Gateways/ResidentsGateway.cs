@@ -1,8 +1,11 @@
+using System;
 using System.Linq;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -21,7 +24,7 @@ namespace EvidenceApi.V1.Gateways
             var found = FindResident(request);
             if (found != null)
             {
-                return EntityToDomain(found);
+                return found.ToDomain();
             }
 
             var entity = new ResidentEntity()
@@ -33,7 +36,19 @@ namespace EvidenceApi.V1.Gateways
             _databaseContext.Residents.Add(entity);
             _databaseContext.SaveChanges();
 
-            return EntityToDomain(FindResident(request));
+            return entity.ToDomain();
+        }
+
+        public Resident FindResident(Guid id)
+        {
+            ResidentEntity found = _databaseContext.Residents.FirstOrDefault(x => x.Id == id);
+
+            if (found == null)
+            {
+                return null;
+            }
+
+            return found.ToDomain();
         }
 
         private ResidentEntity FindResident(ResidentRequest request)
@@ -43,17 +58,6 @@ namespace EvidenceApi.V1.Gateways
                     r.Name == request.Name &&
                     r.Email == request.Email &&
                     r.PhoneNumber == request.PhoneNumber);
-        }
-
-        private static Resident EntityToDomain(ResidentEntity entity)
-        {
-            return new Resident()
-            {
-                Email = entity.Email,
-                Id = entity.Id,
-                Name = entity.Name,
-                PhoneNumber = entity.PhoneNumber
-            };
         }
     }
 

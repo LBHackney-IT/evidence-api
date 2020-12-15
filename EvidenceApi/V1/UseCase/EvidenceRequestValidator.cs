@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
 using FluentValidation;
@@ -24,7 +25,7 @@ namespace EvidenceApi.V1.UseCase
 
             RuleFor(x => x.DeliveryMethods).NotNull();
             RuleForEach(x => x.DeliveryMethods)
-                .IsEnumName(typeof(EvidenceRequest.DeliveryMethod), false);
+                .IsEnumName(typeof(DeliveryMethod), false);
 
             RuleFor(x => x.Resident)
                 .NotEmpty()

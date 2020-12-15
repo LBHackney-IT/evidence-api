@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Infrastructure.Interfaces;
 
 namespace EvidenceApi.V1.Infrastructure
@@ -26,5 +27,6 @@ namespace EvidenceApi.V1.Infrastructure
         [Column("service_requested_by")]
         public string ServiceRequestedBy { get; set; }
 
+        public virtual ICollection<CommunicationEntity> Communications { get; set; }
     }
 }

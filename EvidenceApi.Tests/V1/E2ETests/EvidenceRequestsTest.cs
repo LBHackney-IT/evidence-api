@@ -38,19 +38,21 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var resident = DatabaseContext.Residents.First();
 
             var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
-            string expected = "{"
-                              + "\"resident\":{"
-                              + $"\"id\":\"{resident.Id}\","
-                              + "\"name\":\"Frodo Baggins\","
-                              + "\"email\":\"frodo@bagend.com,\","
-                              + "\"phoneNumber\":\"+447123456789\""
-                              + "},"
-                              + "\"deliveryMethods\":[\"SMS\"],"
-                              + "\"documentTypes\":[\"passport-scan\"],"
-                              + "\"serviceRequestedBy\":\"development-team-staging\","
-                              + $"\"id\":\"{created.Id}\","
-                              + $"\"createdAt\":{formattedCreatedAt}"
-                              + "}";
+            string expected = "{" +
+                               "\"resident\":{" +
+                               $"\"id\":\"{resident.Id}\"," +
+                               "\"name\":\"Frodo Baggins\"," +
+                               "\"email\":\"frodo@bagend.com,\"," +
+                               "\"phoneNumber\":\"+447123456789\"" +
+                               "}," +
+                               "\"deliveryMethods\":[\"SMS\"]," +
+                               "\"documentTypes\":[" +
+                               "{\"id\":\"passport-scan\",\"title\":\"Passport\"}" +
+                               "]," +
+                               "\"serviceRequestedBy\":\"development-team-staging\"," +
+                               $"\"id\":\"{created.Id}\"," +
+                               $"\"createdAt\":{formattedCreatedAt}" +
+                               "}";
 
             json.Should().Be(expected);
         }

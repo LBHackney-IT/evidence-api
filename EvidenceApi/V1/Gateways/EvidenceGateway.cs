@@ -3,6 +3,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -24,6 +25,15 @@ namespace EvidenceApi.V1.Gateways
             request.Id = entity.Id;
             request.CreatedAt = entity.CreatedAt;
             return request;
+        }
+
+        public Communication CreateCommunication(Communication request)
+        {
+            var entity = request.ToEntity();
+            _databaseContext.Communications.Add(entity);
+            _databaseContext.SaveChanges();
+
+            return entity.ToDomain();
         }
     }
 }

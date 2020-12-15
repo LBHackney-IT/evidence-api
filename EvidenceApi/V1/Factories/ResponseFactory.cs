@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
 
@@ -5,13 +6,13 @@ namespace EvidenceApi.V1.Factories
 {
     public static class ResponseFactory
     {
-        public static EvidenceRequestResponse ToResponse(this EvidenceRequest domain)
+        public static EvidenceRequestResponse ToResponse(this EvidenceRequest domain, Resident resident, List<DocumentType> documentTypes)
         {
             return new EvidenceRequestResponse()
             {
-                Resident = domain.Resident.ToResponse(),
+                Resident = resident.ToResponse(),
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()),
-                DocumentTypes = domain.DocumentTypes.ConvertAll(x => x.Id),
+                DocumentTypes = documentTypes,
                 ServiceRequestedBy = domain.ServiceRequestedBy,
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt
