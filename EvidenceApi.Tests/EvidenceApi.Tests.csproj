@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.11.0" />
+    <PackageReference Include="dotenv.net" Version="2.1.1" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.4" />
@@ -25,10 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EvidenceApi\EvidenceApi.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="V1\Helper" />
   </ItemGroup>
 
 </Project>

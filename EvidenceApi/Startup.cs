@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
@@ -112,7 +113,7 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            var options = new Options();
+            var options = new AppOptions();
 
             // Database Context
             services.AddDbContext<EvidenceContext>(
@@ -140,6 +141,7 @@ namespace EvidenceApi
         {
             if (env.IsDevelopment())
             {
+                DotEnv.AutoConfig();
                 app.UseDeveloperExceptionPage();
             }
             else
