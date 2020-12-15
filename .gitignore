@@ -63,3 +63,5 @@ tmp/
 
 .fake
 .ionide
+
+!/bin/

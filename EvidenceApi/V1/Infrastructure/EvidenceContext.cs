@@ -14,6 +14,7 @@ namespace EvidenceApi.V1.Infrastructure
 
         public DbSet<EvidenceRequestEntity> EvidenceRequests { get; set; }
         public DbSet<ResidentEntity> Residents { get; set; }
+        public DbSet<CommunicationEntity> Communications { get; set; }
 
         public override int SaveChanges()
         {
@@ -23,8 +24,9 @@ namespace EvidenceApi.V1.Infrastructure
 
             foreach (var entityEntry in entries)
             {
-                ((IEntity) entityEntry.Entity).CreatedAt = DateTime.Now;
-                ((IEntity) entityEntry.Entity).Id = Guid.NewGuid();
+                var entity = ((IEntity) entityEntry.Entity);
+                entity.CreatedAt = DateTime.Now;
+                entity.Id = Guid.NewGuid();
             }
 
             return base.SaveChanges();

@@ -30,5 +30,19 @@ namespace EvidenceApi.V1.Factories
                 CreatedAt = domain.CreatedAt
             };
         }
+
+        public static CommunicationEntity ToEntity(this Communication domain)
+        {
+            return new CommunicationEntity()
+            {
+                CreatedAt = domain.CreatedAt,
+                DeliveryMethod = domain.DeliveryMethod.ToString(),
+                EvidenceRequestId = domain.EvidenceRequestId,
+                Id = domain.Id,
+                Reason = domain.Reason.ToString(),
+                NotifyId = domain.NotifyId,
+                TemplateId = domain.TemplateId
+            };
+        }
     }
 }
