@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using EvidenceApi.V1.Infrastructure.Interfaces;
 

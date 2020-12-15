@@ -1,9 +1,13 @@
+using System;
 using System.Linq;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 
 namespace EvidenceApi.Tests.V1.Gateways
@@ -13,25 +17,23 @@ namespace EvidenceApi.Tests.V1.Gateways
     {
         private readonly IFixture _fixture = new Fixture();
         private EvidenceGateway _classUnderTest;
-        private EvidenceRequest _request;
-        private EvidenceRequest _created;
 
         [SetUp]
         public void Setup()
         {
             _classUnderTest = new EvidenceGateway(DatabaseContext);
-            _request = _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
-
-            _created = _classUnderTest.CreateEvidenceRequest(_request);
         }
 
         [Test]
         public void CreatingAnEvidenceRequestShouldInsertIntoTheDatabase()
         {
-            var query = RecordQuery();
+            var request = _fixture.Build<EvidenceRequest>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+            var query = DatabaseContext.EvidenceRequests;
+
+            _classUnderTest.CreateEvidenceRequest(request);
 
             query.Count()
                 .Should()
@@ -39,17 +41,23 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var foundRecord = query.First();
             foundRecord.Id.Should().NotBeEmpty();
-            foundRecord.DocumentTypes.Should().BeEquivalentTo(_request.DocumentTypes.ConvertAll(x => x.Id));
-            foundRecord.DeliveryMethods.Should().BeEquivalentTo(_request.DeliveryMethods.ConvertAll(x => x.ToString()));
+            foundRecord.DocumentTypes.Should().BeEquivalentTo(request.DocumentTypeIds);
+            foundRecord.DeliveryMethods.Should().BeEquivalentTo(request.DeliveryMethods.ConvertAll(x => x.ToString()));
         }
 
         [Test]
         public void CreatingAnEvidenceRequestShouldReturnTheCreatedRequest()
         {
-            var found = RecordQuery().First();
+            var request = _fixture.Build<EvidenceRequest>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
 
-            _created.Id.Should().Be(found.Id);
-            _created.CreatedAt.Should().Be(found.CreatedAt);
+            var created = _classUnderTest.CreateEvidenceRequest(request);
+            var found = DatabaseContext.EvidenceRequests.First();
+
+            created.Id.Should().Be(found.Id);
+            created.CreatedAt.Should().Be(found.CreatedAt);
 
         }
 

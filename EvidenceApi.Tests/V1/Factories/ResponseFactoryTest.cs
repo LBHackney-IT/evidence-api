@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Factories;
 using FluentAssertions;
 using NUnit.Framework;
@@ -18,27 +19,20 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
 
-            var documentTypes = new List<DocumentType> { new DocumentType() { Id = "passport", Title = "Passport" } };
             var domain = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, documentTypes)
                 .With(x => x.DeliveryMethods,
-                    new List<EvidenceRequest.DeliveryMethod> { EvidenceRequest.DeliveryMethod.Email })
+                    new List<DeliveryMethod> { DeliveryMethod.Email })
                 .Create();
 
-            var response = domain.ToResponse();
+            var resident = _fixture.Create<Resident>();
+            var documentTypes = _fixture.Create<List<DocumentType>>();
 
-            var resident = new ResidentResponse()
-            {
-                Name = domain.Resident.Name,
-                Email = domain.Resident.Email,
-                PhoneNumber = domain.Resident.PhoneNumber,
-                Id = domain.Resident.Id
-            };
+            var response = domain.ToResponse(resident, documentTypes);
 
             response.ServiceRequestedBy.Should().Be(response.ServiceRequestedBy);
-            response.DocumentTypes.Should().ContainSingle(x => x == "passport");
+            response.DocumentTypes.Should().BeEquivalentTo(documentTypes);
             response.DeliveryMethods.Should().ContainSingle(x => x == "EMAIL");
-            response.Resident.Should().BeEquivalentTo(resident);
+            response.Resident.Should().BeEquivalentTo(resident.ToResponse());
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
         }

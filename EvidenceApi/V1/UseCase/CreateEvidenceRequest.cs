@@ -3,6 +3,7 @@ using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
@@ -36,19 +37,21 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException(validation);
             }
 
-            var evidenceRequest = CreateEvidenceRequest(request);
+            var resident = _residentsGateway.FindOrCreateResident(request.Resident);
+            var documentTypes = request.DocumentTypes.ConvertAll(FindDocumentType);
+            var evidenceRequest = CreateEvidenceRequest(request, resident.Id);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
-            return created.ToResponse();
+            return created.ToResponse(resident, documentTypes);
         }
 
-        private EvidenceRequest CreateEvidenceRequest(EvidenceRequestRequest request)
+        private EvidenceRequest CreateEvidenceRequest(EvidenceRequestRequest request, Guid residentId)
         {
             return new EvidenceRequest
             {
-                DocumentTypes = request.DocumentTypes.ConvertAll(FindDocumentType),
+                DocumentTypeIds = request.DocumentTypes,
                 DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
                 ServiceRequestedBy = request.ServiceRequestedBy,
-                Resident = _residentsGateway.FindOrCreateResident(request.Resident)
+                ResidentId = residentId
             };
         }
 
@@ -57,9 +60,9 @@ namespace EvidenceApi.V1.UseCase
             return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
         }
 
-        private EvidenceRequest.DeliveryMethod ParseDeliveryMethod(string deliveryMethod)
+        private DeliveryMethod ParseDeliveryMethod(string deliveryMethod)
         {
-            return Enum.Parse<EvidenceRequest.DeliveryMethod>(deliveryMethod, true);
+            return Enum.Parse<DeliveryMethod>(deliveryMethod, true);
         }
     }
 }
