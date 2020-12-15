@@ -20,7 +20,7 @@ functions:
     handler: EvidenceApi::EvidenceApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      CONNECTION_STRING: Host=${ssm:/evidence-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/evidence-api/${self:provider.stage}/postgres-port};Database=evidence-api-mirror;Username=${ssm:/evidence-api/${self:provider.stage}/postgres-username};Password=${ssm:/evidence-api/${self:provider.stage}/postgres-password}
+      CONNECTION_STRING: Host=${ssm:/evidence-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/evidence-api/${self:provider.stage}/postgres-port};Database=evidence-api-db-${self:provider.stage};Username=${ssm:/evidence-api/${self:provider.stage}/postgres-username};Password=${ssm:/evidence-api/${self:provider.stage}/postgres-password}
     events:
       - http:
           path: /{proxy+}
