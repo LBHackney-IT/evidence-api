@@ -120,7 +120,7 @@ namespace EvidenceApi
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
             services.AddDbContext<EvidenceContext>(
-                opt => opt.UseNpgsql(connectionString!));
+                opt => opt.UseNpgsql(connectionString ?? throw new InvalidOperationException("CONNECTION_STRING not present")));
         }
 
         private static void ConfigureFileReaders(IServiceCollection services)
