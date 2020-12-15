@@ -36,7 +36,7 @@ namespace EvidenceApi.Tests.V1.Factories
         public void CanMapCommunicationEntityToDomainObject()
         {
             var evidenceRequest = _fixture.Build<EvidenceRequestEntity>()
-                .With(x => x.DeliveryMethods, new List<string>{ "Email" })
+                .With(x => x.DeliveryMethods, new List<string> { "Email" })
                 .Without(x => x.Communications)
                 .Create();
 
