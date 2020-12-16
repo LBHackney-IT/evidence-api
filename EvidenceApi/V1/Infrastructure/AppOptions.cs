@@ -4,10 +4,11 @@ using EvidenceApi.V1.Infrastructure.Interfaces;
 
 namespace EvidenceApi.V1.Infrastructure
 {
-    public class AppOptions : IOptions
+    public static class AppOptions
     {
-        public string NotifyApiKey => Environment.GetEnvironmentVariable("NOTIFY_API_KEY");
-        public string DocumentTypeConfigPath => Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json");
-        public string DatabaseConnectionString => Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        public static string NotifyApiKey => Environment.GetEnvironmentVariable("NOTIFY_API_KEY");
+        public static string DocumentTypeConfigPath => Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json");
+        public static string DatabaseConnectionString => Environment.GetEnvironmentVariable("CONNECTION_STRING");
+        public static Uri EvidenceRequestClientUrl => new Uri(Environment.GetEnvironmentVariable("EVIDENCE_REQUEST_CLIENT_URL")!);
     }
 }

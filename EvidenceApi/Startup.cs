@@ -113,17 +113,21 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            var options = new AppOptions();
+            var success = DotEnv.AutoConfig(5);
+            if (success)
+            {
+                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
+            }
 
             // Database Context
             services.AddDbContext<EvidenceContext>(
-                opt => opt.UseNpgsql(options.DatabaseConnectionString));
+                opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
 
             // Transients
-            services.AddTransient<INotificationClient>(x => new NotificationClient(options.NotifyApiKey));
+            services.AddTransient<INotificationClient>(x => new NotificationClient(AppOptions.NotifyApiKey));
 
             // File Readers
-            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath));
+            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(AppOptions.DocumentTypeConfigPath));
 
             // Gateways
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
@@ -141,7 +145,6 @@ namespace EvidenceApi
         {
             if (env.IsDevelopment())
             {
-                DotEnv.AutoConfig();
                 app.UseDeveloperExceptionPage();
             }
             else

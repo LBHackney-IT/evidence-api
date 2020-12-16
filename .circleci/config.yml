@@ -144,6 +144,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run: cp .env.example .env
       - run:
           name: build
           command: docker-compose build evidence-api-test
