@@ -133,6 +133,7 @@ namespace EvidenceApi
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
+            services.AddScoped<INotifyGateway, NotifyGateway>();
 
             // Use Cases
             services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();

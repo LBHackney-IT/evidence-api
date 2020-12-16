@@ -1,54 +1,86 @@
 using System;
+using System.Collections.Generic;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Gateways.Interfaces;
 using Notify.Interfaces;
 using Notify.Models.Responses;
 
 namespace EvidenceApi.V1.Gateways
 {
-    public class NotifyGateway
+    public class NotifyGateway : INotifyGateway
     {
-        private INotificationClient _client;
-        public NotifyGateway(INotificationClient client)
+        private readonly INotificationClient _client;
+        private readonly IEvidenceGateway _evidenceGateway;
+
+        public NotifyGateway(INotificationClient client, IEvidenceGateway evidenceGateway)
         {
             _client = client;
+            _evidenceGateway = evidenceGateway;
         }
 
-        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason reason, Resident resident)
+        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason reason, EvidenceRequest request, Resident resident)
         {
-            var result = Deliver(deliveryMethod, reason, resident);
+            var personalisation = GetParamsFor(reason, request, resident);
+            var templateId = GetTemplateIdFor(deliveryMethod, reason);
+            var result = Deliver(deliveryMethod, templateId, resident, personalisation);
+            var communication = new Communication
+            {
+                DeliveryMethod = deliveryMethod,
+                NotifyId = result.id,
+                EvidenceRequestId = request.Id,
+                Reason = reason,
+                TemplateId = templateId
+            };
+            _evidenceGateway.CreateCommunication(communication);
         }
 
-        private NotificationResponse Deliver(DeliveryMethod deliveryMethod, CommunicationReason reason, Resident resident)
+        private NotificationResponse Deliver(DeliveryMethod deliveryMethod, string templateId, Resident resident, Dictionary<string, object> personalisation)
         {
             return deliveryMethod switch
             {
-                DeliveryMethod.Email => _client.SendEmail(resident.Email, GetEmailTemplateId(reason), null, null, null),
-                DeliveryMethod.Sms => _client.SendSms(resident.PhoneNumber, GetSmsTemplateId(reason), null, null, null),
+                DeliveryMethod.Email => _client.SendEmail(resident.Email, templateId, personalisation, null, null),
+                DeliveryMethod.Sms => _client.SendSms(resident.PhoneNumber, templateId, personalisation, null, null),
                 _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod, $"Delivery Method {deliveryMethod.ToString()} not recognised")
 
             };
         }
 
-        private static string GetSmsTemplateId(CommunicationReason reason)
+        private static string GetTemplateIdFor(DeliveryMethod deliveryMethod, CommunicationReason reason)
         {
-            return reason switch
+            return deliveryMethod switch
             {
-                CommunicationReason.Reminder => Environment.GetEnvironmentVariable("NOTIFY_TEMPLATE_REMINDER_SMS"),
-                CommunicationReason.EvidenceRejected => Environment.GetEnvironmentVariable("NOTIFY_TEMPLATE_EVIDENCE_REJECTED_SMS"),
-                CommunicationReason.EvidenceRequest => Environment.GetEnvironmentVariable("NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS"),
-                _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, $"Communication Reason {reason.ToString()} not recognised")
+                DeliveryMethod.Sms => reason switch
+                {
+                    CommunicationReason.EvidenceRequest => Environment.GetEnvironmentVariable(
+                        "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason,
+                        $"Communication Reason {reason.ToString()} not recognised")
+                },
+                DeliveryMethod.Email => reason switch
+                {
+                    CommunicationReason.EvidenceRequest => Environment.GetEnvironmentVariable(
+                        "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason,
+                        $"Communication Reason {reason.ToString()} not recognised")
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod,
+                    $"Delivery Method {deliveryMethod.ToString()} not recognised")
+
             };
         }
 
 
-        private static string GetEmailTemplateId(CommunicationReason reason)
+        private static Dictionary<string, object> GetParamsFor(CommunicationReason reason, EvidenceRequest request, Resident resident)
         {
             return reason switch
             {
-                CommunicationReason.Reminder => Environment.GetEnvironmentVariable("NOTIFY_TEMPLATE_REMINDER_EMAIL"),
-                CommunicationReason.EvidenceRejected => Environment.GetEnvironmentVariable("NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL"),
-                CommunicationReason.EvidenceRequest => Environment.GetEnvironmentVariable("NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL"),
+                CommunicationReason.EvidenceRequest => new Dictionary<string, object>
+                {
+                    {"resident_name", resident.Name},
+                    {"service_name", request.ServiceRequestedBy},
+                    {"magic_link", request.MagicLink}
+                },
                 _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, $"Communication Reason {reason.ToString()} not recognised")
             };
         }
