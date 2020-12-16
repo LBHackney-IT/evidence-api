@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Common;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -55,6 +57,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "}";
 
             json.Should().Be(expected);
+
+            // It sends an SMS
+            MockNotifyClient.Verify(x =>
+                x.SendSms("+447123456789", It.IsAny<string>(), It.IsAny<Dictionary<string, dynamic>>(), null, null));
         }
 
         [Test]
