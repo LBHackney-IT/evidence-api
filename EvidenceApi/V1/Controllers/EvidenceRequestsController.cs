@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -15,11 +16,13 @@ namespace EvidenceApi.V1.Controllers
     {
         private readonly IDocumentTypeGateway _gateway;
         private readonly ICreateEvidenceRequestUseCase _creator;
+        private readonly IFindEvidenceRequestUseCase _evidenceRequestUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator)
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, IFindEvidenceRequestUseCase evidenceRequestUseCase)
         {
             _gateway = gateway;
             _creator = creator;
+            _evidenceRequestUseCase = evidenceRequestUseCase;
         }
 
         /// <summary>
@@ -39,6 +42,21 @@ namespace EvidenceApi.V1.Controllers
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.ValidationResponse.Errors);
+            }
+        }
+
+        [HttpGet]
+        [Route("/staging/api/v1/evidence_requests/{id}")]
+        public IActionResult FindEvidenceRequest([FromRoute][Required] Guid id)
+        {
+            try
+            {
+                var result = _evidenceRequestUseCase.Execute(id);
+                return Created(new Uri($"/evidence_requests/{result.Id}", UriKind.Relative), result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex);
             }
         }
     }

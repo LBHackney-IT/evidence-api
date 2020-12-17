@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -34,6 +34,18 @@ namespace EvidenceApi.V1.Gateways
             _databaseContext.SaveChanges();
 
             return entity.ToDomain();
+        }
+
+        public EvidenceRequest FindEvidenceRequest(Guid id)
+        {
+            var evidenceRequest = _databaseContext.EvidenceRequests.Find(id);
+
+            if (evidenceRequest == null)
+            {
+                return null;
+            }
+
+            return evidenceRequest.ToDomain();
         }
     }
 }
