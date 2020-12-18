@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Infrastructure;
 
 namespace EvidenceApi.V1.Domain
 {
@@ -12,5 +13,13 @@ namespace EvidenceApi.V1.Domain
         public List<DeliveryMethod> DeliveryMethods { get; set; }
         public List<string> DocumentTypeIds { get; set; }
         public string ServiceRequestedBy { get; set; }
+
+        public string MagicLink
+        {
+            get
+            {
+                return $"{AppOptions.EvidenceRequestClientUrl}/{Id}";
+            }
+        }
     }
 }

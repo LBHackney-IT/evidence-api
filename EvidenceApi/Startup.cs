@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
@@ -23,6 +24,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Notify.Client;
+using Notify.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace EvidenceApi
@@ -109,35 +112,30 @@ namespace EvidenceApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
-            ConfigureDbContext(services);
-            ConfigureFileReaders(services);
-            RegisterGateways(services);
-            RegisterUseCases(services);
-        }
 
-        private static void ConfigureDbContext(IServiceCollection services)
-        {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            var success = DotEnv.AutoConfig(5);
+            if (success)
+            {
+                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
+            }
 
+            // Database Context
             services.AddDbContext<EvidenceContext>(
-                opt => opt.UseNpgsql(connectionString ?? throw new InvalidOperationException("CONNECTION_STRING not present")));
-        }
+                opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
 
-        private static void ConfigureFileReaders(IServiceCollection services)
-        {
-            string path = Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json");
-            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(path));
-        }
+            // Transients
+            services.AddTransient<INotificationClient>(x => new NotificationClient(AppOptions.NotifyApiKey));
 
-        private static void RegisterGateways(IServiceCollection services)
-        {
+            // File Readers
+            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(AppOptions.DocumentTypeConfigPath));
+
+            // Gateways
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
-        }
+            services.AddScoped<INotifyGateway, NotifyGateway>();
 
-        private static void RegisterUseCases(IServiceCollection services)
-        {
+            // Use Cases
             services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();
             services.AddScoped<IValidator<ResidentRequest>, ResidentRequestValidator>();
             services.AddScoped<IEvidenceRequestValidator, EvidenceRequestValidator>();
