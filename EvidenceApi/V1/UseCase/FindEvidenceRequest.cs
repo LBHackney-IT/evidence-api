@@ -30,6 +30,12 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var found = _evidenceGateway.FindEvidenceRequest(id);
+
+            if (found == null)
+            {
+                throw new NotFoundException("Cannot retrieve evidence request");
+            }
+
             var resident = _residentsGateway.FindResident(found.ResidentId);
             var documentTypes = found.DocumentTypeIds.ConvertAll(FindDocumentType);
             return found.ToResponse(resident, documentTypes);

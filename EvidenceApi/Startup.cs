@@ -141,6 +141,7 @@ namespace EvidenceApi
             services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();
             services.AddScoped<IValidator<ResidentRequest>, ResidentRequestValidator>();
             services.AddScoped<IEvidenceRequestValidator, EvidenceRequestValidator>();
+            services.AddScoped<IFindEvidenceRequestUseCase, FindEvidenceRequestUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

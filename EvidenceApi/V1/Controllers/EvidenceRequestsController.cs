@@ -45,18 +45,28 @@ namespace EvidenceApi.V1.Controllers
             }
         }
 
+        /// <summary>
+        /// Finds evidence request
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Resource not found</response>
         [HttpGet]
-        [Route("/staging/api/v1/evidence_requests/{id}")]
+        [Route("{id}")]
         public IActionResult FindEvidenceRequest([FromRoute][Required] Guid id)
         {
             try
             {
                 var result = _evidenceRequestUseCase.Execute(id);
-                return Created(new Uri($"/evidence_requests/{result.Id}", UriKind.Relative), result);
+                return Ok(result);
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Error);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
             }
         }
     }
