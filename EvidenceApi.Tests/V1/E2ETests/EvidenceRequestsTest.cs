@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
-using System.Collections.Generic;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
