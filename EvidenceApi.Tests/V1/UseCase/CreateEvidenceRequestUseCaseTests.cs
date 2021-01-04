@@ -64,17 +64,33 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Resident.Name.Should().Be(_resident.Name);
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
+            result.ServiceRequestedBy.Should().Be(_created.ServiceRequestedBy);
+            result.UserRequestedBy.Should().Be(_created.UserRequestedBy);
         }
 
         [Test]
-        public void CreatesTheResident()
+        public void CallsGatewaysUsingCorrectDomainObjects()
         {
             SetupValidatorToReturn(true);
             SetupMocks();
 
             _classUnderTest.Execute(_request);
 
-            _residentsGateway.VerifyAll();
+            _residentsGateway.Verify(x => x.FindOrCreateResident(
+                It.Is<Resident>(r =>
+                    r.Name == _resident.Name &&
+                    r.Email == _resident.Email &&
+                    r.PhoneNumber == _resident.PhoneNumber
+                )
+            ));
+
+            _evidenceGateway.Verify(x => x.CreateEvidenceRequest(
+                It.Is<EvidenceRequest>(e =>
+                    e.ResidentId == _resident.Id &&
+                    e.ServiceRequestedBy == _request.ServiceRequestedBy &&
+                    e.UserRequestedBy == _request.UserRequestedBy
+                )
+            ));
         }
 
         [Test]

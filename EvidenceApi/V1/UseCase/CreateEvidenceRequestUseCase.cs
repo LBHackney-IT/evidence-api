@@ -67,6 +67,7 @@ namespace EvidenceApi.V1.UseCase
                 DocumentTypeIds = request.DocumentTypes,
                 DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
                 ServiceRequestedBy = request.ServiceRequestedBy,
+                UserRequestedBy = request.UserRequestedBy,
                 ResidentId = residentId
             };
         }
