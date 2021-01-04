@@ -9,6 +9,8 @@ using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.Tests.V1.Gateways
 {
@@ -110,6 +112,36 @@ namespace EvidenceApi.Tests.V1.Gateways
                 .With(x => x.EvidenceRequestId, request.Id)
                 .Create();
 
+        }
+
+        [Test]
+        public void FindReturnsAnEvidenceRequest()
+        {
+            List<string> dm = new List<string> { "Sms", "Email" };
+            var expectedDeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Sms, DeliveryMethod.Email };
+
+            var entity = _fixture.Build<EvidenceRequestEntity>()
+                .Without(x => x.Communications)
+                .With(x => x.DeliveryMethods, dm)
+                .Create();
+            DatabaseContext.EvidenceRequests.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindEvidenceRequest(entity.Id);
+            found.Id.Should().Be(entity.Id);
+            found.CreatedAt.Should().Be(entity.CreatedAt);
+            found.ResidentId.Should().Be(entity.ResidentId);
+            found.DeliveryMethods.Should().BeEquivalentTo(expectedDeliveryMethods);
+            found.DocumentTypeIds.Should().Equal(entity.DocumentTypes);
+            found.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
+        }
+
+        [Test]
+        public void FindDoesNotReturnAnEvidenceRequest()
+        {
+            Guid id = new Guid("7bb69c97-5e5a-48a5-ad40-e1563a1a7e53");
+            var found = _classUnderTest.FindEvidenceRequest(id);
+            found.Should().BeNull();
         }
     }
 }

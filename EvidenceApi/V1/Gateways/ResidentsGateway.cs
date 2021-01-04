@@ -41,13 +41,7 @@ namespace EvidenceApi.V1.Gateways
 
         public Resident FindResident(Guid id)
         {
-            ResidentEntity found = _databaseContext.Residents.FirstOrDefault(x => x.Id == id);
-
-            if (found == null)
-            {
-                return null;
-            }
-
+            ResidentEntity found = _databaseContext.Residents.Find(id);
             return found.ToDomain();
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -15,11 +16,13 @@ namespace EvidenceApi.V1.Controllers
     {
         private readonly IDocumentTypeGateway _gateway;
         private readonly ICreateEvidenceRequestUseCase _creator;
+        private readonly IFindEvidenceRequestUseCase _evidenceRequestUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator)
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, IFindEvidenceRequestUseCase evidenceRequestUseCase)
         {
             _gateway = gateway;
             _creator = creator;
+            _evidenceRequestUseCase = evidenceRequestUseCase;
         }
 
         /// <summary>
@@ -43,6 +46,31 @@ namespace EvidenceApi.V1.Controllers
             catch (NotificationException ex)
             {
                 return StatusCode(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Finds evidence request
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Resource not found</response>
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult FindEvidenceRequest([FromRoute][Required] Guid id)
+        {
+            try
+            {
+                var result = _evidenceRequestUseCase.Execute(id);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Error);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
             }
         }
     }

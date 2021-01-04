@@ -4,8 +4,8 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 
 ## Stack
 
-- .NET Core as a web framework.
-- nUnit as a test framework.
+-   .NET Core as a web framework.
+-   nUnit as a test framework.
 
 ## Context and history
 
@@ -129,8 +129,8 @@ If changes to the database schema are made then the docker image for the databas
 
 ### Contributors
 
-- **Sam Garson**, Senior Engineer at Made Tech (sam.garson@hackney.gov.uk)
-- **Bogdan Zaharia**, Senior Engineer at Made Tech (bogdan.zaharia@hackney.gov.uk)
+-   **Sam Garson**, Senior Engineer at Made Tech (sam.garson@hackney.gov.uk)
+-   **Bogdan Zaharia**, Engineer at Made Tech (bogdan.zaharia@hackney.gov.uk)
 
 ### Other Contacts
 
