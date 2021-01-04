@@ -143,7 +143,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task ReturnNotFoundWhenCannotFindEvidenceRequest()
         {
-            var uri = new Uri($"api/v1/evidence_requests/ed0f2bd2-df90-4f01-b7f1-d30e402386d0", UriKind.Relative);
+            var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
+            var uri = new Uri($"api/v1/evidence_requests/{fakeId}", UriKind.Relative);
             var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
             responseFind.StatusCode.Should().Be(404);
         }

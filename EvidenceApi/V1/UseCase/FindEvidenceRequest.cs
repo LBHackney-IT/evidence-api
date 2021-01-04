@@ -24,11 +24,6 @@ namespace EvidenceApi.V1.UseCase
         }
         public EvidenceRequestResponse Execute(Guid id)
         {
-            if (id == null)
-            {
-                throw new BadRequestException("Id is null");
-            }
-
             var found = _evidenceGateway.FindEvidenceRequest(id);
 
             if (found == null)

@@ -50,6 +50,14 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.DeliveryMethods.Should().BeEquivalentTo(_found.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
         }
 
+        [Test]
+        public void ThrowsAnErrorWhenAnEvidenceRequestIsNotFound()
+        {
+            Guid id = new Guid();
+            Action act = () => _classUnderTest.Execute(id);
+            act.Should().Throw<NotFoundException>().WithMessage("Cannot retrieve evidence request");
+        }
+
         private void SetupMocks()
         {
             _resident = _fixture.Create<Resident>();

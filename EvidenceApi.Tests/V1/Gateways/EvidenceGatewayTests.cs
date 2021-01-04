@@ -135,5 +135,13 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.DocumentTypeIds.Should().Equal(entity.DocumentTypes);
             found.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
         }
+
+        [Test]
+        public void FindDoesNotReturnAnEvidenceRequest()
+        {
+            Guid id = new Guid("7bb69c97-5e5a-48a5-ad40-e1563a1a7e53");
+            var found = _classUnderTest.FindEvidenceRequest(id);
+            found.Should().BeNull();
+        }
     }
 }
