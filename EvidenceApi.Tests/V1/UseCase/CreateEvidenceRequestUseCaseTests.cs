@@ -6,6 +6,7 @@ using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase;
 using EvidenceApi.V1.UseCase.Interfaces;
@@ -23,6 +24,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
+        private Mock<INotifyGateway> _notifyGateway;
         private readonly IFixture _fixture = new Fixture();
 
         private Resident _resident;
@@ -37,7 +39,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
-            _classUnderTest = new CreateEvidenceRequestUseCase(_validator.Object, _documentTypesGateway.Object, _residentsGateway.Object, _evidenceGateway.Object);
+            _notifyGateway = new Mock<INotifyGateway>();
+            _classUnderTest = new CreateEvidenceRequestUseCase(_validator.Object, _documentTypesGateway.Object,
+                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object);
 
         }
 
@@ -73,6 +77,22 @@ namespace EvidenceApi.Tests.V1.UseCase
             _residentsGateway.VerifyAll();
         }
 
+        [Test]
+        public void SendsANotification()
+        {
+            SetupValidatorToReturn(true);
+            SetupMocks();
+
+            _classUnderTest.Execute(_request);
+
+            _notifyGateway.Verify(x =>
+                x.SendNotification(DeliveryMethod.Email, CommunicationReason.EvidenceRequest, _created, _resident));
+
+            _notifyGateway.Verify(x =>
+                x.SendNotification(DeliveryMethod.Sms, CommunicationReason.EvidenceRequest, _created, _resident));
+
+        }
+
         private void SetupValidatorToReturn(bool valid)
         {
             var result = new Mock<ValidationResult>();
@@ -85,7 +105,9 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _resident = _fixture.Create<Resident>();
             _documentType = _fixture.Create<DocumentType>();
-            _created = _fixture.Create<EvidenceRequest>();
+            _created = _fixture.Build<EvidenceRequest>()
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms })
+                .Create();
 
             _request = _fixture.Build<EvidenceRequestRequest>()
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })

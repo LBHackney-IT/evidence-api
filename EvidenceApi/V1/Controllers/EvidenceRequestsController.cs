@@ -43,6 +43,10 @@ namespace EvidenceApi.V1.Controllers
             {
                 return BadRequest(ex.ValidationResponse.Errors);
             }
+            catch (NotificationException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         /// <summary>

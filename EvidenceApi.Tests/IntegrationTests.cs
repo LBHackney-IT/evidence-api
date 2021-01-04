@@ -1,9 +1,13 @@
 using System.Data;
 using System.Data.Common;
 using System.Net.Http;
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Notify.Interfaces;
 using Npgsql;
 using NUnit.Framework;
 
@@ -13,6 +17,7 @@ namespace EvidenceApi.Tests
     {
         protected HttpClient Client { get; private set; }
         protected EvidenceContext DatabaseContext { get; private set; }
+        protected Mock<INotificationClient> MockNotifyClient { get; private set; }
 
         private MockWebApplicationFactory<TStartup> _factory;
         private NpgsqlConnection _connection;
@@ -31,7 +36,8 @@ namespace EvidenceApi.Tests
         [SetUp]
         public void BaseSetup()
         {
-            _factory = new MockWebApplicationFactory<TStartup>(_connection);
+            MockNotifyClient = CreateMockNotifyClient();
+            _factory = new MockWebApplicationFactory<TStartup>(_connection, MockNotifyClient.Object);
             Client = _factory.CreateClient();
             DatabaseContext = _factory.Server.Host.Services.GetRequiredService<EvidenceContext>();
 
@@ -46,6 +52,15 @@ namespace EvidenceApi.Tests
             _factory.Dispose();
             _transaction.Rollback();
             _transaction.Dispose();
+        }
+
+        private static Mock<INotificationClient> CreateMockNotifyClient()
+        {
+            var fixture = new Fixture()
+                .Customize(new AutoMoqCustomization());
+            var mockClient = fixture.Freeze<Mock<INotificationClient>>();
+            fixture.Create<INotificationClient>();
+            return mockClient;
         }
     }
 }

@@ -7,6 +7,10 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 -   .NET Core as a web framework.
 -   nUnit as a test framework.
 
+## Context and history
+
+See the [Architectural Decision Log](/docs/adr).
+
 ## Contributing
 
 ### Setup
