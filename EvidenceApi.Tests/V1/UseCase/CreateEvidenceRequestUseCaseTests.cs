@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -125,13 +124,18 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms })
                 .Create();
 
+            var residentRequest = new ResidentRequest
+            {
+                Email = _resident.Email, Name = _resident.Name, PhoneNumber = _resident.PhoneNumber
+            };
             _request = _fixture.Build<EvidenceRequestRequest>()
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
+                .With(x => x.Resident, residentRequest)
                 .Create();
 
-            _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<ResidentRequest>())).Returns(_resident);
             _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_created);
+            _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<Resident>())).Returns(_resident).Verifiable();
+            _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_created).Verifiable();
         }
     }
 }

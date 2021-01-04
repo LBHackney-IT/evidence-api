@@ -6,7 +6,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface IResidentsGateway
     {
-        Resident FindOrCreateResident(ResidentRequest request);
+        Resident FindOrCreateResident(Resident request);
         Resident FindResident(Guid id);
     }
 }
