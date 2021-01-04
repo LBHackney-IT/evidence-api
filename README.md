@@ -23,27 +23,24 @@ See the [Architectural Decision Log](/docs/adr).
 
 ### Development
 
-To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
-
-The application can also be served locally using docker:
-
-1.  Add you security credentials to AWS CLI.
-
-```sh
-$ aws configure
-```
-
-2. Log into AWS ECR.
-
-```sh
-$ aws ecr get-login --no-include-email
-```
-
-3. Build and serve the application. It will be available in the port 3000.
+Build and serve the application. It will be available in the port 5000.
 
 ```sh
 $ make build && make serve
 ```
+
+#### Database Things
+
+To modify the database schema:
+
+_Prerequsite: Make sure you have your database running—something like `docker-compose up -d dev-database`_
+
+1. Create or edit the `entity` files corresponding to the models you want to modify
+2. Run `bin/dotnet ef --project EvidenceApi migrations add NameOfMigration`  substituting the name of the migration
+3. Check the migration to make sure it does what you want (and not other things)—it can be found in `EvidenceApi/Migrations`
+4.
+    - If the migration looks good, run `bin/dotnet ef --project EvidenceApi database update`  to run the migrations
+    - If the migration looks bad, run `bin/dotnet ef --project EvidenceApi migrations remove` to wipe the migration
 
 ### Release process
 
