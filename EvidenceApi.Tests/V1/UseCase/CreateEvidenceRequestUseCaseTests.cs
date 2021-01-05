@@ -126,7 +126,9 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             var residentRequest = new ResidentRequest
             {
-                Email = _resident.Email, Name = _resident.Name, PhoneNumber = _resident.PhoneNumber
+                Email = _resident.Email,
+                Name = _resident.Name,
+                PhoneNumber = _resident.PhoneNumber
             };
             _request = _fixture.Build<EvidenceRequestRequest>()
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
