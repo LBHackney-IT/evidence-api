@@ -43,4 +43,7 @@ CREATE INDEX "IX_communications_evidence_request_id" ON communications (evidence
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20201214150433_CreateCommunications', '3.1.7');
 
+ALTER TABLE evidence_requests ADD user_requested_by text NULL;
 
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210104115523_AddUserRequestedByToEvidenceApi', '3.1.7');
