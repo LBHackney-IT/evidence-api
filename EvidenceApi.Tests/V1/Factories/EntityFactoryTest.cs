@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
@@ -60,6 +59,23 @@ namespace EvidenceApi.Tests.V1.Factories
             entity.NotifyId.Should().Be(domain.NotifyId);
             entity.TemplateId.Should().Be(domain.TemplateId);
             entity.EvidenceRequestId.Should().Be(domain.EvidenceRequestId);
+        }
+
+        [Test]
+        public void CanMapADocumentSubmissionDomainObjectToADatabaseEntity()
+        {
+            var domain = _fixture.Create<DocumentSubmission>();
+
+            var entity = domain.ToEntity();
+
+            entity.Id.Should().Be(domain.Id);
+            entity.CreatedAt.Should().Be(domain.CreatedAt);
+            entity.ClaimId.Should().Be(domain.ClaimId);
+            entity.RejectionReason.Should().Be(domain.RejectionReason);
+            entity.State.Should().Be(domain.State);
+            entity.EvidenceRequestId.Should().Be(domain.EvidenceRequest.Id);
+            entity.EvidenceRequest.Should().BeEquivalentTo(domain.EvidenceRequest.ToEntity());
+            entity.DocumentTypeId.Should().Be(domain.DocumentTypeId);
         }
     }
 }

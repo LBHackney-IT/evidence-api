@@ -122,6 +122,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var entity = _fixture.Build<EvidenceRequestEntity>()
                 .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
                 .With(x => x.DeliveryMethods, dm)
                 .Create();
             DatabaseContext.EvidenceRequests.Add(entity);

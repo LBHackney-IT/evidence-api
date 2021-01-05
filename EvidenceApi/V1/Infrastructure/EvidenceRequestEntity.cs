@@ -28,5 +28,6 @@ namespace EvidenceApi.V1.Infrastructure
         public string ServiceRequestedBy { get; set; }
 
         public virtual ICollection<CommunicationEntity> Communications { get; set; }
+        public virtual ICollection<DocumentSubmissionEntity> DocumentSubmissions { get; set; }
     }
 }

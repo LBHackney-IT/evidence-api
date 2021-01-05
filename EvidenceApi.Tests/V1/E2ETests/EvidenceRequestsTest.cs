@@ -119,6 +119,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
                 .With(x => x.DeliveryMethods, new List<string> { "Email" })
                 .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
                 .Create();
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
