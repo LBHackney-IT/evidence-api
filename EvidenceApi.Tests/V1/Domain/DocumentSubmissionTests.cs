@@ -15,7 +15,7 @@ namespace EvidenceApi.Tests.V1.Domain
         [Test]
         public void DocumentSubmissionHaveCorrectAttributes()
         {
-            Guid id = new Guid("e2b06785-eb31-4638-8061-e9adad5c430f");
+            Guid id = Guid.NewGuid();
             string claimId = "0001";
             string rejectionReason = "blurry";
             SubmissionState state = SubmissionState.pending;
