@@ -30,7 +30,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""development-team-staging""
+                ""serviceRequestedBy"": ""development-team-staging"",
+                ""userRequestedBy"": ""staff@test.hackney.gov.uk""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -55,6 +56,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "{\"id\":\"passport-scan\",\"title\":\"Passport\"}" +
                                "]," +
                                "\"serviceRequestedBy\":\"development-team-staging\"," +
+                               "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}" +
                                "}";
@@ -138,6 +140,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "{\"id\":\"passport-scan\",\"title\":\"Passport\"}" +
                                "]," +
                                $"\"serviceRequestedBy\":\"{entity.ServiceRequestedBy}\"," +
+                               $"\"userRequestedBy\":\"{entity.UserRequestedBy}\"," +
                                $"\"id\":\"{entity.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}" +
                                "}";

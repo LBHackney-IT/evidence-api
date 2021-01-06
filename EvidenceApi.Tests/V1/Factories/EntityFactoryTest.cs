@@ -25,6 +25,7 @@ namespace EvidenceApi.Tests.V1.Factories
             var entity = domain.ToEntity();
 
             entity.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
+            entity.UserRequestedBy.Should().Be(entity.UserRequestedBy);
             entity.DocumentTypes.Should().BeEquivalentTo(domain.DocumentTypeIds);
             entity.DeliveryMethods.Should().ContainSingle(x => x == "Email");
             entity.ResidentId.Should().Be(domain.ResidentId);

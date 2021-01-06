@@ -13,13 +13,8 @@ namespace EvidenceApi.V1.Domain
         public List<DeliveryMethod> DeliveryMethods { get; set; }
         public List<string> DocumentTypeIds { get; set; }
         public string ServiceRequestedBy { get; set; }
+        public string UserRequestedBy { get; set; }
 
-        public string MagicLink
-        {
-            get
-            {
-                return $"{AppOptions.EvidenceRequestClientUrl}/{Id}";
-            }
-        }
+        public string MagicLink => $"{AppOptions.EvidenceRequestClientUrl}/{Id}";
     }
 }

@@ -19,6 +19,25 @@ namespace EvidenceApi.Tests.V1.Factories
         private Fixture _fixture = new Fixture();
 
         [Test]
+        public void CanMapEvidenceRequestEntityToDomainObject()
+        {
+            var entity = _fixture.Build<EvidenceRequestEntity>()
+                .Without(x => x.Communications)
+                .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
+                .Create();
+
+            var domain = entity.ToDomain();
+
+            domain.Id.Should().Be(entity.Id);
+            domain.CreatedAt.Should().Be(entity.CreatedAt);
+            domain.DeliveryMethods.Should().ContainSingle(x => x == DeliveryMethod.Email);
+            domain.ResidentId.Should().Be(entity.ResidentId);
+            domain.DocumentTypeIds.Should().BeEquivalentTo(entity.DocumentTypes);
+            domain.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
+            domain.UserRequestedBy.Should().Be(entity.UserRequestedBy);
+        }
+
+        [Test]
         public void CanMapResidentEntityToDomainObject()
         {
             var entity = _fixture.Create<ResidentEntity>();

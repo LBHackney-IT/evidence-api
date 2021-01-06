@@ -14,6 +14,7 @@ namespace EvidenceApi.V1.Factories
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()),
                 DocumentTypes = documentTypes,
                 ServiceRequestedBy = domain.ServiceRequestedBy,
+                UserRequestedBy = domain.UserRequestedBy,
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt
             };

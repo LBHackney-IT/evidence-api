@@ -27,6 +27,9 @@ namespace EvidenceApi.V1.Infrastructure
         [Column("service_requested_by")]
         public string ServiceRequestedBy { get; set; }
 
+        [Column("user_requested_by")]
+        public string UserRequestedBy { get; set; }
+
         public virtual ICollection<CommunicationEntity> Communications { get; set; }
     }
 }
