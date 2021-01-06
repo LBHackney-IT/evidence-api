@@ -43,4 +43,19 @@ CREATE INDEX "IX_communications_evidence_request_id" ON communications (evidence
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20201214150433_CreateCommunications', '3.1.7');
 
+CREATE TABLE document_submissions (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    claim_id text NULL,
+    rejection_reason text NULL,
+    state integer NOT NULL,
+    evidence_request_id uuid NOT NULL,
+    document_type_id text NULL,
+    CONSTRAINT "PK_document_submissions" PRIMARY KEY (id),
+    CONSTRAINT "FK_document_submissions_evidence_requests_evidence_request_id" FOREIGN KEY (evidence_request_id) REFERENCES evidence_requests (id) ON DELETE CASCADE
+);
 
+CREATE INDEX "IX_document_submissions_evidence_request_id" ON document_submissions (evidence_request_id);
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210106110856_CreateDocumentSubmission', '3.1.7');
