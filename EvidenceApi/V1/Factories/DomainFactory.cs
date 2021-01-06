@@ -41,6 +41,7 @@ namespace EvidenceApi.V1.Factories
                 DocumentTypeIds = entity.DocumentTypes,
                 DeliveryMethods = entity.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
                 ServiceRequestedBy = entity.ServiceRequestedBy,
+                UserRequestedBy = entity.UserRequestedBy,
                 ResidentId = entity.ResidentId
             };
         }

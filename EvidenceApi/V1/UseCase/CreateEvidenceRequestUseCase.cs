@@ -41,9 +41,9 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException(validation);
             }
 
-            var resident = _residentsGateway.FindOrCreateResident(request.Resident);
+            var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
             var documentTypes = request.DocumentTypes.ConvertAll(FindDocumentType);
-            var evidenceRequest = CreateEvidenceRequestModel(request, resident.Id);
+            var evidenceRequest = BuildEvidenceRequest(request, resident.Id);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
 
             try
@@ -60,14 +60,25 @@ namespace EvidenceApi.V1.UseCase
             return created.ToResponse(resident, documentTypes);
         }
 
-        private EvidenceRequest CreateEvidenceRequestModel(EvidenceRequestRequest request, Guid residentId)
+        private EvidenceRequest BuildEvidenceRequest(EvidenceRequestRequest request, Guid residentId)
         {
             return new EvidenceRequest
             {
                 DocumentTypeIds = request.DocumentTypes,
                 DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
                 ServiceRequestedBy = request.ServiceRequestedBy,
+                UserRequestedBy = request.UserRequestedBy,
                 ResidentId = residentId
+            };
+        }
+
+        private static Resident BuildResident(ResidentRequest request)
+        {
+            return new Resident
+            {
+                Email = request.Email,
+                Name = request.Name,
+                PhoneNumber = request.PhoneNumber
             };
         }
 

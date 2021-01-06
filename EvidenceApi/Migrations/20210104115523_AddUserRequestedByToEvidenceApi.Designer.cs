@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EvidenceApi.Migrations
 {
     [DbContext(typeof(EvidenceContext))]
-    partial class EvidenceContextModelSnapshot : ModelSnapshot
+    [Migration("20210104115523_AddUserRequestedByToEvidenceApi")]
+    partial class AddUserRequestedByToEvidenceApi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,44 +58,6 @@ namespace EvidenceApi.Migrations
                     b.HasIndex("EvidenceRequestId");
 
                     b.ToTable("communications");
-                });
-
-            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.DocumentSubmissionEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ClaimId")
-                        .HasColumnName("claim_id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnName("created_at")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("DocumentTypeId")
-                        .HasColumnName("document_type_id")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("EvidenceRequestId")
-                        .HasColumnName("evidence_request_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("RejectionReason")
-                        .HasColumnName("rejection_reason")
-                        .HasColumnType("text");
-
-                    b.Property<int>("State")
-                        .HasColumnName("state")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EvidenceRequestId");
-
-                    b.ToTable("document_submissions");
                 });
 
             modelBuilder.Entity("EvidenceApi.V1.Infrastructure.EvidenceRequestEntity", b =>
@@ -164,15 +128,6 @@ namespace EvidenceApi.Migrations
                 {
                     b.HasOne("EvidenceApi.V1.Infrastructure.EvidenceRequestEntity", "EvidenceRequest")
                         .WithMany("Communications")
-                        .HasForeignKey("EvidenceRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.DocumentSubmissionEntity", b =>
-                {
-                    b.HasOne("EvidenceApi.V1.Infrastructure.EvidenceRequestEntity", "EvidenceRequest")
-                        .WithMany("DocumentSubmissions")
                         .HasForeignKey("EvidenceRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

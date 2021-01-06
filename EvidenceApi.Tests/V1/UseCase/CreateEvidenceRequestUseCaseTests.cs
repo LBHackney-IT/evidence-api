@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -64,17 +63,33 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Resident.Name.Should().Be(_resident.Name);
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
+            result.ServiceRequestedBy.Should().Be(_created.ServiceRequestedBy);
+            result.UserRequestedBy.Should().Be(_created.UserRequestedBy);
         }
 
         [Test]
-        public void CreatesTheResident()
+        public void CallsGatewaysUsingCorrectDomainObjects()
         {
             SetupValidatorToReturn(true);
             SetupMocks();
 
             _classUnderTest.Execute(_request);
 
-            _residentsGateway.VerifyAll();
+            _residentsGateway.Verify(x => x.FindOrCreateResident(
+                It.Is<Resident>(r =>
+                    r.Name == _resident.Name &&
+                    r.Email == _resident.Email &&
+                    r.PhoneNumber == _resident.PhoneNumber
+                )
+            ));
+
+            _evidenceGateway.Verify(x => x.CreateEvidenceRequest(
+                It.Is<EvidenceRequest>(e =>
+                    e.ResidentId == _resident.Id &&
+                    e.ServiceRequestedBy == _request.ServiceRequestedBy &&
+                    e.UserRequestedBy == _request.UserRequestedBy
+                )
+            ));
         }
 
         [Test]
@@ -109,13 +124,20 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms })
                 .Create();
 
+            var residentRequest = new ResidentRequest
+            {
+                Email = _resident.Email,
+                Name = _resident.Name,
+                PhoneNumber = _resident.PhoneNumber
+            };
             _request = _fixture.Build<EvidenceRequestRequest>()
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
+                .With(x => x.Resident, residentRequest)
                 .Create();
 
-            _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<ResidentRequest>())).Returns(_resident);
             _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_created);
+            _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<Resident>())).Returns(_resident).Verifiable();
+            _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_created).Verifiable();
         }
     }
 }
