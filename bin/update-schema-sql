@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+bin/dotnet ef --project EvidenceApi migrations script | tail -n +6 > ./database/schema.sql

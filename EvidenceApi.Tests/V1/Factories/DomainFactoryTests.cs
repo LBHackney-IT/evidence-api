@@ -1,14 +1,9 @@
-using System;
 using System.Collections.Generic;
 using AutoFixture;
-using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Factories;
-using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.UseCase;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 
 namespace EvidenceApi.Tests.V1.Factories
@@ -23,6 +18,7 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var entity = _fixture.Build<EvidenceRequestEntity>()
                 .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
                 .Create();
 
@@ -57,6 +53,7 @@ namespace EvidenceApi.Tests.V1.Factories
             var evidenceRequest = _fixture.Build<EvidenceRequestEntity>()
                 .With(x => x.DeliveryMethods, new List<string> { "Email" })
                 .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
                 .Create();
 
             var entity = _fixture.Build<CommunicationEntity>()
@@ -73,6 +70,30 @@ namespace EvidenceApi.Tests.V1.Factories
             domain.TemplateId.Should().Be(entity.TemplateId);
             domain.DeliveryMethod.Should().Be(DeliveryMethod.Email);
             domain.EvidenceRequestId.Should().Be(entity.EvidenceRequest.Id);
+        }
+
+        [Test]
+        public void CanMapDocumentSubmissionEntityToDomainObject()
+        {
+            var evidenceRequest = _fixture.Build<EvidenceRequestEntity>()
+                .With(x => x.DeliveryMethods, new List<string> { "Email" })
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .Create();
+
+            var entity = _fixture.Build<DocumentSubmissionEntity>()
+                .With(x => x.EvidenceRequest, evidenceRequest)
+                .Create();
+
+            var domain = entity.ToDomain();
+
+            domain.Id.Should().Be(entity.Id);
+            domain.CreatedAt.Should().Be(entity.CreatedAt);
+            domain.ClaimId.Should().Be(entity.ClaimId);
+            domain.RejectionReason.Should().Be(entity.RejectionReason);
+            domain.State.Should().Be(entity.State);
+            domain.EvidenceRequest.Should().BeEquivalentTo(entity.EvidenceRequest.ToDomain());
+            domain.DocumentTypeId.Should().Be(entity.DocumentTypeId);
         }
     }
 }

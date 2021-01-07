@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EvidenceApi.Migrations
 {
     [DbContext(typeof(EvidenceContext))]
-    partial class EvidenceContextModelSnapshot : ModelSnapshot
+    [Migration("20210106110856_CreateDocumentSubmission")]
+    partial class CreateDocumentSubmission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,10 +123,6 @@ namespace EvidenceApi.Migrations
 
                     b.Property<string>("ServiceRequestedBy")
                         .HasColumnName("service_requested_by")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserRequestedBy")
-                        .HasColumnName("user_requested_by")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

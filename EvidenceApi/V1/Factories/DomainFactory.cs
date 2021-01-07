@@ -1,9 +1,7 @@
 using System;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
-using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.Factories
 {
@@ -45,6 +43,19 @@ namespace EvidenceApi.V1.Factories
                 ServiceRequestedBy = entity.ServiceRequestedBy,
                 UserRequestedBy = entity.UserRequestedBy,
                 ResidentId = entity.ResidentId
+            };
+        }
+        public static DocumentSubmission ToDomain(this DocumentSubmissionEntity entity)
+        {
+            return new DocumentSubmission
+            {
+                Id = entity.Id,
+                CreatedAt = entity.CreatedAt,
+                ClaimId = entity.ClaimId,
+                RejectionReason = entity.RejectionReason,
+                State = entity.State,
+                EvidenceRequest = entity.EvidenceRequest?.ToDomain(),
+                DocumentTypeId = entity.DocumentTypeId
             };
         }
 

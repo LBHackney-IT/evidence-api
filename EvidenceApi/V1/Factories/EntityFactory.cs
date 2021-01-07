@@ -1,4 +1,3 @@
-using System;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Infrastructure;
 
@@ -43,6 +42,21 @@ namespace EvidenceApi.V1.Factories
                 Reason = domain.Reason.ToString(),
                 NotifyId = domain.NotifyId,
                 TemplateId = domain.TemplateId
+            };
+        }
+
+        public static DocumentSubmissionEntity ToEntity(this DocumentSubmission domain)
+        {
+            return new DocumentSubmissionEntity()
+            {
+                Id = domain.Id,
+                CreatedAt = domain.CreatedAt,
+                ClaimId = domain.ClaimId,
+                RejectionReason = domain.RejectionReason,
+                State = domain.State,
+                EvidenceRequestId = domain.EvidenceRequest.Id,
+                EvidenceRequest = domain.EvidenceRequest.ToEntity(),
+                DocumentTypeId = domain.DocumentTypeId
             };
         }
     }
