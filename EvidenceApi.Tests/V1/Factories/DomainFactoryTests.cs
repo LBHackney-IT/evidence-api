@@ -18,6 +18,7 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var entity = _fixture.Build<EvidenceRequestEntity>()
                 .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
                 .Create();
 
