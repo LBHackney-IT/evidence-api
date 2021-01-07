@@ -30,5 +30,18 @@ namespace EvidenceApi.V1.Factories
                 PhoneNumber = domain.PhoneNumber
             };
         }
+
+        public static DocumentSubmissionResponse ToResponse(this DocumentSubmission domain, string documentType)
+        {
+            return new DocumentSubmissionResponse()
+            {
+                Id = domain.Id,
+                CreatedAt = domain.CreatedAt,
+                ClaimId = domain.ClaimId,
+                RejectionReason = domain.RejectionReason,
+                State = domain.State.ToString(),
+                DocumentType = documentType.ToString()
+            };
+        }
     }
 }

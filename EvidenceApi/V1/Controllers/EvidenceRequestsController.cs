@@ -16,12 +16,14 @@ namespace EvidenceApi.V1.Controllers
     {
         private readonly IDocumentTypeGateway _gateway;
         private readonly ICreateEvidenceRequestUseCase _creator;
+        private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
         private readonly IFindEvidenceRequestUseCase _evidenceRequestUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, IFindEvidenceRequestUseCase evidenceRequestUseCase)
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestUseCase evidenceRequestUseCase)
         {
             _gateway = gateway;
             _creator = creator;
+            _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
         }
 
@@ -71,6 +73,32 @@ namespace EvidenceApi.V1.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+        }
+
+        /// <summary>
+        /// Creates a new document submission
+        /// </summary>
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Evidence request cannot be found</response>
+        [HttpPost]
+        [Route("{evidenceRequestId}/document_submissions")]
+        public IActionResult CreateDocumentSubmission([FromRoute][Required] Guid evidenceRequestId, [FromBody][Required] DocumentSubmissionRequest request)
+        {
+            try
+            {
+                var result = _createDocumentSubmission.Execute(evidenceRequestId, request);
+                return Created(new Uri($"/evidence_requests/{evidenceRequestId}/document_submissions", UriKind.Relative), result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Error);
+            }
+            catch (NotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
             }
         }
     }

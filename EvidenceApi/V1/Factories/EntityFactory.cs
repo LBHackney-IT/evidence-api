@@ -55,7 +55,6 @@ namespace EvidenceApi.V1.Factories
                 RejectionReason = domain.RejectionReason,
                 State = domain.State,
                 EvidenceRequestId = domain.EvidenceRequest.Id,
-                EvidenceRequest = domain.EvidenceRequest.ToEntity(),
                 DocumentTypeId = domain.DocumentTypeId
             };
         }

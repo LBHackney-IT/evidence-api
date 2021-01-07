@@ -27,6 +27,15 @@ namespace EvidenceApi.V1.Gateways
             return request;
         }
 
+        public DocumentSubmission CreateDocumentSubmission(DocumentSubmission request)
+        {
+            var entity = request.ToEntity();
+            _databaseContext.DocumentSubmissions.Add(entity);
+            _databaseContext.SaveChanges();
+
+            return entity.ToDomain();
+        }
+
         public Communication CreateCommunication(Communication request)
         {
             var entity = request.ToEntity();
