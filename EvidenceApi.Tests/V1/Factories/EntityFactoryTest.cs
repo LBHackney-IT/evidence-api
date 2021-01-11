@@ -74,7 +74,7 @@ namespace EvidenceApi.Tests.V1.Factories
             entity.ClaimId.Should().Be(domain.ClaimId);
             entity.RejectionReason.Should().Be(domain.RejectionReason);
             entity.State.Should().Be(domain.State);
-            entity.EvidenceRequestId.Should().Be(domain.EvidenceRequest.Id);
+            //entity.EvidenceRequestId.Should().Be(domain.EvidenceRequest.Id);
             entity.EvidenceRequest.Should().BeEquivalentTo(domain.EvidenceRequest.ToEntity());
             entity.DocumentTypeId.Should().Be(domain.DocumentTypeId);
         }

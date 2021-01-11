@@ -3,7 +3,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.UseCase.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -54,7 +54,9 @@ namespace EvidenceApi.V1.Gateways
                 return null;
             }
 
-            return evidenceRequest.ToDomain();
+            var domain = evidenceRequest.ToDomain();
+            _databaseContext.Entry(evidenceRequest).State = EntityState.Detached;
+            return domain;
         }
     }
 }

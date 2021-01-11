@@ -5,9 +5,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using EvidenceApi.V1.Domain.Enums;
@@ -61,6 +59,54 @@ namespace EvidenceApi.Tests.V1.Gateways
             created.Id.Should().Be(found.Id);
             created.CreatedAt.Should().Be(found.CreatedAt);
 
+        }
+
+        [Test]
+        public void CreatingADocumentSubmissionShouldInsertIntoTheDatabase()
+        {
+            var evidenceRequest = _fixture.Build<EvidenceRequest>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+
+            var request = _fixture.Build<DocumentSubmission>()
+                .With(x => x.EvidenceRequest, evidenceRequest)
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+
+            var query = DatabaseContext.DocumentSubmissions;
+
+            _classUnderTest.CreateDocumentSubmission(request);
+
+            query.Count()
+                .Should()
+                .Be(1);
+
+            var foundRecord = query.First();
+            foundRecord.Id.Should().NotBeEmpty();
+            foundRecord.EvidenceRequest.Id.Should().NotBeEmpty();
+            foundRecord.EvidenceRequest.ServiceRequestedBy.Should().Be(request.EvidenceRequest.ServiceRequestedBy);
+            foundRecord.EvidenceRequest.UserRequestedBy.Should().Be(request.EvidenceRequest.UserRequestedBy);
+            foundRecord.ClaimId.Should().Be(request.ClaimId);
+            foundRecord.RejectionReason.Should().Be(request.RejectionReason);
+            foundRecord.State.Should().Be(request.State);
+            foundRecord.DocumentTypeId.Should().Be(request.DocumentTypeId);
+        }
+
+        [Test]
+        public void CreatingADocumentSubmissionShouldReturnTheCreatedRequest()
+        {
+            var request = _fixture.Build<DocumentSubmission>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+
+            var created = _classUnderTest.CreateDocumentSubmission(request);
+            var found = DatabaseContext.DocumentSubmissions.First();
+
+            created.Id.Should().Be(found.Id);
+            created.CreatedAt.Should().Be(found.CreatedAt);
         }
 
         [Test]
