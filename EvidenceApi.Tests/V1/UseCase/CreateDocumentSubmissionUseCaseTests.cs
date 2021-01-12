@@ -39,6 +39,26 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ThrowsBadRequestExceptionWhenServiceNameIsEmptyOrNull()
+        {
+            var _documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.ServiceName)
+                .Create();
+            Func<DocumentSubmissionResponse> testDelegate = () => _classUnderTest.Execute(new Guid(), _documentSubmissionRequest);
+            testDelegate.Should().Throw<BadRequestException>();
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenRequesterEmailIsEmptyOrNull()
+        {
+            var _documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.RequesterEmail)
+                .Create();
+            Func<DocumentSubmissionResponse> testDelegate = () => _classUnderTest.Execute(new Guid(), _documentSubmissionRequest);
+            testDelegate.Should().Throw<BadRequestException>();
+        }
+
+        [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
             var request = _fixture.Create<DocumentSubmissionRequest>();

@@ -10,5 +10,6 @@ namespace EvidenceApi.V1.Infrastructure
         public static string DocumentTypeConfigPath => Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json");
         public static string DatabaseConnectionString => Environment.GetEnvironmentVariable("CONNECTION_STRING");
         public static Uri EvidenceRequestClientUrl => new Uri(Environment.GetEnvironmentVariable("EVIDENCE_REQUEST_CLIENT_URL")!);
+        public static Uri DocumentsApiUrl => new Uri(Environment.GetEnvironmentVariable("DOCUMENTS_API_URL")!);
     }
 }
