@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EvidenceApi.V1.Domain;
+using System.Net.Http.Headers;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -17,6 +18,7 @@ namespace EvidenceApi.V1.Gateways
 
             var uri = new Uri($"{AppOptions.DocumentsApiUrl}/api/v1/claims", UriKind.Relative);
             HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppOptions.DocumentsApiPostClaimsToken);
             var body = JsonConvert.SerializeObject(request);
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await client.PostAsync(uri, jsonString).ConfigureAwait(true);
