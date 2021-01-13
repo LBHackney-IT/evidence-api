@@ -44,8 +44,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var request = _fixture.Create<DocumentSubmissionRequest>();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == request.DocumentType)))
-                .Returns(() => null)
-                .Verifiable();
+                .Returns(() => null);
             Func<DocumentSubmissionResponse> testDelegate = () => _classUnderTest.Execute(Guid.NewGuid(), request);
             testDelegate.Should().Throw<NotFoundException>();
         }
@@ -63,11 +62,11 @@ namespace EvidenceApi.Tests.V1.UseCase
             var evidenceRequest = _fixture.Build<EvidenceRequest>()
                 .Without(x => x.Id)
                 .Create();
-            _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest);
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
-                .Returns(_created)
-                .Verifiable();
+                .Returns(_created);
+
             var result = _classUnderTest.Execute(evidenceRequest.Id, _request);
 
             result.Id.Should().NotBeEmpty();
