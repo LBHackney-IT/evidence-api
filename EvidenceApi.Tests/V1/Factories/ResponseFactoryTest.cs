@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using AutoFixture;
-using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Factories;
@@ -48,6 +46,22 @@ namespace EvidenceApi.Tests.V1.Factories
             response.Name.Should().Be(domain.Name);
             response.Email.Should().Be(domain.Email);
             response.PhoneNumber.Should().Be(domain.PhoneNumber);
+        }
+
+        [Test]
+        public void CanMapADocumentSubmissionDomainObjectToAResponseObject()
+        {
+            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
+            var domain = _fixture.Create<DocumentSubmission>();
+
+            var response = domain.ToResponse(documentType.ToString());
+
+            response.Id.Should().Be(domain.Id);
+            response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.ClaimId.Should().Be(domain.ClaimId);
+            response.RejectionReason.Should().Be(domain.RejectionReason);
+            response.State.Should().Be(domain.State.ToString());
+            response.DocumentType.Should().Be(documentType.ToString());
         }
     }
 }
