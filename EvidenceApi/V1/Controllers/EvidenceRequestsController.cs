@@ -98,7 +98,7 @@ namespace EvidenceApi.V1.Controllers
             }
             catch (NotFoundException ex)
             {
-                return StatusCode(404, ex.Message);
+                return NotFound(ex.Message);
             }
         }
     }
