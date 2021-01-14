@@ -1,6 +1,7 @@
 using System;
 using dotenv.net;
 using NUnit.Framework;
+using System.IO;
 
 namespace EvidenceApi.Tests
 {
@@ -10,8 +11,7 @@ namespace EvidenceApi.Tests
         [OneTimeSetUp]
         public void SetUp()
         {
-            var success = DotEnv.AutoConfig(5);
-            Console.WriteLine($"ENV: {success}");
+            DotEnv.Config(true, Path.GetFullPath("../../../../.env.example"));
         }
     }
 }
