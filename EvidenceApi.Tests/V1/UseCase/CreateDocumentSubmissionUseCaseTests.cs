@@ -98,7 +98,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Id.Should().NotBeEmpty();
             result.ClaimId.Should().Be(_created.ClaimId);
             result.RejectionReason.Should().Be(_created.RejectionReason);
-            result.State.Should().Be(_created.State.ToString());
+            result.State.Should().Be(_created.State.ToString().ToUpper());
             result.DocumentType.Should().BeEquivalentTo(_created.DocumentTypeId);
         }
     }

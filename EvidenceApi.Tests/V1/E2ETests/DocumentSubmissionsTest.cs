@@ -51,9 +51,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
                                $"\"claimId\":\"{created.ClaimId}\"," +
-                               $"\"claimId\":null," +
                                $"\"rejectionReason\":null," +
-                               $"\"state\":\"pending\"," +
+                               $"\"state\":\"PENDING\"," +
                                "\"documentType\":\"passport-scan\"}";
             json.Should().Be(expected);
         }
