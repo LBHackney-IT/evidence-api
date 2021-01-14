@@ -16,6 +16,7 @@ namespace EvidenceApi.Tests.V1.UseCase
     {
         private CreateDocumentSubmissionUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
+        private Mock<IDocumentsApiGateway> _documentsApiGateway;
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
         private DocumentSubmission _created;
@@ -25,7 +26,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void SetUp()
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
-            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object);
+            _documentsApiGateway = new Mock<IDocumentsApiGateway>();
+            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object);
         }
 
         [Test]
@@ -83,11 +85,14 @@ namespace EvidenceApi.Tests.V1.UseCase
             var evidenceRequest = _fixture.Build<EvidenceRequest>()
                 .Without(x => x.Id)
                 .Create();
+            var claim = _fixture.Create<Claim>();
+            var claimRequest = _fixture.Create<ClaimRequest>();
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
                 .Returns(_created)
                 .Verifiable();
+            _documentsApiGateway.Setup(x => x.GetClaim(claimRequest)).ReturnsAsync(claim);
             var result = _classUnderTest.Execute(evidenceRequest.Id, _request);
 
             result.Id.Should().NotBeEmpty();
