@@ -13,15 +13,19 @@ namespace EvidenceApi.V1.Gateways
 {
     public class DocumentsApiGateway : IDocumentsApiGateway
     {
+        private readonly HttpClient _client;
+        public DocumentsApiGateway(HttpClient httpClient)
+        {
+            _client = httpClient;
+        }
         public async Task<Claim> GetClaim(ClaimRequest request)
         {
 
-            var uri = new Uri($"{AppOptions.DocumentsApiUrl}/api/v1/claims", UriKind.Relative);
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppOptions.DocumentsApiPostClaimsToken);
+            var uri = new Uri("/api/v1/claims", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppOptions.DocumentsApiPostClaimsToken);
             var body = JsonConvert.SerializeObject(request);
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
             var claimJsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var claim = JsonConvert.DeserializeObject<Claim>(claimJsonString);
             return claim;

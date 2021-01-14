@@ -50,8 +50,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
-                               // TODO: Replace this with the correct claim ID when implemented
-                               // $"\"claimId\":\"{created.ClaimId}\"," +
+                               $"\"claimId\":\"{created.ClaimId}\"," +
                                $"\"claimId\":null," +
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"pending\"," +
