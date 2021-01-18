@@ -23,6 +23,54 @@ namespace EvidenceApi.V1.UseCase
 
         public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
         {
+            ValidateRequest(request);
+
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(evidenceRequestId);
+            if (evidenceRequest == null)
+            {
+                throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
+            }
+
+            var claimRequest = BuildClaimRequest(request);
+
+            var claim = await _documentsApiGateway.GetClaim(claimRequest).ConfigureAwait(true);
+
+            var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
+
+            var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
+            var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
+            return createdDocumentSubmission.ToResponse(request.DocumentType);
+        }
+
+        private static ClaimRequest BuildClaimRequest(DocumentSubmissionRequest request)
+        {
+            var claimRequest = new ClaimRequest()
+            {
+                ServiceAreaCreatedBy = request.ServiceName,
+                UserCreatedBy = request.RequesterEmail,
+                ApiCreatedBy = "evidence_api",
+                RetentionExpiresAt = DateTime.Now.AddMonths(3)
+            };
+            return claimRequest;
+        }
+
+        private static DocumentSubmission BuildDocumentSubmission(
+            EvidenceRequest evidenceRequest,
+            DocumentSubmissionRequest request,
+            Claim claim
+        )
+        {
+            var documentSubmission = new DocumentSubmission()
+            {
+                EvidenceRequest = evidenceRequest,
+                DocumentTypeId = request.DocumentType,
+                ClaimId = claim.Id.ToString()
+            };
+            return documentSubmission;
+        }
+
+        private static void ValidateRequest(DocumentSubmissionRequest request)
+        {
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");
@@ -37,37 +85,6 @@ namespace EvidenceApi.V1.UseCase
             {
                 throw new BadRequestException("Requester email is null or empty");
             }
-
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(evidenceRequestId);
-            if (evidenceRequest == null)
-            {
-                throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
-            }
-
-            var claimRequest = new ClaimRequest()
-            {
-                ServiceAreaCreatedBy = request.ServiceName,
-                UserCreatedBy = request.RequesterEmail,
-                ApiCreatedBy = "evidence_api",
-                RetentionExpiresAt = DateTime.Now.AddMonths(3)
-            };
-
-            var claim = await _documentsApiGateway.GetClaim(claimRequest).ConfigureAwait(true);
-
-            if (evidenceRequest == null) { throw new Exception("NO EVIDENCE REQUEST"); }
-            if (claim == null) { throw new Exception("NO CLAIM"); }
-
-
-            var documentSubmission = new DocumentSubmission()
-            {
-                EvidenceRequest = evidenceRequest,
-                DocumentTypeId = request.DocumentType,
-                ClaimId = claim.Id.ToString()
-            };
-
-            var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
-            var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
-            return createdDocumentSubmission.ToResponse(request.DocumentType);
         }
     }
 }
