@@ -6,6 +6,7 @@ using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
+using System.Threading.Tasks;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -20,7 +21,7 @@ namespace EvidenceApi.V1.UseCase
             _documentsApiGateway = documentsApiGateway;
         }
 
-        public DocumentSubmissionResponse Execute(Guid evidenceRequestId, DocumentSubmissionRequest request)
+        public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
         {
             if (String.IsNullOrEmpty(request.DocumentType))
             {
@@ -51,7 +52,7 @@ namespace EvidenceApi.V1.UseCase
                 RetentionExpiresAt = DateTime.Now.AddMonths(3)
             };
 
-            var claim = _documentsApiGateway.GetClaim(claimRequest);
+            var claim = await _documentsApiGateway.GetClaim(claimRequest).ConfigureAwait(true);
 
             var documentSubmission = new DocumentSubmission()
             {
@@ -60,6 +61,7 @@ namespace EvidenceApi.V1.UseCase
                 ClaimId = claim.Id.ToString()
             };
 
+            var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             return createdDocumentSubmission.ToResponse(request.DocumentType);
         }
