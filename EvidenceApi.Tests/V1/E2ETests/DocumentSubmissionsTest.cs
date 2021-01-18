@@ -12,12 +12,31 @@ using NUnit.Framework;
 using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
     public class DocumentSubmissionsTest : IntegrationTests<Startup>
     {
         private readonly IFixture _fixture = new Fixture();
+        private Claim _createdClaim;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _createdClaim = _fixture.Create<Claim>();
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath("/api/v1/claims")
+            ).RespondWith(
+                Response.Create().WithStatusCode(201).WithBody(
+                    JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+        }
+
+
         [Test]
         public async Task CanCreateDocumentSubmissionWithValidParams()
         {
@@ -50,7 +69,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
-                               $"\"claimId\":\"{created.ClaimId}\"," +
+                               $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"PENDING\"," +
                                "\"documentType\":\"passport-scan\"}";

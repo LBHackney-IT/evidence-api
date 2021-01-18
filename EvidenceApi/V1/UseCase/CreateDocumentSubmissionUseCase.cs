@@ -54,6 +54,10 @@ namespace EvidenceApi.V1.UseCase
 
             var claim = await _documentsApiGateway.GetClaim(claimRequest).ConfigureAwait(true);
 
+            if (evidenceRequest == null) { throw new Exception("NO EVIDENCE REQUEST"); }
+            if (claim == null) { throw new Exception("NO CLAIM"); }
+
+
             var documentSubmission = new DocumentSubmission()
             {
                 EvidenceRequest = evidenceRequest,

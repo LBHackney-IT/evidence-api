@@ -10,6 +10,7 @@ using Moq;
 using Notify.Interfaces;
 using Npgsql;
 using NUnit.Framework;
+using WireMock.Server;
 
 namespace EvidenceApi.Tests
 {
@@ -18,6 +19,8 @@ namespace EvidenceApi.Tests
         protected HttpClient Client { get; private set; }
         protected EvidenceContext DatabaseContext { get; private set; }
         protected Mock<INotificationClient> MockNotifyClient { get; private set; }
+        protected WireMockServer DocumentsApiServer { get; private set; }
+        protected AppOptions Options { get; private set; }
 
         private MockWebApplicationFactory<TStartup> _factory;
         private NpgsqlConnection _connection;
@@ -26,18 +29,28 @@ namespace EvidenceApi.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
+            Options = new Fixture().Create<AppOptions>();
+            Options.DocumentsApiUrl = new System.Uri("http://localhost:3001");
+
             _connection = new NpgsqlConnection(ConnectionString.TestDatabase());
             _connection.Open();
             var npgsqlCommand = _connection.CreateCommand();
             npgsqlCommand.CommandText = "SET deadlock_timeout TO 30";
             npgsqlCommand.ExecuteNonQuery();
+            DocumentsApiServer = WireMockServer.Start(3001);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            DocumentsApiServer.Stop();
         }
 
         [SetUp]
         public void BaseSetup()
         {
             MockNotifyClient = CreateMockNotifyClient();
-            _factory = new MockWebApplicationFactory<TStartup>(_connection, MockNotifyClient.Object);
+            _factory = new MockWebApplicationFactory<TStartup>(_connection, MockNotifyClient.Object, Options);
             Client = _factory.CreateClient();
             DatabaseContext = _factory.Server.Host.Services.GetRequiredService<EvidenceContext>();
 

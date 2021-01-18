@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Gateways.Interfaces;
+using EvidenceApi.V1.Infrastructure;
 using Notify.Interfaces;
 using Notify.Models.Responses;
 
@@ -12,11 +13,13 @@ namespace EvidenceApi.V1.Gateways
     {
         private readonly INotificationClient _client;
         private readonly IEvidenceGateway _evidenceGateway;
+        private readonly AppOptions _options;
 
-        public NotifyGateway(INotificationClient client, IEvidenceGateway evidenceGateway)
+        public NotifyGateway(INotificationClient client, IEvidenceGateway evidenceGateway, AppOptions options)
         {
             _client = client;
             _evidenceGateway = evidenceGateway;
+            _options = options;
         }
 
         public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason reason, EvidenceRequest request, Resident resident)
@@ -71,7 +74,7 @@ namespace EvidenceApi.V1.Gateways
         }
 
 
-        private static Dictionary<string, object> GetParamsFor(CommunicationReason reason, EvidenceRequest request, Resident resident)
+        private Dictionary<string, object> GetParamsFor(CommunicationReason reason, EvidenceRequest request, Resident resident)
         {
             return reason switch
             {
@@ -79,10 +82,12 @@ namespace EvidenceApi.V1.Gateways
                 {
                     {"resident_name", resident.Name},
                     {"service_name", request.ServiceRequestedBy},
-                    {"magic_link", request.MagicLink}
+                    {"magic_link", MagicLinkFor(request)}
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, $"Communication Reason {reason.ToString()} not recognised")
             };
         }
+
+        private string MagicLinkFor(EvidenceRequest request) => $"{_options.EvidenceRequestClientUrl}/resident/{request.Id}";
     }
 }

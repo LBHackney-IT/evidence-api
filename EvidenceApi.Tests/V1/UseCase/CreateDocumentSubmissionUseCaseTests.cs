@@ -87,13 +87,21 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.Id)
                 .Create();
             var claim = _fixture.Create<Claim>();
-            var claimRequest = _fixture.Create<ClaimRequest>();
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
                 .Returns(_created)
                 .Verifiable();
-            _documentsApiGateway.Setup(x => x.GetClaim(claimRequest)).ReturnsAsync(claim);
+            _documentsApiGateway
+                .Setup(x =>
+                    x.GetClaim(It.Is<ClaimRequest>(cr =>
+                        cr.ServiceAreaCreatedBy == _request.ServiceName &&
+                        cr.UserCreatedBy == _request.RequesterEmail &&
+                        cr.ApiCreatedBy == "evidence_api"
+                    ))
+                )
+                .ReturnsAsync(claim);
+
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
             result.Id.Should().NotBeEmpty();
