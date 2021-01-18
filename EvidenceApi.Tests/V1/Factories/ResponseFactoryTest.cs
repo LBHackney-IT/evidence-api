@@ -60,7 +60,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.RejectionReason.Should().Be(domain.RejectionReason);
-            response.State.Should().Be(domain.State.ToString());
+            response.State.Should().Be(domain.State.ToString().ToUpper());
             response.DocumentType.Should().Be(documentType.ToString());
         }
     }

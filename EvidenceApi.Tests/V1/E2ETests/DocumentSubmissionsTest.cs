@@ -33,7 +33,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
             string body = @"
             {
-                ""documentType"": ""passport-scan""
+                ""documentType"": ""passport-scan"",
+                ""serviceName"": ""service-name"",
+                ""requesterEmail"": ""example@email""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -48,11 +50,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
-                               // TODO: Replace this with the correct claim ID when implemented
-                               // $"\"claimId\":\"{created.ClaimId}\"," +
-                               $"\"claimId\":null," +
+                               $"\"claimId\":\"{created.ClaimId}\"," +
                                $"\"rejectionReason\":null," +
-                               $"\"state\":\"pending\"," +
+                               $"\"state\":\"PENDING\"," +
                                "\"documentType\":\"passport-scan\"}";
             json.Should().Be(expected);
         }
@@ -87,7 +87,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/evidence_requests/{fakeId}/document_submissions", UriKind.Relative);
             string body = @"
             {
-                ""documentType"": ""passport-scan""
+                ""documentType"": ""passport-scan"",
+                ""serviceName"": ""service-name"",
+                ""requesterEmail"": ""example@email""
             }";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);

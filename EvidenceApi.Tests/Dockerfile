@@ -7,7 +7,6 @@ WORKDIR /app
 
 # Copy csproj and restore as distinct layers
 COPY ./nuget.config ./
-COPY ./.env.example ./.env
 COPY ./EvidenceApi.sln ./
 COPY ./EvidenceApi/EvidenceApi.csproj ./EvidenceApi/
 COPY ./EvidenceApi.Tests/EvidenceApi.Tests.csproj ./EvidenceApi.Tests/
