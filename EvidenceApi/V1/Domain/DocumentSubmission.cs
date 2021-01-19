@@ -1,6 +1,6 @@
 using System;
 using EvidenceApi.V1.Domain.Enums;
-
+#nullable enable annotations
 namespace EvidenceApi.V1.Domain
 {
     public class DocumentSubmission
@@ -12,5 +12,6 @@ namespace EvidenceApi.V1.Domain
         public SubmissionState State { get; set; } = SubmissionState.pending;
         public EvidenceRequest EvidenceRequest { get; set; }
         public string DocumentTypeId { get; set; }
+        public S3UploadPolicy? UploadPolicy { get; set; }
     }
 }

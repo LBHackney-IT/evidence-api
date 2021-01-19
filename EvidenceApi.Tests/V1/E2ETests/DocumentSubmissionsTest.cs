@@ -21,17 +21,35 @@ namespace EvidenceApi.Tests.V1.E2ETests
     {
         private readonly IFixture _fixture = new Fixture();
         private Claim _createdClaim;
+        private Document _document;
+        private S3UploadPolicy _createdUploadPolicy;
 
         [SetUp]
         public void SetUp()
         {
-            _createdClaim = _fixture.Create<Claim>();
+            Guid id = Guid.NewGuid();
+            _document = _fixture.Build<Document>()
+                .With(x => x.Id, id)
+                .Create();
+            _createdClaim = _fixture.Build<Claim>()
+                .With(x => x.Document, _document)
+                .Create();
+
+            _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             DocumentsApiServer.Given(
                 Request.Create().WithPath("/api/v1/claims")
             ).RespondWith(
                 Response.Create().WithStatusCode(201).WithBody(
                     JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/documents/{id}/upload_policies")
+            ).RespondWith(
+                Response.Create().WithStatusCode(201).WithBody(
+                    JsonConvert.SerializeObject(_createdUploadPolicy)
                 )
             );
         }
@@ -72,7 +90,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"PENDING\"," +
-                               "\"documentType\":\"passport-scan\"}";
+                               "\"documentType\":\"passport-scan\"," +
+                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}" +
+                               "}";
+
             json.Should().Be(expected);
         }
 

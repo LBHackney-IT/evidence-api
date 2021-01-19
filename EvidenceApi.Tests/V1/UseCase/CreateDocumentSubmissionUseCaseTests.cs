@@ -87,6 +87,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.Id)
                 .Create();
             var claim = _fixture.Create<Claim>();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
@@ -101,9 +102,16 @@ namespace EvidenceApi.Tests.V1.UseCase
                     ))
                 )
                 .ReturnsAsync(claim);
+            _documentsApiGateway
+                .Setup(x =>
+                    x.CreateUploadPolicy(It.Is<Guid>(id =>
+                        id == claim.Document.Id))
+                )
+                .ReturnsAsync(s3UploadPolicy);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
+            result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
             result.Id.Should().NotBeEmpty();
             result.ClaimId.Should().Be(_created.ClaimId);
             result.RejectionReason.Should().Be(_created.RejectionReason);

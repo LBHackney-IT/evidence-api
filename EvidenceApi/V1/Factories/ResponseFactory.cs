@@ -40,7 +40,8 @@ namespace EvidenceApi.V1.Factories
                 ClaimId = domain.ClaimId,
                 RejectionReason = domain.RejectionReason,
                 State = domain.State.ToString().ToUpper(),
-                DocumentType = documentType.ToString()
+                DocumentType = documentType.ToString(),
+                UploadPolicy = domain.UploadPolicy
             };
         }
     }
