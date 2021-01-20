@@ -121,7 +121,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _documentsApiGateway
                 .Setup(x =>
-                    x.GetClaim(It.Is<ClaimRequest>(cr =>
+                    x.CreateClaim(It.Is<ClaimRequest>(cr =>
                         cr.ServiceAreaCreatedBy == _request.ServiceName &&
                         cr.UserCreatedBy == _request.RequesterEmail &&
                         cr.ApiCreatedBy == "evidence_api"
