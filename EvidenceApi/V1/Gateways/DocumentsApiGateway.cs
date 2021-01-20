@@ -14,21 +14,42 @@ namespace EvidenceApi.V1.Gateways
     public class DocumentsApiGateway : IDocumentsApiGateway
     {
         private readonly HttpClient _client;
-        public DocumentsApiGateway(HttpClient httpClient)
+        private readonly AppOptions _options;
+        public DocumentsApiGateway(HttpClient httpClient, AppOptions options)
         {
             _client = httpClient;
+            _options = options;
+
+            _client.BaseAddress = _options.DocumentsApiUrl;
+
         }
         public async Task<Claim> GetClaim(ClaimRequest request)
         {
 
             var uri = new Uri("/api/v1/claims", UriKind.Relative);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppOptions.DocumentsApiPostClaimsToken);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
+
+            // SerializeBody
             var body = JsonConvert.SerializeObject(request);
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
             var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+            // DeserializeResponse
             var claimJsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var claim = JsonConvert.DeserializeObject<Claim>(claimJsonString);
+
             return claim;
+        }
+
+        public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
+        {
+            var uri = new Uri($"/api/v1/documents/{id}/upload_policies", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
+            var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
+            var uploadPolicyJsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var s3UploadPolicy = JsonConvert.DeserializeObject<S3UploadPolicy>(uploadPolicyJsonString);
+            return s3UploadPolicy;
         }
     }
 }

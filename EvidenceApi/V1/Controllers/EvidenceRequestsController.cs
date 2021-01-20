@@ -5,6 +5,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EvidenceApi.V1.Controllers
 {
@@ -85,11 +86,11 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Evidence request cannot be found</response>
         [HttpPost]
         [Route("{evidenceRequestId}/document_submissions")]
-        public IActionResult CreateDocumentSubmission([FromRoute][Required] Guid evidenceRequestId, [FromBody][Required] DocumentSubmissionRequest request)
+        public async Task<IActionResult> CreateDocumentSubmission([FromRoute][Required] Guid evidenceRequestId, [FromBody][Required] DocumentSubmissionRequest request)
         {
             try
             {
-                var result = _createDocumentSubmission.Execute(evidenceRequestId, request);
+                var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request).ConfigureAwait(true);
                 return Created(new Uri($"/evidence_requests/{evidenceRequestId}/document_submissions", UriKind.Relative), result);
             }
             catch (BadRequestException ex)

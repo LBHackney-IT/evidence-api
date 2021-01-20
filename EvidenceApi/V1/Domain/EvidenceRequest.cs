@@ -14,7 +14,5 @@ namespace EvidenceApi.V1.Domain
         public List<string> DocumentTypeIds { get; set; }
         public string ServiceRequestedBy { get; set; }
         public string UserRequestedBy { get; set; }
-
-        public string MagicLink => $"{AppOptions.EvidenceRequestClientUrl}/{Id}";
     }
 }

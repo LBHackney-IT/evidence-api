@@ -6,7 +6,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
-using FluentAssertions;
+using EvidenceApi.V1.Infrastructure;
 using Moq;
 using Notify.Interfaces;
 using Notify.Models.Responses;
@@ -21,12 +21,14 @@ namespace EvidenceApi.Tests.V1.Gateways
         private readonly NotifyGateway _classUnderTest;
         private readonly Mock<INotificationClient> _notifyClient;
         private readonly Mock<IEvidenceGateway> _evidenceGateway;
+        private readonly AppOptions _options;
 
         public NotifyGatewayTests()
         {
+            _options = _fixture.Create<AppOptions>();
             _notifyClient = new Mock<INotificationClient>();
             _evidenceGateway = new Mock<IEvidenceGateway>();
-            _classUnderTest = new NotifyGateway(_notifyClient.Object, _evidenceGateway.Object);
+            _classUnderTest = new NotifyGateway(_notifyClient.Object, _evidenceGateway.Object, _options);
         }
 
         [Test]
@@ -44,7 +46,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 {"resident_name", resident.Name},
                 {"service_name", request.ServiceRequestedBy},
-                {"magic_link", request.MagicLink}
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}/resident/{request.Id}"}
             };
 
             var response = _fixture.Create<SmsNotificationResponse>();
@@ -70,7 +72,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 {"resident_name", resident.Name},
                 {"service_name", request.ServiceRequestedBy},
-                {"magic_link", request.MagicLink}
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}/resident/{request.Id}"}
             };
 
             var response = _fixture.Create<EmailNotificationResponse>();

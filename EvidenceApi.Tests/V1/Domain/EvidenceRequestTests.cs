@@ -17,13 +17,5 @@ namespace EvidenceApi.Tests.V1.Domain
         {
             _classUnderTest = _fixture.Create<EvidenceRequest>();
         }
-
-        [Test]
-        public void HasAMagicLink()
-        {
-            _classUnderTest.Id = Guid.Parse("c021e098-ccd5-4ad8-adb3-c64aeb1c1357");
-            var clientUrl = Environment.GetEnvironmentVariable("EVIDENCE_REQUEST_CLIENT_URL");
-            _classUnderTest.MagicLink.Should().Be($"{clientUrl}/c021e098-ccd5-4ad8-adb3-c64aeb1c1357");
-        }
     }
 }

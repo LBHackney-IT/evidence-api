@@ -2,6 +2,7 @@ using System;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
+using EvidenceApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 using EvidenceApi.V1.Boundary.Request;
@@ -19,14 +20,14 @@ namespace EvidenceApi.Tests.V1.Gateways
         private readonly IFixture _fixture = new Fixture();
         private Mock<HttpMessageHandler> _messageHandler = new Mock<HttpMessageHandler>();
         private DocumentsApiGateway _classUnderTest;
-        private string _baseAddress = "https://foo.test.com";
+        private AppOptions _options;
 
         [SetUp]
         public void SetUp()
         {
+            _options = _fixture.Create<AppOptions>();
             var client = _messageHandler.CreateClient();
-            client.BaseAddress = new Uri(_baseAddress);
-            _classUnderTest = new DocumentsApiGateway(client);
+            _classUnderTest = new DocumentsApiGateway(client, _options);
         }
 
         [Test]
@@ -41,20 +42,39 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expectedClaim = JsonConvert.DeserializeObject<Claim>(_claimResponseFixture);
 
-            _messageHandler.SetupRequest(HttpMethod.Post, $"{_baseAddress}/api/v1/claims", async request =>
+            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/claims", async request =>
             {
                 var json = await request.Content.ReadAsStringAsync().ConfigureAwait(true);
                 var body = JsonConvert.DeserializeObject<ClaimRequest>(json);
                 return body.ServiceAreaCreatedBy == claimRequest.ServiceAreaCreatedBy &&
                     body.UserCreatedBy == claimRequest.UserCreatedBy &&
                     body.ApiCreatedBy == claimRequest.ApiCreatedBy &&
-                    body.RetentionExpiresAt == claimRequest.RetentionExpiresAt;
+                    body.RetentionExpiresAt == claimRequest.RetentionExpiresAt &&
+                    request.Headers.Authorization.ToString() == _options.DocumentsApiPostClaimsToken;
             })
                 .ReturnsResponse(_claimResponseFixture, "application/json");
 
             var result = await _classUnderTest.GetClaim(claimRequest).ConfigureAwait(true);
 
             result.Should().BeEquivalentTo(expectedClaim);
+        }
+
+        [Test]
+        public async Task CanCreateUploadPolicyWithValidParameters()
+        {
+            Guid id = Guid.NewGuid();
+
+            var expectedS3UploadPolicy = JsonConvert.DeserializeObject<S3UploadPolicy>(_s3UploadPolicyResponse);
+
+            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}/upload_policies", request =>
+                {
+                    return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
+                })
+                    .ReturnsResponse(_s3UploadPolicyResponse, "application/json");
+
+            var result = await _classUnderTest.CreateUploadPolicy(id).ConfigureAwait(true);
+
+            result.Should().BeEquivalentTo(expectedS3UploadPolicy);
         }
 
         private string _claimResponseFixture = @"{
@@ -69,6 +89,21 @@ namespace EvidenceApi.Tests.V1.Gateways
                 ""createdAt"": ""2021-01-14T14:32:15.377Z"",
                 ""fileSize"": 25300,
                 ""fileType"": ""image/png""
+            }
+        }";
+
+        private string _s3UploadPolicyResponse = @"{
+            ""url"": ""string"",
+            ""fields"": {
+                ""acl"": ""private"",
+                ""key"": ""uuid-document-id"",
+                ""X-Amz-Server-Side-Encryption"": ""AES256"",
+                ""bucket"": ""documents-api-dev-documents"",
+                ""X-Amz-Algorithm"": ""AWS4-HMAC-SHA256"",
+                ""X-Amz-Credential"": ""SECRET/20210113/eu-west-2/s3/aws4_request"",
+                ""X-Amz-Date"": ""20210113T154042Z"",
+                ""Policy"": ""base64 encoded policy"",
+                ""X-Amz-Signature"": ""aws generated signature""
             }
         }";
     }

@@ -15,11 +15,13 @@ namespace EvidenceApi.Tests
     {
         private readonly DbConnection _connection;
         private readonly INotificationClient _mockNotificationClient;
+        private readonly AppOptions _options;
 
-        public MockWebApplicationFactory(DbConnection connection, INotificationClient mockNotificationClient)
+        public MockWebApplicationFactory(DbConnection connection, INotificationClient mockNotificationClient, AppOptions Options)
         {
             _connection = connection;
             _mockNotificationClient = mockNotificationClient;
+            _options = Options;
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -43,6 +45,7 @@ namespace EvidenceApi.Tests
             builder.ConfigureTestServices(services =>
             {
                 services.AddTransient(x => _mockNotificationClient);
+                services.AddSingleton(x => _options);
             });
         }
     }

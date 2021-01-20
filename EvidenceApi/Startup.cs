@@ -119,25 +119,25 @@ namespace EvidenceApi
                 Console.WriteLine("LOADED ENVIRONMENT FROM .env");
             }
 
+            var options = AppOptions.FromEnv();
+            services.AddSingleton(x => options);
+
             // Database Context
             services.AddDbContext<EvidenceContext>(
-                opt => opt.UseNpgsql(AppOptions.DatabaseConnectionString));
+                opt => opt.UseNpgsql(options.DatabaseConnectionString));
 
             // Transients
-            services.AddTransient<INotificationClient>(x => new NotificationClient(AppOptions.NotifyApiKey));
+            services.AddTransient<INotificationClient>(x => new NotificationClient(options.NotifyApiKey));
 
             // File Readers
-            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(AppOptions.DocumentTypeConfigPath));
+            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath));
 
             // Gateways
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();
-            services.AddHttpClient<IDocumentsApiGateway, DocumentsApiGateway>(client =>
-            {
-                client.BaseAddress = AppOptions.DocumentsApiUrl;
-            });
+            services.AddHttpClient<IDocumentsApiGateway, DocumentsApiGateway>();
 
             // Use Cases
             services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();
