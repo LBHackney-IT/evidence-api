@@ -54,7 +54,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             })
                 .ReturnsResponse(_claimResponseFixture, "application/json");
 
-            var result = await _classUnderTest.GetClaim(claimRequest).ConfigureAwait(true);
+            var result = await _classUnderTest.CreateClaim(claimRequest).ConfigureAwait(true);
 
             result.Should().BeEquivalentTo(expectedClaim);
         }

@@ -7,7 +7,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface IDocumentsApiGateway
     {
-        Task<Claim> GetClaim(ClaimRequest request);
+        Task<Claim> CreateClaim(ClaimRequest request);
         Task<S3UploadPolicy> CreateUploadPolicy(Guid id);
     }
 }

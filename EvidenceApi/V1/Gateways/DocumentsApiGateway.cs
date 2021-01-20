@@ -23,7 +23,7 @@ namespace EvidenceApi.V1.Gateways
             _client.BaseAddress = _options.DocumentsApiUrl;
 
         }
-        public async Task<Claim> GetClaim(ClaimRequest request)
+        public async Task<Claim> CreateClaim(ClaimRequest request)
         {
 
             var uri = new Uri("/api/v1/claims", UriKind.Relative);

@@ -33,7 +33,7 @@ namespace EvidenceApi.V1.UseCase
 
             var claimRequest = BuildClaimRequest(request);
 
-            var claim = await _documentsApiGateway.GetClaim(claimRequest).ConfigureAwait(true);
+            var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
 
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
