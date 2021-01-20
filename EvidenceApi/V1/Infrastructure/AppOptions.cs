@@ -16,12 +16,13 @@ namespace EvidenceApi.V1.Infrastructure
         public static AppOptions FromEnv()
         {
             var documentsApiUrl = Environment.GetEnvironmentVariable("DOCUMENTS_API_URL");
+            var evidenceApiUrl = Environment.GetEnvironmentVariable("EVIDENCE_API_URL");
             return new AppOptions()
             {
                 NotifyApiKey = Environment.GetEnvironmentVariable("NOTIFY_API_KEY"),
                 DocumentTypeConfigPath = Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json"),
                 DatabaseConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING"),
-                EvidenceRequestClientUrl = new Uri(Environment.GetEnvironmentVariable("EVIDENCE_REQUEST_CLIENT_URL")!),
+                EvidenceRequestClientUrl = evidenceApiUrl != null ? new Uri(evidenceApiUrl) : null,
                 DocumentsApiUrl = documentsApiUrl != null ? new Uri(documentsApiUrl) : null,
                 DocumentsApiPostClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_CLAIMS_TOKEN"),
                 DocumentsApiPostDocumentsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_DOCUMENTS_TOKEN")
