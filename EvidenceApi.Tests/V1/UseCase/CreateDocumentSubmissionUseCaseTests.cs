@@ -77,37 +77,14 @@ namespace EvidenceApi.Tests.V1.UseCase
         public async Task ReturnsTheCreatedDocumentSubmissionWhenRequestIsValid()
         {
             _documentType = _fixture.Create<DocumentType>();
-            _request = _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.DocumentType, _documentType.ToString())
-                .Create();
-            _created = _fixture.Build<DocumentSubmission>()
-                .With(x => x.DocumentTypeId, _documentType.ToString())
-                .Create();
-            var evidenceRequest = _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Create();
+            _request = CreateRequestFixture();
+            _created = DocumentSubmissionFixture();
+            var evidenceRequest = CreateEvidenceRequestFixture();
             var claim = _fixture.Create<Claim>();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
-            _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
-            _evidenceGateway
-                .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
-                .Returns(_created)
-                .Verifiable();
-            _documentsApiGateway
-                .Setup(x =>
-                    x.GetClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == _request.ServiceName &&
-                        cr.UserCreatedBy == _request.RequesterEmail &&
-                        cr.ApiCreatedBy == "evidence_api"
-                    ))
-                )
-                .ReturnsAsync(claim);
-            _documentsApiGateway
-                .Setup(x =>
-                    x.CreateUploadPolicy(It.Is<Guid>(id =>
-                        id == claim.Document.Id))
-                )
-                .ReturnsAsync(s3UploadPolicy);
+
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(claim, s3UploadPolicy);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
@@ -117,6 +94,56 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.RejectionReason.Should().Be(_created.RejectionReason);
             result.State.Should().Be(_created.State.ToString().ToUpper());
             result.DocumentType.Should().BeEquivalentTo(_created.DocumentTypeId);
+        }
+
+        private DocumentSubmissionRequest CreateRequestFixture()
+        {
+            return _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.DocumentType, _documentType.ToString())
+                .Create();
+        }
+
+        private DocumentSubmission DocumentSubmissionFixture()
+        {
+            return _fixture.Build<DocumentSubmission>()
+                .With(x => x.DocumentTypeId, _documentType.ToString())
+                .Create();
+        }
+
+        private EvidenceRequest CreateEvidenceRequestFixture()
+        {
+            return _fixture.Build<EvidenceRequest>()
+                .Without(x => x.Id)
+                .Create();
+        }
+
+        private void SetupDocumentsApiGateway(Claim claim, S3UploadPolicy s3UploadPolicy)
+        {
+            _documentsApiGateway
+                .Setup(x =>
+                    x.GetClaim(It.Is<ClaimRequest>(cr =>
+                        cr.ServiceAreaCreatedBy == _request.ServiceName &&
+                        cr.UserCreatedBy == _request.RequesterEmail &&
+                        cr.ApiCreatedBy == "evidence_api"
+                    ))
+                )
+                .ReturnsAsync(claim);
+
+            _documentsApiGateway
+                .Setup(x =>
+                    x.CreateUploadPolicy(It.Is<Guid>(id =>
+                        id == claim.Document.Id))
+                )
+                .ReturnsAsync(s3UploadPolicy);
+        }
+
+        private void SetupEvidenceGateway(EvidenceRequest evidenceRequest)
+        {
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
+            _evidenceGateway
+                .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
+                .Returns(_created)
+                .Verifiable();
         }
     }
 }

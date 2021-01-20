@@ -31,7 +31,7 @@ namespace EvidenceApi.V1.Factories
             };
         }
 
-        public static DocumentSubmissionResponse ToResponse(this DocumentSubmission domain, string documentType)
+        public static DocumentSubmissionResponse ToResponse(this DocumentSubmission domain, string documentType, S3UploadPolicy s3UploadPolicy)
         {
             return new DocumentSubmissionResponse()
             {
@@ -41,7 +41,7 @@ namespace EvidenceApi.V1.Factories
                 RejectionReason = domain.RejectionReason,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType.ToString(),
-                UploadPolicy = domain.UploadPolicy
+                UploadPolicy = s3UploadPolicy
             };
         }
     }

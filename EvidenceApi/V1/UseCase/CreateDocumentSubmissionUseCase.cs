@@ -36,11 +36,11 @@ namespace EvidenceApi.V1.UseCase
             var claim = await _documentsApiGateway.GetClaim(claimRequest).ConfigureAwait(true);
 
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
+            var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
             var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
-            var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
-            createdDocumentSubmission.UploadPolicy = createdS3UploadPolicy;
-            return createdDocumentSubmission.ToResponse(request.DocumentType);
+
+            return createdDocumentSubmission.ToResponse(request.DocumentType, createdS3UploadPolicy);
         }
 
         private static ClaimRequest BuildClaimRequest(DocumentSubmissionRequest request)

@@ -46,9 +46,7 @@ namespace EvidenceApi.V1.Gateways
         {
             var uri = new Uri($"/api/v1/documents/{id}/upload_policies", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
-            var body = JsonConvert.SerializeObject(id);
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
             var uploadPolicyJsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var s3UploadPolicy = JsonConvert.DeserializeObject<S3UploadPolicy>(uploadPolicyJsonString);
             return s3UploadPolicy;
