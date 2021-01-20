@@ -66,8 +66,11 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expectedS3UploadPolicy = JsonConvert.DeserializeObject<S3UploadPolicy>(_s3UploadPolicyResponse);
 
-            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}/upload_policies")
-                .ReturnsResponse(_s3UploadPolicyResponse, "application/json");
+            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}/upload_policies", request =>
+                {
+                    return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
+                })
+                    .ReturnsResponse(_s3UploadPolicyResponse, "application/json");
 
             var result = await _classUnderTest.CreateUploadPolicy(id).ConfigureAwait(true);
 
