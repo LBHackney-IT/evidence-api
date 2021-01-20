@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using EvidenceApi.V1.Infrastructure.Interfaces;
 
 namespace EvidenceApi.V1.Infrastructure
 {
@@ -16,13 +15,14 @@ namespace EvidenceApi.V1.Infrastructure
 
         public static AppOptions FromEnv()
         {
+            var documentsApiUrl = Environment.GetEnvironmentVariable("DOCUMENTS_API_URL");
             return new AppOptions()
             {
                 NotifyApiKey = Environment.GetEnvironmentVariable("NOTIFY_API_KEY"),
                 DocumentTypeConfigPath = Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json"),
                 DatabaseConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING"),
                 EvidenceRequestClientUrl = new Uri(Environment.GetEnvironmentVariable("EVIDENCE_REQUEST_CLIENT_URL")!),
-                DocumentsApiUrl = new Uri(Environment.GetEnvironmentVariable("DOCUMENTS_API_URL")!),
+                DocumentsApiUrl = documentsApiUrl != null ? new Uri(documentsApiUrl) : null,
                 DocumentsApiPostClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_CLAIMS_TOKEN"),
                 DocumentsApiPostDocumentsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_DOCUMENTS_TOKEN")
             };
