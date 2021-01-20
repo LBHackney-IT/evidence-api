@@ -29,17 +29,11 @@ namespace EvidenceApi.V1.Gateways
             var uri = new Uri("/api/v1/claims", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
 
-            // SerializeBody
-            var body = JsonConvert.SerializeObject(request);
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var jsonString = SerializeBody(request);
 
             var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
 
-            // DeserializeResponse
-            var claimJsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var claim = JsonConvert.DeserializeObject<Claim>(claimJsonString);
-
-            return claim;
+            return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
         public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
@@ -47,9 +41,19 @@ namespace EvidenceApi.V1.Gateways
             var uri = new Uri($"/api/v1/documents/{id}/upload_policies", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
             var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
-            var uploadPolicyJsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var s3UploadPolicy = JsonConvert.DeserializeObject<S3UploadPolicy>(uploadPolicyJsonString);
-            return s3UploadPolicy;
+            return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
+        }
+
+        private static StringContent SerializeBody(ClaimRequest request)
+        {
+            var body = JsonConvert.SerializeObject(request);
+            return new StringContent(body, Encoding.UTF8, "application/json");
+        }
+
+        private static async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
+        {
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            return JsonConvert.DeserializeObject<T>(jsonString);
         }
     }
 }
