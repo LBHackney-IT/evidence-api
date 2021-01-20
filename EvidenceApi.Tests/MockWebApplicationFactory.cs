@@ -17,11 +17,11 @@ namespace EvidenceApi.Tests
         private readonly INotificationClient _mockNotificationClient;
         private readonly AppOptions _options;
 
-        public MockWebApplicationFactory(DbConnection connection, INotificationClient mockNotificationClient, AppOptions Options)
+        public MockWebApplicationFactory(DbConnection connection, INotificationClient mockNotificationClient, AppOptions options)
         {
             _connection = connection;
             _mockNotificationClient = mockNotificationClient;
-            _options = Options;
+            _options = options;
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)

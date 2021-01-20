@@ -18,7 +18,7 @@ namespace EvidenceApi.Tests.V1.Domain
             Guid id = Guid.NewGuid();
             string claimId = "0001";
             string rejectionReason = "blurry";
-            SubmissionState state = SubmissionState.pending;
+            SubmissionState state = SubmissionState.Pending;
             EvidenceRequest evidenceRequest = _fixture.Create<EvidenceRequest>();
             string documentTypeId = "passport-scan";
 

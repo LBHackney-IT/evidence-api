@@ -34,30 +34,30 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public void ThrowsBadRequestExceptionWhenDocumentTypeIsEmptyOrNull()
         {
-            var _documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.DocumentType)
                 .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), _documentSubmissionRequest).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), documentSubmissionRequest).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>();
         }
 
         [Test]
         public void ThrowsBadRequestExceptionWhenServiceNameIsEmptyOrNull()
         {
-            var _documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.ServiceName)
                 .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), _documentSubmissionRequest).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), documentSubmissionRequest).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>();
         }
 
         [Test]
         public void ThrowsBadRequestExceptionWhenRequesterEmailIsEmptyOrNull()
         {
-            var _documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.RequesterEmail)
                 .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), _documentSubmissionRequest).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), documentSubmissionRequest).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>();
         }
 
