@@ -22,6 +22,7 @@ namespace EvidenceApi.V1.UseCase
             _documentTypeGateway = documentTypeGateway;
             _residentsGateway = residentsGateway;
         }
+
         public EvidenceRequestResponse Execute(Guid id)
         {
             var found = _evidenceGateway.FindEvidenceRequest(id);
@@ -32,7 +33,7 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindResident(found.ResidentId);
-            var documentTypes = found.DocumentTypeIds.ConvertAll(FindDocumentType);
+            var documentTypes = found.DocumentTypes.ConvertAll(FindDocumentType);
             return found.ToResponse(resident, documentTypes);
         }
 

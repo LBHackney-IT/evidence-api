@@ -31,9 +31,8 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void FindOrCreateReturnsTheResidentWhenItAlreadyExists()
         {
             var request = _fixture.Create<Resident>();
-            var entity = request.ToEntity();
 
-            DatabaseContext.Residents.Add(entity);
+            DatabaseContext.Residents.Add(request);
             DatabaseContext.SaveChanges();
 
             _classUnderTest.FindOrCreateResident(request);
@@ -73,7 +72,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void FindReturnsAResidentWhenOneExists()
         {
-            var entity = _fixture.Create<ResidentEntity>();
+            var entity = _fixture.Create<Resident>();
             DatabaseContext.Residents.Add(entity);
             DatabaseContext.SaveChanges();
 

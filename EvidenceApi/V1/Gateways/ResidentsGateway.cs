@@ -24,23 +24,21 @@ namespace EvidenceApi.V1.Gateways
             var found = FindResident(request);
             if (found != null)
             {
-                return found.ToDomain();
+                return found;
             }
 
-            var entity = request.ToEntity();
-            _databaseContext.Residents.Add(entity);
+            _databaseContext.Residents.Add(request);
             _databaseContext.SaveChanges();
 
-            return entity.ToDomain();
+            return request;
         }
 
         public Resident FindResident(Guid id)
         {
-            ResidentEntity found = _databaseContext.Residents.Find(id);
-            return found.ToDomain();
+            return _databaseContext.Residents.Find(id);
         }
 
-        private ResidentEntity FindResident(Resident request)
+        private Resident FindResident(Resident request)
         {
             return _databaseContext.Residents
                 .FirstOrDefault(r =>

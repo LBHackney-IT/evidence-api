@@ -12,6 +12,6 @@ namespace EvidenceApi.V1.Boundary.Response
         public string ServiceRequestedBy { get; set; }
         public string UserRequestedBy { get; set; }
         public Guid Id { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
     }
 }

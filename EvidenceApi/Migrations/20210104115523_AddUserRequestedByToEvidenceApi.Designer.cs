@@ -22,7 +22,7 @@ namespace EvidenceApi.Migrations
                 .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.CommunicationEntity", b =>
+            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.Communication", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace EvidenceApi.Migrations
                     b.ToTable("communications");
                 });
 
-            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.EvidenceRequestEntity", b =>
+            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.EvidenceRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,7 +96,7 @@ namespace EvidenceApi.Migrations
                     b.ToTable("evidence_requests");
                 });
 
-            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.ResidentEntity", b =>
+            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.Resident", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,9 +124,9 @@ namespace EvidenceApi.Migrations
                     b.ToTable("residents");
                 });
 
-            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.CommunicationEntity", b =>
+            modelBuilder.Entity("EvidenceApi.V1.Infrastructure.Communication", b =>
                 {
-                    b.HasOne("EvidenceApi.V1.Infrastructure.EvidenceRequestEntity", "EvidenceRequest")
+                    b.HasOne("EvidenceApi.V1.Infrastructure.EvidenceRequest", "EvidenceRequest")
                         .WithMany("Communications")
                         .HasForeignKey("EvidenceRequestId")
                         .OnDelete(DeleteBehavior.Cascade)

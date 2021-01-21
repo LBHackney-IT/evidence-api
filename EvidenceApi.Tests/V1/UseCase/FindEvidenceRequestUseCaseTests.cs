@@ -62,7 +62,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _resident = _fixture.Create<Resident>();
             _documentType = _fixture.Create<DocumentType>();
-            _found = _fixture.Create<EvidenceRequest>();
+            _found = TestDataHelper.EvidenceRequest();
 
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident);
             _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);

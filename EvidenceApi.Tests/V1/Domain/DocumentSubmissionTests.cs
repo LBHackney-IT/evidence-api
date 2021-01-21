@@ -10,17 +10,15 @@ namespace EvidenceApi.Tests.V1.Domain
     [TestFixture]
     public class DocumentSubmissionTests
     {
-        private Fixture _fixture = new Fixture();
-
         [Test]
         public void DocumentSubmissionHaveCorrectAttributes()
         {
-            Guid id = Guid.NewGuid();
-            string claimId = "0001";
-            string rejectionReason = "blurry";
-            SubmissionState state = SubmissionState.Pending;
-            EvidenceRequest evidenceRequest = _fixture.Create<EvidenceRequest>();
-            string documentTypeId = "passport-scan";
+            var id = Guid.NewGuid();
+            var claimId = "0001";
+            var rejectionReason = "blurry";
+            var state = SubmissionState.Pending;
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var documentTypeId = "passport-scan";
 
             var documentSubmission = new DocumentSubmission { Id = id, ClaimId = claimId, RejectionReason = rejectionReason, State = state, EvidenceRequest = evidenceRequest, DocumentTypeId = documentTypeId };
 
