@@ -138,7 +138,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void FindReturnsAnEvidenceRequest()
         {
-            var dm = new List<DeliveryMethod> {DeliveryMethod.Email, DeliveryMethod.Sms};
+            var dm = new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms };
             var expectedDeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Sms, DeliveryMethod.Email };
 
             var entity = TestDataHelper.EvidenceRequest();

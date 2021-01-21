@@ -59,7 +59,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentType = _fixture.Create<DocumentType>();
             _request = CreateRequestFixture();
             _created = DocumentSubmissionFixture();
-            var evidenceRequest = TestDataHelper.EvidenceRequest();;
+            var evidenceRequest = TestDataHelper.EvidenceRequest(); ;
             var claim = _fixture.Create<Claim>();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
