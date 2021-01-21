@@ -1,17 +1,23 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using dotenv.net;
 using NUnit.Framework;
 using System.IO;
 
-namespace EvidenceApi.Tests
+[SetUpFixture]
+public class GlobalSetup
 {
-    [SetUpFixture]
-    public class GlobalSetup
+    [OneTimeSetUp]
+    [SuppressMessage("ReSharper", "CA1031")]
+    public void SetUp()
     {
-        [OneTimeSetUp]
-        public void SetUp()
+        try
         {
             DotEnv.Config(true, Path.GetFullPath("../../../../.env.example"));
+        }
+        catch
+        {
+            Console.Write("Could not find .env.example file");
         }
     }
 }
