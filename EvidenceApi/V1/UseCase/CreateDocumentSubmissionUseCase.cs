@@ -31,8 +31,7 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
             }
 
-            var claimRequest = BuildClaimRequest(request);
-
+            var claimRequest = BuildClaimRequest(evidenceRequest);
             var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
 
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
@@ -43,12 +42,12 @@ namespace EvidenceApi.V1.UseCase
             return createdDocumentSubmission.ToResponse(request.DocumentType, createdS3UploadPolicy);
         }
 
-        private static ClaimRequest BuildClaimRequest(DocumentSubmissionRequest request)
+        private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)
         {
             var claimRequest = new ClaimRequest()
             {
-                ServiceAreaCreatedBy = request.ServiceName,
-                UserCreatedBy = request.RequesterEmail,
+                ServiceAreaCreatedBy = evidenceRequest.ServiceRequestedBy,
+                UserCreatedBy = evidenceRequest.UserRequestedBy,
                 ApiCreatedBy = "evidence_api",
                 RetentionExpiresAt = DateTime.Now.AddMonths(3)
             };
@@ -75,16 +74,6 @@ namespace EvidenceApi.V1.UseCase
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");
-            }
-
-            if (String.IsNullOrEmpty(request.ServiceName))
-            {
-                throw new BadRequestException("Service name is null or empty");
-            }
-
-            if (String.IsNullOrEmpty(request.RequesterEmail))
-            {
-                throw new BadRequestException("Requester email is null or empty");
             }
         }
     }
