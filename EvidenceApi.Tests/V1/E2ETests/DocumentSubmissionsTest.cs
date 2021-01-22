@@ -136,5 +136,51 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(404);
         }
+
+        [Test]
+        public async Task CanUpdateDocumentSubmissionStateWithValidParameters()
+        {
+            var evidenceRequestEntity = _fixture.Build<EvidenceRequestEntity>()
+                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                .With(x => x.DeliveryMethods, new List<string> { "Email" })
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .Create();
+            DatabaseContext.EvidenceRequests.Add(evidenceRequestEntity);
+            DatabaseContext.SaveChanges();
+
+            var documentSubmissionEntity = _fixture.Build<DocumentSubmissionEntity>()
+                .With(x => x.EvidenceRequest, evidenceRequestEntity)
+                .Create();
+            DatabaseContext.DocumentSubmissions.Add(documentSubmissionEntity);
+            DatabaseContext.SaveChanges();
+
+            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
+            var createdEvidenceRequest = DatabaseContext.EvidenceRequests.First();
+
+            var uri = new Uri($"api/v1/evidence_requests/{createdEvidenceRequest.Id}/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
+            string body = @"
+            {
+                ""state"": ""UPLOADED"" 
+            }";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+            // response.StatusCode.Should().Be(200);
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+
+            var formattedCreatedAt = JsonConvert.SerializeObject(createdDocumentSubmission.CreatedAt.ToDateTimeOffset());
+            string expected = "{" +
+                               $"\"id\":\"{createdDocumentSubmission.Id}\"," +
+                               $"\"createdAt\":\"{formattedCreatedAt}\"," +
+                               $"\"claimId\":\"{documentSubmissionEntity.ClaimId}\"," +
+                               $"\"rejectionReason\":\"{documentSubmissionEntity.RejectionReason}\"," +
+                               "\"state\":\"UPLOADED\"," +
+                               $"\"documentType\":\"{documentSubmissionEntity.DocumentTypeId}\"," +
+                               "\"uploadPolicy\":\"null\"," +
+                               "}";
+            json.Should().Be(expected);
+        }
     }
 }

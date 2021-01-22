@@ -190,5 +190,43 @@ namespace EvidenceApi.Tests.V1.Gateways
             var found = _classUnderTest.FindEvidenceRequest(id);
             found.Should().BeNull();
         }
+
+        [Test]
+        public void FindReturnsADocumentSubmission()
+        {
+            List<string> dm = new List<string> { "Sms", "Email" };
+
+            var evidenceRequestEntity = _fixture.Build<EvidenceRequestEntity>()
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .With(x => x.DeliveryMethods, dm)
+                .Create();
+
+            var entity = _fixture.Build<DocumentSubmissionEntity>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .With(x => x.EvidenceRequest, evidenceRequestEntity)
+                .Create();
+
+            DatabaseContext.DocumentSubmissions.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindDocumentSubmission(entity.Id);
+
+            found.Id.Should().Be(entity.Id);
+            found.ClaimId.Should().Be(entity.ClaimId);
+            found.RejectionReason.Should().Be(entity.RejectionReason);
+            found.State.Should().Be(entity.State);
+            found.EvidenceRequest.Should().BeEquivalentTo(entity.EvidenceRequest.ToDomain());
+            found.DocumentTypeId.Should().Be(entity.DocumentTypeId);
+        }
+
+        [Test]
+        public void FindDoesNotReturnADocumentSubmission()
+        {
+            Guid id = Guid.NewGuid();
+            var found = _classUnderTest.FindDocumentSubmission(id);
+            found.Should().BeNull();
+        }
     }
 }

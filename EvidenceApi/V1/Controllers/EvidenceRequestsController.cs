@@ -19,13 +19,15 @@ namespace EvidenceApi.V1.Controllers
         private readonly ICreateEvidenceRequestUseCase _creator;
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
         private readonly IFindEvidenceRequestUseCase _evidenceRequestUseCase;
+        private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestUseCase evidenceRequestUseCase)
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestUseCase evidenceRequestUseCase, IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase)
         {
             _gateway = gateway;
             _creator = creator;
             _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
+            _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
         }
 
         /// <summary>
@@ -92,6 +94,31 @@ namespace EvidenceApi.V1.Controllers
             {
                 var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request).ConfigureAwait(true);
                 return Created(new Uri($"/evidence_requests/{evidenceRequestId}/document_submissions", UriKind.Relative), result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Error);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Updates the state of a document submission
+        /// </summary>
+        /// <response code="200">Updated</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="404">Document submission cannot be found</response>
+        [HttpPatch]
+        [Route("{evidenceRequestId}/document_submissions/{id}")]
+        public IActionResult UpdateDocumentSubmissionState([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionRequest request)
+        {
+            try
+            {
+                var result = _updateDocumentSubmissionStateUseCase.Execute(id, request);
+                return Ok(result);
             }
             catch (BadRequestException ex)
             {

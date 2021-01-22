@@ -9,5 +9,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         EvidenceRequest FindEvidenceRequest(Guid id);
         Communication CreateCommunication(Communication request);
         DocumentSubmission CreateDocumentSubmission(DocumentSubmission request);
+        DocumentSubmission FindDocumentSubmission(Guid id);
     }
 }
