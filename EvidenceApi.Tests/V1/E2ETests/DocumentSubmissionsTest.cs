@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Common;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
+using EvidenceApi.V1.Boundary.Response;
+using EvidenceApi.V1.Factories;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -84,7 +84,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var created = DatabaseContext.DocumentSubmissions.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
@@ -157,7 +157,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 
             var createdEvidenceRequest = DatabaseContext.EvidenceRequests.First();
-            Console.WriteLine(createdEvidenceRequest.CreatedAt);
             var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
 
             var uri = new Uri($"api/v1/evidence_requests/{createdEvidenceRequest.Id}/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
@@ -168,21 +167,13 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
-            // response.StatusCode.Should().Be(200);
+            response.StatusCode.Should().Be(200);
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(createdDocumentSubmission.CreatedAt);
-            string expected = "{" +
-                               $"\"id\":\"{createdDocumentSubmission.Id}\"," +
-                               $"\"createdAt\":\"{formattedCreatedAt}\"," +
-                               $"\"claimId\":\"{documentSubmission.ClaimId}\"," +
-                               $"\"rejectionReason\":\"{documentSubmission.RejectionReason}\"," +
-                               "\"state\":\"UPLOADED\"," +
-                               $"\"documentType\":\"{documentSubmission.DocumentTypeId}\"," +
-                               "\"uploadPolicy\":\"null\"," +
-                               "}";
-            json.Should().Be(expected);
+            var expected = createdDocumentSubmission.ToResponse();
+            result.Should().BeEquivalentTo(expected);
         }
     }
 }

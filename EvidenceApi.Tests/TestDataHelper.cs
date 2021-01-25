@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Infrastructure;
 
 namespace EvidenceApi.Tests
 {
@@ -38,6 +40,14 @@ namespace EvidenceApi.Tests
                 .Without(x => x.CreatedAt)
                 .Without(x => x.EvidenceRequest)
                 .Create();
+        }
+
+        public static DocumentType DocumentType(string id)
+        {
+            var options = AppOptions.FromEnv();
+            var reader = new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath);
+
+            return reader.GetData().Find(x => x.Id == id);
         }
     }
 }

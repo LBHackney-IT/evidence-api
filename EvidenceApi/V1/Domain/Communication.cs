@@ -15,7 +15,7 @@ namespace EvidenceApi.V1.Domain
         public Guid Id { get; set; }
 
         [Column("created_at")]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Column("delivery_method")]
         public DeliveryMethod DeliveryMethod { get; set; }
