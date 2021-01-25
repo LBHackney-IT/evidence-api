@@ -27,7 +27,6 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document submission with id: {id}");
             }
 
-            // see if needed after adding e2e tests
             SubmissionState state;
             if (!Enum.TryParse<SubmissionState>(request.State, true, out state))
             {

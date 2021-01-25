@@ -157,7 +157,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void FindDoesNotReturnAnEvidenceRequest()
+        public void FindReturnsNullWhenAnEvidenceRequestWithIdCannotBeFound()
         {
             Guid id = new Guid("7bb69c97-5e5a-48a5-ad40-e1563a1a7e53");
             var found = _classUnderTest.FindEvidenceRequest(id);
@@ -167,29 +167,17 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void FindReturnsADocumentSubmission()
         {
-            List<DeliveryMethod> dm = new List<DeliveryMethod> { DeliveryMethod.Sms, DeliveryMethod.Email };
-
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-            evidenceRequest.DeliveryMethods = dm;
-
-            var documentSubmission = TestDataHelper.DocumentSubmission();
-            documentSubmission.EvidenceRequest = evidenceRequest;
-
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
 
             var found = _classUnderTest.FindDocumentSubmission(documentSubmission.Id);
 
-            found.Id.Should().Be(documentSubmission.Id);
-            found.ClaimId.Should().Be(documentSubmission.ClaimId);
-            found.RejectionReason.Should().Be(documentSubmission.RejectionReason);
-            found.State.Should().Be(documentSubmission.State);
-            found.EvidenceRequest.Should().BeEquivalentTo(documentSubmission.EvidenceRequest);
-            found.DocumentTypeId.Should().Be(documentSubmission.DocumentTypeId);
+            found.Should().Be(documentSubmission);
         }
 
         [Test]
-        public void FindDoesNotReturnADocumentSubmission()
+        public void FindReturnsNullWhenADocumentSubmissionWithIdCannotBeFound()
         {
             Guid id = Guid.NewGuid();
             var found = _classUnderTest.FindDocumentSubmission(id);

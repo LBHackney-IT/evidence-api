@@ -47,20 +47,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             act.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with id: {id}");
         }
 
-        //check if it's needed after adding e2e tests
-
-        // [Test]
-        // public void ThrowsBadRequestExceptionWhenStateIsNotValid()
-        // {
-        //     Guid id = Guid.NewGuid();
-        //     var invalidState = "some-state";
-        //     DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
-        //         .With(x => x.State, Enum.Parse(typeof(SubmissionState), invalidState))
-        //         .Create();
-        //     Action act = () => _classUnderTest.Execute(id, request);
-        //     act.Should().Throw<BadRequestException>().WithMessage($"This state is invalid");
-        // }
-
         private void SetupMocks(Guid id)
         {
             _found = TestDataHelper.DocumentSubmission();
