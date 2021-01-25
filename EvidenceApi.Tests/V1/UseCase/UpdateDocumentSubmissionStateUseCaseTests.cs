@@ -47,6 +47,19 @@ namespace EvidenceApi.Tests.V1.UseCase
             act.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with id: {id}");
         }
 
+        [Test]
+        public void ThrowsBadRequestExceptionWhenStateIsNotValid()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id);
+            string invalidState = "Invalidstate";
+            DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.State, Enum.Parse(typeof(SubmissionState), invalidState))
+                .Create();
+            Action act = () => _classUnderTest.Execute(id, request);
+            act.Should().Throw<BadRequestException>().WithMessage("This state is invalid");
+        }
+
         private void SetupMocks(Guid id)
         {
             _found = TestDataHelper.DocumentSubmission();
