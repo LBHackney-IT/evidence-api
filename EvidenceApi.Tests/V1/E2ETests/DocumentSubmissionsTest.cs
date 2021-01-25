@@ -12,6 +12,7 @@ using NUnit.Framework;
 using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Domain.Enums;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
@@ -58,9 +59,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task CanCreateDocumentSubmissionWithValidParams()
         {
-            var entity = _fixture.Build<EvidenceRequestEntity>()
+            var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<string> { "Email" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
@@ -83,7 +84,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var created = DatabaseContext.DocumentSubmissions.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
@@ -100,9 +101,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task UnsuccessfulWithInvalidParams()
         {
-            var entity = _fixture.Build<EvidenceRequestEntity>()
+            var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<string> { "Email" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();

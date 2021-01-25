@@ -39,7 +39,7 @@ namespace EvidenceApi.V1.UseCase
 
             var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
 
-            return createdDocumentSubmission.ToResponse(request.DocumentType, createdS3UploadPolicy);
+            return createdDocumentSubmission.ToResponse(createdS3UploadPolicy);
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)

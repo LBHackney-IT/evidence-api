@@ -17,10 +17,8 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
 
-            var domain = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DeliveryMethods,
-                    new List<DeliveryMethod> { DeliveryMethod.Email })
-                .Create();
+            var domain = TestDataHelper.EvidenceRequest();
+            domain.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
 
             var resident = _fixture.Create<Resident>();
             var documentTypes = _fixture.Create<List<DocumentType>>();
@@ -52,17 +50,17 @@ namespace EvidenceApi.Tests.V1.Factories
         public void CanMapADocumentSubmissionDomainObjectToAResponseObject()
         {
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
-            var domain = _fixture.Create<DocumentSubmission>();
+            var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType.ToString(), s3UploadPolicy);
+            var response = domain.ToResponse(s3UploadPolicy);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.RejectionReason.Should().Be(domain.RejectionReason);
             response.State.Should().Be(domain.State.ToString().ToUpper());
-            response.DocumentType.Should().Be(documentType.ToString());
+            response.DocumentType.Should().Be(domain.DocumentTypeId);
             response.UploadPolicy.Should().Be(s3UploadPolicy);
         }
     }
