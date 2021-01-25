@@ -18,45 +18,31 @@ namespace EvidenceApi.V1.Gateways
 
         public EvidenceRequest CreateEvidenceRequest(EvidenceRequest request)
         {
-            var entity = request.ToEntity();
-            _databaseContext.EvidenceRequests.Add(entity);
+            _databaseContext.EvidenceRequests.Add(request);
             _databaseContext.SaveChanges();
 
-            request.Id = entity.Id;
-            request.CreatedAt = entity.CreatedAt;
             return request;
         }
 
         public DocumentSubmission CreateDocumentSubmission(DocumentSubmission request)
         {
-            var entity = request.ToEntity();
-            _databaseContext.DocumentSubmissions.Add(entity);
+            _databaseContext.DocumentSubmissions.Add(request);
             _databaseContext.SaveChanges();
 
-            return entity.ToDomain();
+            return request;
         }
 
         public Communication CreateCommunication(Communication request)
         {
-            var entity = request.ToEntity();
-            _databaseContext.Communications.Add(entity);
+            _databaseContext.Communications.Add(request);
             _databaseContext.SaveChanges();
 
-            return entity.ToDomain();
+            return request;
         }
 
         public EvidenceRequest FindEvidenceRequest(Guid id)
         {
-            var evidenceRequest = _databaseContext.EvidenceRequests.Find(id);
-
-            if (evidenceRequest == null)
-            {
-                return null;
-            }
-
-            var domain = evidenceRequest.ToDomain();
-            _databaseContext.Entry(evidenceRequest).State = EntityState.Detached;
-            return domain;
+            return _databaseContext.EvidenceRequests.Find(id);
         }
 
         public DocumentSubmission FindDocumentSubmission(Guid id)

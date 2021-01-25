@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
+using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -43,7 +45,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var created = DatabaseContext.EvidenceRequests.First();
             var resident = DatabaseContext.Residents.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
             string expected = "{" +
                                "\"resident\":{" +
                                $"\"id\":\"{resident.Id}\"," +
@@ -113,20 +115,20 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task CanFindEvidenceRequestWithValidParams()
         {
-            var resident = _fixture.Create<ResidentEntity>();
+            var resident = _fixture.Create<Resident>();
             DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
-            var entity = _fixture.Build<EvidenceRequestEntity>()
+            var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.ResidentId, resident.Id)
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<string> { "Email" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}", UriKind.Relative);
-            var formattedCreatedAt = JsonConvert.SerializeObject(entity.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(entity.CreatedAt);
             var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             string expected = "{" +

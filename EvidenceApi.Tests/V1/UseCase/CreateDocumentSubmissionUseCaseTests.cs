@@ -42,26 +42,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenServiceNameIsEmptyOrNull()
-        {
-            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
-                .Without(x => x.ServiceName)
-                .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>();
-        }
-
-        [Test]
-        public void ThrowsBadRequestExceptionWhenRequesterEmailIsEmptyOrNull()
-        {
-            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
-                .Without(x => x.RequesterEmail)
-                .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(new Guid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>();
-        }
-
-        [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
             var request = _fixture.Create<DocumentSubmissionRequest>();
@@ -79,21 +59,21 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentType = _fixture.Create<DocumentType>();
             _request = CreateRequestFixture();
             _created = DocumentSubmissionFixture();
-            var evidenceRequest = CreateEvidenceRequestFixture();
+            var evidenceRequest = TestDataHelper.EvidenceRequest(); ;
             var claim = _fixture.Create<Claim>();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(claim, s3UploadPolicy);
+            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
             result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
-            result.Id.Should().NotBeEmpty();
+            result.Id.Should().Be(_created.Id);
             result.ClaimId.Should().Be(_created.ClaimId);
             result.RejectionReason.Should().Be(_created.RejectionReason);
             result.State.Should().Be(_created.State.ToString().ToUpper());
-            result.DocumentType.Should().BeEquivalentTo(_created.DocumentTypeId);
+            result.DocumentType.Should().Be(_created.DocumentTypeId);
         }
 
         private DocumentSubmissionRequest CreateRequestFixture()
@@ -105,25 +85,18 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         private DocumentSubmission DocumentSubmissionFixture()
         {
-            return _fixture.Build<DocumentSubmission>()
-                .With(x => x.DocumentTypeId, _documentType.ToString())
-                .Create();
+            var submission = TestDataHelper.DocumentSubmission();
+            submission.DocumentTypeId = _documentType.Id;
+            return submission;
         }
 
-        private EvidenceRequest CreateEvidenceRequestFixture()
-        {
-            return _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Create();
-        }
-
-        private void SetupDocumentsApiGateway(Claim claim, S3UploadPolicy s3UploadPolicy)
+        private void SetupDocumentsApiGateway(EvidenceRequest evidenceRequest, Claim claim, S3UploadPolicy s3UploadPolicy)
         {
             _documentsApiGateway
                 .Setup(x =>
                     x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == _request.ServiceName &&
-                        cr.UserCreatedBy == _request.RequesterEmail &&
+                        cr.ServiceAreaCreatedBy == evidenceRequest.ServiceRequestedBy &&
+                        cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
                         cr.ApiCreatedBy == "evidence_api"
                     ))
                 )

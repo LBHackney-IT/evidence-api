@@ -39,7 +39,7 @@ namespace EvidenceApi.Tests
                 var serviceProvider = services.BuildServiceProvider();
                 var dbContext = serviceProvider.GetRequiredService<EvidenceContext>();
 
-                dbContext.Database.EnsureCreated();
+                dbContext.Database.Migrate();
             });
 
             builder.ConfigureTestServices(services =>

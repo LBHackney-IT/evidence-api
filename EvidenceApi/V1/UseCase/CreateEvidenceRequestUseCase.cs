@@ -64,7 +64,7 @@ namespace EvidenceApi.V1.UseCase
         {
             return new EvidenceRequest
             {
-                DocumentTypeIds = request.DocumentTypes,
+                DocumentTypes = request.DocumentTypes,
                 DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
                 ServiceRequestedBy = request.ServiceRequestedBy,
                 UserRequestedBy = request.UserRequestedBy,

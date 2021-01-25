@@ -1,18 +1,43 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using EvidenceApi.V1.Domain.Enums;
-using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.Infrastructure.Interfaces;
 
 namespace EvidenceApi.V1.Domain
 {
-    public class EvidenceRequest
+    [Table("evidence_requests")]
+    public class EvidenceRequest : IEntity
     {
+        [Column("id")]
         public Guid Id { get; set; }
-        public DateTime CreatedAt { get; set; }
+
+        [Column("created_at")]
+        public DateTimeOffset CreatedAt { get; set; }
+
+        [Column("resident_id")]
         public Guid ResidentId { get; set; }
-        public List<DeliveryMethod> DeliveryMethods { get; set; }
-        public List<string> DocumentTypeIds { get; set; }
+
+        [Column("delivery_methods")]
+        public List<string> RawDeliveryMethods { get; set; }
+
+        [Column("document_types")]
+        public List<string> DocumentTypes { get; set; }
+
+        [Column("service_requested_by")]
         public string ServiceRequestedBy { get; set; }
+
+        [Column("user_requested_by")]
         public string UserRequestedBy { get; set; }
+
+        public virtual ICollection<Communication> Communications { get; set; }
+        public virtual ICollection<DocumentSubmission> DocumentSubmissions { get; set; }
+
+        [NotMapped]
+        public virtual List<DeliveryMethod> DeliveryMethods
+        {
+            get => RawDeliveryMethods.ConvertAll(Enum.Parse<DeliveryMethod>);
+            set => RawDeliveryMethods = value.ConvertAll(dm => dm.ToString());
+        }
     }
 }

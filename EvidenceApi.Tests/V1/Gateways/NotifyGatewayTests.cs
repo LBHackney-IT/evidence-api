@@ -38,9 +38,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var reason = CommunicationReason.EvidenceRequest;
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS";
             var resident = _fixture.Create<Resident>();
-            var request = _fixture.Build<EvidenceRequest>()
-                .With(x => x.ResidentId, resident.Id)
-                .Create();
+            var request = TestDataHelper.EvidenceRequest();
+            request.ResidentId = resident.Id;
+
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
             var expectedParams = new Dictionary<string, object>
             {
@@ -64,9 +64,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var reason = CommunicationReason.EvidenceRequest;
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var resident = _fixture.Create<Resident>();
-            var request = _fixture.Build<EvidenceRequest>()
-                .With(x => x.ResidentId, resident.Id)
-                .Create();
+            var request = TestDataHelper.EvidenceRequest();
+            request.ResidentId = resident.Id;
+
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
             var expectedParams = new Dictionary<string, object>
             {
@@ -89,9 +89,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var deliveryMethod = DeliveryMethod.Email;
             var reason = CommunicationReason.EvidenceRequest;
             var resident = _fixture.Create<Resident>();
-            var request = _fixture.Build<EvidenceRequest>()
-                .With(x => x.ResidentId, resident.Id)
-                .Create();
+            var request = TestDataHelper.EvidenceRequest();
+            request.ResidentId = resident.Id;
+
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
 

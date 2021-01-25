@@ -120,9 +120,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _resident = _fixture.Create<Resident>();
             _documentType = _fixture.Create<DocumentType>();
-            _created = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms })
-                .Create();
+            _created = TestDataHelper.EvidenceRequest();
+            _created.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms };
 
             var residentRequest = new ResidentRequest
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +13,10 @@ namespace EvidenceApi.V1.Infrastructure
         {
         }
 
-        public DbSet<EvidenceRequestEntity> EvidenceRequests { get; set; }
-        public DbSet<ResidentEntity> Residents { get; set; }
-        public DbSet<CommunicationEntity> Communications { get; set; }
-        public DbSet<DocumentSubmissionEntity> DocumentSubmissions { get; set; }
+        public DbSet<EvidenceRequest> EvidenceRequests { get; set; }
+        public DbSet<Resident> Residents { get; set; }
+        public DbSet<Communication> Communications { get; set; }
+        public DbSet<DocumentSubmission> DocumentSubmissions { get; set; }
 
         public override int SaveChanges()
         {
@@ -26,8 +27,8 @@ namespace EvidenceApi.V1.Infrastructure
             foreach (var entityEntry in entries)
             {
                 var entity = ((IEntity) entityEntry.Entity);
-                entity.CreatedAt = DateTime.Now;
-                entity.Id = Guid.NewGuid();
+                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.Now;
+                if (entity.Id == default) entity.Id = Guid.NewGuid();
             }
 
             return base.SaveChanges();

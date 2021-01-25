@@ -15,7 +15,6 @@ namespace EvidenceApi.Tests.V1.Gateways
     [TestFixture]
     public class EvidenceGatewayTests : DatabaseTests
     {
-        private readonly IFixture _fixture = new Fixture();
         private EvidenceGateway _classUnderTest;
 
         [SetUp]
@@ -27,10 +26,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void CreatingAnEvidenceRequestShouldInsertIntoTheDatabase()
         {
-            var request = _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.EvidenceRequest();
             var query = DatabaseContext.EvidenceRequests;
 
             _classUnderTest.CreateEvidenceRequest(request);
@@ -41,17 +37,14 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var foundRecord = query.First();
             foundRecord.Id.Should().NotBeEmpty();
-            foundRecord.DocumentTypes.Should().BeEquivalentTo(request.DocumentTypeIds);
-            foundRecord.DeliveryMethods.Should().BeEquivalentTo(request.DeliveryMethods.ConvertAll(x => x.ToString()));
+            foundRecord.DocumentTypes.Should().BeEquivalentTo(request.DocumentTypes);
+            foundRecord.DeliveryMethods.Should().BeEquivalentTo(request.DeliveryMethods);
         }
 
         [Test]
         public void CreatingAnEvidenceRequestShouldReturnTheCreatedRequest()
         {
-            var request = _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.EvidenceRequest();
 
             var created = _classUnderTest.CreateEvidenceRequest(request);
             var found = DatabaseContext.EvidenceRequests.First();
@@ -64,16 +57,10 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void CreatingADocumentSubmissionShouldInsertIntoTheDatabase()
         {
-            var evidenceRequest = _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
 
-            var request = _fixture.Build<DocumentSubmission>()
-                .With(x => x.EvidenceRequest, evidenceRequest)
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.DocumentSubmission();
+            request.EvidenceRequest = evidenceRequest;
 
             var query = DatabaseContext.DocumentSubmissions;
 
@@ -97,10 +84,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void CreatingADocumentSubmissionShouldReturnTheCreatedRequest()
         {
-            var request = _fixture.Build<DocumentSubmission>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.DocumentSubmission(true);
 
             var created = _classUnderTest.CreateDocumentSubmission(request);
             var found = DatabaseContext.DocumentSubmissions.First();
@@ -121,8 +105,8 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var foundRecord = query.First();
             foundRecord.Id.Should().NotBeEmpty();
-            foundRecord.Reason.Should().Be(communication.Reason.ToString());
-            foundRecord.DeliveryMethod.Should().Be(communication.DeliveryMethod.ToString());
+            foundRecord.Reason.Should().Be(communication.Reason);
+            foundRecord.DeliveryMethod.Should().Be(communication.DeliveryMethod);
             foundRecord.EvidenceRequest.Id.Should().Be(communication.EvidenceRequestId);
 
             created.Id.Should().Be(foundRecord.Id);
@@ -141,36 +125,25 @@ namespace EvidenceApi.Tests.V1.Gateways
 
         private Communication CreateCommunicationFixture()
         {
-            var request = _fixture.Build<EvidenceRequest>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .Create();
+            var request = TestDataHelper.EvidenceRequest();
 
-            var evidenceRequestEntity = request.ToEntity();
-            DatabaseContext.EvidenceRequests.Add(evidenceRequestEntity);
+            DatabaseContext.EvidenceRequests.Add(request);
             DatabaseContext.SaveChanges();
-            request.Id = evidenceRequestEntity.Id;
-            request.CreatedAt = evidenceRequestEntity.CreatedAt;
 
-            return _fixture.Build<Communication>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .With(x => x.EvidenceRequestId, request.Id)
-                .Create();
-
+            var communication = TestDataHelper.Communication();
+            communication.EvidenceRequest = request;
+            return communication;
         }
 
         [Test]
         public void FindReturnsAnEvidenceRequest()
         {
-            List<string> dm = new List<string> { "Sms", "Email" };
+            var dm = new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms };
             var expectedDeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Sms, DeliveryMethod.Email };
 
-            var entity = _fixture.Build<EvidenceRequestEntity>()
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .With(x => x.DeliveryMethods, dm)
-                .Create();
+            var entity = TestDataHelper.EvidenceRequest();
+            entity.DeliveryMethods = dm;
+
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
 
@@ -179,7 +152,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.CreatedAt.Should().Be(entity.CreatedAt);
             found.ResidentId.Should().Be(entity.ResidentId);
             found.DeliveryMethods.Should().BeEquivalentTo(expectedDeliveryMethods);
-            found.DocumentTypeIds.Should().Equal(entity.DocumentTypes);
+            found.DocumentTypes.Should().Equal(entity.DocumentTypes);
             found.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
         }
 

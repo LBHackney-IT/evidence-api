@@ -17,10 +17,8 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
 
-            var domain = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DeliveryMethods,
-                    new List<DeliveryMethod> { DeliveryMethod.Email })
-                .Create();
+            var domain = TestDataHelper.EvidenceRequest();
+            domain.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
 
             var resident = _fixture.Create<Resident>();
             var documentTypes = _fixture.Create<List<DocumentType>>();
@@ -51,7 +49,8 @@ namespace EvidenceApi.Tests.V1.Factories
         [Test]
         public void CanMapADocumentSubmissionDomainObjectToAResponseObject()
         {
-            var domain = _fixture.Create<DocumentSubmission>();
+            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
+            var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             var response = domain.ToResponse(s3UploadPolicy);
