@@ -157,10 +157,30 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void FindDoesNotReturnAnEvidenceRequest()
+        public void FindReturnsNullWhenAnEvidenceRequestWithIdCannotBeFound()
         {
             Guid id = new Guid("7bb69c97-5e5a-48a5-ad40-e1563a1a7e53");
             var found = _classUnderTest.FindEvidenceRequest(id);
+            found.Should().BeNull();
+        }
+
+        [Test]
+        public void FindReturnsADocumentSubmission()
+        {
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindDocumentSubmission(documentSubmission.Id);
+
+            found.Should().Be(documentSubmission);
+        }
+
+        [Test]
+        public void FindReturnsNullWhenADocumentSubmissionWithIdCannotBeFound()
+        {
+            Guid id = Guid.NewGuid();
+            var found = _classUnderTest.FindDocumentSubmission(id);
             found.Should().BeNull();
         }
     }

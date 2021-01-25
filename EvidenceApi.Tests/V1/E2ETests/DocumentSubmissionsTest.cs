@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Common;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
+using EvidenceApi.V1.Boundary.Response;
+using EvidenceApi.V1.Factories;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -84,7 +84,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var created = DatabaseContext.DocumentSubmissions.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
@@ -136,6 +136,44 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task CanUpdateDocumentSubmissionStateWithValidParameters()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+
+            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
+            evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+
+            var documentSubmission = TestDataHelper.DocumentSubmission();
+            documentSubmission.EvidenceRequest = evidenceRequest;
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+
+            DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+            var createdEvidenceRequest = DatabaseContext.EvidenceRequests.First();
+            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
+
+            var uri = new Uri($"api/v1/evidence_requests/{createdEvidenceRequest.Id}/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
+            string body = @"
+            {
+                ""state"": ""UPLOADED"" 
+            }";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+            response.StatusCode.Should().Be(200);
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
+
+            var expected = createdDocumentSubmission.ToResponse();
+            result.Should().BeEquivalentTo(expected);
         }
     }
 }

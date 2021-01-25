@@ -31,7 +31,7 @@ namespace EvidenceApi.V1.Factories
             };
         }
 
-        public static DocumentSubmissionResponse ToResponse(this DocumentSubmission domain, S3UploadPolicy s3UploadPolicy)
+        public static DocumentSubmissionResponse ToResponse(this DocumentSubmission domain, S3UploadPolicy s3UploadPolicy = null)
         {
             return new DocumentSubmissionResponse()
             {

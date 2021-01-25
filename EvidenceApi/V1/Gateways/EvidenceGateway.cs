@@ -18,7 +18,7 @@ namespace EvidenceApi.V1.Gateways
 
         public EvidenceRequest CreateEvidenceRequest(EvidenceRequest request)
         {
-            _databaseContext.EvidenceRequests.Add(request);
+            if (request.Id == default) _databaseContext.EvidenceRequests.Add(request);
             _databaseContext.SaveChanges();
 
             return request;
@@ -26,7 +26,7 @@ namespace EvidenceApi.V1.Gateways
 
         public DocumentSubmission CreateDocumentSubmission(DocumentSubmission request)
         {
-            _databaseContext.DocumentSubmissions.Add(request);
+            if (request.Id == default) _databaseContext.DocumentSubmissions.Add(request);
             _databaseContext.SaveChanges();
 
             return request;
@@ -34,7 +34,7 @@ namespace EvidenceApi.V1.Gateways
 
         public Communication CreateCommunication(Communication request)
         {
-            _databaseContext.Communications.Add(request);
+            if (request.Id == default) _databaseContext.Communications.Add(request);
             _databaseContext.SaveChanges();
 
             return request;
@@ -43,6 +43,11 @@ namespace EvidenceApi.V1.Gateways
         public EvidenceRequest FindEvidenceRequest(Guid id)
         {
             return _databaseContext.EvidenceRequests.Find(id);
+        }
+
+        public DocumentSubmission FindDocumentSubmission(Guid id)
+        {
+            return _databaseContext.DocumentSubmissions.Find(id);
         }
     }
 }

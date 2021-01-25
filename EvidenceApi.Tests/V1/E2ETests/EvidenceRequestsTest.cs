@@ -13,6 +13,8 @@ using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Boundary.Response;
+using EvidenceApi.V1.Factories;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -45,7 +47,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var created = DatabaseContext.EvidenceRequests.First();
             var resident = DatabaseContext.Residents.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
             string expected = "{" +
                                "\"resident\":{" +
                                $"\"id\":\"{resident.Id}\"," +
@@ -125,30 +127,19 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
+
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}", UriKind.Relative);
-            var formattedCreatedAt = JsonConvert.SerializeObject(entity.CreatedAt);
+            var formattedCreatedAt = JsonConvert.SerializeObject(entity.CreatedAt.ToDateTimeOffset());
             var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
-            string expected = "{" +
-                               "\"resident\":{" +
-                               $"\"id\":\"{resident.Id}\"," +
-                               $"\"name\":\"{resident.Name}\"," +
-                               $"\"email\":\"{resident.Email}\"," +
-                               $"\"phoneNumber\":\"{resident.PhoneNumber}\"" +
-                               "}," +
-                               "\"deliveryMethods\":[\"EMAIL\"]," +
-                               "\"documentTypes\":[" +
-                               "{\"id\":\"passport-scan\",\"title\":\"Passport\"}" +
-                               "]," +
-                               $"\"serviceRequestedBy\":\"{entity.ServiceRequestedBy}\"," +
-                               $"\"userRequestedBy\":\"{entity.UserRequestedBy}\"," +
-                               $"\"id\":\"{entity.Id}\"," +
-                               $"\"createdAt\":{formattedCreatedAt}" +
-                               "}";
+            var result = JsonConvert.DeserializeObject<EvidenceRequestResponse>(jsonFind);
+
+            var expectedDocumentType = TestDataHelper.DocumentType("passport-scan");
+            var expected = entity.ToResponse(resident, new List<DocumentType> { expectedDocumentType });
             responseFind.StatusCode.Should().Be(200);
-            jsonFind.Should().Be(expected);
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Test]
