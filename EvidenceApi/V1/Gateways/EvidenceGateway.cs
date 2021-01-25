@@ -47,16 +47,7 @@ namespace EvidenceApi.V1.Gateways
 
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
-            var documentSubmission = _databaseContext.DocumentSubmissions.Find(id);
-
-            if (documentSubmission == null)
-            {
-                return null;
-            }
-
-            var domain = documentSubmission.ToDomain();
-            _databaseContext.Entry(documentSubmission).State = EntityState.Detached;
-            return domain;
+            return _databaseContext.DocumentSubmissions.Find(id);
         }
     }
 }

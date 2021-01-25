@@ -141,23 +141,24 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task CanUpdateDocumentSubmissionStateWithValidParameters()
         {
-            var evidenceRequestEntity = _fixture.Build<EvidenceRequestEntity>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<string> { "Email" })
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Create();
-            DatabaseContext.EvidenceRequests.Add(evidenceRequestEntity);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+
+            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
+            evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+
+            var documentSubmission = TestDataHelper.DocumentSubmission();
+            documentSubmission.EvidenceRequest = evidenceRequest;
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
 
-            var documentSubmissionEntity = _fixture.Build<DocumentSubmissionEntity>()
-                .With(x => x.EvidenceRequest, evidenceRequestEntity)
-                .Create();
-            DatabaseContext.DocumentSubmissions.Add(documentSubmissionEntity);
-            DatabaseContext.SaveChanges();
+            DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 
-            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
             var createdEvidenceRequest = DatabaseContext.EvidenceRequests.First();
+            Console.WriteLine(createdEvidenceRequest.CreatedAt);
+            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
 
             var uri = new Uri($"api/v1/evidence_requests/{createdEvidenceRequest.Id}/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
             string body = @"
@@ -171,14 +172,14 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(createdDocumentSubmission.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(createdDocumentSubmission.CreatedAt);
             string expected = "{" +
                                $"\"id\":\"{createdDocumentSubmission.Id}\"," +
                                $"\"createdAt\":\"{formattedCreatedAt}\"," +
-                               $"\"claimId\":\"{documentSubmissionEntity.ClaimId}\"," +
-                               $"\"rejectionReason\":\"{documentSubmissionEntity.RejectionReason}\"," +
+                               $"\"claimId\":\"{documentSubmission.ClaimId}\"," +
+                               $"\"rejectionReason\":\"{documentSubmission.RejectionReason}\"," +
                                "\"state\":\"UPLOADED\"," +
-                               $"\"documentType\":\"{documentSubmissionEntity.DocumentTypeId}\"," +
+                               $"\"documentType\":\"{documentSubmission.DocumentTypeId}\"," +
                                "\"uploadPolicy\":\"null\"," +
                                "}";
             json.Should().Be(expected);

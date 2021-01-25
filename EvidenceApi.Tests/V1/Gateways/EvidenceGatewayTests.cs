@@ -167,31 +167,25 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void FindReturnsADocumentSubmission()
         {
-            List<string> dm = new List<string> { "Sms", "Email" };
+            List<DeliveryMethod> dm = new List<DeliveryMethod> { DeliveryMethod.Sms, DeliveryMethod.Email };
 
-            var evidenceRequestEntity = _fixture.Build<EvidenceRequestEntity>()
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .With(x => x.DeliveryMethods, dm)
-                .Create();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.DeliveryMethods = dm;
 
-            var entity = _fixture.Build<DocumentSubmissionEntity>()
-                .Without(x => x.Id)
-                .Without(x => x.CreatedAt)
-                .With(x => x.EvidenceRequest, evidenceRequestEntity)
-                .Create();
+            var documentSubmission = TestDataHelper.DocumentSubmission();
+            documentSubmission.EvidenceRequest = evidenceRequest;
 
-            DatabaseContext.DocumentSubmissions.Add(entity);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
 
-            var found = _classUnderTest.FindDocumentSubmission(entity.Id);
+            var found = _classUnderTest.FindDocumentSubmission(documentSubmission.Id);
 
-            found.Id.Should().Be(entity.Id);
-            found.ClaimId.Should().Be(entity.ClaimId);
-            found.RejectionReason.Should().Be(entity.RejectionReason);
-            found.State.Should().Be(entity.State);
-            found.EvidenceRequest.Should().BeEquivalentTo(entity.EvidenceRequest.ToDomain());
-            found.DocumentTypeId.Should().Be(entity.DocumentTypeId);
+            found.Id.Should().Be(documentSubmission.Id);
+            found.ClaimId.Should().Be(documentSubmission.ClaimId);
+            found.RejectionReason.Should().Be(documentSubmission.RejectionReason);
+            found.State.Should().Be(documentSubmission.State);
+            found.EvidenceRequest.Should().BeEquivalentTo(documentSubmission.EvidenceRequest);
+            found.DocumentTypeId.Should().Be(documentSubmission.DocumentTypeId);
         }
 
         [Test]

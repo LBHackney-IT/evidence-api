@@ -63,12 +63,11 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         private void SetupMocks(Guid id)
         {
-            _found = _fixture.Create<DocumentSubmission>();
+            _found = TestDataHelper.DocumentSubmission();
 
-            var updated = _fixture.Build<DocumentSubmission>()
-                .With(x => x.Id, id)
-                .With(x => x.State, SubmissionState.Uploaded)
-                .Create();
+            var updated = TestDataHelper.DocumentSubmission();
+            updated.Id = id;
+            updated.State = SubmissionState.Uploaded;
 
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(id)).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
