@@ -71,7 +71,7 @@ namespace EvidenceApi.V1.Controllers
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex.Error);
+                return BadRequest(ex.Message);
             }
             catch (NotFoundException)
             {
@@ -97,7 +97,7 @@ namespace EvidenceApi.V1.Controllers
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex.Error);
+                return BadRequest(ex.Message);
             }
             catch (NotFoundException ex)
             {
@@ -122,7 +122,7 @@ namespace EvidenceApi.V1.Controllers
             }
             catch (BadRequestException ex)
             {
-                return BadRequest(ex.Error);
+                return BadRequest(ex.Message);
             }
             catch (NotFoundException ex)
             {
