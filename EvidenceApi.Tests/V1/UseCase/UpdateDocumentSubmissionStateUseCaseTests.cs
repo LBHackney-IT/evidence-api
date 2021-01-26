@@ -52,10 +52,10 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             Guid id = Guid.NewGuid();
             SetupMocks(id);
-            string invalidState = "Invalidstate";
             DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.State, Enum.Parse(typeof(SubmissionState), invalidState))
+                .With(x => x.State, "Invalidstate")
                 .Create();
+
             Action act = () => _classUnderTest.Execute(id, request);
             act.Should().Throw<BadRequestException>().WithMessage("This state is invalid");
         }

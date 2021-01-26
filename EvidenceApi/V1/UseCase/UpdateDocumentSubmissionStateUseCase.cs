@@ -28,13 +28,12 @@ namespace EvidenceApi.V1.UseCase
             }
 
             SubmissionState state;
-            if (!Enum.TryParse<SubmissionState>(request.State, true, out state))
+            if (!Enum.TryParse(request.State, true, out state))
             {
                 throw new BadRequestException("This state is invalid");
             }
 
             documentSubmission.State = state;
-
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             return documentSubmission.ToResponse();
         }
