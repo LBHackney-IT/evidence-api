@@ -14,11 +14,13 @@ namespace EvidenceApi.V1.UseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
+        private readonly IDocumentTypeGateway _documentTypeGateway;
 
-        public CreateDocumentSubmissionUseCase(IEvidenceGateway evidenceGateway, IDocumentsApiGateway documentsApiGateway)
+        public CreateDocumentSubmissionUseCase(IEvidenceGateway evidenceGateway, IDocumentsApiGateway documentsApiGateway, IDocumentTypeGateway documentTypeGateway)
         {
             _evidenceGateway = evidenceGateway;
             _documentsApiGateway = documentsApiGateway;
+            _documentTypeGateway = documentTypeGateway;
         }
 
         public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
@@ -38,8 +40,9 @@ namespace EvidenceApi.V1.UseCase
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
             var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
+            var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
 
-            return createdDocumentSubmission.ToResponse(createdS3UploadPolicy);
+            return createdDocumentSubmission.ToResponse(documentType, createdS3UploadPolicy);
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)

@@ -16,8 +16,9 @@ namespace EvidenceApi.Tests.V1.UseCase
     public class CreateDocumentSubmissionUseCaseTests
     {
         private CreateDocumentSubmissionUseCase _classUnderTest;
-        private Mock<IEvidenceGateway> _evidenceGateway;
-        private Mock<IDocumentsApiGateway> _documentsApiGateway;
+        private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
+        private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
+        private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
         private DocumentSubmission _created;
@@ -26,9 +27,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _evidenceGateway = new Mock<IEvidenceGateway>();
-            _documentsApiGateway = new Mock<IDocumentsApiGateway>();
-            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object);
+            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object);
         }
 
         [Test]
@@ -65,6 +64,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             SetupEvidenceGateway(evidenceRequest);
             SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
@@ -73,7 +73,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.ClaimId.Should().Be(_created.ClaimId);
             result.RejectionReason.Should().Be(_created.RejectionReason);
             result.State.Should().Be(_created.State.ToString().ToUpper());
-            result.DocumentType.Should().Be(_created.DocumentTypeId);
+            result.DocumentType.Should().Be(docType);
         }
 
         private DocumentSubmissionRequest CreateRequestFixture()
@@ -117,6 +117,14 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
                 .Returns(_created)
                 .Verifiable();
+        }
+
+        private DocumentType SetupDocumentTypeGateway(string documentTypeId)
+        {
+            var documentType = TestDataHelper.DocumentType(documentTypeId);
+            _documentTypeGateway.Setup(x => x.GetDocumentTypeById(documentTypeId)).Returns(documentType);
+
+            return documentType;
         }
     }
 }

@@ -53,14 +53,14 @@ namespace EvidenceApi.Tests.V1.Factories
             var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(s3UploadPolicy);
+            var response = domain.ToResponse(documentType, s3UploadPolicy);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.RejectionReason.Should().Be(domain.RejectionReason);
             response.State.Should().Be(domain.State.ToString().ToUpper());
-            response.DocumentType.Should().Be(domain.DocumentTypeId);
+            response.DocumentType.Should().Be(documentType);
             response.UploadPolicy.Should().Be(s3UploadPolicy);
         }
     }

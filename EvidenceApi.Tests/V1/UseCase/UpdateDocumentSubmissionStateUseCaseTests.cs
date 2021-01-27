@@ -15,15 +15,15 @@ namespace EvidenceApi.Tests.V1.UseCase
     public class UpdateDocumentSubmissionStateUseCaseTests
     {
         private UpdateDocumentSubmissionStateUseCase _classUnderTest;
-        private Mock<IEvidenceGateway> _evidenceGateway;
+        private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
+        private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
 
         [SetUp]
         public void SetUp()
         {
-            _evidenceGateway = new Mock<IEvidenceGateway>();
-            _classUnderTest = new UpdateDocumentSubmissionStateUseCase(_evidenceGateway.Object);
+            _classUnderTest = new UpdateDocumentSubmissionStateUseCase(_evidenceGateway.Object, _documentTypeGateway.Object);
         }
 
         [Test]
@@ -72,6 +72,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
             ))).Returns(updated);
+
+            _documentTypeGateway.Setup(x => x.GetDocumentTypeById(_found.DocumentTypeId))
+                .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));
         }
 
         private DocumentSubmissionRequest BuildDocumentSubmissionRequest()
