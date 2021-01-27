@@ -7,6 +7,10 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 -   .NET Core as a web framework.
 -   nUnit as a test framework.
 
+## What does it do?
+
+[**🚀 Swagger**](https://app.swaggerhub.com/apis-docs/Hackney/evidence-api/1.0.0) ([Edit it here](https://app.swaggerhub.com/apis/Hackney/evidence-api/1.0.0))
+
 ## Context and history
 
 See the [Architectural Decision Log](/docs/adr).
