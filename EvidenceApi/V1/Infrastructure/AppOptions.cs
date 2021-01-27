@@ -16,7 +16,7 @@ namespace EvidenceApi.V1.Infrastructure
         public static AppOptions FromEnv()
         {
             var documentsApiUrl = Environment.GetEnvironmentVariable("DOCUMENTS_API_URL");
-            var evidenceApiUrl = Environment.GetEnvironmentVariable("EVIDENCE_API_URL");
+            var evidenceApiUrl = Environment.GetEnvironmentVariable("EVIDENCE_REQUEST_CLIENT_URL");
             return new AppOptions()
             {
                 NotifyApiKey = Environment.GetEnvironmentVariable("NOTIFY_API_KEY"),

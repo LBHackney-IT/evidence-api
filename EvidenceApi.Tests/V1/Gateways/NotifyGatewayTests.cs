@@ -46,7 +46,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 {"resident_name", resident.Name},
                 {"service_name", request.ServiceRequestedBy},
-                {"magic_link", $"{_options.EvidenceRequestClientUrl}/resident/{request.Id}"}
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"}
             };
 
             var response = _fixture.Create<SmsNotificationResponse>();
@@ -72,7 +72,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 {"resident_name", resident.Name},
                 {"service_name", request.ServiceRequestedBy},
-                {"magic_link", $"{_options.EvidenceRequestClientUrl}/resident/{request.Id}"}
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"}
             };
 
             var response = _fixture.Create<EmailNotificationResponse>();
@@ -110,12 +110,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
         private static bool CompareDictionaries(Dictionary<string, object> a, Dictionary<string, object> b)
         {
-            // foreach (var kv in a)
-            // {
-            //     Console.WriteLine($"{kv.Key}: {a[kv.Key].ToString() == b[kv.Key].ToString()}");
-            // }
-
-            return a.Keys.All(k => b[k].ToString() == a[k].ToString());
+            return a.Keys.All(k => b[k].Equals(a[k]));
         }
 
     }
