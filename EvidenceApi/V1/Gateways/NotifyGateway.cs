@@ -88,6 +88,6 @@ namespace EvidenceApi.V1.Gateways
             };
         }
 
-        private string MagicLinkFor(EvidenceRequest request) => $"{_options.EvidenceRequestClientUrl}/resident/{request.Id}";
+        private string MagicLinkFor(EvidenceRequest request) => $"{_options.EvidenceRequestClientUrl}resident/{request.Id}";
     }
 }

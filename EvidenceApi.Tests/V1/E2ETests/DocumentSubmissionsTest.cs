@@ -91,7 +91,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"PENDING\"," +
-                               "\"documentType\":\"passport-scan\"," +
+                               "\"documentType\":{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}" +
                                "}";
 
@@ -150,6 +150,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentSubmission = TestDataHelper.DocumentSubmission();
             documentSubmission.EvidenceRequest = evidenceRequest;
+            documentSubmission.DocumentTypeId = "passport-scan";
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
@@ -162,7 +163,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/evidence_requests/{createdEvidenceRequest.Id}/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
             string body = @"
             {
-                ""state"": ""UPLOADED"" 
+                ""state"": ""UPLOADED""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -172,7 +173,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
 
-            var expected = createdDocumentSubmission.ToResponse();
+            var documentType = TestDataHelper.DocumentType("passport-scan");
+            var expected = createdDocumentSubmission.ToResponse(documentType);
             result.Should().BeEquivalentTo(expected);
         }
     }

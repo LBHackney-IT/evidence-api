@@ -11,7 +11,7 @@ namespace EvidenceApi.V1.Boundary.Response
         public string ClaimId { get; set; }
         public string RejectionReason { get; set; }
         public string State { get; set; }
-        public string DocumentType { get; set; }
+        public DocumentType DocumentType { get; set; }
         public S3UploadPolicy? UploadPolicy { get; set; }
     }
 }

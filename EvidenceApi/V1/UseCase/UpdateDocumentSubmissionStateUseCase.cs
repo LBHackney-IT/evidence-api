@@ -12,10 +12,12 @@ namespace EvidenceApi.V1.UseCase
     public class UpdateDocumentSubmissionStateUseCase : IUpdateDocumentSubmissionStateUseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
+        private readonly IDocumentTypeGateway _documentTypeGateway;
 
-        public UpdateDocumentSubmissionStateUseCase(IEvidenceGateway evidenceGateway)
+        public UpdateDocumentSubmissionStateUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway)
         {
             _evidenceGateway = evidenceGateway;
+            _documentTypeGateway = documentTypeGateway;
         }
 
         public DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionRequest request)
@@ -35,7 +37,9 @@ namespace EvidenceApi.V1.UseCase
 
             documentSubmission.State = state;
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
-            return documentSubmission.ToResponse();
+
+            var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
+            return documentSubmission.ToResponse(documentType);
         }
     }
 }
