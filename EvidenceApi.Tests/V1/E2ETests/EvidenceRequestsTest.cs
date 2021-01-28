@@ -182,6 +182,21 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
+        public async Task DoesNotReturnEvidenceRequestsWhenParamsDoNotMatchAny()
+        {
+            var expected = BuildEvidenceRequestsListWithDifferentResident();
+            var serviceRequestedBy = expected[0].ServiceRequestedBy;
+            var residentId = expected[1].Resident.Id;
+            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
+
+            response.StatusCode.Should().Be(200);
+            result.Should().BeEmpty();
+        }
+
+        [Test]
         public async Task ReturnBadRequestWhenServiceIsEmpty()
         {
             var serviceRequestedBy = "";
