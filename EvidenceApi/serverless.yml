@@ -20,11 +20,11 @@ functions:
     handler: EvidenceApi::EvidenceApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      CONNECTION_STRING: Host=${ssm:/evidence-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/evidence-api/${self:provider.stage}/postgres-port};Database=${ssm:/evidence-api/${self:provider.stage}/postgres-database};Username=${ssm:/evidence-api/${self:provider.stage}/postgres-username};Password=${ssm:/evidence-api/${self:provider.stage}/postgres-password}
+      CONNECTION_STRING: Host=${ssm:/evidence-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/evidence-api/${self:provider.stage}/postgres-port};Database=${ssm:/evidence-api/${self:provider.stage}/postgres-database};Username=${ssm:/evidence-api/${self:provider.stage}/postgres-username};Password=${ssm:/evidence-api/${self:provider.stage}/postgres-password~true}
       DOCUMENTS_API_URL: ${ssm:/documents-api/${self:provider.stage}/base-url}
       DOCUMENTS_API_POST_CLAIMS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/post/claims/token}
       DOCUMENTS_API_POST_DOCUMENTS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/post/documents/token}
-      NOTIFY_API_KEY: ${ssm:/evidence-api/${self:provider.stage}/notify-api-key}
+      NOTIFY_API_KEY: ${ssm:/evidence-api/${self:provider.stage}/notify-api-key~true}
       NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL: ${ssm:/evidence-api/notify/email/evidence-requested}
       NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS: ${ssm:/evidence-api/notify/sms/evidence-requested}
       EVIDENCE_REQUEST_CLIENT_URL: https://${ssm:/evidence-api/${self:provider.stage}/client-url}
