@@ -57,7 +57,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "}," +
                                "\"deliveryMethods\":[\"SMS\"]," +
                                "\"documentTypes\":[" +
-                               "{\"id\":\"passport-scan\",\"title\":\"Passport\"}" +
+                               "{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}" +
                                "]," +
                                "\"serviceRequestedBy\":\"development-team-staging\"," +
                                "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +

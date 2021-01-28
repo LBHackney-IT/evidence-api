@@ -20,9 +20,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var data = JsonConvert.DeserializeObject<List<DocumentType>>(json);
 
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "passport-scan", Title = "Passport" });
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "bank-statement", Title = "Bank statement" });
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "drivers-licence", Title = "Drivers licence" });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "passport-scan", Title = "Passport", Description = "A valid passport open at the photo page" });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "bank-statement", Title = "Bank statement", Description = "From the past three months" });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "drivers-licence", Title = "Drivers licence", Description = "A valid UK full or provisional UK driving license" });
         }
 
     }
