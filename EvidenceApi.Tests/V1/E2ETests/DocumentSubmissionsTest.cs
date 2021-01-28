@@ -160,7 +160,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var createdEvidenceRequest = DatabaseContext.EvidenceRequests.First();
             var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
 
-            var uri = new Uri($"api/v1/evidence_requests/{createdEvidenceRequest.Id}/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
             string body = @"
             {
                 ""state"": ""UPLOADED""
