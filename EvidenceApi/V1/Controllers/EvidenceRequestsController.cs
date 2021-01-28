@@ -105,29 +105,5 @@ namespace EvidenceApi.V1.Controllers
             }
         }
 
-        /// <summary>
-        /// Updates the state of a document submission
-        /// </summary>
-        /// <response code="200">Updated</response>
-        /// <response code="400">Request contains invalid parameters</response>
-        /// <response code="404">Document submission cannot be found</response>
-        [HttpPatch]
-        [Route("{evidenceRequestId}/document_submissions/{id}")]
-        public IActionResult UpdateDocumentSubmissionState([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionRequest request)
-        {
-            try
-            {
-                var result = _updateDocumentSubmissionStateUseCase.Execute(id, request);
-                return Ok(result);
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
     }
 }
