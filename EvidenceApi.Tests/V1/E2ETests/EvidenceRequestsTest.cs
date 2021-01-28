@@ -192,7 +192,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task ReturnBadRequestWhenServiceandResidentIdAreEmpty()
+        public async Task ReturnBadRequestWhenServiceAndResidentIdAreEmpty()
         {
             var serviceRequestedBy = "";
             var residentId = "";

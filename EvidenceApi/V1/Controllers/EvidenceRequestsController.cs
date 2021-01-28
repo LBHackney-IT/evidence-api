@@ -107,5 +107,23 @@ namespace EvidenceApi.V1.Controllers
             }
         }
 
+        /// <summary>
+        /// Finds evidence request
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        [HttpGet]
+        public IActionResult FilterEvidenceRequests([FromQuery] EvidenceRequestsSearchQuery request)
+        {
+            try
+            {
+                var result = _getEvidenceRequestsUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
