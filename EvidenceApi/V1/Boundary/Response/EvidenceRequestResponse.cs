@@ -1,3 +1,4 @@
+#nullable enable annotations
 using System;
 using System.Collections.Generic;
 using EvidenceApi.V1.Domain;
@@ -13,5 +14,6 @@ namespace EvidenceApi.V1.Boundary.Response
         public string UserRequestedBy { get; set; }
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DocumentSubmission? DocumentSubmission { get; set; }
     }
 }

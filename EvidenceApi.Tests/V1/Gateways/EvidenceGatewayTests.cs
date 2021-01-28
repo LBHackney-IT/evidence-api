@@ -1,3 +1,4 @@
+#nullable enable annotations
 using System;
 using System.Linq;
 using AutoFixture;
@@ -182,6 +183,67 @@ namespace EvidenceApi.Tests.V1.Gateways
             Guid id = Guid.NewGuid();
             var found = _classUnderTest.FindDocumentSubmission(id);
             found.Should().BeNull();
+        }
+
+        [Test]
+        public void CanGetEvidenceRequestsByServiceAndResidentId()
+        {
+            var resident = TestDataHelper.Resident();
+            DatabaseContext.Residents.Add(resident);
+
+            var expected = ExpectedEvidenceRequests(resident);
+            var serviceRequestedBy = "development-team-staging";
+            var residentId = resident.Id;
+
+            var result = _classUnderTest.GetEvidenceRequests(serviceRequestedBy, residentId);
+            result.Should().BeEquivalentTo(expected);
+            residentId.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void CanGetEvidenceRequestsByServiceOnly()
+        {
+            var expected = ExpectedEvidenceRequests();
+            var serviceRequestedBy = "development-team-staging";
+
+            var result = _classUnderTest.GetEvidenceRequests(serviceRequestedBy);
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public void GetEvidenceRequestsReturnsEmptyList()
+        {
+            var expected = ExpectedEvidenceRequests();
+            var serviceRequestedBy = "invalid-service";
+
+            var result = _classUnderTest.GetEvidenceRequests(serviceRequestedBy);
+            result.Should().BeEmpty();
+        }
+
+        public List<EvidenceRequest> ExpectedEvidenceRequests(Resident? resident = null)
+        {
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+
+            if (resident != null)
+            {
+                evidenceRequest1.ResidentId = resident.Id;
+                evidenceRequest2.ResidentId = resident.Id;
+            }
+
+            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest2.ServiceRequestedBy = "development-team-staging";
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<EvidenceRequest>();
+
+            expected.Add(evidenceRequest1);
+            expected.Add(evidenceRequest2);
+            return expected;
         }
     }
 }
