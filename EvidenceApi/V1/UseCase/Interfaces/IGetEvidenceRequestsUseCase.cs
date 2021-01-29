@@ -4,7 +4,7 @@ using EvidenceApi.V1.Boundary.Request;
 
 namespace EvidenceApi.V1.UseCase.Interfaces
 {
-    public interface IGetEvidenceRequestsUseCase
+    public interface IFindEvidenceRequestsUseCase
     {
         List<EvidenceRequestResponse> Execute(EvidenceRequestsSearchQuery request);
     }

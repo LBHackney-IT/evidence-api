@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -8,18 +7,16 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase;
-using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
-using FluentValidation.Results;
 using Moq;
 using NUnit.Framework;
 using EvidenceApi.V1.Factories;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
-    public class GetEvidenceRequestsUseCaseTests
+    public class FindEvidenceRequestsUseCaseTests
     {
-        private GetEvidenceRequestsUseCase _classUnderTest;
+        private FindEvidenceRequestsUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
@@ -35,7 +32,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
-            _classUnderTest = new GetEvidenceRequestsUseCase(_evidenceGateway.Object, _documentTypesGateway.Object, _residentsGateway.Object);
+            _classUnderTest = new FindEvidenceRequestsUseCase(_evidenceGateway.Object, _documentTypesGateway.Object, _residentsGateway.Object);
         }
 
         [Test]
@@ -55,6 +52,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             });
 
             var result = _classUnderTest.Execute(request);
+
+            _evidenceGateway.Verify(x =>
+                x.GetEvidenceRequests(request.ServiceRequestedBy, request.ResidentId));
 
             result.Should().BeEquivalentTo(expected);
         }

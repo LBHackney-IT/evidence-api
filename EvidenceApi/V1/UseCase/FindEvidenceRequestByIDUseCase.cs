@@ -10,13 +10,13 @@ using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class FindEvidenceRequestUseCase : IFindEvidenceRequestUseCase
+    public class FindEvidenceRequestByIDUseCase : IFindEvidenceRequestByIDUseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly IResidentsGateway _residentsGateway;
 
-        public FindEvidenceRequestUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IResidentsGateway residentsGateway)
+        public FindEvidenceRequestByIDUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IResidentsGateway residentsGateway)
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;

@@ -18,7 +18,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 {
     public class FindEvidenceREquestUseCaseTests
     {
-        private FindEvidenceRequestUseCase _classUnderTest;
+        private FindEvidenceRequestByIDUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
@@ -34,7 +34,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
-            _classUnderTest = new FindEvidenceRequestUseCase(_evidenceGateway.Object, _documentTypesGateway.Object, _residentsGateway.Object);
+            _classUnderTest = new FindEvidenceRequestByIDUseCase(_evidenceGateway.Object, _documentTypesGateway.Object, _residentsGateway.Object);
         }
 
         [Test]

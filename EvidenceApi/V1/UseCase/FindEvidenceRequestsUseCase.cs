@@ -10,13 +10,13 @@ using EvidenceApi.V1.Boundary.Request;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class GetEvidenceRequestsUseCase : IGetEvidenceRequestsUseCase
+    public class FindEvidenceRequestsUseCase : IFindEvidenceRequestsUseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly IResidentsGateway _residentsGateway;
 
-        public GetEvidenceRequestsUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IResidentsGateway residentsGateway)
+        public FindEvidenceRequestsUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IResidentsGateway residentsGateway)
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;

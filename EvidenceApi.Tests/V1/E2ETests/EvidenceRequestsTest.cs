@@ -163,7 +163,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
-            result.Should().BeEquivalentTo(expected[0]);
+            result.Should().ContainSingle();
+            result.Should().ContainEquivalentOf(expected[0]);
         }
 
         [Test]
@@ -264,21 +265,27 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var documentTypes = new List<string> { "passport-scan", "drivers-licence" };
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest3 = TestDataHelper.EvidenceRequest();
             evidenceRequest1.ServiceRequestedBy = "development-team-staging";
             evidenceRequest2.ServiceRequestedBy = "another-service-id";
+            evidenceRequest3.ServiceRequestedBy = "yet-another-service";
             evidenceRequest1.ResidentId = resident1.Id;
             evidenceRequest2.ResidentId = resident2.Id;
+            evidenceRequest3.ResidentId = resident2.Id;
             evidenceRequest1.DocumentTypes = documentTypes;
             evidenceRequest2.DocumentTypes = documentTypes;
+            evidenceRequest3.DocumentTypes = documentTypes;
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
             DatabaseContext.SaveChanges();
 
             var expected = new List<EvidenceRequest>();
 
             expected.Add(evidenceRequest1);
             expected.Add(evidenceRequest2);
+            expected.Add(evidenceRequest3);
 
             var docTypes = new List<DocumentType>();
             docTypes.Add(TestDataHelper.DocumentType("passport-scan"));
@@ -287,6 +294,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var list = new List<EvidenceRequestResponse>();
             list.Add(evidenceRequest1.ToResponse(resident1, docTypes));
             list.Add(evidenceRequest2.ToResponse(resident2, docTypes));
+            list.Add(evidenceRequest3.ToResponse(resident2, docTypes));
 
             return list;
         }
