@@ -32,7 +32,6 @@ functions:
       - http:
           path: /{proxy+}
           method: ANY
-          private: true
           authorizer:
             arn: ${ssm:/platform-apis-lambda-authorizer-arn}
             type: request
