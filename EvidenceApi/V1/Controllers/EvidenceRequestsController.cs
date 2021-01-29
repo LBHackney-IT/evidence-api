@@ -18,16 +18,18 @@ namespace EvidenceApi.V1.Controllers
         private readonly IDocumentTypeGateway _gateway;
         private readonly ICreateEvidenceRequestUseCase _creator;
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
-        private readonly IFindEvidenceRequestUseCase _evidenceRequestUseCase;
+        private readonly IFindEvidenceRequestByIDUseCase _evidenceRequestUseCase;
         private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
+        private readonly IFindEvidenceRequestsUseCase _getEvidenceRequestsUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestUseCase evidenceRequestUseCase, IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase)
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestByIDUseCase evidenceRequestUseCase, IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase, IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase)
         {
             _gateway = gateway;
             _creator = creator;
             _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
+            _getEvidenceRequestsUseCase = getEvidenceRequestsUseCase;
         }
 
         /// <summary>
@@ -105,5 +107,23 @@ namespace EvidenceApi.V1.Controllers
             }
         }
 
+        /// <summary>
+        /// Finds evidence request
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        [HttpGet]
+        public IActionResult FilterEvidenceRequests([FromQuery] EvidenceRequestsSearchQuery request)
+        {
+            try
+            {
+                var result = _getEvidenceRequestsUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

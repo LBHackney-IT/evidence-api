@@ -49,5 +49,13 @@ namespace EvidenceApi.Tests
 
             return reader.GetData().Find(x => x.Id == id);
         }
+
+        public static Resident Resident()
+        {
+            return _fixture.Build<Resident>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+        }
     }
 }

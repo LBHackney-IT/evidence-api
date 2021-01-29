@@ -62,7 +62,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "\"serviceRequestedBy\":\"development-team-staging\"," +
                                "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +
                                $"\"id\":\"{created.Id}\"," +
-                               $"\"createdAt\":{formattedCreatedAt}" +
+                               $"\"createdAt\":{formattedCreatedAt}," +
+                               "\"documentSubmission\":null" +
                                "}";
 
             json.Should().Be(expected);
@@ -151,5 +152,151 @@ namespace EvidenceApi.Tests.V1.E2ETests
             responseFind.StatusCode.Should().Be(404);
         }
 
+        [Test]
+        public async Task CanGetEvidenceRequestsWithValidService()
+        {
+            var expected = BuildEvidenceRequestsListWithSameResident();
+            var serviceRequestedBy = expected[0].ServiceRequestedBy;
+            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
+
+            response.StatusCode.Should().Be(200);
+            result.Should().ContainSingle();
+            result.Should().ContainEquivalentOf(expected[0]);
+        }
+
+        [Test]
+        public async Task CanGetEvidenceRequestsWithValidServiceAndResidentId()
+        {
+            var expected = BuildEvidenceRequestsListWithDifferentResident();
+            var serviceRequestedBy = expected[0].ServiceRequestedBy;
+            var residentId = expected[0].Resident.Id;
+            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
+
+            response.StatusCode.Should().Be(200);
+            result.Should().BeEquivalentTo(expected[0]);
+        }
+
+        [Test]
+        public async Task DoesNotReturnEvidenceRequestsWhenParamsDoNotMatchAny()
+        {
+            var expected = BuildEvidenceRequestsListWithDifferentResident();
+            var serviceRequestedBy = expected[0].ServiceRequestedBy;
+            var residentId = expected[1].Resident.Id;
+            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
+
+            response.StatusCode.Should().Be(200);
+            result.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task ReturnBadRequestWhenServiceIsEmpty()
+        {
+            var serviceRequestedBy = "";
+            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task ReturnBadRequestWhenServiceAndResidentIdAreEmpty()
+        {
+            var serviceRequestedBy = "";
+            var residentId = "";
+            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(400);
+        }
+
+        private List<EvidenceRequestResponse> BuildEvidenceRequestsListWithSameResident()
+        {
+            var resident = TestDataHelper.Resident();
+
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            var documentTypes = new List<string> { "passport-scan", "drivers-licence" };
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest2.ServiceRequestedBy = "another-service-id";
+            evidenceRequest1.ResidentId = resident.Id;
+            evidenceRequest2.ResidentId = resident.Id;
+            evidenceRequest1.DocumentTypes = documentTypes;
+            evidenceRequest2.DocumentTypes = documentTypes;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<EvidenceRequest>();
+
+            expected.Add(evidenceRequest1);
+            expected.Add(evidenceRequest2);
+
+            return expected.ConvertAll<EvidenceRequestResponse>(er =>
+            {
+                var documentTypes = new List<DocumentType>();
+                documentTypes.Add(TestDataHelper.DocumentType("passport-scan"));
+                documentTypes.Add(TestDataHelper.DocumentType("drivers-licence"));
+                return er.ToResponse(resident, documentTypes);
+            });
+        }
+
+        private List<EvidenceRequestResponse> BuildEvidenceRequestsListWithDifferentResident()
+        {
+            var resident1 = TestDataHelper.Resident();
+            var resident2 = TestDataHelper.Resident();
+
+            DatabaseContext.Residents.Add(resident1);
+            DatabaseContext.Residents.Add(resident2);
+            DatabaseContext.SaveChanges();
+
+            var documentTypes = new List<string> { "passport-scan", "drivers-licence" };
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest3 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest2.ServiceRequestedBy = "another-service-id";
+            evidenceRequest3.ServiceRequestedBy = "yet-another-service";
+            evidenceRequest1.ResidentId = resident1.Id;
+            evidenceRequest2.ResidentId = resident2.Id;
+            evidenceRequest3.ResidentId = resident2.Id;
+            evidenceRequest1.DocumentTypes = documentTypes;
+            evidenceRequest2.DocumentTypes = documentTypes;
+            evidenceRequest3.DocumentTypes = documentTypes;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<EvidenceRequest>();
+
+            expected.Add(evidenceRequest1);
+            expected.Add(evidenceRequest2);
+            expected.Add(evidenceRequest3);
+
+            var docTypes = new List<DocumentType>();
+            docTypes.Add(TestDataHelper.DocumentType("passport-scan"));
+            docTypes.Add(TestDataHelper.DocumentType("drivers-licence"));
+
+            var list = new List<EvidenceRequestResponse>();
+            list.Add(evidenceRequest1.ToResponse(resident1, docTypes));
+            list.Add(evidenceRequest2.ToResponse(resident2, docTypes));
+            list.Add(evidenceRequest3.ToResponse(resident2, docTypes));
+
+            return list;
+        }
     }
 }
