@@ -1,11 +1,10 @@
 using System;
 using System.Linq;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using EvidenceApi.V1.Boundary.Request;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -47,16 +46,16 @@ namespace EvidenceApi.V1.Gateways
             return _databaseContext.EvidenceRequests.Find(id);
         }
 
-        public List<EvidenceRequest> GetEvidenceRequests(string ServiceRequestedBy, Guid? residentId = null)
+        public List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request)
         {
-            if (residentId == default)
+            if (request.ResidentId == default)
             {
                 return _databaseContext.EvidenceRequests
-                    .Where(x => x.ServiceRequestedBy.Contains(ServiceRequestedBy)).ToList();
+                    .Where(x => x.ServiceRequestedBy.Contains(request.ServiceRequestedBy)).ToList();
             }
             return _databaseContext.EvidenceRequests
-                .Where(x => x.ServiceRequestedBy.Contains(ServiceRequestedBy) &&
-                    x.ResidentId.Equals(residentId)).ToList();
+                .Where(x => x.ServiceRequestedBy.Contains(request.ServiceRequestedBy) &&
+                    x.ResidentId.Equals(request.ResidentId)).ToList();
         }
 
         public DocumentSubmission FindDocumentSubmission(Guid id)

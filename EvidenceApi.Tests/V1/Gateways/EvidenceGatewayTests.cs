@@ -10,6 +10,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Boundary.Request;
 
 namespace EvidenceApi.Tests.V1.Gateways
 {
@@ -192,21 +193,27 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.Residents.Add(resident);
 
             var expected = ExpectedEvidenceRequests(resident);
-            var serviceRequestedBy = "development-team-staging";
-            var residentId = resident.Id;
+            var request = new EvidenceRequestsSearchQuery()
+            {
+                ServiceRequestedBy = "development-team-staging",
+                ResidentId = resident.Id
+            };
 
-            var result = _classUnderTest.GetEvidenceRequests(serviceRequestedBy, residentId);
+            var result = _classUnderTest.GetEvidenceRequests(request);
             result.Should().BeEquivalentTo(expected);
-            residentId.Should().NotBeEmpty();
+            request.ResidentId.Should().NotBeEmpty();
         }
 
         [Test]
         public void CanGetEvidenceRequestsByServiceOnly()
         {
             var expected = ExpectedEvidenceRequests();
-            var serviceRequestedBy = "development-team-staging";
+            var request = new EvidenceRequestsSearchQuery()
+            {
+                ServiceRequestedBy = "development-team-staging"
+            };
 
-            var result = _classUnderTest.GetEvidenceRequests(serviceRequestedBy);
+            var result = _classUnderTest.GetEvidenceRequests(request);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -214,9 +221,12 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void GetEvidenceRequestsReturnsEmptyList()
         {
             var expected = ExpectedEvidenceRequests();
-            var serviceRequestedBy = "invalid-service";
+            var request = new EvidenceRequestsSearchQuery()
+            {
+                ServiceRequestedBy = "invalid-service"
+            };
 
-            var result = _classUnderTest.GetEvidenceRequests(serviceRequestedBy);
+            var result = _classUnderTest.GetEvidenceRequests(request);
             result.Should().BeEmpty();
         }
 

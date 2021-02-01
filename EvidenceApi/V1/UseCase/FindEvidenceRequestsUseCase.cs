@@ -25,7 +25,7 @@ namespace EvidenceApi.V1.UseCase
 
         public List<EvidenceRequestResponse> Execute(EvidenceRequestsSearchQuery request)
         {
-            var found = _evidenceGateway.GetEvidenceRequests(request.ServiceRequestedBy, request.ResidentId);
+            var found = _evidenceGateway.GetEvidenceRequests(request);
 
             if (String.IsNullOrEmpty(request.ServiceRequestedBy))
             {
