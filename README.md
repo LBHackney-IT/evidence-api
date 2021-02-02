@@ -52,7 +52,7 @@ The application uses GOV.UK Notify to send emails and SMS.
 
 When running the application locally we make calls to the Notify service and so you need to:
 1. Ask to be invited to the _Hackney Upload_ group so you can access the Notify dashboard
-2. Update your local `.env` file with the correct values for the properties `NOTIFY_TEMPLATE_REMINDER_*`, `NOTIFY_TEMPLATE_EVIDENCE_*` and `NOTIFY_API_KEY`
+2. Update your local `.env` file with the correct values for the properties `NOTIFY_TEMPLATE_REMINDER_*`, `NOTIFY_TEMPLATE_EVIDENCE_*` and `NOTIFY_API_KEY` (these should use the **staging** API key)
 
 ### Release process
 
