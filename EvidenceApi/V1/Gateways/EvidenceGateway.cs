@@ -48,14 +48,12 @@ namespace EvidenceApi.V1.Gateways
 
         public List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request)
         {
-            if (request.ResidentId == default)
-            {
-                return _databaseContext.EvidenceRequests
-                    .Where(x => x.ServiceRequestedBy.Contains(request.ServiceRequestedBy)).ToList();
-            }
             return _databaseContext.EvidenceRequests
-                .Where(x => x.ServiceRequestedBy.Contains(request.ServiceRequestedBy) &&
-                    x.ResidentId.Equals(request.ResidentId)).ToList();
+                .Where(x =>
+                    x.ServiceRequestedBy.Contains(request.ServiceRequestedBy) &&
+                    (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
+                    (request.State == null || x.State.Equals(request.State))
+                ).ToList();
         }
 
         public DocumentSubmission FindDocumentSubmission(Guid id)

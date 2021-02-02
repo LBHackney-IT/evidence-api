@@ -40,6 +40,8 @@ namespace EvidenceApi.V1.Domain
             get => RawDeliveryMethods.ConvertAll(Enum.Parse<DeliveryMethod>);
             set => RawDeliveryMethods = value.ConvertAll(dm => dm.ToString());
         }
+
+        [NotMapped]
         public string State => DocumentTypes.ToArray().All(dt =>
             DocumentSubmissions.Any(ds => ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
         ) ? "approved" : "pending";
