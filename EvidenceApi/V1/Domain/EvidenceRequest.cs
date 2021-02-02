@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Infrastructure.Interfaces;
@@ -39,5 +40,8 @@ namespace EvidenceApi.V1.Domain
             get => RawDeliveryMethods.ConvertAll(Enum.Parse<DeliveryMethod>);
             set => RawDeliveryMethods = value.ConvertAll(dm => dm.ToString());
         }
+        public string State => DocumentTypes.ToArray().All(dt =>
+            DocumentSubmissions.Any(ds => ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
+        ) ? "approved" : "pending";
     }
 }
