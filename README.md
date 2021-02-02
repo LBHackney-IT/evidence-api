@@ -46,6 +46,14 @@ _Prerequsite: Make sure you have your database running—something like `docker-
     - If the migration looks good, run `bin/dotnet ef --project EvidenceApi database update`  to run the migrations
     - If the migration looks bad, run `bin/dotnet ef --project EvidenceApi migrations remove` to wipe the migration
 
+#### Notify
+
+The application uses GOV.UK Notify to send emails and SMS.
+
+When running the application locally we make calls to the Notify service and so you need to:
+1. Ask to be invited to the _Hackney Upload_ group so you can access the Notify dashboard
+2. Update your local `.env` file with the correct values for the properties `NOTIFY_TEMPLATE_REMINDER_*`, `NOTIFY_TEMPLATE_EVIDENCE_*` and `NOTIFY_API_KEY` (these should use the **staging** API key)
+
 ### Release process
 
 We use a pull request workflow, where changes are made on a branch and approved by one or more other maintainers before the developer can merge into `master` branch.
