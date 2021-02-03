@@ -61,9 +61,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             _request = CreateRequestFixture();
             _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
-            var existingDocumentSubmission =
-                new DocumentSubmission { State = SubmissionState.Rejected, DocumentTypeId = _documentType.Id };
-            evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             var claim = _fixture.Create<Claim>();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
@@ -82,15 +79,39 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.DocumentType.Should().Be(docType);
         }
 
-        [Test]
-        public void ThrowsBadRequestIfDocumentSubmissionAlreadyExists()
+        [TestCase(SubmissionState.Pending)]
+        [TestCase(SubmissionState.Rejected)]
+        public void DoesNotThrowWhenInactiveDocumentSubmissionExists(SubmissionState state)
         {
             _documentType = _fixture.Create<DocumentType>();
             _request = CreateRequestFixture();
             _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var existingDocumentSubmission =
-                new DocumentSubmission { State = SubmissionState.Approved, DocumentTypeId = _documentType.Id };
+                new DocumentSubmission { State = state, DocumentTypeId = _documentType.Id };
+            evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
+
+            var claim = _fixture.Create<Claim>();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
+
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            SetupDocumentTypeGateway(_request.DocumentType);
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            testDelegate.Should().NotThrow();
+        }
+
+        [TestCase(SubmissionState.Approved)]
+        [TestCase(SubmissionState.Uploaded)]
+        public void ThrowsBadRequestIfActiveDocumentSubmissionAlreadyExists(SubmissionState state)
+        {
+            _documentType = _fixture.Create<DocumentType>();
+            _request = CreateRequestFixture();
+            _created = DocumentSubmissionFixture();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var existingDocumentSubmission =
+                new DocumentSubmission { State = state, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             SetupEvidenceGateway(evidenceRequest);

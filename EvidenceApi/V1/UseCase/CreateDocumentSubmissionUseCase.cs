@@ -36,7 +36,7 @@ namespace EvidenceApi.V1.UseCase
             }
 
             if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
-                d.State != SubmissionState.Rejected && d.DocumentTypeId == request.DocumentType))
+                (d.State == SubmissionState.Approved || d.State == SubmissionState.Uploaded) && d.DocumentTypeId == request.DocumentType))
             {
                 throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");
             }
