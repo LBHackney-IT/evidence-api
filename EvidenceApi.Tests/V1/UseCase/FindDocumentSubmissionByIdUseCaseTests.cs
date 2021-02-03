@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
-using EvidenceApi.V1.Boundary.Request;
-using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase;
-using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
-using FluentValidation.Results;
 using Moq;
 using NUnit.Framework;
 
@@ -41,19 +35,20 @@ namespace EvidenceApi.Tests.V1.UseCase
             var id = Guid.NewGuid();
             var result = _classUnderTest.Execute(id);
 
-            //result.Id.Should().NotBeEmpty();
             result.ClaimId.Should().Be(_found.ClaimId);
-            // result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
-            // result.DeliveryMethods.Should().BeEquivalentTo(_found.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
+            result.RejectionReason.Should().Be(_found.RejectionReason);
+            result.State.Should().Be(_found.State.ToString().ToUpper());
+            result.DocumentType.Should().Be(_documentType);
+
         }
 
-        // [Test]
-        // public void ThrowsAnErrorWhenAnEvidenceRequestIsNotFound()
-        // {
-        //     Guid id = new Guid();
-        //     Action act = () => _classUnderTest.Execute(id);
-        //     act.Should().Throw<NotFoundException>().WithMessage("Cannot retrieve evidence request");
-        // }
+        [Test]
+        public void ThrowsAnErrorWhenADocumentSubmissionIsNotFound()
+        {
+            var id = Guid.NewGuid();
+            Action act = () => _classUnderTest.Execute(id);
+            act.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with ID: {id}");
+        }
 
         private void SetupMocks()
         {
