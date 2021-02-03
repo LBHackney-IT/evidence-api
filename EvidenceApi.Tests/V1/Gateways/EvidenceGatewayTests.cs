@@ -187,6 +187,26 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void CanGetEvidenceRequestsByServiceAndResidentIdAndState()
+        {
+            var resident = TestDataHelper.Resident();
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            var expected = ExpectedEvidenceRequests(resident);
+            var request = new EvidenceRequestsSearchQuery()
+            {
+                ServiceRequestedBy = "development-team-staging",
+                ResidentId = resident.Id,
+                State = SubmissionState.Approved
+            };
+
+            var result = _classUnderTest.GetEvidenceRequests(request);
+            result.Should().BeEquivalentTo(expected);
+            request.ResidentId.Should().NotBeEmpty();
+        }
+
+        [Test]
         public void CanGetEvidenceRequestsByServiceAndResidentId()
         {
             var resident = TestDataHelper.Resident();
@@ -230,7 +250,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEmpty();
         }
 
-        public List<EvidenceRequest> ExpectedEvidenceRequests(Resident? resident = null)
+        public List<EvidenceRequest> ExpectedEvidenceRequests(Resident? resident = null, EvidenceRequestState? state = null)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
@@ -239,6 +259,17 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 evidenceRequest1.ResidentId = resident.Id;
                 evidenceRequest2.ResidentId = resident.Id;
+            }
+
+            if (state != null)
+            {
+                var DocumentSubmissions = new List<DocumentSubmission>();
+                var documentSubmission1 = TestDataHelper.DocumentSubmission();
+                var documentSubmission2 = TestDataHelper.DocumentSubmission();
+                documentSubmission1.DocumentTypeId = "passport-scan";
+                documentSubmission1.State = SubmissionState.Approved;
+                documentSubmission2.DocumentTypeId = "bank-statement";
+                documentSubmission2.State = SubmissionState.Approved;
             }
 
             evidenceRequest1.ServiceRequestedBy = "development-team-staging";

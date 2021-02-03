@@ -41,9 +41,31 @@ namespace EvidenceApi.V1.Domain
             set => RawDeliveryMethods = value.ConvertAll(dm => dm.ToString());
         }
 
-        [NotMapped]
-        public string State => DocumentTypes.ToArray().All(dt =>
-            DocumentSubmissions.Any(ds => ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
-        ) ? "approved" : "pending";
+        //[NotMapped]
+        // public string State => DocumentTypes.ToArray().All(dt =>
+        //     DocumentSubmissions.Any(ds => ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
+        // ) ? "approved" : "pending";
+
+        public EvidenceRequestState State()
+        {
+            if (DocumentTypes.ToArray().All(dt =>
+                DocumentSubmissions.Any(ds =>
+                ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
+            ))
+            {
+                return EvidenceRequestState.Approved;
+            }
+            else
+            {
+                if (DocumentTypes.ToArray().All(dt =>
+                    DocumentSubmissions.Any(ds =>
+                    ds.State == SubmissionState.Uploaded && ds.DocumentTypeId == dt)
+                ))
+                {
+                    return EvidenceRequestState.ForReview;
+                }
+            }
+            return EvidenceRequestState.Pending;
+        }
     }
 }

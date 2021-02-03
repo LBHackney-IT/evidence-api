@@ -94,7 +94,7 @@ namespace EvidenceApi.Tests.V1.Domain
                 DocumentSubmissions = documentSubmissions
             };
 
-            evidenceRequest.State.Should().Be("approved");
+            evidenceRequest.State().Should().Be(EvidenceRequestState.Approved);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace EvidenceApi.Tests.V1.Domain
                 DocumentSubmissions = documentSubmissions
             };
 
-            evidenceRequest.State.Should().Be("pending");
+            evidenceRequest.State().Should().Be(EvidenceRequestState.Pending);
         }
     }
 }
