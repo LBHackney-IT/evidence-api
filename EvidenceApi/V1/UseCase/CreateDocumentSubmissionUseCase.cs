@@ -35,7 +35,7 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
             }
 
-            if (evidenceRequest.DocumentSubmissions.Any(d =>
+            if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
                 d.State != SubmissionState.Rejected && d.DocumentTypeId == request.DocumentType))
             {
                 throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");

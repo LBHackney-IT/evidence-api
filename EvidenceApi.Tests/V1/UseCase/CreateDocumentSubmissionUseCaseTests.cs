@@ -62,7 +62,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var existingDocumentSubmission =
-                new DocumentSubmission {State = SubmissionState.Rejected, DocumentTypeId = _documentType.Id};
+                new DocumentSubmission { State = SubmissionState.Rejected, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             var claim = _fixture.Create<Claim>();
@@ -90,7 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var existingDocumentSubmission =
-                new DocumentSubmission {State = SubmissionState.Approved, DocumentTypeId = _documentType.Id};
+                new DocumentSubmission { State = SubmissionState.Approved, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             SetupEvidenceGateway(evidenceRequest);
