@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
@@ -7,6 +8,7 @@ using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -31,6 +33,12 @@ namespace EvidenceApi.V1.UseCase
             if (evidenceRequest == null)
             {
                 throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
+            }
+
+            if (evidenceRequest.DocumentSubmissions.Any(d =>
+                d.State != SubmissionState.Rejected && d.DocumentTypeId == request.DocumentType))
+            {
+                throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");
             }
 
             var claimRequest = BuildClaimRequest(evidenceRequest);

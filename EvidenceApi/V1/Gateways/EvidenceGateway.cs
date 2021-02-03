@@ -47,15 +47,15 @@ namespace EvidenceApi.V1.Gateways
             return _databaseContext.EvidenceRequests.Find(id);
         }
 
-        public List<EvidenceRequest> GetEvidenceRequests(string ServiceRequestedBy, Guid? residentId = null)
+        public List<EvidenceRequest> GetEvidenceRequests(string serviceRequestedBy, Guid? residentId = null)
         {
             if (residentId == default)
             {
                 return _databaseContext.EvidenceRequests
-                    .Where(x => x.ServiceRequestedBy.Contains(ServiceRequestedBy)).ToList();
+                    .Where(x => x.ServiceRequestedBy.Contains(serviceRequestedBy)).ToList();
             }
             return _databaseContext.EvidenceRequests
-                .Where(x => x.ServiceRequestedBy.Contains(ServiceRequestedBy) &&
+                .Where(x => x.ServiceRequestedBy.Contains(serviceRequestedBy) &&
                     x.ResidentId.Equals(residentId)).ToList();
         }
 
