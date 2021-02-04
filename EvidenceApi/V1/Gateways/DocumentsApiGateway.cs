@@ -21,12 +21,11 @@ namespace EvidenceApi.V1.Gateways
             _options = options;
 
             _client.BaseAddress = _options.DocumentsApiUrl;
-
         }
         public async Task<Claim> CreateClaim(ClaimRequest request)
         {
 
-            var uri = new Uri("/api/v1/claims", UriKind.Relative);
+            var uri = new Uri("api/v1/claims", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
 
             var jsonString = SerializeBody(request);
@@ -38,7 +37,7 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
         {
-            var uri = new Uri($"/api/v1/documents/{id}/upload_policies", UriKind.Relative);
+            var uri = new Uri($"api/v1/documents/{id}/upload_policies", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
             var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
