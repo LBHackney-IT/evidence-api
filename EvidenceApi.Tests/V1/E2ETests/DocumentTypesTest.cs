@@ -24,6 +24,5 @@ namespace EvidenceApi.Tests.V1.E2ETests
             data.Should().ContainEquivalentOf(new DocumentType() { Id = "bank-statement", Title = "Bank statement", Description = "From the past three months" });
             data.Should().ContainEquivalentOf(new DocumentType() { Id = "drivers-licence", Title = "Drivers licence", Description = "A valid UK full or provisional UK driving license" });
         }
-
     }
 }

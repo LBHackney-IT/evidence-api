@@ -71,10 +71,6 @@ namespace EvidenceApi.V1.Controllers
                 var result = _evidenceRequestUseCase.Execute(id);
                 return Ok(result);
             }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (NotFoundException)
             {
                 return NotFound();

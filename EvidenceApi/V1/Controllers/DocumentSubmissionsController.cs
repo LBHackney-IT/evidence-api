@@ -14,10 +14,15 @@ namespace EvidenceApi.V1.Controllers
     public class DocumentSubmissionsController : BaseController
     {
         private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
+        private readonly IFindDocumentSubmissionByIdUseCase _findDocumentSubmissionByIdUseCase;
 
-        public DocumentSubmissionsController(IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase)
+        public DocumentSubmissionsController(
+            IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase,
+            IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase
+        )
         {
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
+            _findDocumentSubmissionByIdUseCase = findDocumentSubmissionByIdUseCase;
         }
 
         /// <summary>
@@ -38,6 +43,26 @@ namespace EvidenceApi.V1.Controllers
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Finds a document submission by id
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="404">Document submission cannot be found</response>
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult FindDocumentSubmission([FromRoute][Required] Guid id)
+        {
+            try
+            {
+                var result = _findDocumentSubmissionByIdUseCase.Execute(id);
+                return Ok(result);
             }
             catch (NotFoundException ex)
             {

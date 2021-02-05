@@ -177,5 +177,33 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var expected = createdDocumentSubmission.ToResponse(documentType);
             result.Should().BeEquivalentTo(expected);
         }
+
+        [Test]
+        public async Task CanFindDocumentSubmissionWithValidId()
+        {
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+            var uri = new Uri($"api/v1/document_submissions/{documentSubmission.Id}", UriKind.Relative);
+
+            var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
+            var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
+
+            var expected = documentSubmission.ToResponse(null);
+
+            responseFind.StatusCode.Should().Be(200);
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task ReturnNotFoundWhenCannotFindDocumentSubmission()
+        {
+            var fakeId = Guid.NewGuid();
+            var uri = new Uri($"api/v1/document_submissions/{fakeId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+        }
     }
 }

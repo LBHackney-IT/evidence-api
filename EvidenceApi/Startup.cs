@@ -147,6 +147,8 @@ namespace EvidenceApi
             services.AddScoped<ICreateDocumentSubmissionUseCase, CreateDocumentSubmissionUseCase>();
             services.AddScoped<IUpdateDocumentSubmissionStateUseCase, UpdateDocumentSubmissionStateUseCase>();
             services.AddScoped<IFindEvidenceRequestsUseCase, FindEvidenceRequestsUseCase>();
+            services.AddScoped<IFindResidentByIDUseCase, FindResidentByIDUseCase>();
+            services.AddScoped<IFindDocumentSubmissionByIdUseCase, FindDocumentSubmissionByIdUseCase>();
             services.AddScoped<IUpdateEvidenceRequestStateUseCase, UpdateEvidenceRequestStateUseCase>();
         }
 
