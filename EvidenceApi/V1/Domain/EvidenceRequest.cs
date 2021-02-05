@@ -31,6 +31,9 @@ namespace EvidenceApi.V1.Domain
         [Column("user_requested_by")]
         public string UserRequestedBy { get; set; }
 
+        [Column("state")]
+        public EvidenceRequestState State { get; set; }
+
         public virtual ICollection<Communication> Communications { get; set; }
         public virtual ICollection<DocumentSubmission> DocumentSubmissions { get; set; }
 
@@ -46,26 +49,26 @@ namespace EvidenceApi.V1.Domain
         //     DocumentSubmissions.Any(ds => ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
         // ) ? "approved" : "pending";
 
-        public EvidenceRequestState State()
-        {
-            if (DocumentTypes.ToArray().All(dt =>
-                DocumentSubmissions.Any(ds =>
-                ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
-            ))
-            {
-                return EvidenceRequestState.Approved;
-            }
-            else
-            {
-                if (DocumentTypes.ToArray().All(dt =>
-                    DocumentSubmissions.Any(ds =>
-                    ds.State == SubmissionState.Uploaded && ds.DocumentTypeId == dt)
-                ))
-                {
-                    return EvidenceRequestState.ForReview;
-                }
-            }
-            return EvidenceRequestState.Pending;
-        }
+        // public EvidenceRequestState State()
+        // {
+        //     if (DocumentTypes.ToArray().All(dt =>
+        //         DocumentSubmissions.Any(ds =>
+        //         ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
+        //     ))
+        //     {
+        //         return EvidenceRequestState.Approved;
+        //     }
+        //     else
+        //     {
+        //         if (DocumentTypes.ToArray().All(dt =>
+        //             DocumentSubmissions.Any(ds =>
+        //             ds.State == SubmissionState.Uploaded && ds.DocumentTypeId == dt)
+        //         ))
+        //         {
+        //             return EvidenceRequestState.ForReview;
+        //         }
+        //     }
+        //     return EvidenceRequestState.Pending;
+        // }
     }
 }

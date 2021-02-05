@@ -9,6 +9,6 @@ namespace EvidenceApi.V1.Boundary.Request
     {
         public string ServiceRequestedBy { get; set; }
         public Guid? ResidentId { get; set; } = null;
-        public SubmissionState? State { get; set; } = null;
+        public EvidenceRequestState? State { get; set; } = null;
     }
 }

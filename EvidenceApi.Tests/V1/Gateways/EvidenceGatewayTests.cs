@@ -193,13 +193,13 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
 
-            var expected = ExpectedEvidenceRequests(resident);
             var request = new EvidenceRequestsSearchQuery()
             {
                 ServiceRequestedBy = "development-team-staging",
                 ResidentId = resident.Id,
-                State = SubmissionState.Approved
+                State = EvidenceRequestState.Approved
             };
+            var expected = ExpectedEvidenceRequests(resident, EvidenceRequestState.Approved);
 
             var result = _classUnderTest.GetEvidenceRequests(request);
             result.Should().BeEquivalentTo(expected);
@@ -263,13 +263,8 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             if (state != null)
             {
-                var DocumentSubmissions = new List<DocumentSubmission>();
-                var documentSubmission1 = TestDataHelper.DocumentSubmission();
-                var documentSubmission2 = TestDataHelper.DocumentSubmission();
-                documentSubmission1.DocumentTypeId = "passport-scan";
-                documentSubmission1.State = SubmissionState.Approved;
-                documentSubmission2.DocumentTypeId = "bank-statement";
-                documentSubmission2.State = SubmissionState.Approved;
+                evidenceRequest1.State = (EvidenceRequestState) state;
+                evidenceRequest2.State = (EvidenceRequestState) state;
             }
 
             evidenceRequest1.ServiceRequestedBy = "development-team-staging";

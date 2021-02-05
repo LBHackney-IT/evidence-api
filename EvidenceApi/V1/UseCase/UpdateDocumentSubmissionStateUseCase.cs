@@ -13,11 +13,17 @@ namespace EvidenceApi.V1.UseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
 
-        public UpdateDocumentSubmissionStateUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway)
+        public UpdateDocumentSubmissionStateUseCase(
+            IEvidenceGateway evidenceGateway,
+            IDocumentTypeGateway documentTypeGateway,
+            IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase
+        )
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
         }
 
         public DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionRequest request)
@@ -29,6 +35,11 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document submission with id: {id}");
             }
 
+            if (String.IsNullOrEmpty(request.State))
+            {
+                throw new BadRequestException("State in the request cannot be null");
+            }
+
             SubmissionState state;
             if (!Enum.TryParse(request.State, true, out state))
             {
@@ -37,6 +48,7 @@ namespace EvidenceApi.V1.UseCase
 
             documentSubmission.State = state;
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
+            _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
             var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType);
