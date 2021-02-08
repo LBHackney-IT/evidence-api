@@ -16,17 +16,12 @@ namespace EvidenceApi.Tests.V1.Domain
             var id = Guid.NewGuid();
             var createdAt = DateTime.Now;
             var residentId = Guid.NewGuid();
-            var deliveryMethods = new List<DeliveryMethod>();
-            deliveryMethods.Add(DeliveryMethod.Sms);
-            var documentTypes = new List<string>();
-            documentTypes.Add("passport");
+            var deliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Sms };
+            var documentTypes = new List<string>() { "passport" };
             var serviceRequestedBy = "some-service";
             var userRequestedBy = "some-user";
-            var communications = new List<Communication>();
-            communications.Add(TestDataHelper.Communication());
-            var documentSubmissions = new List<DocumentSubmission>();
-            documentSubmissions.Add(TestDataHelper.DocumentSubmission());
-
+            var communications = new List<Communication>() { TestDataHelper.Communication() };
+            var documentSubmissions = new List<DocumentSubmission>() { TestDataHelper.DocumentSubmission() };
 
             var evidenceRequest = new EvidenceRequest
             {
