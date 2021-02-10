@@ -62,6 +62,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             act.Should().Throw<BadRequestException>().WithMessage("This state is invalid");
         }
 
+        [Test]
         public void CallsTheGatewayWithTheCorrectParams()
         {
             _evidenceGateway.VerifyAll();

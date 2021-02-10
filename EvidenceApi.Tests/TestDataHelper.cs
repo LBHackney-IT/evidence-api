@@ -14,9 +14,9 @@ namespace EvidenceApi.Tests
             return _fixture.Build<EvidenceRequest>()
                 .Without(x => x.Id)
                 .Without(x => x.CreatedAt)
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Without(x => x.RawDeliveryMethods)
+                .With(x => x.Communications, new List<Communication>())
+                .With(x => x.DocumentSubmissions, new List<DocumentSubmission>())
+                .With(x => x.RawDeliveryMethods, new List<string>())
                 .Create();
         }
 
