@@ -26,19 +26,13 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find an evidence request with ID: {id}");
             }
 
-            if (evidenceRequest.DocumentTypes.ToArray().All(dt =>
-                evidenceRequest.DocumentSubmissions.Any(ds =>
-                ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
-            ))
+            if (allDocumentSubmissionsAreApproved(evidenceRequest))
             {
                 evidenceRequest.State = EvidenceRequestState.Approved;
             }
             else
             {
-                if (evidenceRequest.DocumentTypes.ToArray().Any(dt =>
-                    evidenceRequest.DocumentSubmissions.Any(ds =>
-                    ds.State == SubmissionState.Uploaded && ds.DocumentTypeId == dt)
-                ))
+                if (atLeastOneDocumentSubmissionisUploaded(evidenceRequest))
                 {
                     evidenceRequest.State = EvidenceRequestState.ForReview;
                 }
@@ -49,6 +43,22 @@ namespace EvidenceApi.V1.UseCase
             }
             _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
             return evidenceRequest;
+        }
+
+        private static bool allDocumentSubmissionsAreApproved(EvidenceRequest evidenceRequest)
+        {
+            return evidenceRequest.DocumentTypes.ToArray().All(dt =>
+                evidenceRequest.DocumentSubmissions.Any(ds =>
+                ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
+            );
+        }
+
+        private static bool atLeastOneDocumentSubmissionisUploaded(EvidenceRequest evidenceRequest)
+        {
+            return evidenceRequest.DocumentTypes.ToArray().Any(dt =>
+                evidenceRequest.DocumentSubmissions.Any(ds =>
+                ds.State == SubmissionState.Uploaded && ds.DocumentTypeId == dt)
+            );
         }
     }
 }

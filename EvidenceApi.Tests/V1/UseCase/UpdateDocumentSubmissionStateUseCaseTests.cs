@@ -50,6 +50,19 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ThrowsBadRequestExceptionWhenStateIsNullOrEmpty()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id);
+            DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.State)
+                .Create();
+
+            Action act = () => _classUnderTest.Execute(id, request);
+            act.Should().Throw<BadRequestException>().WithMessage("State in the request cannot be null");
+        }
+
+        [Test]
         public void ThrowsBadRequestExceptionWhenStateIsNotValid()
         {
             Guid id = Guid.NewGuid();

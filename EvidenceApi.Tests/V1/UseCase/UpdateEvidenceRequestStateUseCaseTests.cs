@@ -28,7 +28,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var id = Guid.NewGuid();
             SetupMocks();
-            var expected = ExpectedEvidenceRequestApprovedState(_found);
+            EvidenceRequestApprovedState(_found);
             var result = _classUnderTest.Execute(id);
 
             result.Id.Should().Be(_found.Id);
@@ -40,7 +40,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var id = Guid.NewGuid();
             SetupMocks();
-            var expected = ExpectedEvidenceRequestForReviewState(_found);
+            EvidenceRequestForReviewState(_found);
             var result = _classUnderTest.Execute(id);
 
             result.Id.Should().Be(_found.Id);
@@ -52,7 +52,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var id = Guid.NewGuid();
             SetupMocks();
-            var expected = ExpectedEvidenceRequestForPendingState(_found);
+            EvidenceRequestForPendingState(_found);
             var result = _classUnderTest.Execute(id);
 
             result.Id.Should().Be(_found.Id);
@@ -81,7 +81,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_found);
         }
 
-        private static EvidenceRequest ExpectedEvidenceRequestApprovedState(EvidenceRequest evidenceRequest)
+        private static void EvidenceRequestApprovedState(EvidenceRequest evidenceRequest)
         {
             evidenceRequest.DocumentTypes.Clear();
             evidenceRequest.DocumentTypes.Add("passport-scan");
@@ -94,10 +94,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             documentSubmission2.State = SubmissionState.Approved;
             evidenceRequest.DocumentSubmissions.Add(documentSubmission1);
             evidenceRequest.DocumentSubmissions.Add(documentSubmission2);
-            return evidenceRequest;
         }
 
-        private static EvidenceRequest ExpectedEvidenceRequestForReviewState(EvidenceRequest evidenceRequest)
+        private static void EvidenceRequestForReviewState(EvidenceRequest evidenceRequest)
         {
             evidenceRequest.DocumentTypes.Clear();
             evidenceRequest.DocumentTypes.Add("passport-scan");
@@ -110,10 +109,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             documentSubmission2.State = SubmissionState.Uploaded;
             evidenceRequest.DocumentSubmissions.Add(documentSubmission1);
             evidenceRequest.DocumentSubmissions.Add(documentSubmission2);
-            return evidenceRequest;
         }
 
-        private static EvidenceRequest ExpectedEvidenceRequestForPendingState(EvidenceRequest evidenceRequest)
+        private static void EvidenceRequestForPendingState(EvidenceRequest evidenceRequest)
         {
             evidenceRequest.DocumentTypes.Clear();
             evidenceRequest.DocumentTypes.Add("passport-scan");
@@ -126,7 +124,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             documentSubmission2.State = SubmissionState.Pending;
             evidenceRequest.DocumentSubmissions.Add(documentSubmission1);
             evidenceRequest.DocumentSubmissions.Add(documentSubmission2);
-            return evidenceRequest;
         }
     }
 }
