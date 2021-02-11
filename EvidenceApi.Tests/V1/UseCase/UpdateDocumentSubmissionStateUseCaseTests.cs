@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -17,19 +18,20 @@ namespace EvidenceApi.Tests.V1.UseCase
         private UpdateDocumentSubmissionStateUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
+        private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
 
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new UpdateDocumentSubmissionStateUseCase(_evidenceGateway.Object, _documentTypeGateway.Object);
+            _classUnderTest = new UpdateDocumentSubmissionStateUseCase(_evidenceGateway.Object, _documentTypeGateway.Object, _updateEvidenceRequestStateUseCase.Object);
         }
 
         [Test]
         public void ReturnsTheUpdatedDocumentSubmission()
         {
-            Guid id = Guid.NewGuid();
+            var id = Guid.NewGuid();
             SetupMocks(id);
             DocumentSubmissionRequest request = BuildDocumentSubmissionRequest();
             var result = _classUnderTest.Execute(id, request);
@@ -48,6 +50,19 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ThrowsBadRequestExceptionWhenStateIsNullOrEmpty()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id);
+            DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.State)
+                .Create();
+
+            Action act = () => _classUnderTest.Execute(id, request);
+            act.Should().Throw<BadRequestException>().WithMessage("State in the request cannot be null");
+        }
+
+        [Test]
         public void ThrowsBadRequestExceptionWhenStateIsNotValid()
         {
             Guid id = Guid.NewGuid();
@@ -60,27 +75,32 @@ namespace EvidenceApi.Tests.V1.UseCase
             act.Should().Throw<BadRequestException>().WithMessage("This state is invalid");
         }
 
+        [Test]
+        public void CallsTheGatewayWithTheCorrectParams()
+        {
+            _evidenceGateway.VerifyAll();
+            _updateEvidenceRequestStateUseCase.VerifyAll();
+        }
+
         private void SetupMocks(Guid id)
         {
-            _found = TestDataHelper.DocumentSubmission();
-
-            var updated = TestDataHelper.DocumentSubmission();
-            updated.Id = id;
-            updated.State = SubmissionState.Uploaded;
+            _found = TestDataHelper.DocumentSubmission(true);
 
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(id)).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
-            ))).Returns(updated);
+            )));
 
             _documentTypeGateway.Setup(x => x.GetDocumentTypeById(_found.DocumentTypeId))
                 .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));
+
+            _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));
         }
 
         private DocumentSubmissionRequest BuildDocumentSubmissionRequest()
         {
             return _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.State, "UPLOADED")
+                .With(x => x.State, "Uploaded")
                 .Create();
         }
     }

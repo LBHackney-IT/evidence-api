@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Infrastructure.Interfaces;
@@ -29,6 +30,9 @@ namespace EvidenceApi.V1.Domain
 
         [Column("user_requested_by")]
         public string UserRequestedBy { get; set; }
+
+        [Column("state")]
+        public EvidenceRequestState State { get; set; }
 
         public virtual ICollection<Communication> Communications { get; set; }
         public virtual ICollection<DocumentSubmission> DocumentSubmissions { get; set; }

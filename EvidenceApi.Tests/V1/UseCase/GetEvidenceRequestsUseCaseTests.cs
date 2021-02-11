@@ -54,7 +54,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(request);
 
             _evidenceGateway.Verify(x =>
-                x.GetEvidenceRequests(request.ServiceRequestedBy, request.ResidentId));
+                x.GetEvidenceRequests(request));
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -78,7 +78,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident);
             _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<string>(), It.IsAny<Guid?>())).Returns(_found);
+            _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(_found);
         }
 
         private void BuildEvidenceRequestsList()

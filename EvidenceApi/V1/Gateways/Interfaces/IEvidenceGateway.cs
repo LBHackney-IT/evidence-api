@@ -1,6 +1,7 @@
 using System;
 using EvidenceApi.V1.Domain;
 using System.Collections.Generic;
+using EvidenceApi.V1.Boundary.Request;
 
 namespace EvidenceApi.V1.Gateways.Interfaces
 {
@@ -11,6 +12,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Communication CreateCommunication(Communication request);
         DocumentSubmission CreateDocumentSubmission(DocumentSubmission request);
         DocumentSubmission FindDocumentSubmission(Guid id);
-        List<EvidenceRequest> GetEvidenceRequests(string serviceRequestedBy, Guid? residentId = null);
+        List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request);
     }
 }
