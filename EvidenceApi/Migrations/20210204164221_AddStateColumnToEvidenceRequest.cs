@@ -19,6 +19,7 @@ namespace EvidenceApi.Migrations
                         WHEN 'EvidenceRejected' THEN 0
                         WHEN 'Reminder' THEN 1
                         WHEN 'EvidenceRequest' THEN 2
+                        ELSE 0
                     END;
                 ALTER TABLE communications ALTER COLUMN reason TYPE integer USING reason::integer;
                 ALTER TABLE communications ALTER COLUMN reason SET NOT NULL;
