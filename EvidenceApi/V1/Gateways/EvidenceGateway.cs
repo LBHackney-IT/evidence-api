@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace EvidenceApi.V1.Gateways

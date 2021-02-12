@@ -4,6 +4,7 @@ using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EvidenceApi.V1.Controllers
 {
@@ -57,11 +58,11 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Document submission cannot be found</response>
         [HttpGet]
         [Route("{id}")]
-        public IActionResult FindDocumentSubmission([FromRoute][Required] Guid id)
+        public async Task<IActionResult> FindDocumentSubmission([FromRoute][Required] Guid id)
         {
             try
             {
-                var result = _findDocumentSubmissionByIdUseCase.Execute(id);
+                var result = await _findDocumentSubmissionByIdUseCase.ExecuteAsync(id).ConfigureAwait(true);
                 return Ok(result);
             }
             catch (NotFoundException ex)

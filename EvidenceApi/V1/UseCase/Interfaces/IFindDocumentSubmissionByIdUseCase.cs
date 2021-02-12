@@ -1,11 +1,11 @@
 using System;
-using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
+using System.Threading.Tasks;
 
 namespace EvidenceApi.V1.UseCase.Interfaces
 {
     public interface IFindDocumentSubmissionByIdUseCase
     {
-        DocumentSubmissionResponse Execute(Guid id);
+        Task<DocumentSubmissionResponse> ExecuteAsync(Guid id);
     }
 }

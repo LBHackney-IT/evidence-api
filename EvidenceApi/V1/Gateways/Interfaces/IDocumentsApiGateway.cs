@@ -9,5 +9,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
     {
         Task<Claim> CreateClaim(ClaimRequest request);
         Task<S3UploadPolicy> CreateUploadPolicy(Guid id);
+        Task<Claim> GetClaimById(string id);
     }
 }

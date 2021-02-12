@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
+#nullable enable annotations
 
 namespace EvidenceApi.V1.Factories
 {
@@ -31,7 +32,12 @@ namespace EvidenceApi.V1.Factories
             };
         }
 
-        public static DocumentSubmissionResponse ToResponse(this DocumentSubmission domain, DocumentType documentType, S3UploadPolicy s3UploadPolicy = null)
+        public static DocumentSubmissionResponse ToResponse(
+            this DocumentSubmission domain,
+            DocumentType documentType,
+            S3UploadPolicy? s3UploadPolicy = null,
+            Document? document = null
+        )
         {
             return new DocumentSubmissionResponse()
             {
@@ -41,7 +47,8 @@ namespace EvidenceApi.V1.Factories
                 RejectionReason = domain.RejectionReason,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
-                UploadPolicy = s3UploadPolicy
+                UploadPolicy = s3UploadPolicy,
+                Document = document
             };
         }
     }

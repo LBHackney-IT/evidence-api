@@ -31,7 +31,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public async Task CanGetAClaimWithValidParameters()
+        public async Task CanCreateAClaimWithValidParameters()
         {
             var claimRequest = _fixture.Build<ClaimRequest>()
                 .With(x => x.ServiceAreaCreatedBy, "service-area")
@@ -75,6 +75,19 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = await _classUnderTest.CreateUploadPolicy(id).ConfigureAwait(true);
 
             result.Should().BeEquivalentTo(expectedS3UploadPolicy);
+        }
+
+        [Test]
+        public async Task CanGetAClaim()
+        {
+            var id = Guid.NewGuid().ToString();
+            var expectedClaim = JsonConvert.DeserializeObject<Claim>(_claimResponseFixture);
+            _messageHandler.SetupRequest(HttpMethod.Get, $"{_options.DocumentsApiUrl}api/v1/claims/{id}")
+                .ReturnsResponse(_claimResponseFixture, "application/json");
+            // add auth check here
+            var result = await _classUnderTest.GetClaimById(id).ConfigureAwait(true);
+
+            result.Should().BeEquivalentTo(expectedClaim);
         }
 
         private string _claimResponseFixture = @"{

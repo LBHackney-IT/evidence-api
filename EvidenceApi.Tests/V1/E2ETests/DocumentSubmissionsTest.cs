@@ -47,6 +47,14 @@ namespace EvidenceApi.Tests.V1.E2ETests
             );
 
             DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/claims/{_createdClaim.Id}").UsingGet()
+            ).RespondWith(
+                Response.Create().WithStatusCode(200).WithBody(
+                    JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+
+            DocumentsApiServer.Given(
                 Request.Create().WithPath($"/api/v1/documents/{id}/upload_policies")
             ).RespondWith(
                 Response.Create().WithStatusCode(201).WithBody(
@@ -92,7 +100,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"PENDING\"," +
                                "\"documentType\":{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}," +
-                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}" +
+                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
+                               "\"document\":null" +
                                "}";
 
             json.Should().Be(expected);
@@ -182,6 +191,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanFindDocumentSubmissionWithValidId()
         {
             var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            documentSubmission.ClaimId = _createdClaim.Id.ToString();
+            documentSubmission.DocumentTypeId = "passport-scan";
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/document_submissions/{documentSubmission.Id}", UriKind.Relative);
@@ -190,7 +201,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
 
-            var expected = documentSubmission.ToResponse(null);
+            var documentType = TestDataHelper.DocumentType("passport-scan");
+            var expected = documentSubmission.ToResponse(documentType, null, _document);
 
             responseFind.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
