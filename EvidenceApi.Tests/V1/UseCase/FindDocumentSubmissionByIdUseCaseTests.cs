@@ -22,8 +22,13 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         private DocumentType _documentType;
         private DocumentSubmission _found;
+        private DocumentSubmission _found2;
         private Task<Claim> _claim;
-        private string _id = "70cdff29-84d3-461e-bd16-2032c07c28bd";
+        private Task<Claim> _claim2;
+        private string _claimId1 = "70cdff29-84d3-461e-bd16-2032c07c28bd";
+        private string _claimId2 = "010f4156-92aa-4082-891b-3b238e46940a";
+        private Guid _documentSubmissionId1 = Guid.NewGuid();
+        private Guid _documentSubmissionId2 = Guid.NewGuid();
 
         [SetUp]
         public void SetUp()
@@ -42,8 +47,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public async Task ReturnsTheFoundDocumentSubmission()
         {
             SetupMocks();
-            var id = Guid.NewGuid();
-            var result = await _classUnderTest.ExecuteAsync(id).ConfigureAwait(true);
+            var result = await _classUnderTest.ExecuteAsync(_documentSubmissionId1).ConfigureAwait(true);
 
             result.ClaimId.Should().Be(_found.ClaimId);
             result.RejectionReason.Should().Be(_found.RejectionReason);
@@ -52,20 +56,18 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Document.Should().NotBeNull();
         }
 
-        // test: return the found document subnmission with no document
-        // [Test]
-        // public async Task ReturnsTheFoundDocumentSubmissionWithoutDocument()
-        // {
-        //     SetupMocks();
-        //     var id = Guid.NewGuid();
-        //     var result = await _classUnderTest.ExecuteAsync(id).ConfigureAwait(true);
+        [Test]
+        public async Task ReturnsTheFoundDocumentSubmissionWithoutDocument()
+        {
+            SetupMocks();
+            var result = await _classUnderTest.ExecuteAsync(_documentSubmissionId2).ConfigureAwait(true);
 
-        //     result.ClaimId.Should().Be(_found.ClaimId);
-        //     result.RejectionReason.Should().Be(_found.RejectionReason);
-        //     result.State.Should().Be(_found.State.ToString().ToUpper());
-        //     result.DocumentType.Should().Be(_documentType);
-        //     result.Document.Should().BeNull();
-        // }
+            result.ClaimId.Should().Be(_found2.ClaimId);
+            result.RejectionReason.Should().Be(_found2.RejectionReason);
+            result.State.Should().Be(_found2.State.ToString().ToUpper());
+            result.DocumentType.Should().Be(_documentType);
+            result.Document.Should().BeNull();
+        }
 
         [Test]
         public void ThrowsAnErrorWhenADocumentSubmissionIsNotFound()
@@ -79,12 +81,23 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _documentType = _fixture.Create<DocumentType>();
             _claim = _fixture.Create<Task<Claim>>();
+            _claim2 = _fixture.Create<Task<Claim>>();
+
             _found = TestDataHelper.DocumentSubmission();
-            _found.ClaimId = _id;
+            _found.Id = _documentSubmissionId1;
+            _found.ClaimId = _claimId1;
+
+            _found2 = TestDataHelper.DocumentSubmission();
+            _found2.Id = _documentSubmissionId2;
+            _found2.ClaimId = _claimId2;
+            _claim2.Result.Document = null;
+
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway.Setup(x => x.FindDocumentSubmission(It.IsAny<Guid>())).Returns(_found);
-            _documentsApiGateway.Setup(x => x.GetClaimById(_id)).Returns(_claim);
+            _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId1)).Returns(_found);
+            _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId2)).Returns(_found2);
+            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim);
+            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
         }
     }
 }
