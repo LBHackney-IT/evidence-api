@@ -32,6 +32,7 @@ namespace EvidenceApi.Migrations
                     CASE delivery_method
                         WHEN 'Sms' THEN 0
                         WHEN 'Email' THEN 1
+                        ELSE 0
                     END;
                 ALTER TABLE communications ALTER COLUMN delivery_method TYPE integer USING delivery_method::integer;
                 ALTER TABLE communications ALTER COLUMN delivery_method SET NOT NULL;
