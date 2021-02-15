@@ -46,7 +46,7 @@ namespace EvidenceApi.V1.Gateways
         public async Task<Claim> GetClaimById(string id)
         {
             var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
-            //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
             var response = await _client.GetAsync(uri).ConfigureAwait(true);
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }

@@ -12,6 +12,7 @@ namespace EvidenceApi.V1.Infrastructure
         public Uri DocumentsApiUrl { get; set; }
         public string DocumentsApiPostClaimsToken { get; set; }
         public string DocumentsApiPostDocumentsToken { get; set; }
+        public string DocumentsApiGetClaimsToken { get; set; }
 
         public static AppOptions FromEnv()
         {
@@ -24,6 +25,7 @@ namespace EvidenceApi.V1.Infrastructure
                 DatabaseConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING"),
                 EvidenceRequestClientUrl = evidenceApiUrl != null ? new Uri(evidenceApiUrl) : null,
                 DocumentsApiUrl = documentsApiUrl != null ? new Uri(documentsApiUrl) : null,
+                DocumentsApiGetClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_GET_CLAIMS_TOKEN"),
                 DocumentsApiPostClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_CLAIMS_TOKEN"),
                 DocumentsApiPostDocumentsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_DOCUMENTS_TOKEN")
             };
