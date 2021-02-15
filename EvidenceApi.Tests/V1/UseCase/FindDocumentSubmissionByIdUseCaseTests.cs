@@ -23,7 +23,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private DocumentType _documentType;
         private DocumentSubmission _found;
         private DocumentSubmission _found2;
-        private Task<Claim> _claim;
+        private Task<Claim> _claim1;
         private Task<Claim> _claim2;
         private string _claimId1 = "70cdff29-84d3-461e-bd16-2032c07c28bd";
         private string _claimId2 = "010f4156-92aa-4082-891b-3b238e46940a";
@@ -80,7 +80,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private void SetupMocks()
         {
             _documentType = _fixture.Create<DocumentType>();
-            _claim = _fixture.Create<Task<Claim>>();
+            _claim1 = _fixture.Create<Task<Claim>>();
             _claim2 = _fixture.Create<Task<Claim>>();
 
             _found = TestDataHelper.DocumentSubmission();
@@ -96,7 +96,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId1)).Returns(_found);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId2)).Returns(_found2);
-            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim);
+            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
         }
     }
