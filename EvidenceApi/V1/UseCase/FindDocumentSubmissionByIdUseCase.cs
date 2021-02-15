@@ -5,6 +5,7 @@ using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Domain;
+using System.Threading.Tasks;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -12,14 +13,20 @@ namespace EvidenceApi.V1.UseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private IDocumentsApiGateway _documentsApiGateway;
 
-        public FindDocumentSubmissionByIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway)
+        public FindDocumentSubmissionByIdUseCase(
+            IEvidenceGateway evidenceGateway,
+            IDocumentTypeGateway documentTypeGateway,
+            IDocumentsApiGateway documentsApiGateway
+        )
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _documentsApiGateway = documentsApiGateway;
         }
 
-        public DocumentSubmissionResponse Execute(Guid id)
+        public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid id)
         {
             var found = _evidenceGateway.FindDocumentSubmission(id);
 
@@ -29,7 +36,8 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var documentType = FindDocumentType(found.DocumentTypeId);
-            return found.ToResponse(documentType);
+            var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
+            return found.ToResponse(documentType, null, claim.Document);
         }
 
         private DocumentType FindDocumentType(string documentTypeId)

@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using EvidenceApi.V1.Infrastructure.Interfaces;
 using EvidenceApi.V1.Domain.Enums;
-using EvidenceApi.V1.Infrastructure;
 
 namespace EvidenceApi.V1.Domain
 {

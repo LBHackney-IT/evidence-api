@@ -38,11 +38,17 @@ namespace EvidenceApi.V1.Gateways
         public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
         {
             var uri = new Uri($"api/v1/documents/{id}/upload_policies", UriKind.Relative);
-            Console.WriteLine("==TOKEN== {0}", _options.DocumentsApiPostDocumentsToken);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
             var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
-            Console.WriteLine("==POLICY==");
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
+        }
+
+        public async Task<Claim> GetClaimById(string id)
+        {
+            var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+            var response = await _client.GetAsync(uri).ConfigureAwait(true);
+            return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
         private static StringContent SerializeBody(ClaimRequest request)
@@ -54,7 +60,6 @@ namespace EvidenceApi.V1.Gateways
         private static async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
         {
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            Console.WriteLine(jsonString);
             return JsonConvert.DeserializeObject<T>(jsonString);
         }
     }

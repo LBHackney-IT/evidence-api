@@ -16,5 +16,7 @@ namespace EvidenceApi.V1.Domain
     public class Document
     {
         public Guid Id { get; set; }
+        public int FileSize { get; set; }
+        public string FileType { get; set; }
     }
 }
