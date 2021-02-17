@@ -1,16 +1,8 @@
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
-using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways;
-using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using NUnit.Framework;
 
 namespace EvidenceApi.Tests.V1.Gateways
@@ -83,6 +75,122 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.Email.Should().Be(entity.Email);
             foundRecord.PhoneNumber.Should().Be(entity.PhoneNumber);
             foundRecord.Name.Should().Be(entity.Name);
+        }
+
+        [Test]
+        public void FindResidentsByName()
+        {
+            // Arrange
+            var resident1 = _fixture.Build<Resident>()
+                .With(x => x.Name, "Test Resident")
+                .Create();
+            var resident2 = _fixture.Build<Resident>()
+                .With(x => x.Name, "Other Resident")
+                .Create();
+            var resident3 = _fixture.Build<Resident>()
+                .With(x => x.Name, "Test Resident2")
+                .Create();
+            DatabaseContext.Residents.Add(resident1);
+            DatabaseContext.Residents.Add(resident2);
+            DatabaseContext.Residents.Add(resident3);
+            DatabaseContext.SaveChanges();
+
+            // Act
+            var result = _classUnderTest.FindResidents("Test");
+
+            // Assert
+            result.Count.Should().Be(2);
+            var resultResident1 = result.Find(r => r.Name == "Test Resident");
+            resultResident1.Should().NotBeNull();
+            var resultResident2 = result.Find(r => r.Name == "Test Resident2");
+            resultResident2.Should().NotBeNull();
+        }
+
+        [Test]
+        public void FindResidentsByEmail()
+        {
+            // Arrange
+            var resident1 = _fixture.Build<Resident>()
+                .With(x => x.Email, "TestEmail@hackney.gov.uk")
+                .Create();
+            var resident2 = _fixture.Build<Resident>()
+                .With(x => x.Email, "OtherEmail@hackney.gov.uk")
+                .Create();
+            var resident3 = _fixture.Build<Resident>()
+                .With(x => x.Email, "TestEmail2@hackney.gov.uk")
+                .Create();
+            DatabaseContext.Residents.Add(resident1);
+            DatabaseContext.Residents.Add(resident2);
+            DatabaseContext.Residents.Add(resident3);
+            DatabaseContext.SaveChanges();
+
+            // Act
+            var result = _classUnderTest.FindResidents("Test");
+
+            // Assert
+            result.Count.Should().Be(2);
+            var resultResident1 = result.Find(r => r.Email == "TestEmail@hackney.gov.uk");
+            resultResident1.Should().NotBeNull();
+            var resultResident2 = result.Find(r => r.Email == "TestEmail@hackney.gov.uk");
+            resultResident2.Should().NotBeNull();
+        }
+
+        [Test]
+        public void FindResidentsByPhoneNumber()
+        {
+            // Arrange
+            var resident1 = _fixture.Build<Resident>()
+                .With(x => x.PhoneNumber, "123")
+                .Create();
+            var resident2 = _fixture.Build<Resident>()
+                .With(x => x.PhoneNumber, "567")
+                .Create();
+            var resident3 = _fixture.Build<Resident>()
+                .With(x => x.PhoneNumber, "1234")
+                .Create();
+            DatabaseContext.Residents.Add(resident1);
+            DatabaseContext.Residents.Add(resident2);
+            DatabaseContext.Residents.Add(resident3);
+            DatabaseContext.SaveChanges();
+
+            // Act
+            var result = _classUnderTest.FindResidents("123");
+
+            // Assert
+            result.Count.Should().Be(2);
+            var resultResident1 = result.Find(r => r.PhoneNumber == "123");
+            resultResident1.Should().NotBeNull();
+            var resultResident2 = result.Find(r => r.PhoneNumber == "1234");
+            resultResident2.Should().NotBeNull();
+        }
+
+        [Test]
+        public void FindResidentsByBothNameAndEmail()
+        {
+            // Arrange
+            var resident1 = _fixture.Build<Resident>()
+                .With(x => x.Name, "Test Resident")
+                .Create();
+            var resident2 = _fixture.Build<Resident>()
+                .With(x => x.PhoneNumber, "567")
+                .Create();
+            var resident3 = _fixture.Build<Resident>()
+                .With(x => x.Email, "TestEmail@hackney.gov.uk")
+                .Create();
+            DatabaseContext.Residents.Add(resident1);
+            DatabaseContext.Residents.Add(resident2);
+            DatabaseContext.Residents.Add(resident3);
+            DatabaseContext.SaveChanges();
+
+            // Act
+            var result = _classUnderTest.FindResidents("Test");
+
+            // Assert
+            result.Count.Should().Be(2);
+            var resultResident1 = result.Find(r => r.Name == "Test Resident");
+            resultResident1.Should().NotBeNull();
+            var resultResident2 = result.Find(r => r.Email == "TestEmail@hackney.gov.uk");
+            resultResident2.Should().NotBeNull();
         }
     }
 }

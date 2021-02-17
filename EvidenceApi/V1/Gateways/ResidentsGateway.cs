@@ -1,11 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -36,6 +34,21 @@ namespace EvidenceApi.V1.Gateways
         public Resident FindResident(Guid id)
         {
             return _databaseContext.Residents.Find(id);
+        }
+
+        public List<Resident> FindResidents(string searchQuery)
+        {
+            /*
+             * I decided to use LINQ filtering over a DbSet because it seemed neat and meant we didn't need to worry about coding against SQL injection.
+             * If we notice it is performing poorly then we could instead use raw SQL queries with named parameters.
+             * See - https://docs.microsoft.com/en-us/ef/core/querying/raw-sql
+             */
+            return _databaseContext.Residents
+                .Where(r =>
+                    r.Name.StartsWith(searchQuery) ||
+                    r.Email.StartsWith(searchQuery) ||
+                    r.PhoneNumber.StartsWith(searchQuery))
+                .ToList();
         }
 
         private Resident FindResident(Resident request)

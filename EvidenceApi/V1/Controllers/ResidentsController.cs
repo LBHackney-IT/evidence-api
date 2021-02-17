@@ -13,9 +13,12 @@ namespace EvidenceApi.V1.Controllers
     public class ResidentsController : BaseController
     {
         private readonly IFindResidentByIDUseCase _findByIdUseCase;
-        public ResidentsController(IFindResidentByIDUseCase gateway)
+        private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
+
+        public ResidentsController(IFindResidentByIDUseCase findByIdUseCase, IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase)
         {
-            _findByIdUseCase = gateway;
+            _findByIdUseCase = findByIdUseCase;
+            _findResidentsBySearchQueryUseCase = findResidentsBySearchQueryUseCase;
         }
 
         /// <summary>
@@ -37,6 +40,20 @@ namespace EvidenceApi.V1.Controllers
             {
                 return NotFound();
             }
+        }
+
+        /// <summary>
+        /// Search for residents
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpGet]
+        [Route("search/{searchQuery}")]
+        public IActionResult SearchResidents([FromRoute][Required] string searchQuery)
+        {
+            var result = _findResidentsBySearchQueryUseCase.Execute(searchQuery);
+
+            return Ok(result);
         }
     }
 }

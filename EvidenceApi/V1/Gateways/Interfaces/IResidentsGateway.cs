@@ -1,5 +1,5 @@
 using System;
-using EvidenceApi.V1.Boundary.Request;
+using System.Collections.Generic;
 using EvidenceApi.V1.Domain;
 
 namespace EvidenceApi.V1.Gateways.Interfaces
@@ -8,5 +8,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
     {
         Resident FindOrCreateResident(Resident request);
         Resident FindResident(Guid id);
+        List<Resident> FindResidents(string searchQuery);
     }
 }
