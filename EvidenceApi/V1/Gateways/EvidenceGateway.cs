@@ -60,5 +60,10 @@ namespace EvidenceApi.V1.Gateways
         {
             return _databaseContext.DocumentSubmissions.Find(id);
         }
+
+        public List<DocumentSubmission> FindDocumentSubmissionByEvidenceRequestId(Guid id)
+        {
+            return _databaseContext.DocumentSubmissions.Where(x => x.EvidenceRequestId == id).ToList();
+        }
     }
 }

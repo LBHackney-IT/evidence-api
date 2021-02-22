@@ -16,14 +16,17 @@ namespace EvidenceApi.V1.Controllers
     {
         private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
         private readonly IFindDocumentSubmissionByIdUseCase _findDocumentSubmissionByIdUseCase;
+        private readonly IFindDocumentSubmissionsByResidentIdUseCase _findDocumentSubmissionsByResidentIdUseCase;
 
         public DocumentSubmissionsController(
             IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase,
-            IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase
+            IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase,
+            IFindDocumentSubmissionsByResidentIdUseCase findDocumentSubmissionsByResidentIdUseCase
         )
         {
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
             _findDocumentSubmissionByIdUseCase = findDocumentSubmissionByIdUseCase;
+            _findDocumentSubmissionsByResidentIdUseCase = findDocumentSubmissionsByResidentIdUseCase;
         }
 
         /// <summary>
@@ -63,6 +66,25 @@ namespace EvidenceApi.V1.Controllers
             try
             {
                 var result = await _findDocumentSubmissionByIdUseCase.ExecuteAsync(id).ConfigureAwait(true);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Find all document submissions by resident id
+        /// </summary>
+        /// <response code="200">Found</response>
+        /// <response code="404">Evidence request cannot be found</response>
+        [HttpGet]
+        public async Task<IActionResult> FindDocumentSubmissionsByResidentId([FromQuery] DocumentSubmissionSearchQuery request)
+        {
+            try
+            {
+                var result = await _findDocumentSubmissionsByResidentIdUseCase.ExecuteAsync(request).ConfigureAwait(true);
                 return Ok(result);
             }
             catch (NotFoundException ex)
