@@ -65,4 +65,15 @@ CREATE INDEX "IX_document_submissions_evidence_request_id" ON document_submissio
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210106110856_CreateDocumentSubmission', '3.1.7');
 
+ALTER TABLE evidence_requests ADD state int NULL;
 
+ALTER TABLE communications ALTER COLUMN reason TYPE integer USING reason::integer;
+ALTER TABLE communications ALTER COLUMN reason SET NOT NULL;
+ALTER TABLE communications ALTER COLUMN reason DROP DEFAULT;
+
+ALTER TABLE communications ALTER COLUMN delivery_method TYPE integer USING delivery_method::integer;
+ALTER TABLE communications ALTER COLUMN delivery_method SET NOT NULL;
+ALTER TABLE communications ALTER COLUMN delivery_method DROP DEFAULT;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210204164221_AddStateColumnToEvidenceRequest', '3.1.7');
