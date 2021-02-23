@@ -78,18 +78,18 @@ namespace EvidenceApi.V1.Controllers
         /// Find all document submissions by resident id
         /// </summary>
         /// <response code="200">Found</response>
-        /// <response code="404">Evidence request cannot be found</response>
+        /// <response code="400">Search query is invalid</response>
         [HttpGet]
-        public async Task<IActionResult> FindDocumentSubmissionsByResidentId([FromQuery] DocumentSubmissionSearchQuery request)
+        public async Task<IActionResult> FindDocumentSubmissionsByResidentId([FromQuery][Required] DocumentSubmissionSearchQuery request)
         {
             try
             {
                 var result = await _findDocumentSubmissionsByResidentIdUseCase.ExecuteAsync(request).ConfigureAwait(true);
                 return Ok(result);
             }
-            catch (NotFoundException ex)
+            catch (BadRequestException ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

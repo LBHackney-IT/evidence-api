@@ -28,17 +28,14 @@ namespace EvidenceApi.V1.UseCase
 
         public async Task<List<DocumentSubmissionResponse>> ExecuteAsync(DocumentSubmissionSearchQuery request)
         {
+            ValidateRequest(request);
+
             EvidenceRequestsSearchQuery evidenceRequestSearchQuery = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = request.serviceRequestedBy,
+                ServiceRequestedBy = request.ServiceRequestedBy,
                 ResidentId = request.ResidentId
             };
             var found = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
-
-            if (found == null)
-            {
-                throw new NotFoundException("Cannot find evidence requests with provided parameters");
-            }
 
             var documentSubmissions = new List<DocumentSubmission>();
 
@@ -66,6 +63,19 @@ namespace EvidenceApi.V1.UseCase
         private DocumentType FindDocumentType(string documentTypeId)
         {
             return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+        }
+
+        private static void ValidateRequest(DocumentSubmissionSearchQuery request)
+        {
+            if (String.IsNullOrEmpty(request.ServiceRequestedBy))
+            {
+                throw new BadRequestException("Service requested by is null or empty");
+            }
+
+            if (request.ResidentId == Guid.Empty)
+            {
+                throw new BadRequestException("Resident ID is invalid");
+            }
         }
     }
 }

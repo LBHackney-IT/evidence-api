@@ -54,30 +54,45 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             var result = await _classUnderTest.ExecuteAsync(_useCaseRequest).ConfigureAwait(true);
 
-            //result[0].Id.Should().Be(_documentSubmission1.Id);
-            result.Should().NotBeEmpty();
+            result[0].Id.Should().Be(_documentSubmission1.Id);
+            result[0].ClaimId.Should().BeEquivalentTo(_documentSubmission1.ClaimId);
+            result[0].DocumentType.Should().BeEquivalentTo(_documentType);
+            result[0].State.Should().BeEquivalentTo(_documentSubmission1.State.ToString());
+            result[0].RejectionReason.Should().BeEquivalentTo(_documentSubmission1.RejectionReason);
+            result[1].Id.Should().Be(_documentSubmission2.Id);
+            result[1].ClaimId.Should().BeEquivalentTo(_documentSubmission2.ClaimId);
+            result[1].DocumentType.Should().BeEquivalentTo(_documentType);
+            result[1].State.Should().BeEquivalentTo(_documentSubmission2.State.ToString());
+            result[1].RejectionReason.Should().BeEquivalentTo(_documentSubmission2.RejectionReason);
         }
 
-        // [Test]
-        // public async Task ReturnsTheFoundDocumentSubmissionWithoutDocument()
-        // {
-        //     SetupMocks();
-        //     var result = await _classUnderTest.ExecuteAsync(_documentSubmissionId2).ConfigureAwait(true);
+        [Test]
+        public void ThrowsBadRequestWhenServiceRequestedByIsEmpty()
+        {
+            var serviceRequestedBy = "";
+            var residentId = Guid.NewGuid();
+            var request = new DocumentSubmissionSearchQuery()
+            {
+                ServiceRequestedBy = serviceRequestedBy,
+                ResidentId = residentId
+            };
+            Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Service requested by is null or empty");
+        }
 
-        //     result.ClaimId.Should().Be(_found2.ClaimId);
-        //     result.RejectionReason.Should().Be(_found2.RejectionReason);
-        //     result.State.Should().Be(_found2.State.ToString().ToUpper());
-        //     result.DocumentType.Should().Be(_documentType);
-        //     result.Document.Should().BeNull();
-        // }
-
-        // [Test]
-        // public void ThrowsAnErrorWhenADocumentSubmissionIsNotFound()
-        // {
-        //     var id = Guid.NewGuid();
-        //     Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id).ConfigureAwait(true);
-        //     testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with ID: {id}");
-        // }
+        [Test]
+        public void ThrowsBadRequestWhenResidentIdIsNull()
+        {
+            var serviceRequestedBy = "some service";
+            Guid residentId = Guid.Empty;
+            var request = new DocumentSubmissionSearchQuery()
+            {
+                ServiceRequestedBy = serviceRequestedBy,
+                ResidentId = residentId
+            };
+            Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Resident ID is invalid");
+        }
 
         private void SetupMocks()
         {
@@ -109,7 +124,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _useCaseRequest = new DocumentSubmissionSearchQuery()
             {
-                serviceRequestedBy = "Housing benefit",
+                ServiceRequestedBy = "Housing benefit",
                 ResidentId = residentId
             };
 
