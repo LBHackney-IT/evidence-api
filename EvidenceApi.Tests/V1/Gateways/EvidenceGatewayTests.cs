@@ -277,7 +277,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void FindByResidentIdReturnsNullWhenDocumentSubmissionsCannotBeFound()
+        public void FindByResidentIdReturnsEmptyListWhenDocumentSubmissionsCannotBeFound()
         {
             var id = Guid.NewGuid();
             var found = _classUnderTest.FindDocumentSubmissionByEvidenceRequestId(id);

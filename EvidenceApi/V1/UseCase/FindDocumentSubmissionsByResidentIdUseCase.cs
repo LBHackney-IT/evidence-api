@@ -53,9 +53,11 @@ namespace EvidenceApi.V1.UseCase
                 if (claim.Document == null)
                 {
                     result.Add(ds.ToResponse(documentType, null, null));
-                    return result;
                 }
-                result.Add(ds.ToResponse(documentType, null, claim.Document));
+                else
+                {
+                    result.Add(ds.ToResponse(documentType, null, claim.Document));
+                }
             }
             return result;
         }

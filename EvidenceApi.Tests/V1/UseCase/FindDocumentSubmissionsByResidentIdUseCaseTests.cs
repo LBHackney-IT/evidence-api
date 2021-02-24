@@ -54,16 +54,19 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             var result = await _classUnderTest.ExecuteAsync(_useCaseRequest).ConfigureAwait(true);
 
-            result[0].Id.Should().Be(_documentSubmission1.Id);
-            result[0].ClaimId.Should().BeEquivalentTo(_documentSubmission1.ClaimId);
-            result[0].DocumentType.Should().BeEquivalentTo(_documentType);
-            result[0].State.Should().BeEquivalentTo(_documentSubmission1.State.ToString());
-            result[0].RejectionReason.Should().BeEquivalentTo(_documentSubmission1.RejectionReason);
-            result[1].Id.Should().Be(_documentSubmission2.Id);
-            result[1].ClaimId.Should().BeEquivalentTo(_documentSubmission2.ClaimId);
-            result[1].DocumentType.Should().BeEquivalentTo(_documentType);
-            result[1].State.Should().BeEquivalentTo(_documentSubmission2.State.ToString());
-            result[1].RejectionReason.Should().BeEquivalentTo(_documentSubmission2.RejectionReason);
+            var documentSubmission1 = result[0];
+            var documentSubmission2 = result[1];
+
+            documentSubmission1.Id.Should().Be(_documentSubmission1.Id);
+            documentSubmission1.ClaimId.Should().BeEquivalentTo(_documentSubmission1.ClaimId);
+            documentSubmission1.DocumentType.Should().BeEquivalentTo(_documentType);
+            documentSubmission1.State.Should().BeEquivalentTo(_documentSubmission1.State.ToString());
+            documentSubmission1.RejectionReason.Should().BeEquivalentTo(_documentSubmission1.RejectionReason);
+            documentSubmission2.Id.Should().Be(_documentSubmission2.Id);
+            documentSubmission2.ClaimId.Should().BeEquivalentTo(_documentSubmission2.ClaimId);
+            documentSubmission2.DocumentType.Should().BeEquivalentTo(_documentType);
+            documentSubmission2.State.Should().BeEquivalentTo(_documentSubmission2.State.ToString());
+            documentSubmission2.RejectionReason.Should().BeEquivalentTo(_documentSubmission2.RejectionReason);
         }
 
         [Test]
@@ -81,7 +84,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestWhenResidentIdIsNull()
+        public void ThrowsBadRequestWhenResidentIdIsEmpty()
         {
             var serviceRequestedBy = "some service";
             Guid residentId = Guid.Empty;
