@@ -217,5 +217,57 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(404);
         }
+
+        [Test]
+        public async Task CanFindDocumentSubmissionsWithValidParameters()
+        {
+            var documentType = TestDataHelper.DocumentType("passport-scan");
+
+            var evidenceRequestId = Guid.NewGuid();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.Id = evidenceRequestId;
+            evidenceRequest.ServiceRequestedBy = "Housing benefit";
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmission();
+            documentSubmission1.EvidenceRequestId = evidenceRequest.Id;
+            documentSubmission1.DocumentTypeId = "passport-scan";
+            documentSubmission1.ClaimId = _createdClaim.Id.ToString();
+
+            var documentSubmission2 = TestDataHelper.DocumentSubmission();
+            documentSubmission2.EvidenceRequestId = evidenceRequest.Id;
+            documentSubmission2.DocumentTypeId = "passport-scan";
+            documentSubmission2.ClaimId = _createdClaim.Id.ToString();
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/document_submissions?serviceRequestedBy=Housing+benefit&residentId={evidenceRequest.ResidentId}", UriKind.Relative);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<List<DocumentSubmissionResponse>>(json);
+
+            var expected = new List<DocumentSubmissionResponse>()
+            {
+                documentSubmission1.ToResponse(documentType, null, _document),
+                documentSubmission2.ToResponse(documentType, null, _document)
+            };
+
+            response.StatusCode.Should().Be(200);
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task ReturnBadRequestWhenSearchQueryIsInvalid()
+        {
+            var serviceRequestedBy = "";
+            var fakeResidentId = Guid.NewGuid();
+            var uri = new Uri($"api/v1/document_submissions?serviceRequestedBy={serviceRequestedBy}&residentId={fakeResidentId}", UriKind.Relative);
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            Console.WriteLine(response);
+            response.StatusCode.Should().Be(400);
+        }
     }
 }

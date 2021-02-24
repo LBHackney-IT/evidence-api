@@ -250,6 +250,40 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEmpty();
         }
 
+        [Test]
+        public void FindByResidentIdReturnsDocumentSubmissions()
+        {
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            var documentSubmission1 = TestDataHelper.DocumentSubmission();
+            documentSubmission1.EvidenceRequest = evidenceRequest1;
+            var documentSubmission2 = TestDataHelper.DocumentSubmission();
+            documentSubmission2.EvidenceRequest = evidenceRequest1;
+            var documentSubmission3 = TestDataHelper.DocumentSubmission();
+            documentSubmission3.EvidenceRequest = evidenceRequest2;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            DatabaseContext.SaveChanges();
+
+            var expectedDocumentSubmissions = new List<DocumentSubmission>()
+            {
+                documentSubmission1, documentSubmission2
+            };
+
+            var found = _classUnderTest.FindDocumentSubmissionByEvidenceRequestId(evidenceRequest1.Id);
+
+            found.Should().BeEquivalentTo(expectedDocumentSubmissions);
+        }
+
+        [Test]
+        public void FindByResidentIdReturnsEmptyListWhenDocumentSubmissionsCannotBeFound()
+        {
+            var id = Guid.NewGuid();
+            var found = _classUnderTest.FindDocumentSubmissionByEvidenceRequestId(id);
+            found.Should().BeEmpty();
+        }
+
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
