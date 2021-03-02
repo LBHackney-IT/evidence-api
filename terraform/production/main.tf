@@ -66,7 +66,7 @@ module "postgres_db_production" {
   db_port              = data.aws_ssm_parameter.evidence_postgres_port.value
   subnet_ids           = data.aws_subnet_ids.production.ids
   db_engine            = "postgres"
-  db_engine_version    = "11.8"
+  db_engine_version    = "11.10"
   db_instance_class    = "db.t3.micro"
   db_allocated_storage = 100
   maintenance_window   = "sun:10:00-sun:10:30"
