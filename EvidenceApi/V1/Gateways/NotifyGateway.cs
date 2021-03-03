@@ -81,7 +81,7 @@ namespace EvidenceApi.V1.Gateways
                 CommunicationReason.EvidenceRequest => new Dictionary<string, object>
                 {
                     {"resident_name", resident.Name},
-                    {"service_name", request.ServiceRequestedBy},
+                    {"reason", request.Reason},
                     {"magic_link", MagicLinkFor(request)}
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, $"Communication Reason {reason.ToString()} not recognised")
