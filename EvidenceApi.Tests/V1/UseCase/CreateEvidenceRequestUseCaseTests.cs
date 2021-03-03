@@ -64,6 +64,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
             result.ServiceRequestedBy.Should().Be(_created.ServiceRequestedBy);
+            result.Reason.Should().Be(_created.Reason);
             result.UserRequestedBy.Should().Be(_created.UserRequestedBy);
         }
 

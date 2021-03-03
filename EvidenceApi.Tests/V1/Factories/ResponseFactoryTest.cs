@@ -26,6 +26,7 @@ namespace EvidenceApi.Tests.V1.Factories
             var response = domain.ToResponse(resident, documentTypes);
 
             response.ServiceRequestedBy.Should().Be(response.ServiceRequestedBy);
+            response.Reason.Should().Be(response.Reason);
             response.DocumentTypes.Should().BeEquivalentTo(documentTypes);
             response.DeliveryMethods.Should().ContainSingle(x => x == "EMAIL");
             response.Resident.Should().BeEquivalentTo(resident.ToResponse());

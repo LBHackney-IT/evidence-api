@@ -19,6 +19,7 @@ namespace EvidenceApi.Tests.V1.Domain
             var deliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Sms };
             var documentTypes = new List<string>() { "passport" };
             var serviceRequestedBy = "some-service";
+            var reason = "some-reason";
             var userRequestedBy = "some-user";
             var communications = new List<Communication>() { TestDataHelper.Communication() };
             var documentSubmissions = new List<DocumentSubmission>() { TestDataHelper.DocumentSubmission() };
@@ -31,6 +32,7 @@ namespace EvidenceApi.Tests.V1.Domain
                 DeliveryMethods = deliveryMethods,
                 DocumentTypes = documentTypes,
                 ServiceRequestedBy = serviceRequestedBy,
+                Reason = reason,
                 UserRequestedBy = userRequestedBy,
                 Communications = communications,
                 DocumentSubmissions = documentSubmissions
@@ -42,6 +44,7 @@ namespace EvidenceApi.Tests.V1.Domain
             evidenceRequest.DeliveryMethods.Should().BeEquivalentTo(deliveryMethods);
             evidenceRequest.DocumentTypes.Should().BeEquivalentTo(documentTypes);
             evidenceRequest.ServiceRequestedBy.Should().Be(serviceRequestedBy);
+            evidenceRequest.Reason.Should().Be(reason);
             evidenceRequest.UserRequestedBy.Should().Be(userRequestedBy);
             evidenceRequest.Communications.Should().BeEquivalentTo(communications);
             evidenceRequest.DocumentSubmissions.Should().BeEquivalentTo(documentSubmissions);

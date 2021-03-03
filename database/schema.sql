@@ -77,3 +77,8 @@ ALTER TABLE communications ALTER COLUMN delivery_method DROP DEFAULT;
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210204164221_AddStateColumnToEvidenceRequest', '3.1.7');
+
+ALTER TABLE evidence_requests ADD reason text NULL;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210302123801_AddReasonColumnToEvidenceRequest', '3.1.7');
