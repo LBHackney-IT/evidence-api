@@ -5,7 +5,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface INotifyGateway
     {
-        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason reason, EvidenceRequest request,
+        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest request,
             Resident resident);
 
     }
