@@ -76,6 +76,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.Id.Should().NotBeEmpty();
             foundRecord.EvidenceRequest.Id.Should().NotBeEmpty();
             foundRecord.EvidenceRequest.ServiceRequestedBy.Should().Be(request.EvidenceRequest.ServiceRequestedBy);
+            foundRecord.EvidenceRequest.Reason.Should().Be(request.EvidenceRequest.Reason);
             foundRecord.EvidenceRequest.UserRequestedBy.Should().Be(request.EvidenceRequest.UserRequestedBy);
             foundRecord.ClaimId.Should().Be(request.ClaimId);
             foundRecord.RejectionReason.Should().Be(request.RejectionReason);
@@ -156,6 +157,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.DeliveryMethods.Should().BeEquivalentTo(expectedDeliveryMethods);
             found.DocumentTypes.Should().Equal(entity.DocumentTypes);
             found.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
+            found.Reason.Should().Be(entity.Reason);
         }
 
         [Test]

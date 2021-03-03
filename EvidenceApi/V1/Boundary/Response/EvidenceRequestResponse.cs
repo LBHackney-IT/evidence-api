@@ -11,6 +11,7 @@ namespace EvidenceApi.V1.Boundary.Response
         public List<string> DeliveryMethods { get; set; }
         public List<DocumentType> DocumentTypes { get; set; }
         public string ServiceRequestedBy { get; set; }
+        public string Reason { get; set; }
         public string UserRequestedBy { get; set; }
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }

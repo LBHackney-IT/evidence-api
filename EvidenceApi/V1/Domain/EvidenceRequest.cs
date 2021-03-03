@@ -28,6 +28,9 @@ namespace EvidenceApi.V1.Domain
         [Column("service_requested_by")]
         public string ServiceRequestedBy { get; set; }
 
+        [Column("reason")]
+        public string Reason { get; set; }
+
         [Column("user_requested_by")]
         public string UserRequestedBy { get; set; }
 

@@ -138,7 +138,7 @@ If changes to the database schema are made then the docker image for the databas
 
 ### Contributors
 
--   **Sam Garson**, Senior Engineer at Made Tech (sam.garson@hackney.gov.uk)
+-   **Neil Mendum**, Senior Engineer at Made Tech (neil.mendum@hackney.gov.uk)
 -   **Bogdan Zaharia**, Engineer at Made Tech (bogdan.zaharia@hackney.gov.uk)
 
 ### Other Contacts

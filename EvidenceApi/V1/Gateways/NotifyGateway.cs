@@ -22,17 +22,17 @@ namespace EvidenceApi.V1.Gateways
             _options = options;
         }
 
-        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason reason, EvidenceRequest request, Resident resident)
+        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest request, Resident resident)
         {
-            var personalisation = GetParamsFor(reason, request, resident);
-            var templateId = GetTemplateIdFor(deliveryMethod, reason);
+            var personalisation = GetParamsFor(communicationReason, request, resident);
+            var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
             var result = Deliver(deliveryMethod, templateId, resident, personalisation);
             var communication = new Communication
             {
                 DeliveryMethod = deliveryMethod,
                 NotifyId = result.id,
                 EvidenceRequestId = request.Id,
-                Reason = reason,
+                Reason = communicationReason,
                 TemplateId = templateId
             };
             _evidenceGateway.CreateCommunication(communication);
@@ -49,23 +49,23 @@ namespace EvidenceApi.V1.Gateways
             };
         }
 
-        private static string GetTemplateIdFor(DeliveryMethod deliveryMethod, CommunicationReason reason)
+        private static string GetTemplateIdFor(DeliveryMethod deliveryMethod, CommunicationReason communicationReason)
         {
             return deliveryMethod switch
             {
-                DeliveryMethod.Sms => reason switch
+                DeliveryMethod.Sms => communicationReason switch
                 {
                     CommunicationReason.EvidenceRequest => Environment.GetEnvironmentVariable(
                         "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS"),
-                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason,
-                        $"Communication Reason {reason.ToString()} not recognised")
+                    _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason,
+                        $"Communication Reason {communicationReason.ToString()} not recognised")
                 },
-                DeliveryMethod.Email => reason switch
+                DeliveryMethod.Email => communicationReason switch
                 {
                     CommunicationReason.EvidenceRequest => Environment.GetEnvironmentVariable(
                         "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL"),
-                    _ => throw new ArgumentOutOfRangeException(nameof(reason), reason,
-                        $"Communication Reason {reason.ToString()} not recognised")
+                    _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason,
+                        $"Communication Reason {communicationReason.ToString()} not recognised")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod,
                     $"Delivery Method {deliveryMethod.ToString()} not recognised")
@@ -74,17 +74,17 @@ namespace EvidenceApi.V1.Gateways
         }
 
 
-        private Dictionary<string, object> GetParamsFor(CommunicationReason reason, EvidenceRequest request, Resident resident)
+        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, EvidenceRequest request, Resident resident)
         {
-            return reason switch
+            return communicationReason switch
             {
                 CommunicationReason.EvidenceRequest => new Dictionary<string, object>
                 {
                     {"resident_name", resident.Name},
-                    {"service_name", request.ServiceRequestedBy},
+                    {"reason", request.Reason},
                     {"magic_link", MagicLinkFor(request)}
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, $"Communication Reason {reason.ToString()} not recognised")
+                _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
             };
         }
 

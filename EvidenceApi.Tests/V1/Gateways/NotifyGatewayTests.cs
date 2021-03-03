@@ -35,23 +35,24 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void CanSendAnEvidenceRequestedSms()
         {
             var deliveryMethod = DeliveryMethod.Sms;
-            var reason = CommunicationReason.EvidenceRequest;
+            var communicationReason = CommunicationReason.EvidenceRequest;
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS";
             var resident = _fixture.Create<Resident>();
             var request = TestDataHelper.EvidenceRequest();
             request.ResidentId = resident.Id;
+            request.Reason = "some-reason";
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
-                {"service_name", request.ServiceRequestedBy},
+                {"reason", request.Reason},
                 {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"}
             };
 
             var response = _fixture.Create<SmsNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, reason, request, resident);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
             _notifyClient.Verify(x =>
                 x.SendSms(resident.PhoneNumber, expectedTemplateId,
                     It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
@@ -61,23 +62,24 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void CanSendAnEvidenceRequestedEmail()
         {
             var deliveryMethod = DeliveryMethod.Email;
-            var reason = CommunicationReason.EvidenceRequest;
+            var communicationReason = CommunicationReason.EvidenceRequest;
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var resident = _fixture.Create<Resident>();
             var request = TestDataHelper.EvidenceRequest();
             request.ResidentId = resident.Id;
+            request.Reason = "some-reason";
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
-                {"service_name", request.ServiceRequestedBy},
+                {"reason", request.Reason},
                 {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"}
             };
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, reason, request, resident);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
             _notifyClient.Verify(x =>
                     x.SendEmail(resident.Email, expectedTemplateId,
                         It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
@@ -87,10 +89,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void CreatesACommunication()
         {
             var deliveryMethod = DeliveryMethod.Email;
-            var reason = CommunicationReason.EvidenceRequest;
+            var communicationReason = CommunicationReason.EvidenceRequest;
             var resident = _fixture.Create<Resident>();
             var request = TestDataHelper.EvidenceRequest();
             request.ResidentId = resident.Id;
+            request.Reason = "some-reason";
 
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
@@ -101,10 +104,10 @@ namespace EvidenceApi.Tests.V1.Gateways
                         null))
                 .Returns(response);
 
-            _classUnderTest.SendNotification(deliveryMethod, reason, request, resident);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
 
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
-                x.Reason == reason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
+                x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
                 x.NotifyId == response.id)));
         }
 
