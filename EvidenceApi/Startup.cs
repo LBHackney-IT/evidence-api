@@ -131,9 +131,11 @@ namespace EvidenceApi
 
             // File Readers
             services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath));
+            services.AddSingleton<IFileReader<List<StaffSelectedDocumentType>>>(x => new FileReader<List<StaffSelectedDocumentType>>(options.StaffSelectedDocumentTypeConfigPath));
 
             // Gateways
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
+            services.AddScoped<IStaffSelectedDocumentTypeGateway, StaffSelectedDocumentTypeGateway>();
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();

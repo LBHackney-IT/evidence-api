@@ -7,6 +7,7 @@ namespace EvidenceApi.V1.Infrastructure
     {
         public string NotifyApiKey { get; set; }
         public string DocumentTypeConfigPath { get; set; }
+        public string StaffSelectedDocumentTypeConfigPath { get; set; }
         public string DatabaseConnectionString { get; set; }
         public Uri EvidenceRequestClientUrl { get; set; }
         public Uri DocumentsApiUrl { get; set; }
@@ -22,6 +23,7 @@ namespace EvidenceApi.V1.Infrastructure
             {
                 NotifyApiKey = Environment.GetEnvironmentVariable("NOTIFY_API_KEY"),
                 DocumentTypeConfigPath = Path.Combine(Environment.CurrentDirectory, @"DocumentTypes.json"),
+                StaffSelectedDocumentTypeConfigPath = Path.Combine(Environment.CurrentDirectory, @"StaffSelectedDocumentTypes.json"),
                 DatabaseConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING"),
                 EvidenceRequestClientUrl = evidenceApiUrl != null ? new Uri(evidenceApiUrl) : null,
                 DocumentsApiUrl = documentsApiUrl != null ? new Uri(documentsApiUrl) : null,
