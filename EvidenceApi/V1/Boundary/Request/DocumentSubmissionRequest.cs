@@ -1,5 +1,6 @@
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
+#nullable enable annotations
 
 namespace EvidenceApi.V1.Boundary.Request
 {
@@ -7,7 +8,6 @@ namespace EvidenceApi.V1.Boundary.Request
     {
         public string DocumentType { get; set; }
         public string State { get; set; }
-
-
+        public string? StaffSelectedDocumentTypeId { get; set; }
     }
 }
