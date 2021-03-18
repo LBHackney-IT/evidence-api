@@ -56,6 +56,7 @@ CREATE TABLE document_submissions (
     state integer NOT NULL,
     evidence_request_id uuid NOT NULL,
     document_type_id text NULL,
+    staff_selected_document_type_id text NULL,
     CONSTRAINT "PK_document_submissions" PRIMARY KEY (id),
     CONSTRAINT "FK_document_submissions_evidence_requests_evidence_request_id" FOREIGN KEY (evidence_request_id) REFERENCES evidence_requests (id) ON DELETE CASCADE
 );
