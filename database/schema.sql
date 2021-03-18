@@ -56,7 +56,6 @@ CREATE TABLE document_submissions (
     state integer NOT NULL,
     evidence_request_id uuid NOT NULL,
     document_type_id text NULL,
-    staff_selected_document_type_id text NULL,
     CONSTRAINT "PK_document_submissions" PRIMARY KEY (id),
     CONSTRAINT "FK_document_submissions_evidence_requests_evidence_request_id" FOREIGN KEY (evidence_request_id) REFERENCES evidence_requests (id) ON DELETE CASCADE
 );
@@ -83,3 +82,8 @@ ALTER TABLE evidence_requests ADD reason text NULL;
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210302123801_AddReasonColumnToEvidenceRequest', '3.1.7');
+
+ALTER TABLE document_submissions ADD staff_selected_document_type_id text NULL;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210318104225_AddStaffSelectedDocumentTypeId', '3.1.7');
