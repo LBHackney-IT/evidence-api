@@ -135,7 +135,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.Resident, residentRequest)
                 .Create();
 
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(),It.IsAny<string>())).Returns(_documentType);
             _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<Resident>())).Returns(_resident).Verifiable();
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_created).Verifiable();
         }

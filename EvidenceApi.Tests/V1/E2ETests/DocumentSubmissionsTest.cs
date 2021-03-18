@@ -68,8 +68,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanCreateDocumentSubmissionWithValidParams()
         {
             var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                .With(x => x.DocumentTypes, new List<string> { "proof-of-id" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .With(x => x.ServiceRequestedBy, "Development Housing Team")
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
@@ -79,7 +80,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
             string body = @"
             {
-                ""documentType"": ""passport-scan"",
+                ""documentType"": ""proof-of-id"",
                 ""serviceName"": ""service-name"",
                 ""requesterEmail"": ""example@email""
             }";
@@ -99,7 +100,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"PENDING\"," +
-                               "\"documentType\":{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}," +
+                               "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
                                "\"document\":null" +
                                "}";

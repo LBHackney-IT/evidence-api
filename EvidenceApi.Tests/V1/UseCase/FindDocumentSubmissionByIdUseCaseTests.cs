@@ -83,17 +83,16 @@ namespace EvidenceApi.Tests.V1.UseCase
             _claim1 = _fixture.Create<Task<Claim>>();
             _claim2 = _fixture.Create<Task<Claim>>();
 
-            _found = TestDataHelper.DocumentSubmission();
+            _found = TestDataHelper.DocumentSubmission(true);
             _found.Id = _documentSubmissionId1;
             _found.ClaimId = _claimId1;
 
-            _found2 = TestDataHelper.DocumentSubmission();
+            _found2 = TestDataHelper.DocumentSubmission(true);
             _found2.Id = _documentSubmissionId2;
             _found2.ClaimId = _claimId2;
             _claim2.Result.Document = null;
 
-
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(),It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId1)).Returns(_found);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId2)).Returns(_found2);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);

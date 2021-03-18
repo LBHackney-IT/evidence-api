@@ -1,12 +1,9 @@
-using System.Collections.Generic;
-using EvidenceApi.V1.Domain;
-
 namespace EvidenceApi.V1.Gateways.Interfaces
 {
-    public interface IStaffSelectedDocumentTypeGateway
+    // Did this because registering multiple implementations of the same interface seems to be a pain.
+    // See https://stackoverflow.com/questions/39174989/how-to-register-multiple-implementations-of-the-same-interface-in-asp-net-core
+    // This avoids needing to over complicate Startup.cs
+    public interface IStaffSelectedDocumentTypeGateway : IDocumentTypeGateway
     {
-        StaffSelectedDocumentType GetStaffSelectedDocumentTypeById(string id);
-
-        List<StaffSelectedDocumentType> GetAll();
     }
 }

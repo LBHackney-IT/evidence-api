@@ -11,18 +11,17 @@ namespace EvidenceApi.Tests.V1.E2ETests
     public class DocumentTypesTest : IntegrationTests<Startup>
     {
         [Test]
-        public async Task GetDocumentTypesReturns200()
+        public async Task GetDocumentTypesByTeamNameReturns200()
         {
-            var uri = new Uri($"api/v1/document_types", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_types/Development Housing Team", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             response.StatusCode.Should().Be(200);
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var data = JsonConvert.DeserializeObject<List<DocumentType>>(json);
 
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "passport-scan", Title = "Passport", Description = "A valid passport open at the photo page" });
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "bank-statement", Title = "Bank statement", Description = "From the past three months" });
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "drivers-licence", Title = "Drivers licence", Description = "A valid UK full or provisional UK driving license" });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "proof-of-id", Title = "Proof of ID", Description = "A valid document that can be used to prove identity" });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "repairs-photo", Title = "Repairs photo", Description = "A photo of the issue that need to be repaired" });
         }
     }
 }

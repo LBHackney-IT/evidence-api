@@ -7,24 +7,29 @@ namespace EvidenceApi.V1.Gateways
 {
     public class DocumentTypeGateway : IDocumentTypeGateway
     {
-        private readonly IFileReader<List<DocumentType>> _reader;
+        private readonly IFileReader<List<Team>> _reader;
 
-        public DocumentTypeGateway(IFileReader<List<DocumentType>> reader)
+        public DocumentTypeGateway(IFileReader<List<Team>> reader)
         {
             _reader = reader;
         }
 
-        public DocumentType GetDocumentTypeById(string id)
+        public DocumentType GetDocumentTypeByTeamNameAndDocumentId(string teamName, string documentTypeId)
         {
-            var allTypes = GetAll();
-            var result = allTypes.Find(d => d.Id == id);
+            var documentTypesForTeam = GetDocumentTypesByTeamName(teamName);
+            var result = documentTypesForTeam.Find(d => d.Id == documentTypeId);
 
             return result;
         }
 
-        public List<DocumentType> GetAll()
+        public List<DocumentType> GetDocumentTypesByTeamName(string teamName)
         {
-            return _reader.GetData();
+            var teamFromFile = _reader.GetData().Find(t => t.Name == teamName);
+            if (teamFromFile == null)
+            {
+                return new List<DocumentType>();
+            }
+            return teamFromFile.DocumentTypes;
         }
     }
 }

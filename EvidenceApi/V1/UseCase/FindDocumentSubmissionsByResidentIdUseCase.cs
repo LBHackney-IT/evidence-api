@@ -6,10 +6,8 @@ using EvidenceApi.V1.Gateways.Interfaces;
 using System.Collections.Generic;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Domain;
-using System.Linq;
 using System.Threading.Tasks;
 using System;
-
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -35,36 +33,33 @@ namespace EvidenceApi.V1.UseCase
                 ServiceRequestedBy = request.ServiceRequestedBy,
                 ResidentId = request.ResidentId
             };
-            var found = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
-
-            var documentSubmissions = new List<DocumentSubmission>();
-
-            foreach (var er in found)
-            {
-                documentSubmissions = documentSubmissions.Concat(_evidenceGateway.FindDocumentSubmissionByEvidenceRequestId(er.Id)).ToList();
-            }
+            var evidenceRequests = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
 
             var result = new List<DocumentSubmissionResponse>();
 
-            foreach (var ds in documentSubmissions)
+            foreach (var er in evidenceRequests)
             {
-                var documentType = FindDocumentType(ds.DocumentTypeId);
-                var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
-                if (claim.Document == null)
+                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionByEvidenceRequestId(er.Id);
+                foreach (var ds in documentSubmissions)
                 {
-                    result.Add(ds.ToResponse(documentType, null, null));
-                }
-                else
-                {
-                    result.Add(ds.ToResponse(documentType, null, claim.Document));
+                    var documentType = FindDocumentType(er.ServiceRequestedBy, ds.DocumentTypeId);
+                    var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
+                    if (claim.Document == null)
+                    {
+                        result.Add(ds.ToResponse(documentType, null, null));
+                    }
+                    else
+                    {
+                        result.Add(ds.ToResponse(documentType, null, claim.Document));
+                    }
                 }
             }
             return result;
         }
 
-        private DocumentType FindDocumentType(string documentTypeId)
+        private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, documentTypeId);
         }
 
         private static void ValidateRequest(DocumentSubmissionSearchQuery request)

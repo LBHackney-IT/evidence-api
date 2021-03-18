@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Infrastructure;
+using NUnit.Framework.Constraints;
 
 namespace EvidenceApi.Tests
 {
@@ -17,6 +18,7 @@ namespace EvidenceApi.Tests
                 .With(x => x.Communications, new List<Communication>())
                 .With(x => x.DocumentSubmissions, new List<DocumentSubmission>())
                 .With(x => x.RawDeliveryMethods, new List<string>())
+                .With(x => x.ServiceRequestedBy)
                 .Create();
         }
 

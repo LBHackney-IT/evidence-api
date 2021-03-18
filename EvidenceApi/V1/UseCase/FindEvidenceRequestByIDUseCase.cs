@@ -33,13 +33,14 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindResident(found.ResidentId);
-            var documentTypes = found.DocumentTypes.ConvertAll(FindDocumentType);
+            var teamName = found.ServiceRequestedBy;
+            var documentTypes = found.DocumentTypes.ConvertAll((documentTypeId) => FindDocumentType(teamName, documentTypeId));
             return found.ToResponse(resident, documentTypes);
         }
 
-        private DocumentType FindDocumentType(string documentTypeId)
+        private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, documentTypeId);
         }
     }
 }

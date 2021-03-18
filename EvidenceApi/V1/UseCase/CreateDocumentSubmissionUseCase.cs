@@ -48,7 +48,7 @@ namespace EvidenceApi.V1.UseCase
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
             var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
-            var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
+            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(evidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
 
             return createdDocumentSubmission.ToResponse(documentType, createdS3UploadPolicy);
         }

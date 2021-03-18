@@ -21,6 +21,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
+        private string teamName = "teamName";
 
         [SetUp]
         public void SetUp()
@@ -32,7 +33,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ReturnsTheUpdatedDocumentSubmission()
         {
             var id = Guid.NewGuid();
-            SetupMocks(id);
+            SetupMocks(id, teamName);
             DocumentSubmissionRequest request = BuildDocumentSubmissionRequest();
             var result = _classUnderTest.Execute(id, request);
 
@@ -53,7 +54,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsBadRequestExceptionWhenStateIsNullOrEmpty()
         {
             Guid id = Guid.NewGuid();
-            SetupMocks(id);
+            SetupMocks(id, teamName);
             DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.State)
                 .Create();
@@ -66,7 +67,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsBadRequestExceptionWhenStateIsNotValid()
         {
             Guid id = Guid.NewGuid();
-            SetupMocks(id);
+            SetupMocks(id, teamName);
             DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
                 .With(x => x.State, "Invalidstate")
                 .Create();
@@ -82,7 +83,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _updateEvidenceRequestStateUseCase.VerifyAll();
         }
 
-        private void SetupMocks(Guid id)
+        private void SetupMocks(Guid id, string teamName)
         {
             _found = TestDataHelper.DocumentSubmission(true);
 
@@ -91,7 +92,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 ds.Id == id && ds.State == SubmissionState.Uploaded
             )));
 
-            _documentTypeGateway.Setup(x => x.GetDocumentTypeById(_found.DocumentTypeId))
+            _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(teamName, _found.DocumentTypeId))
                 .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));
 
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));

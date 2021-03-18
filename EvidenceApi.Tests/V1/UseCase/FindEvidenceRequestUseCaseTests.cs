@@ -65,7 +65,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _found = TestDataHelper.EvidenceRequest();
 
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident);
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(),It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(It.IsAny<Guid>())).Returns(_found);
         }
     }

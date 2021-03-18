@@ -129,13 +129,11 @@ namespace EvidenceApi
             // Transients
             services.AddTransient<INotificationClient>(x => new NotificationClient(options.NotifyApiKey));
 
-            // File Readers
-            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath));
-            services.AddSingleton<IFileReader<List<StaffSelectedDocumentType>>>(x => new FileReader<List<StaffSelectedDocumentType>>(options.StaffSelectedDocumentTypeConfigPath));
-
             // Gateways
-            services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
-            services.AddScoped<IStaffSelectedDocumentTypeGateway, StaffSelectedDocumentTypeGateway>();
+            services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>(sp =>
+                new DocumentTypeGateway(new FileReader<List<Team>>(options.DocumentTypeConfigPath)));
+            services.AddScoped<IStaffSelectedDocumentTypeGateway, StaffSelectedDocumentTypeGateway>(sp =>
+                new StaffSelectedDocumentTypeGateway(new FileReader<List<Team>>(options.StaffSelectedDocumentTypeConfigPath)));
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();

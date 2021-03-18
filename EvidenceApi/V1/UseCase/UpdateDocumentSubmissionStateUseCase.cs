@@ -50,7 +50,7 @@ namespace EvidenceApi.V1.UseCase
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
-            var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
+            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(documentSubmission.EvidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType);
         }
     }

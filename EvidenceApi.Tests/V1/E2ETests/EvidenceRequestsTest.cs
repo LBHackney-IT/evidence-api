@@ -33,8 +33,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""phoneNumber"": ""+447123456789""
                 },
                 ""deliveryMethods"": [""SMS""],
-                ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""development-team-staging"",
+                ""documentTypes"": [""proof-of-id""],
+                ""serviceRequestedBy"": ""Development Housing Team"",
                 ""reason"": ""staging-reason"",
                 ""userRequestedBy"": ""staff@test.hackney.gov.uk""
             }";
@@ -58,9 +58,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "}," +
                                "\"deliveryMethods\":[\"SMS\"]," +
                                "\"documentTypes\":[" +
-                               "{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}" +
+                               "{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}" +
                                "]," +
-                               "\"serviceRequestedBy\":\"development-team-staging\"," +
+                               "\"serviceRequestedBy\":\"Development Housing Team\"," +
                                "\"reason\":\"staging-reason\"," +
                                "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +
                                $"\"id\":\"{created.Id}\"," +
