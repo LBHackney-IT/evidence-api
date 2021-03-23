@@ -37,12 +37,12 @@ namespace EvidenceApi.V1.UseCase
 
             var result = new List<DocumentSubmissionResponse>();
 
-            foreach (var er in evidenceRequests)
+            foreach (var evidenceReq in evidenceRequests)
             {
-                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionByEvidenceRequestId(er.Id);
+                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionByEvidenceRequestId(evidenceReq.Id);
                 foreach (var ds in documentSubmissions)
                 {
-                    var documentType = FindDocumentType(er.ServiceRequestedBy, ds.DocumentTypeId);
+                    var documentType = FindDocumentType(evidenceReq.ServiceRequestedBy, ds.DocumentTypeId);
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
                     if (claim.Document == null)
                     {

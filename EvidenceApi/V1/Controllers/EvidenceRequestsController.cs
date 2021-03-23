@@ -18,11 +18,11 @@ namespace EvidenceApi.V1.Controllers
         private readonly IDocumentTypeGateway _gateway;
         private readonly ICreateEvidenceRequestUseCase _creator;
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
-        private readonly IFindEvidenceRequestByIDUseCase _evidenceRequestUseCase;
+        private readonly IFindEvidenceRequestByIdUseCase _evidenceRequestUseCase;
         private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
         private readonly IFindEvidenceRequestsUseCase _getEvidenceRequestsUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestByIDUseCase evidenceRequestUseCase, IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase, IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase)
+        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestByIdUseCase evidenceRequestUseCase, IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase, IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase)
         {
             _gateway = gateway;
             _creator = creator;

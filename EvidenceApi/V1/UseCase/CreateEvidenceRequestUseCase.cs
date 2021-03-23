@@ -42,7 +42,7 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
-            var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(request.ServiceRequestedBy,dt));
+            var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(request.ServiceRequestedBy, dt));
 
             var evidenceRequest = BuildEvidenceRequest(request, resident.Id);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);

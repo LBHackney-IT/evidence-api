@@ -30,7 +30,7 @@ namespace EvidenceApi.V1.UseCase
                     var allRequestDocumentTypesFoundInTeamDocumentTypes = documentTypesInRequestAndTeamLookup.Count() == evidenceReqReq.DocumentTypes.Count;
                     if (!allRequestDocumentTypesFoundInTeamDocumentTypes)
                     {
-                        context.AddFailure("DocumentTypes","'Document Types' must only contain valid document type IDs.");
+                        context.AddFailure("DocumentTypes", "'Document Types' must only contain valid document type IDs.");
                     }
                 });
 

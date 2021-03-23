@@ -12,10 +12,10 @@ namespace EvidenceApi.V1.Controllers
     [ApiVersion("1.0")]
     public class ResidentsController : BaseController
     {
-        private readonly IFindResidentByIDUseCase _findByIdUseCase;
+        private readonly IFindResidentByIdUseCase _findByIdUseCase;
         private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
 
-        public ResidentsController(IFindResidentByIDUseCase findByIdUseCase, IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase)
+        public ResidentsController(IFindResidentByIdUseCase findByIdUseCase, IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase)
         {
             _findByIdUseCase = findByIdUseCase;
             _findResidentsBySearchQueryUseCase = findResidentsBySearchQueryUseCase;

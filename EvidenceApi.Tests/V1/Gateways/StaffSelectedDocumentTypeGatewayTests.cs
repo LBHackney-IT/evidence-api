@@ -31,7 +31,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var team = new Team();
             team.Name = teamName;
             team.DocumentTypes = docTypes;
-            var teams = new List<Team> {team};
+            var teams = new List<Team> { team };
             _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
 
             // Act
@@ -61,7 +61,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var team = new Team();
             team.Name = teamName;
             team.DocumentTypes = docTypes;
-            var teams = new List<Team> {team};
+            var teams = new List<Team> { team };
             _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
 
             // Act
@@ -78,7 +78,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var teamName = "teamName";
             var team = new Team();
             team.Name = teamName;
-            var teams = new List<Team> {team};
+            var teams = new List<Team> { team };
             _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
 
             // Act
