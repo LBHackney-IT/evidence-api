@@ -42,6 +42,22 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ReturnsTheUpdatedDocumentSubmissionWhenStaffSelectedDocumentTypeIsProvided()
+        {
+            var id = Guid.NewGuid();
+            SetupMocks(id);
+            var request = _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.State, "Uploaded")
+                .With(x => x.StaffSelectedDocumentTypeId, "proof-of-id")
+                .Create();
+            var result = _classUnderTest.Execute(id, request);
+
+            result.Id.Should().Be(_found.Id);
+            // uncomment this after DES-189
+            // result.StaffSelectedDocumentType.Should().Be(_found.StaffSelectedDocumentTypeId);
+        }
+
+        [Test]
         public void ThrowsAnErrorWhenADocumentSubmissionIsNotFound()
         {
             Guid id = Guid.NewGuid();
@@ -91,6 +107,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
             )));
+            // mock new gateway after DES-189
 
             _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(teamName, _found.DocumentTypeId))
                 .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));

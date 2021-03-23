@@ -47,6 +47,12 @@ namespace EvidenceApi.V1.UseCase
             }
 
             documentSubmission.State = state;
+
+            if (!String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
+            {
+                documentSubmission.StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId;
+                // fetch StaffSelectedDocumentType from json file using the gateway after DES-189
+            }
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 

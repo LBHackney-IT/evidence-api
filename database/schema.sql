@@ -82,3 +82,8 @@ ALTER TABLE evidence_requests ADD reason text NULL;
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20210302123801_AddReasonColumnToEvidenceRequest', '3.1.7');
+
+ALTER TABLE document_submissions ADD staff_selected_document_type_id text NULL;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20210318104225_AddStaffSelectedDocumentTypeId', '3.1.7');
