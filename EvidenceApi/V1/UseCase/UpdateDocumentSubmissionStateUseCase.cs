@@ -47,10 +47,17 @@ namespace EvidenceApi.V1.UseCase
             }
 
             documentSubmission.State = state;
+
+            if (!String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
+            {
+                documentSubmission.StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId;
+                // fetch StaffSelectedDocumentType from json file using the gateway after DES-189
+            }
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
             var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
+            // pass staffSelectedDocumentType after DES-189
             return documentSubmission.ToResponse(documentType);
         }
     }

@@ -48,6 +48,7 @@ namespace EvidenceApi.V1.Factories
                 RejectionReason = domain.RejectionReason,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
+                // add staffSelectedDocumentType after DES-189
                 UploadPolicy = s3UploadPolicy,
                 Document = document
             };
