@@ -35,9 +35,10 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document submission with ID: {id}");
             }
 
-            var documentType = FindDocumentType(found.EvidenceRequest.ServiceRequestedBy, found.DocumentTypeId);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(found.EvidenceRequestId);
+            var documentType = FindDocumentType(evidenceRequest.ServiceRequestedBy, found.DocumentTypeId);
             var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
-            return found.ToResponse(documentType, null, claim.Document);
+            return found.ToResponse(documentType, null, null, claim.Document);
         }
 
         private DocumentType FindDocumentType(string teamName, string documentTypeId)

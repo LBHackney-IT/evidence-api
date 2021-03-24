@@ -36,6 +36,7 @@ namespace EvidenceApi.V1.Factories
         public static DocumentSubmissionResponse ToResponse(
             this DocumentSubmission domain,
             DocumentType documentType,
+            DocumentType? staffSelectedDocumentType = null,
             S3UploadPolicy? s3UploadPolicy = null,
             Document? document = null
         )
@@ -48,7 +49,7 @@ namespace EvidenceApi.V1.Factories
                 RejectionReason = domain.RejectionReason,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
-                // add staffSelectedDocumentType after DES-189
+                StaffSelectedDocumentType = staffSelectedDocumentType,
                 UploadPolicy = s3UploadPolicy,
                 Document = document
             };

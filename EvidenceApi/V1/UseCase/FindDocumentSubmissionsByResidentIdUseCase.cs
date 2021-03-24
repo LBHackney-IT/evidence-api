@@ -46,11 +46,11 @@ namespace EvidenceApi.V1.UseCase
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
                     if (claim.Document == null)
                     {
-                        result.Add(ds.ToResponse(documentType, null, null));
+                        result.Add(ds.ToResponse(documentType));
                     }
                     else
                     {
-                        result.Add(ds.ToResponse(documentType, null, claim.Document));
+                        result.Add(ds.ToResponse(documentType, null, null, claim.Document));
                     }
                 }
             }

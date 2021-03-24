@@ -18,6 +18,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private UpdateDocumentSubmissionStateUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
+        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
         private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
@@ -26,7 +27,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new UpdateDocumentSubmissionStateUseCase(_evidenceGateway.Object, _documentTypeGateway.Object, _updateEvidenceRequestStateUseCase.Object);
+            _classUnderTest = new UpdateDocumentSubmissionStateUseCase(
+                _evidenceGateway.Object,
+                _documentTypeGateway.Object,
+                _staffSelectedDocumentTypeGateway.Object,
+                _updateEvidenceRequestStateUseCase.Object);
         }
 
         [Test]
@@ -44,17 +49,24 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public void ReturnsTheUpdatedDocumentSubmissionWhenStaffSelectedDocumentTypeIsProvided()
         {
+            // Arrange
             var id = Guid.NewGuid();
-            SetupMocks(id);
+            SetupMocks(id, teamName);
+
             var request = _fixture.Build<DocumentSubmissionRequest>()
                 .With(x => x.State, "Uploaded")
-                .With(x => x.StaffSelectedDocumentTypeId, "proof-of-id")
+                .With(x => x.StaffSelectedDocumentTypeId, "passport-scan")
                 .Create();
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), request.StaffSelectedDocumentTypeId))
+                .Returns(TestDataHelper.StaffSelectedDocumentType(request.StaffSelectedDocumentTypeId));
+
+            // Act
             var result = _classUnderTest.Execute(id, request);
 
+            // Assert
             result.Id.Should().Be(_found.Id);
-            // uncomment this after DES-189
-            // result.StaffSelectedDocumentType.Should().Be(_found.StaffSelectedDocumentTypeId);
+            result.StaffSelectedDocumentType.Should().NotBeNull();
+            result.StaffSelectedDocumentType.Id.Should().Be(_found.StaffSelectedDocumentTypeId);
         }
 
         [Test]
@@ -103,11 +115,12 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _found = TestDataHelper.DocumentSubmission(true);
 
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(evidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(id)).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
             )));
-            // mock new gateway after DES-189
 
             _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(teamName, _found.DocumentTypeId))
                 .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));
