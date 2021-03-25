@@ -15,12 +15,14 @@ namespace EvidenceApi.V1.UseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
 
-        public FindDocumentSubmissionsByResidentIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IDocumentsApiGateway documentsApiGateway)
+        public FindDocumentSubmissionsByResidentIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway, IDocumentsApiGateway documentsApiGateway)
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
             _documentsApiGateway = documentsApiGateway;
         }
 
@@ -43,14 +45,16 @@ namespace EvidenceApi.V1.UseCase
                 foreach (var ds in documentSubmissions)
                 {
                     var documentType = FindDocumentType(evidenceReq.ServiceRequestedBy, ds.DocumentTypeId);
+                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.ServiceRequestedBy,
+                        ds.StaffSelectedDocumentTypeId);
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
                     if (claim.Document == null)
                     {
-                        result.Add(ds.ToResponse(documentType));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType));
                     }
                     else
                     {
-                        result.Add(ds.ToResponse(documentType, null, null, claim.Document));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document));
                     }
                 }
             }
@@ -60,6 +64,11 @@ namespace EvidenceApi.V1.UseCase
         private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
             return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, documentTypeId);
+        }
+
+        private DocumentType FindStaffSelectedDocumentType(string teamName, string staffSelectedDocumentTypeId)
+        {
+            return _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, staffSelectedDocumentTypeId);
         }
 
         private static void ValidateRequest(DocumentSubmissionSearchQuery request)

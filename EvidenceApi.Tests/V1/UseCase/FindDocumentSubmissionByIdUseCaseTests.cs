@@ -17,6 +17,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private FindDocumentSubmissionByIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
+        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway;
         private Mock<IDocumentsApiGateway> _documentsApiGateway;
         private readonly IFixture _fixture = new Fixture();
 
@@ -35,10 +36,12 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
+            _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
             _documentsApiGateway = new Mock<IDocumentsApiGateway>();
             _classUnderTest = new FindDocumentSubmissionByIdUseCase(
                 _evidenceGateway.Object,
                 _documentTypesGateway.Object,
+                _staffSelectedDocumentTypeGateway.Object,
                 _documentsApiGateway.Object
             );
         }
@@ -53,6 +56,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.RejectionReason.Should().Be(_found.RejectionReason);
             result.State.Should().Be(_found.State.ToString().ToUpper());
             result.DocumentType.Should().Be(_documentType);
+            result.StaffSelectedDocumentType.Should().Be(_documentType);
             result.Document.Should().NotBeNull();
         }
 
@@ -93,6 +97,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _claim2.Result.Document = null;
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(_found.EvidenceRequest);
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found2.EvidenceRequestId)).Returns(_found2.EvidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId1)).Returns(_found);

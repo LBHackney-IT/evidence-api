@@ -19,6 +19,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private FindDocumentSubmissionsByResidentIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
+        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway;
         private Mock<IDocumentsApiGateway> _documentsApiGateway;
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
@@ -39,10 +40,12 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
+            _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
             _documentsApiGateway = new Mock<IDocumentsApiGateway>();
             _classUnderTest = new FindDocumentSubmissionsByResidentIdUseCase(
                 _evidenceGateway.Object,
                 _documentTypesGateway.Object,
+                _staffSelectedDocumentTypeGateway.Object,
                 _documentsApiGateway.Object
             );
         }
@@ -60,11 +63,13 @@ namespace EvidenceApi.Tests.V1.UseCase
             documentSubmission1.Id.Should().Be(_documentSubmission1.Id);
             documentSubmission1.ClaimId.Should().BeEquivalentTo(_documentSubmission1.ClaimId);
             documentSubmission1.DocumentType.Should().BeEquivalentTo(_documentType);
+            documentSubmission1.StaffSelectedDocumentType.Should().BeEquivalentTo(_documentType);
             documentSubmission1.State.Should().BeEquivalentTo(_documentSubmission1.State.ToString());
             documentSubmission1.RejectionReason.Should().BeEquivalentTo(_documentSubmission1.RejectionReason);
             documentSubmission2.Id.Should().Be(_documentSubmission2.Id);
             documentSubmission2.ClaimId.Should().BeEquivalentTo(_documentSubmission2.ClaimId);
             documentSubmission2.DocumentType.Should().BeEquivalentTo(_documentType);
+            documentSubmission2.StaffSelectedDocumentType.Should().BeEquivalentTo(_documentType);
             documentSubmission2.State.Should().BeEquivalentTo(_documentSubmission2.State.ToString());
             documentSubmission2.RejectionReason.Should().BeEquivalentTo(_documentSubmission2.RejectionReason);
         }
@@ -142,6 +147,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             };
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(evidenceRequestsResult);
             _evidenceGateway.Setup(x => x.FindDocumentSubmissionByEvidenceRequestId(_evidenceRequest1.Id)).Returns(_found);
             _evidenceGateway.Setup(x => x.FindDocumentSubmissionByEvidenceRequestId(_evidenceRequest2.Id)).Returns(new List<DocumentSubmission>());

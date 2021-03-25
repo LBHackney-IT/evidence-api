@@ -13,16 +13,19 @@ namespace EvidenceApi.V1.UseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private IDocumentsApiGateway _documentsApiGateway;
 
         public FindDocumentSubmissionByIdUseCase(
             IEvidenceGateway evidenceGateway,
             IDocumentTypeGateway documentTypeGateway,
+            IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway,
             IDocumentsApiGateway documentsApiGateway
         )
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
             _documentsApiGateway = documentsApiGateway;
         }
 
@@ -37,13 +40,20 @@ namespace EvidenceApi.V1.UseCase
 
             var evidenceRequest = _evidenceGateway.FindEvidenceRequest(found.EvidenceRequestId);
             var documentType = FindDocumentType(evidenceRequest.ServiceRequestedBy, found.DocumentTypeId);
+            var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceRequest.ServiceRequestedBy,
+                found.StaffSelectedDocumentTypeId);
             var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
-            return found.ToResponse(documentType, null, null, claim.Document);
+            return found.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document);
         }
 
         private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
             return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, documentTypeId);
+        }
+
+        private DocumentType FindStaffSelectedDocumentType(string teamName, string staffSelectedDocumentTypeId)
+        {
+            return _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, staffSelectedDocumentTypeId);
         }
     }
 }
