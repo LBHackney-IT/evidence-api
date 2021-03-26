@@ -15,6 +15,10 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 
 See the [Architectural Decision Log](/docs/adr).
 
+## Guides
+-   [Service Onboarding](/docs/guides/service-onboarding.md)
+-   [Tracking requests through environments](/docs/guides/tracking-requests.md)
+
 ## Contributing
 
 ### Setup
