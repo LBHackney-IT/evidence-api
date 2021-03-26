@@ -81,6 +81,20 @@ namespace EvidenceApi.Tests.V1.UseCase
             testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with ID: {id}");
         }
 
+        [Test]
+        public void ThrowsAnErrorWhenDocumentApiCannotFindClaim()
+        {
+            // Arrange
+            SetupMocks();
+            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Throws(new DocumentsApiException("doh!"));
+
+            // Act
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(_documentSubmissionId1).ConfigureAwait(true);
+
+            // Assert
+            testDelegate.Should().Throw<BadRequestException>().WithMessage($"Issue with DocumentsApi so cannot return DocumentSubmissionResponse: doh!");
+        }
+
         private void SetupMocks()
         {
             _documentType = _fixture.Create<DocumentType>();

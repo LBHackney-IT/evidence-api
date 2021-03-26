@@ -41,16 +41,23 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");
             }
 
-            var claimRequest = BuildClaimRequest(evidenceRequest);
-            var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
+            try
+            {
+                var claimRequest = BuildClaimRequest(evidenceRequest);
+                var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
+                var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
 
-            var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
-            var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
+                var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
+                var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
-            var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
-            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
+                var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
 
-            return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy);
+                return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy);
+            }
+            catch (DocumentsApiException ex)
+            {
+                throw new BadRequestException($"Issue with DocumentsApi so cannot create DocumentSubmission: {ex.Message}");
+            }
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)
