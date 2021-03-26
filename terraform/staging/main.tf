@@ -73,12 +73,12 @@ module "postgres_db_staging" {
   subnet_ids           = data.aws_subnet_ids.staging.ids
   db_engine            = "postgres"
   db_engine_version    = "11.10"
-  db_instance_class    = "db.t2.micro"
+  db_instance_class    = "db.t2.small"
   db_allocated_storage = 40
   maintenance_window   = "sun:10:00-sun:10:30"
   db_username          = data.aws_ssm_parameter.evidence_postgres_username.value
   db_password          = data.aws_ssm_parameter.evidence_postgres_db_password.value
-  storage_encrypted    = false
+  storage_encrypted    = true
   multi_az             = false //only true if production deployment
   publicly_accessible  = false
   project_name         = "platform apis"
