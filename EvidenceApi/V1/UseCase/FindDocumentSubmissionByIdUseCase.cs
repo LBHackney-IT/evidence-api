@@ -42,8 +42,15 @@ namespace EvidenceApi.V1.UseCase
             var documentType = FindDocumentType(evidenceRequest.ServiceRequestedBy, found.DocumentTypeId);
             var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceRequest.ServiceRequestedBy,
                 found.StaffSelectedDocumentTypeId);
-            var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
-            return found.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document);
+            try
+            {
+                var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
+                return found.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document);
+            }
+            catch (DocumentsApiException ex)
+            {
+                throw new BadRequestException($"Issue with DocumentsApi so cannot return DocumentSubmissionResponse: {ex.Message}");
+            }
         }
 
         private DocumentType FindDocumentType(string teamName, string documentTypeId)
