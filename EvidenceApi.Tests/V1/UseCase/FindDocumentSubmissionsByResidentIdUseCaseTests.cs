@@ -149,8 +149,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(evidenceRequestsResult);
-            _evidenceGateway.Setup(x => x.FindDocumentSubmissionByEvidenceRequestId(_evidenceRequest1.Id)).Returns(_found);
-            _evidenceGateway.Setup(x => x.FindDocumentSubmissionByEvidenceRequestId(_evidenceRequest2.Id)).Returns(new List<DocumentSubmission>());
+            _evidenceGateway.Setup(x => x.FindDocumentSubmissionsByEvidenceRequestId(_evidenceRequest1.Id)).Returns(_found);
+            _evidenceGateway.Setup(x => x.FindDocumentSubmissionsByEvidenceRequestId(_evidenceRequest2.Id)).Returns(new List<DocumentSubmission>());
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
         }

@@ -41,7 +41,7 @@ namespace EvidenceApi.V1.UseCase
 
             foreach (var evidenceReq in evidenceRequests)
             {
-                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionByEvidenceRequestId(evidenceReq.Id);
+                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionsByEvidenceRequestId(evidenceReq.Id);
                 foreach (var ds in documentSubmissions)
                 {
                     var documentType = FindDocumentType(evidenceReq.ServiceRequestedBy, ds.DocumentTypeId);

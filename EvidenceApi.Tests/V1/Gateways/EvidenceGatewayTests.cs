@@ -273,7 +273,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                 documentSubmission1, documentSubmission2
             };
 
-            var found = _classUnderTest.FindDocumentSubmissionByEvidenceRequestId(evidenceRequest1.Id);
+            var found = _classUnderTest.FindDocumentSubmissionsByEvidenceRequestId(evidenceRequest1.Id);
 
             found.Should().BeEquivalentTo(expectedDocumentSubmissions);
         }
@@ -282,7 +282,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void FindByResidentIdReturnsEmptyListWhenDocumentSubmissionsCannotBeFound()
         {
             var id = Guid.NewGuid();
-            var found = _classUnderTest.FindDocumentSubmissionByEvidenceRequestId(id);
+            var found = _classUnderTest.FindDocumentSubmissionsByEvidenceRequestId(id);
             found.Should().BeEmpty();
         }
 
