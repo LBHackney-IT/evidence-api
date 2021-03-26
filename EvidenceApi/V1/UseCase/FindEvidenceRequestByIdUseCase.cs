@@ -38,7 +38,7 @@ namespace EvidenceApi.V1.UseCase
 
         private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, documentTypeId);
         }
     }
 }

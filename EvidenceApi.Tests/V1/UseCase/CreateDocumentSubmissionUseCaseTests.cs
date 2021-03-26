@@ -166,7 +166,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private DocumentType SetupDocumentTypeGateway(string documentTypeId)
         {
             var documentType = TestDataHelper.DocumentType(documentTypeId);
-            _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId("team", documentTypeId)).Returns(documentType);
+            _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId("team", documentTypeId)).Returns(documentType);
 
             return documentType;
         }

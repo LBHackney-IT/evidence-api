@@ -96,8 +96,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             _found2.ClaimId = _claimId2;
             _claim2.Result.Document = null;
 
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
-            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(_found.EvidenceRequest);
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found2.EvidenceRequestId)).Returns(_found2.EvidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId1)).Returns(_found);

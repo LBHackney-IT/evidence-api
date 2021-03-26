@@ -35,7 +35,7 @@ namespace EvidenceApi.V1.UseCase
             return found.ConvertAll<EvidenceRequestResponse>(er =>
             {
                 var resident = _residentsGateway.FindResident(er.ResidentId);
-                var documentTypes = er.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(request.ServiceRequestedBy, dt));
+                var documentTypes = er.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.ServiceRequestedBy, dt));
                 return er.ToResponse(resident, documentTypes);
             });
         }

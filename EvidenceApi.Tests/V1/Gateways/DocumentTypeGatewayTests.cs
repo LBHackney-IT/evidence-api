@@ -35,7 +35,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
 
             // Act
-            var response = _classUnderTest.GetDocumentTypeByTeamNameAndDocumentId(teamName, docType.Id);
+            var response = _classUnderTest.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, docType.Id);
 
             // Assert
             response.Id.Should().BeSameAs(docType.Id);
@@ -46,7 +46,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void GetDocumentTypeByTeamNameAndDocumentIdNullIfDocumentTypeDoesNotExist()
         {
             _fileReaderMock.Setup(s => s.GetData()).Returns(new List<Team>());
-            var response = _classUnderTest.GetDocumentTypeByTeamNameAndDocumentId("teamName", "passport");
+            var response = _classUnderTest.GetDocumentTypeByTeamNameAndDocumentTypeId("teamName", "passport");
 
             response.Should().BeNull();
         }

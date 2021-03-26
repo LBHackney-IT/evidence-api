@@ -57,13 +57,13 @@ namespace EvidenceApi.V1.UseCase
             {
                 documentSubmission.StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId;
                 var evidenceRequest = _evidenceGateway.FindEvidenceRequest(documentSubmission.EvidenceRequestId);
-                staffSelectedDocumentType = _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(
+                staffSelectedDocumentType = _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(
                     evidenceRequest.ServiceRequestedBy, request.StaffSelectedDocumentTypeId);
             }
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
-            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(documentSubmission.EvidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
+            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
         }
     }

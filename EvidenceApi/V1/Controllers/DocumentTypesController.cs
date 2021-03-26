@@ -37,7 +37,7 @@ namespace EvidenceApi.V1.Controllers
             {
                 return Ok(result);
             }
-            return NotFound($"Cannot find team with name: {team}");
+            return NotFound($"No document types were found for team with name: {team}");
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace EvidenceApi.V1.Controllers
             {
                 return Ok(result);
             }
-            return NotFound($"Cannot find team with name: {team}");
+            return NotFound($"No document types were found for team with name: {team}");
         }
     }
 }

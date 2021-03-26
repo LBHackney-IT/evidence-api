@@ -63,12 +63,12 @@ namespace EvidenceApi.V1.UseCase
 
         private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, documentTypeId);
         }
 
         private DocumentType FindStaffSelectedDocumentType(string teamName, string staffSelectedDocumentTypeId)
         {
-            return _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentId(teamName, staffSelectedDocumentTypeId);
+            return _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, staffSelectedDocumentTypeId);
         }
 
         private static void ValidateRequest(DocumentSubmissionSearchQuery request)

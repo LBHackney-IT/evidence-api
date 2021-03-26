@@ -14,7 +14,7 @@ namespace EvidenceApi.V1.Gateways
             _reader = reader;
         }
 
-        public DocumentType GetDocumentTypeByTeamNameAndDocumentId(string teamName, string documentTypeId)
+        public DocumentType GetDocumentTypeByTeamNameAndDocumentTypeId(string teamName, string documentTypeId)
         {
             var documentTypesForTeam = GetDocumentTypesByTeamName(teamName);
             var result = documentTypesForTeam.Find(d => d.Id == documentTypeId);

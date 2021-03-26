@@ -57,7 +57,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.State, "Uploaded")
                 .With(x => x.StaffSelectedDocumentTypeId, "passport-scan")
                 .Create();
-            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(It.IsAny<string>(), request.StaffSelectedDocumentTypeId))
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), request.StaffSelectedDocumentTypeId))
                 .Returns(TestDataHelper.StaffSelectedDocumentType(request.StaffSelectedDocumentTypeId));
 
             // Act
@@ -122,7 +122,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 ds.Id == id && ds.State == SubmissionState.Uploaded
             )));
 
-            _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentId(teamName, _found.DocumentTypeId))
+            _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, _found.DocumentTypeId))
                 .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));
 
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));

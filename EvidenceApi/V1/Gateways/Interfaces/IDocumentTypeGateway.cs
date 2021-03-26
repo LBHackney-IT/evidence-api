@@ -5,7 +5,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface IDocumentTypeGateway
     {
-        DocumentType GetDocumentTypeByTeamNameAndDocumentId(string teamName, string documentTypeId);
+        DocumentType GetDocumentTypeByTeamNameAndDocumentTypeId(string teamName, string documentTypeId);
 
         List<DocumentType> GetDocumentTypesByTeamName(string teamName);
     }
