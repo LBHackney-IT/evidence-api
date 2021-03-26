@@ -4,6 +4,7 @@ using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
+using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Domain.Enums;
 
@@ -13,16 +14,19 @@ namespace EvidenceApi.V1.UseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
 
         public UpdateDocumentSubmissionStateUseCase(
             IEvidenceGateway evidenceGateway,
             IDocumentTypeGateway documentTypeGateway,
+            IStaffSelectedDocumentTypeGateway selectedDocumentTypeGateway,
             IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase
         )
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _staffSelectedDocumentTypeGateway = selectedDocumentTypeGateway;
             _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
         }
 
@@ -48,17 +52,19 @@ namespace EvidenceApi.V1.UseCase
 
             documentSubmission.State = state;
 
+            DocumentType staffSelectedDocumentType = null;
             if (!String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
             {
                 documentSubmission.StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId;
-                // fetch StaffSelectedDocumentType from json file using the gateway after DES-189
+                var evidenceRequest = _evidenceGateway.FindEvidenceRequest(documentSubmission.EvidenceRequestId);
+                staffSelectedDocumentType = _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(
+                    evidenceRequest.ServiceRequestedBy, request.StaffSelectedDocumentTypeId);
             }
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
-            var documentType = _documentTypeGateway.GetDocumentTypeById(documentSubmission.DocumentTypeId);
-            // pass staffSelectedDocumentType after DES-189
-            return documentSubmission.ToResponse(documentType);
+            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
+            return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
         }
     }
 }

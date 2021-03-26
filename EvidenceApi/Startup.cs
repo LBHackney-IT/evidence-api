@@ -129,11 +129,11 @@ namespace EvidenceApi
             // Transients
             services.AddTransient<INotificationClient>(x => new NotificationClient(options.NotifyApiKey));
 
-            // File Readers
-            services.AddSingleton<IFileReader<List<DocumentType>>>(x => new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath));
-
             // Gateways
-            services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>();
+            services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>(sp =>
+                new DocumentTypeGateway(new FileReader<List<Team>>(options.DocumentTypeConfigPath)));
+            services.AddScoped<IStaffSelectedDocumentTypeGateway, StaffSelectedDocumentTypeGateway>(sp =>
+                new StaffSelectedDocumentTypeGateway(new FileReader<List<Team>>(options.StaffSelectedDocumentTypeConfigPath)));
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();
@@ -143,11 +143,11 @@ namespace EvidenceApi
             services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();
             services.AddScoped<IValidator<ResidentRequest>, ResidentRequestValidator>();
             services.AddScoped<IEvidenceRequestValidator, EvidenceRequestValidator>();
-            services.AddScoped<IFindEvidenceRequestByIDUseCase, FindEvidenceRequestByIDUseCase>();
+            services.AddScoped<IFindEvidenceRequestByIdUseCase, FindEvidenceRequestByIdUseCase>();
             services.AddScoped<ICreateDocumentSubmissionUseCase, CreateDocumentSubmissionUseCase>();
             services.AddScoped<IUpdateDocumentSubmissionStateUseCase, UpdateDocumentSubmissionStateUseCase>();
             services.AddScoped<IFindEvidenceRequestsUseCase, FindEvidenceRequestsUseCase>();
-            services.AddScoped<IFindResidentByIDUseCase, FindResidentByIDUseCase>();
+            services.AddScoped<IFindResidentByIdUseCase, FindResidentByIdUseCase>();
             services.AddScoped<IFindDocumentSubmissionByIdUseCase, FindDocumentSubmissionByIdUseCase>();
             services.AddScoped<IUpdateEvidenceRequestStateUseCase, UpdateEvidenceRequestStateUseCase>();
             services.AddScoped<IFindResidentsBySearchQueryUseCase, FindResidentsBySearchQueryUseCase>();

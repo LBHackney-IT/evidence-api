@@ -33,8 +33,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""phoneNumber"": ""+447123456789""
                 },
                 ""deliveryMethods"": [""SMS""],
-                ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""development-team-staging"",
+                ""documentTypes"": [""proof-of-id""],
+                ""serviceRequestedBy"": ""Development Housing Team"",
                 ""reason"": ""staging-reason"",
                 ""userRequestedBy"": ""staff@test.hackney.gov.uk""
             }";
@@ -58,9 +58,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "}," +
                                "\"deliveryMethods\":[\"SMS\"]," +
                                "\"documentTypes\":[" +
-                               "{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}" +
+                               "{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}" +
                                "]," +
-                               "\"serviceRequestedBy\":\"development-team-staging\"," +
+                               "\"serviceRequestedBy\":\"Development Housing Team\"," +
                                "\"reason\":\"staging-reason\"," +
                                "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +
                                $"\"id\":\"{created.Id}\"," +
@@ -88,7 +88,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""FOO""],
                 ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""development-team-staging""
+                ""serviceRequestedBy"": ""Development Housing Team""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -109,7 +109,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""development-team-staging""
+                ""serviceRequestedBy"": ""Development Housing Team""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -127,6 +127,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .With(x => x.ResidentId, resident.Id)
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .With(x => x.ServiceRequestedBy, "Development Housing Team")
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
@@ -230,7 +231,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var documentTypes = new List<string> { "passport-scan", "drivers-licence" };
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest1.ServiceRequestedBy = "Development Housing Team";
             evidenceRequest2.ServiceRequestedBy = "another-service-id";
             evidenceRequest1.ResidentId = resident.Id;
             evidenceRequest2.ResidentId = resident.Id;
@@ -268,7 +269,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest1.ServiceRequestedBy = "Development Housing Team";
             evidenceRequest2.ServiceRequestedBy = "another-service-id";
             evidenceRequest3.ServiceRequestedBy = "yet-another-service";
             evidenceRequest1.ResidentId = resident1.Id;

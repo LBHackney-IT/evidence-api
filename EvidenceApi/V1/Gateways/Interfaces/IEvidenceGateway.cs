@@ -13,6 +13,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         DocumentSubmission CreateDocumentSubmission(DocumentSubmission request);
         DocumentSubmission FindDocumentSubmission(Guid id);
         List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request);
-        List<DocumentSubmission> FindDocumentSubmissionByEvidenceRequestId(Guid id);
+        List<DocumentSubmission> FindDocumentSubmissionsByEvidenceRequestId(Guid id);
     }
 }

@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Development Housing Team",
+    "id": "2",
+    "documentTypes": [
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "Drivers licence",
+        "description": "A valid UK full or provisional UK driving license"
+      }
+    ]
+  }
+]

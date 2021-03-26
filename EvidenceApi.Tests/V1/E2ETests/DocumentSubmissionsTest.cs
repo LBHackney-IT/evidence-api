@@ -68,8 +68,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanCreateDocumentSubmissionWithValidParams()
         {
             var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                .With(x => x.DocumentTypes, new List<string> { "proof-of-id" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .With(x => x.ServiceRequestedBy, "Development Housing Team")
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
@@ -79,8 +80,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
             string body = @"
             {
-                ""documentType"": ""passport-scan"",
-                ""serviceName"": ""service-name"",
+                ""documentType"": ""proof-of-id"",
+                ""serviceName"": ""Development Housing Team"",
                 ""requesterEmail"": ""example@email""
             }";
 
@@ -99,7 +100,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
                                $"\"state\":\"PENDING\"," +
-                               "\"documentType\":{\"id\":\"passport-scan\",\"title\":\"Passport\",\"description\":\"A valid passport open at the photo page\"}," +
+                               "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
+                               "\"staffSelectedDocumentType\":null," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
                                "\"document\":null" +
                                "}";
@@ -150,7 +152,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task CanUpdateDocumentSubmissionStateWithValidParameters()
         {
+            // Arrange
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.ServiceRequestedBy = "Development Housing Team";
 
             evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
@@ -166,24 +170,29 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 
-            var createdEvidenceRequest = DatabaseContext.EvidenceRequests.First();
             var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
 
             var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
             string body = @"
             {
-                ""state"": ""UPLOADED""
+                ""state"": ""UPLOADED"",
+                ""staffSelectedDocumentTypeId"": ""drivers-licence""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
+            // Act
             var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+
+            // Assert
             response.StatusCode.Should().Be(200);
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
 
             var documentType = TestDataHelper.DocumentType("passport-scan");
-            var expected = createdDocumentSubmission.ToResponse(documentType);
+            var staffSelectedDocumentType = TestDataHelper.DocumentType("drivers-licence");
+            var expected = createdDocumentSubmission.ToResponse(documentType, staffSelectedDocumentType);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -201,8 +210,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
 
-            var documentType = TestDataHelper.DocumentType("passport-scan");
-            var expected = documentSubmission.ToResponse(documentType, null, _document);
+            var expected = documentSubmission.ToResponse(null, null, null, _document);
 
             responseFind.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
@@ -226,7 +234,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
-            evidenceRequest.ServiceRequestedBy = "Housing benefit";
+            evidenceRequest.ServiceRequestedBy = "Development Housing Team";
 
             var documentSubmission1 = TestDataHelper.DocumentSubmission();
             documentSubmission1.EvidenceRequestId = evidenceRequest.Id;
@@ -243,7 +251,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/document_submissions?serviceRequestedBy=Housing+benefit&residentId={evidenceRequest.ResidentId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions?serviceRequestedBy=Development+Housing+Team&residentId={evidenceRequest.ResidentId}", UriKind.Relative);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -251,8 +259,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var expected = new List<DocumentSubmissionResponse>()
             {
-                documentSubmission1.ToResponse(documentType, null, _document),
-                documentSubmission2.ToResponse(documentType, null, _document)
+                documentSubmission1.ToResponse(documentType, null, null, _document),
+                documentSubmission2.ToResponse(documentType, null, null, _document)
             };
 
             response.StatusCode.Should().Be(200);

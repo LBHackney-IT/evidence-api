@@ -9,16 +9,16 @@ using NUnit.Framework;
 namespace EvidenceApi.Tests.V1.Gateways
 {
     [TestFixture]
-    public class DocumentTypeGatewayTests
+    public class StaffSelectedDocumentTypeGatewayTests
     {
-        private DocumentTypeGateway _classUnderTest;
+        private StaffSelectedDocumentTypeGateway _classUnderTest;
         private Mock<IFileReader<List<Team>>> _fileReaderMock;
 
         [SetUp]
         public void Setup()
         {
             _fileReaderMock = new Mock<IFileReader<List<Team>>>();
-            _classUnderTest = new DocumentTypeGateway(_fileReaderMock.Object);
+            _classUnderTest = new StaffSelectedDocumentTypeGateway(_fileReaderMock.Object);
         }
 
         [Test]

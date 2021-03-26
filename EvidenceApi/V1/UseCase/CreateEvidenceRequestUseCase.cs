@@ -42,7 +42,8 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
-            var documentTypes = request.DocumentTypes.ConvertAll(FindDocumentType);
+            var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.ServiceRequestedBy, dt));
+
             var evidenceRequest = BuildEvidenceRequest(request, resident.Id);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
 
@@ -83,9 +84,9 @@ namespace EvidenceApi.V1.UseCase
             };
         }
 
-        private DocumentType FindDocumentType(string documentTypeId)
+        private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, documentTypeId);
         }
 
         private DeliveryMethod ParseDeliveryMethod(string deliveryMethod)

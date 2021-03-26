@@ -54,7 +54,7 @@ namespace EvidenceApi.Tests.V1.Factories
             var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType, s3UploadPolicy);
+            var response = domain.ToResponse(documentType, null, s3UploadPolicy);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);

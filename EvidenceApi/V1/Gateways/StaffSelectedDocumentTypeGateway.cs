@@ -5,11 +5,11 @@ using EvidenceApi.V1.Infrastructure.Interfaces;
 
 namespace EvidenceApi.V1.Gateways
 {
-    public class DocumentTypeGateway : IDocumentTypeGateway
+    public class StaffSelectedDocumentTypeGateway : IStaffSelectedDocumentTypeGateway
     {
         private readonly IFileReader<List<Team>> _reader;
 
-        public DocumentTypeGateway(IFileReader<List<Team>> reader)
+        public StaffSelectedDocumentTypeGateway(IFileReader<List<Team>> reader)
         {
             _reader = reader;
         }

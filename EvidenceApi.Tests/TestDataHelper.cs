@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Infrastructure;
@@ -17,6 +18,7 @@ namespace EvidenceApi.Tests
                 .With(x => x.Communications, new List<Communication>())
                 .With(x => x.DocumentSubmissions, new List<DocumentSubmission>())
                 .With(x => x.RawDeliveryMethods, new List<string>())
+                .With(x => x.ServiceRequestedBy)
                 .Create();
         }
 
@@ -45,9 +47,17 @@ namespace EvidenceApi.Tests
         public static DocumentType DocumentType(string id)
         {
             var options = AppOptions.FromEnv();
-            var reader = new FileReader<List<DocumentType>>(options.DocumentTypeConfigPath);
+            var reader = new FileReader<List<Team>>(options.DocumentTypeConfigPath);
 
-            return reader.GetData().Find(x => x.Id == id);
+            return reader.GetData().SelectMany(t => t.DocumentTypes).ToList().Find(dt => dt.Id == id);
+        }
+
+        public static DocumentType StaffSelectedDocumentType(string id)
+        {
+            var options = AppOptions.FromEnv();
+            var reader = new FileReader<List<Team>>(options.StaffSelectedDocumentTypeConfigPath);
+
+            return reader.GetData().SelectMany(t => t.DocumentTypes).ToList().Find(dt => dt.Id == id);
         }
 
         public static Resident Resident()

@@ -77,7 +77,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentType = _fixture.Create<DocumentType>();
 
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident);
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(_found);
         }
 
