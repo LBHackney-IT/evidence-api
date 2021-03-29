@@ -154,6 +154,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.Id.Should().Be(entity.Id);
             found.CreatedAt.Should().Be(entity.CreatedAt);
             found.ResidentId.Should().Be(entity.ResidentId);
+            found.ResidentReferenceId.Should().Be(entity.ResidentReferenceId);
             found.DeliveryMethods.Should().BeEquivalentTo(expectedDeliveryMethods);
             found.DocumentTypes.Should().Equal(entity.DocumentTypes);
             found.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);

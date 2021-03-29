@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
-using EvidenceApi.V1.Infrastructure.Interfaces;
 using EvidenceApi.V1.UseCase;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.Versioning;
@@ -128,6 +128,7 @@ namespace EvidenceApi
 
             // Transients
             services.AddTransient<INotificationClient>(x => new NotificationClient(options.NotifyApiKey));
+            services.AddTransient<HashAlgorithm>(x => SHA512.Create());
 
             // Gateways
             services.AddScoped<IDocumentTypeGateway, DocumentTypeGateway>(sp =>

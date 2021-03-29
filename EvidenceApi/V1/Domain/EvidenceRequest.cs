@@ -19,6 +19,9 @@ namespace EvidenceApi.V1.Domain
         [Column("resident_id")]
         public Guid ResidentId { get; set; }
 
+        [Column("resident_reference_id")]
+        public string ResidentReferenceId { get; set; }
+
         [Column("delivery_methods")]
         public List<string> RawDeliveryMethods { get; set; }
 
