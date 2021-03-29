@@ -39,7 +39,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var id = Guid.NewGuid();
             SetupMocks(id, teamName);
-            DocumentSubmissionRequest request = BuildDocumentSubmissionRequest();
+            DocumentSubmissionUpdateRequest request = BuildDocumentSubmissionUpdateRequest();
             var result = _classUnderTest.Execute(id, request);
 
             result.Id.Should().Be(_found.Id);
@@ -53,7 +53,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var id = Guid.NewGuid();
             SetupMocks(id, teamName);
 
-            var request = _fixture.Build<DocumentSubmissionRequest>()
+            var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
                 .With(x => x.StaffSelectedDocumentTypeId, "passport-scan")
                 .Create();
@@ -70,10 +70,27 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ReturnsTheUpdatedDocumentSubmissionWhenRejectionReasonIsProvided()
+        {
+            var id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+
+            var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "Uploaded")
+                .With(x => x.RejectionReason, "This is the rejection reason")
+                .Create();
+
+            var result = _classUnderTest.Execute(id, request);
+
+            result.Id.Should().Be(_found.Id);
+            result.RejectionReason.Should().Be("This is the rejection reason");
+        }
+
+        [Test]
         public void ThrowsAnErrorWhenADocumentSubmissionIsNotFound()
         {
             Guid id = Guid.NewGuid();
-            DocumentSubmissionRequest request = BuildDocumentSubmissionRequest();
+            DocumentSubmissionUpdateRequest request = BuildDocumentSubmissionUpdateRequest();
             Action act = () => _classUnderTest.Execute(id, request);
             act.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with id: {id}");
         }
@@ -83,7 +100,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             Guid id = Guid.NewGuid();
             SetupMocks(id, teamName);
-            DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
+            DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .Without(x => x.State)
                 .Create();
 
@@ -96,7 +113,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             Guid id = Guid.NewGuid();
             SetupMocks(id, teamName);
-            DocumentSubmissionRequest request = _fixture.Build<DocumentSubmissionRequest>()
+            DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Invalidstate")
                 .Create();
 
@@ -128,9 +145,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));
         }
 
-        private DocumentSubmissionRequest BuildDocumentSubmissionRequest()
+        private DocumentSubmissionUpdateRequest BuildDocumentSubmissionUpdateRequest()
         {
-            return _fixture.Build<DocumentSubmissionRequest>()
+            return _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
                 .Create();
         }
