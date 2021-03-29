@@ -176,7 +176,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = @"
             {
                 ""state"": ""UPLOADED"",
-                ""staffSelectedDocumentTypeId"": ""drivers-licence""
+                ""staffSelectedDocumentTypeId"": ""drivers-licence"",
+                ""rejectionReason"": ""This is the rejection reason""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");

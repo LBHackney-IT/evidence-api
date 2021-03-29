@@ -6,6 +6,6 @@ namespace EvidenceApi.V1.UseCase.Interfaces
 {
     public interface IUpdateDocumentSubmissionStateUseCase
     {
-        DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionRequest request);
+        DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionUpdateRequest request);
     }
 }
