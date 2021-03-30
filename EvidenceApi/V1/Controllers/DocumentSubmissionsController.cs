@@ -37,7 +37,7 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Document submission cannot be found</response>
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult UpdateDocumentSubmissionState([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionRequest request)
+        public IActionResult UpdateDocumentSubmissionState([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionUpdateRequest request)
         {
             try
             {

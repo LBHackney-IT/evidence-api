@@ -20,7 +20,7 @@ namespace EvidenceApi.Tests.V1.Domain
             string serviceAreaCreatedBy = "service-area";
             string userCreatedBy = "name@email";
             string apiCreatedBy = "evidence-api";
-            DateTime retentionExpiresAt = DateTime.Now.AddMonths(3);
+            DateTime retentionExpiresAt = DateTime.UtcNow.AddMonths(3);
 
             var claim = new Claim
             {

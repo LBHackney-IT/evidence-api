@@ -48,7 +48,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var created = DatabaseContext.EvidenceRequests.First();
             var resident = DatabaseContext.Residents.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
             string expected = "{" +
                                "\"resident\":{" +
                                $"\"id\":\"{resident.Id}\"," +
@@ -135,7 +135,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}", UriKind.Relative);
-            var formattedCreatedAt = JsonConvert.SerializeObject(entity.CreatedAt.ToDateTimeOffset());
             var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<EvidenceRequestResponse>(jsonFind);

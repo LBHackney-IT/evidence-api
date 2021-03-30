@@ -30,7 +30,7 @@ namespace EvidenceApi.V1.UseCase
             _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
         }
 
-        public DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionRequest request)
+        public DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionUpdateRequest request)
         {
             var documentSubmission = _evidenceGateway.FindDocumentSubmission(id);
 
@@ -51,6 +51,11 @@ namespace EvidenceApi.V1.UseCase
             }
 
             documentSubmission.State = state;
+
+            if (!String.IsNullOrEmpty(request.RejectionReason))
+            {
+                documentSubmission.RejectionReason = request.RejectionReason;
+            }
 
             DocumentType staffSelectedDocumentType = null;
             if (!String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
