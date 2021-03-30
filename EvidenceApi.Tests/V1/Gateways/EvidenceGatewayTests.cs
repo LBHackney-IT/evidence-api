@@ -287,6 +287,57 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.Should().BeEmpty();
         }
 
+        [Test]
+        public void FindEvidenceRequestsByResidentIdReturnsResults()
+        {
+            // Arrange
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest3 = TestDataHelper.EvidenceRequest();
+            var resident1 = TestDataHelper.Resident();
+            resident1.Id = Guid.NewGuid();
+            var resident2 = TestDataHelper.Resident();
+            resident2.Id = Guid.NewGuid();
+            evidenceRequest1.ResidentId = resident1.Id;
+            evidenceRequest2.ResidentId = resident1.Id;
+            evidenceRequest3.ResidentId = resident2.Id;
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
+            DatabaseContext.SaveChanges();
+            var expected = new List<EvidenceRequest>()
+            {
+                evidenceRequest1, evidenceRequest2
+            };
+
+            // Act
+            var found = _classUnderTest.FindEvidenceRequestsByResidentId(resident1.Id);
+
+            // Assert
+            found.Should().Equal(expected);
+        }
+
+        [Test]
+        public void GetAllReturnsResults()
+        {
+            // Arrange
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.SaveChanges();
+            var expected = new List<EvidenceRequest>()
+            {
+                evidenceRequest1, evidenceRequest2
+            };
+
+            // Act
+            var found = _classUnderTest.GetAll();
+
+            // Assert
+            found.Should().Equal(expected);
+        }
+
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
