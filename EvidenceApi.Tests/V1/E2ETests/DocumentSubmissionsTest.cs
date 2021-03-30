@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using AutoFixture;
@@ -93,7 +92,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var created = DatabaseContext.DocumentSubmissions.First();
 
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt.ToDateTimeOffset());
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
