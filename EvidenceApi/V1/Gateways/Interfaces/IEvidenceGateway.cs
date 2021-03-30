@@ -14,5 +14,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         DocumentSubmission FindDocumentSubmission(Guid id);
         List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request);
         List<DocumentSubmission> FindDocumentSubmissionsByEvidenceRequestId(Guid id);
+        List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id);
+        List<EvidenceRequest> GetAll();
     }
 }

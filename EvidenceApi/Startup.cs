@@ -10,6 +10,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
+using EvidenceApi.V1.Infrastructure.Interfaces;
 using EvidenceApi.V1.UseCase;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.Versioning;
@@ -138,6 +139,7 @@ namespace EvidenceApi
             services.AddScoped<IResidentsGateway, ResidentsGateway>();
             services.AddScoped<IEvidenceGateway, EvidenceGateway>();
             services.AddScoped<INotifyGateway, NotifyGateway>();
+            services.AddScoped<IStringHasher, StringHasher>();
             services.AddHttpClient<IDocumentsApiGateway, DocumentsApiGateway>();
 
             // Use Cases
@@ -153,6 +155,7 @@ namespace EvidenceApi
             services.AddScoped<IUpdateEvidenceRequestStateUseCase, UpdateEvidenceRequestStateUseCase>();
             services.AddScoped<IFindResidentsBySearchQueryUseCase, FindResidentsBySearchQueryUseCase>();
             services.AddScoped<IFindDocumentSubmissionsByResidentIdUseCase, FindDocumentSubmissionsByResidentIdUseCase>();
+            services.AddScoped<ICreateResidentReferenceIdUseCase, CreateResidentReferenceIdUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

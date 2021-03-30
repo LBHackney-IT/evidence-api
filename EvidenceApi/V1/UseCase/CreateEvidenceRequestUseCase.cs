@@ -20,7 +20,7 @@ namespace EvidenceApi.V1.UseCase
         private readonly IResidentsGateway _residentsGateway;
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly INotifyGateway _notifyGateway;
-        private readonly HashAlgorithm _hashAlgorithm;
+        private readonly ICreateResidentReferenceIdUseCase _createResidentReferenceIdUseCase;
 
         public CreateEvidenceRequestUseCase(
             IEvidenceRequestValidator validator,
@@ -28,14 +28,14 @@ namespace EvidenceApi.V1.UseCase
             IResidentsGateway residentsGateway,
             IEvidenceGateway evidenceGateway,
             INotifyGateway notifyGateway,
-            HashAlgorithm hashAlgorithm)
+            ICreateResidentReferenceIdUseCase createResidentReferenceIdUseCase)
         {
             _validator = validator;
             _documentTypeGateway = documentTypeGateway;
             _residentsGateway = residentsGateway;
             _evidenceGateway = evidenceGateway;
             _notifyGateway = notifyGateway;
-            _hashAlgorithm = hashAlgorithm;
+            _createResidentReferenceIdUseCase = createResidentReferenceIdUseCase;
         }
 
         public EvidenceRequestResponse Execute(EvidenceRequestRequest request)
@@ -49,8 +49,7 @@ namespace EvidenceApi.V1.UseCase
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
             var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.ServiceRequestedBy, dt));
 
-            var residentIdHash = _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(resident.Id.ToString()));
-            var residentReferenceId = BitConverter.ToString(residentIdHash).Substring(0, 10).Replace("-", "");
+            var residentReferenceId = _createResidentReferenceIdUseCase.Execute(resident);
             var evidenceRequest = BuildEvidenceRequest(request, resident.Id, residentReferenceId);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
 

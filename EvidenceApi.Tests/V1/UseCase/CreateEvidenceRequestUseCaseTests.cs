@@ -25,7 +25,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
         private Mock<INotifyGateway> _notifyGateway;
-        private HashAlgorithm _hashAlgorithm;
+        private Mock<ICreateResidentReferenceIdUseCase> _createResidentReferenceIdUseCase;
         private readonly IFixture _fixture = new Fixture();
 
         private Resident _resident;
@@ -41,9 +41,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
             _notifyGateway = new Mock<INotifyGateway>();
-            _hashAlgorithm = SHA512.Create();
+            _createResidentReferenceIdUseCase = new Mock<ICreateResidentReferenceIdUseCase>();
             _classUnderTest = new CreateEvidenceRequestUseCase(_validator.Object, _documentTypesGateway.Object,
-                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object, _hashAlgorithm);
+                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object, _createResidentReferenceIdUseCase.Object);
 
         }
 
