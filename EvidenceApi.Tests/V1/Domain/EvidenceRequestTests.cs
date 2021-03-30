@@ -14,7 +14,7 @@ namespace EvidenceApi.Tests.V1.Domain
         public void EvidenceRequestHaveCorrectAttributes()
         {
             var id = Guid.NewGuid();
-            var createdAt = DateTime.Now;
+            var createdAt = DateTime.UtcNow;
             var residentId = Guid.NewGuid();
             var deliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Sms };
             var documentTypes = new List<string>() { "passport" };

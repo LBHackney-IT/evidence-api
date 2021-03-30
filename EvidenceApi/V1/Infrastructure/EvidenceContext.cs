@@ -27,7 +27,7 @@ namespace EvidenceApi.V1.Infrastructure
             foreach (var entityEntry in entries)
             {
                 var entity = ((IEntity) entityEntry.Entity);
-                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.Now;
+                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.UtcNow;
                 if (entity.Id == default) entity.Id = Guid.NewGuid();
             }
 
