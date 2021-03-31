@@ -34,7 +34,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             existingResident.Id = residentId;
 
             EvidenceRequest existingEvidenceRequest = TestDataHelper.EvidenceRequest();
-            var evidenceRequests = new List<EvidenceRequest>() {existingEvidenceRequest};
+            var evidenceRequests = new List<EvidenceRequest>() { existingEvidenceRequest };
             _evidenceGateway.Setup(x => x.FindEvidenceRequestsByResidentId(residentId)).Returns(evidenceRequests);
 
             // Act
@@ -55,7 +55,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             EvidenceRequest existingEvidenceRequest = TestDataHelper.EvidenceRequest();
             existingEvidenceRequest.ResidentReferenceId = "ResidentRef";
-            var evidenceRequests = new List<EvidenceRequest>() {existingEvidenceRequest};
+            var evidenceRequests = new List<EvidenceRequest>() { existingEvidenceRequest };
             _evidenceGateway.Setup(x => x.FindEvidenceRequestsByResidentId(residentId)).Returns(new List<EvidenceRequest>());
             _evidenceGateway.Setup(x => x.GetAll()).Returns(evidenceRequests);
             _stringHasher.Setup(x => x.create(residentId.ToString()))
