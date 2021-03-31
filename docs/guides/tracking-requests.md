@@ -41,7 +41,7 @@ chmod 400 ./private-key.pem
 ```
 8. Create environment variables by retrieving properties from AWS SSM
 ```sh
-EVIDENCE_API_HOST=$(aws ssm get-parameter --name /evidence-api/stagig/postgres-hostname --query Parameter.Value)
+EVIDENCE_API_HOST=$(aws ssm get-parameter --name /evidence-api/staging/postgres-hostname --query Parameter.Value)
 EVIDENCE_API_PORT=$(aws ssm get-parameter --name /evidence-api/staging/postgres-port --query Parameter.Value)
 JUMP_BOX_NAME=$(aws ssm get-parameter --name /platform-apis-jump-box-instance-name --query Parameter.Value)
 ```
