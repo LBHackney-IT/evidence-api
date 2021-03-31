@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace EvidenceApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class CreateResidentReferenceIdTests
+    public class CreateResidentReferenceIdUseCaseTests
     {
         private CreateResidentReferenceIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
@@ -34,8 +34,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             existingResident.Id = residentId;
 
             EvidenceRequest existingEvidenceRequest = TestDataHelper.EvidenceRequest();
-            var evidenceRequests = new List<EvidenceRequest>();
-            evidenceRequests.Add(existingEvidenceRequest);
+            var evidenceRequests = new List<EvidenceRequest>() {existingEvidenceRequest};
             _evidenceGateway.Setup(x => x.FindEvidenceRequestsByResidentId(residentId)).Returns(evidenceRequests);
 
             // Act
@@ -56,8 +55,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             EvidenceRequest existingEvidenceRequest = TestDataHelper.EvidenceRequest();
             existingEvidenceRequest.ResidentReferenceId = "ResidentRef";
-            var evidenceRequests = new List<EvidenceRequest>();
-            evidenceRequests.Add(existingEvidenceRequest);
+            var evidenceRequests = new List<EvidenceRequest>() {existingEvidenceRequest};
             _evidenceGateway.Setup(x => x.FindEvidenceRequestsByResidentId(residentId)).Returns(new List<EvidenceRequest>());
             _evidenceGateway.Setup(x => x.GetAll()).Returns(evidenceRequests);
             _stringHasher.Setup(x => x.create(residentId.ToString()))

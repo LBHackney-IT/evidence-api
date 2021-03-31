@@ -1,6 +1,4 @@
 using System;
-using System.Security.Cryptography;
-using System.Text;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;

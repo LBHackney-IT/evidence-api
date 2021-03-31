@@ -22,10 +22,10 @@ namespace EvidenceApi.V1.UseCase
         public string Execute(Resident resident)
         {
             var residentId = resident.Id;
-            var existingEvidenceRequests = _evidenceGateway.FindEvidenceRequestsByResidentId(residentId);
-            if (existingEvidenceRequests.Count > 0)
+            var evidenceRequestsForResident = _evidenceGateway.FindEvidenceRequestsByResidentId(residentId);
+            if (evidenceRequestsForResident.Count > 0)
             {
-                return existingEvidenceRequests.First().ResidentReferenceId;
+                return evidenceRequestsForResident.First().ResidentReferenceId;
             }
 
             var residentIdHash = _stringHasher.create(residentId.ToString());
@@ -33,14 +33,11 @@ namespace EvidenceApi.V1.UseCase
             var residentReferenceId = trimHash(residentIdHash, hashStartIndex, ResidentReferenceLength);
             var allResidentReferenceIds = _evidenceGateway.GetAll().Select(e => e.ResidentReferenceId).ToHashSet();
             var residentReferenceIdAlreadyExists = residentReferenceIdExists(allResidentReferenceIds, residentReferenceId);
-            if (residentReferenceIdAlreadyExists)
+            while (residentReferenceIdAlreadyExists)
             {
-                while (residentReferenceIdAlreadyExists)
-                {
-                    hashStartIndex++;
-                    residentReferenceId = trimHash(residentIdHash, hashStartIndex, ResidentReferenceLength);
-                    residentReferenceIdAlreadyExists = residentReferenceIdExists(allResidentReferenceIds, residentReferenceId);
-                }
+                hashStartIndex++;
+                residentReferenceId = trimHash(residentIdHash, hashStartIndex, ResidentReferenceLength);
+                residentReferenceIdAlreadyExists = residentReferenceIdExists(allResidentReferenceIds, residentReferenceId);
             }
 
             return residentReferenceId;
