@@ -11,8 +11,7 @@ namespace EvidenceApi.V1.Factories
         {
             return new EvidenceRequestResponse()
             {
-                Resident = resident.ToResponse(),
-                ResidentReferenceId = domain.ResidentReferenceId,
+                Resident = resident.ToResponse(domain.ResidentReferenceId),
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()),
                 DocumentTypes = documentTypes,
                 ServiceRequestedBy = domain.ServiceRequestedBy,
@@ -23,14 +22,15 @@ namespace EvidenceApi.V1.Factories
             };
         }
 
-        public static ResidentResponse ToResponse(this Resident domain)
+        public static ResidentResponse ToResponse(this Resident domain, string? referenceId = null)
         {
             return new ResidentResponse()
             {
                 Id = domain.Id,
                 Name = domain.Name,
                 Email = domain.Email,
-                PhoneNumber = domain.PhoneNumber
+                PhoneNumber = domain.PhoneNumber,
+                ReferenceId = referenceId
             };
         }
 

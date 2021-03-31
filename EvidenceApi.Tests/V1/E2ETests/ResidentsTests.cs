@@ -32,11 +32,18 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             // Arrange
             var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var serviceRequestedBy = "Development Housing Team";
+            evidenceRequest.ResidentId = resident.Id;
+            evidenceRequest.ServiceRequestedBy = serviceRequestedBy;
+
             DatabaseContext.Add(resident);
+            DatabaseContext.Add(evidenceRequest);
             DatabaseContext.SaveChanges();
 
             // Act
-            var uri = new Uri($"api/v1/residents/search/{resident.Name}", UriKind.Relative);
+            var uri = new Uri($"api/v1/residents/search/?serviceRequestedBy={serviceRequestedBy}&searchQuery={resident.Name}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             // Assert

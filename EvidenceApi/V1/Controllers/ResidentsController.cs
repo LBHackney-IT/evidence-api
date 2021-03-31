@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -48,10 +49,10 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="200">Found</response>
         /// <response code="401">Request lacks valid API token</response>
         [HttpGet]
-        [Route("search/{searchQuery}")]
-        public IActionResult SearchResidents([FromRoute][Required] string searchQuery)
+        [Route("search")]
+        public IActionResult SearchResidents([FromQuery][Required] ResidentSearchQuery request)
         {
-            var result = _findResidentsBySearchQueryUseCase.Execute(searchQuery);
+            var result = _findResidentsBySearchQueryUseCase.Execute(request);
 
             return Ok(result);
         }

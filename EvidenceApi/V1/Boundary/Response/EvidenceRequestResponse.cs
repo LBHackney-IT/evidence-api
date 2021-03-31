@@ -8,7 +8,6 @@ namespace EvidenceApi.V1.Boundary.Response
     public class EvidenceRequestResponse
     {
         public ResidentResponse Resident { get; set; }
-        public string ResidentReferenceId { get; set; }
         public List<string> DeliveryMethods { get; set; }
         public List<DocumentType> DocumentTypes { get; set; }
         public string ServiceRequestedBy { get; set; }
