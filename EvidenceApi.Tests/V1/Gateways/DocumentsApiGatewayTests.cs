@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
@@ -52,7 +53,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                     body.RetentionExpiresAt == claimRequest.RetentionExpiresAt &&
                     request.Headers.Authorization.ToString() == _options.DocumentsApiPostClaimsToken;
             })
-                .ReturnsResponse(_claimResponseFixture, "application/json");
+                .ReturnsResponse(HttpStatusCode.Created, _claimResponseFixture, "application/json");
 
             var result = await _classUnderTest.CreateClaim(claimRequest).ConfigureAwait(true);
 
@@ -70,7 +71,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                 {
                     return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
                 })
-                    .ReturnsResponse(_s3UploadPolicyResponse, "application/json");
+                    .ReturnsResponse(HttpStatusCode.Created, _s3UploadPolicyResponse, "application/json");
 
             var result = await _classUnderTest.CreateUploadPolicy(id).ConfigureAwait(true);
 
@@ -86,7 +87,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                 {
                     return request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken;
                 })
-                .ReturnsResponse(_claimResponseFixture, "application/json");
+                .ReturnsResponse(HttpStatusCode.OK, _claimResponseFixture, "application/json");
             var result = await _classUnderTest.GetClaimById(id).ConfigureAwait(true);
 
             result.Should().BeEquivalentTo(expectedClaim);
