@@ -55,7 +55,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenDocumentApiCannotCreateClaim()
+        public void ThrowsBadRequestExceptionWhenCannotCreateClaim()
         {
             // Arrange
             _documentType = _fixture.Create<DocumentType>();
@@ -83,7 +83,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestThrowsNotFoundExceptionWhenDocumentApiCannotCreateUploadPolicy()
+        public void ThrowsBadRequestExceptionWhenCannotCreateUploadPolicy()
         {
             // Arrange
             _documentType = _fixture.Create<DocumentType>();
@@ -109,7 +109,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                     x.CreateUploadPolicy(It.Is<Guid>(id =>
                         id == claim.Document.Id))
                 )
-                .Throws(new DocumentsApiException("error!"));
+                .Throws(new DocumentsApiException("doh!"));
 
             // Act
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);

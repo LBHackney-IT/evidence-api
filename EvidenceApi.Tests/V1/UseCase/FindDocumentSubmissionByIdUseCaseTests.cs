@@ -82,7 +82,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsAnErrorWhenDocumentApiCannotFindClaim()
+        public void ThrowsAnErrorWhenClaimIsNotFound()
         {
             // Arrange
             SetupMocks();

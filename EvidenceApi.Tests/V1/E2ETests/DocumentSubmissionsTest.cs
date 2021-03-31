@@ -133,7 +133,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CreateDocumentSubmissionUnsuccessfulWhenDocumentApiCannotCreateClaim()
+        public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateClaim()
         {
             // Arrange
             var entity = _fixture.Build<EvidenceRequest>()
@@ -170,7 +170,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CreateDocumentSubmissionUnsuccessfulWhenDocumentApiCannotCreateUploadPolicy()
+        public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateUploadPolicy()
         {
             // Arrange
             var entity = _fixture.Build<EvidenceRequest>()
@@ -308,7 +308,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task ReturnBadRequestWhenDocumentsApiHasIssueDuringFindDocumentSubmission()
+        public async Task ReturnBadRequestWhenIssueDuringFindDocumentSubmission()
         {
             // Arrange
             var documentSubmission = TestDataHelper.DocumentSubmission(true);
