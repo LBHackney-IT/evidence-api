@@ -1,5 +1,4 @@
 using System.Data.Common;
-using System.Security.Cryptography;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -46,7 +45,6 @@ namespace EvidenceApi.Tests
             builder.ConfigureTestServices(services =>
             {
                 services.AddTransient(x => _mockNotificationClient);
-                services.AddTransient(x => SHA512.Create());
                 services.AddSingleton(x => _options);
             });
         }

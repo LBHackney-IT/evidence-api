@@ -9,9 +9,9 @@ namespace EvidenceApi.V1.Infrastructure
     {
         private readonly HashAlgorithm _hashAlgorithm;
 
-        public StringHasher(HashAlgorithm hashAlgorithm)
+        public StringHasher()
         {
-            _hashAlgorithm = hashAlgorithm;
+            _hashAlgorithm = SHA512.Create();
         }
 
         public string create(string toHash)
