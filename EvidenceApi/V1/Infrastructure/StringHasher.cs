@@ -14,7 +14,7 @@ namespace EvidenceApi.V1.Infrastructure
             _hashAlgorithm = SHA512.Create();
         }
 
-        public string create(string toHash)
+        public string Create(string toHash)
         {
             var hash = _hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(toHash));
             return BitConverter.ToString(hash);

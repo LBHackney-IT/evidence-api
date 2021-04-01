@@ -13,7 +13,7 @@ namespace EvidenceApi.Tests.V1.UseCase
     [TestFixture]
     public class CreateResidentReferenceIdUseCaseTests
     {
-        private CreateResidentReferenceIdUseCase _classUnderTest;
+        private FindOrCreateResidentReferenceIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IStringHasher> _stringHasher;
 
@@ -22,7 +22,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _stringHasher = new Mock<IStringHasher>();
-            _classUnderTest = new CreateResidentReferenceIdUseCase(_evidenceGateway.Object, _stringHasher.Object);
+            _classUnderTest = new FindOrCreateResidentReferenceIdUseCase(_evidenceGateway.Object, _stringHasher.Object);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             // Assert
             result.Should().Be(existingEvidenceRequest.ResidentReferenceId);
-            _stringHasher.Verify(x => x.create(It.IsAny<string>()), Times.Never);
+            _stringHasher.Verify(x => x.Create(It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var evidenceRequests = new List<EvidenceRequest>() { existingEvidenceRequest };
             _evidenceGateway.Setup(x => x.FindEvidenceRequestsByResidentId(residentId)).Returns(new List<EvidenceRequest>());
             _evidenceGateway.Setup(x => x.GetAll()).Returns(evidenceRequests);
-            _stringHasher.Setup(x => x.create(residentId.ToString()))
+            _stringHasher.Setup(x => x.Create(residentId.ToString()))
                 .Returns(existingEvidenceRequest.ResidentReferenceId + "123456");
 
             // Act
@@ -66,7 +66,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             // Assert
             result.Should().Be("esidentRef1");
-            _stringHasher.Verify(x => x.create(It.IsAny<string>()), Times.Exactly(1));
+            _stringHasher.Verify(x => x.Create(It.IsAny<string>()), Times.Exactly(1));
         }
     }
 }
