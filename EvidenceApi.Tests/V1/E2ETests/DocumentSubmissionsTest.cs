@@ -256,8 +256,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = @"
             {
                 ""state"": ""UPLOADED"",
-                ""staffSelectedDocumentTypeId"": ""drivers-licence"",
-                ""rejectionReason"": ""This is the rejection reason""
+                ""staffSelectedDocumentTypeId"": ""drivers-licence""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -275,6 +274,54 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var staffSelectedDocumentType = TestDataHelper.DocumentType("drivers-licence");
             var expected = createdDocumentSubmission.ToResponse(documentType, staffSelectedDocumentType);
             result.Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public async Task CanUpdateDocumentSubmissionStateOnlyWhenRejected()
+        {
+            // Arrange
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.ServiceRequestedBy = "Development Housing Team";
+
+            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
+            evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
+            evidenceRequest.ResidentId = resident.Id;
+
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+
+            var documentSubmission = TestDataHelper.DocumentSubmission();
+            documentSubmission.EvidenceRequest = evidenceRequest;
+            documentSubmission.DocumentTypeId = "passport-scan";
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+
+            DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
+
+            var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}", UriKind.Relative);
+            string body = @"
+            {
+                ""state"": ""REJECTED"",
+                ""rejectionReason"": ""This is the rejection reason""
+            }";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+
+            // Assert
+            response.StatusCode.Should().Be(200);
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
+
+            result.State.Should().Be("REJECTED");
         }
 
         [Test]
