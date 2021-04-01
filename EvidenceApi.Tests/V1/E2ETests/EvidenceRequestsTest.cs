@@ -56,6 +56,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "\"email\":\"frodo@bagend.com,\"," +
                                "\"phoneNumber\":\"+447123456789\"" +
                                "}," +
+                               $"\"residentReferenceId\":\"{created.ResidentReferenceId}\"," +
                                "\"deliveryMethods\":[\"SMS\"]," +
                                "\"documentTypes\":[" +
                                "{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}" +

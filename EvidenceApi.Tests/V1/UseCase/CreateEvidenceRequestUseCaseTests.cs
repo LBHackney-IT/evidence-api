@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -24,6 +25,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
         private Mock<INotifyGateway> _notifyGateway;
+        private Mock<IFindOrCreateResidentReferenceIdUseCase> _createResidentReferenceIdUseCase;
         private readonly IFixture _fixture = new Fixture();
 
         private Resident _resident;
@@ -39,8 +41,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
             _notifyGateway = new Mock<INotifyGateway>();
+            _createResidentReferenceIdUseCase = new Mock<IFindOrCreateResidentReferenceIdUseCase>();
             _classUnderTest = new CreateEvidenceRequestUseCase(_validator.Object, _documentTypesGateway.Object,
-                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object);
+                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object, _createResidentReferenceIdUseCase.Object);
 
         }
 
@@ -60,6 +63,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(_request);
 
             result.Resident.Id.Should().NotBeEmpty();
+            result.ResidentReferenceId.Should().NotBeEmpty();
             result.Resident.Name.Should().Be(_resident.Name);
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));

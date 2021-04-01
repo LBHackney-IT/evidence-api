@@ -12,6 +12,7 @@ namespace EvidenceApi.V1.Factories
             return new EvidenceRequestResponse()
             {
                 Resident = resident.ToResponse(),
+                ResidentReferenceId = domain.ResidentReferenceId,
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()),
                 DocumentTypes = documentTypes,
                 ServiceRequestedBy = domain.ServiceRequestedBy,

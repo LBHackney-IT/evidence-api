@@ -30,6 +30,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.DocumentTypes.Should().BeEquivalentTo(documentTypes);
             response.DeliveryMethods.Should().ContainSingle(x => x == "EMAIL");
             response.Resident.Should().BeEquivalentTo(resident.ToResponse());
+            response.ResidentReferenceId.Should().Be(domain.ResidentReferenceId);
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
         }
