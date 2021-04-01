@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
@@ -20,8 +21,12 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
         private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
         private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
+        private Mock<INotifyGateway> _notifyGateway = new Mock<INotifyGateway>();
+        private Mock<IResidentsGateway> _residentsGateway = new Mock<IResidentsGateway>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
+        private Resident _resident;
+        private EvidenceRequest _evidenceRequest;
         private string teamName = "teamName";
 
         [SetUp]
@@ -31,6 +36,8 @@ namespace EvidenceApi.Tests.V1.UseCase
                 _evidenceGateway.Object,
                 _documentTypeGateway.Object,
                 _staffSelectedDocumentTypeGateway.Object,
+                _notifyGateway.Object,
+                _residentsGateway.Object,
                 _updateEvidenceRequestStateUseCase.Object);
         }
 
@@ -83,7 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(id, request);
 
             result.Id.Should().Be(_found.Id);
-            result.RejectionReason.Should().Be("This is the rejection reason");
+            result.RejectionReason.Should().Be(_found.RejectionReason);
         }
 
         [Test]
@@ -122,6 +129,26 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void SendsANotification()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+
+            var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "Rejected")
+                .With(x => x.RejectionReason, "This is the rejection reason")
+                .Create();
+            _classUnderTest.Execute(id, request);
+
+            _notifyGateway.Verify(x =>
+                x.SendNotification(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
+
+            _notifyGateway.Verify(x =>
+                x.SendNotification(DeliveryMethod.Sms, CommunicationReason.EvidenceRejected, _found, _resident));
+
+        }
+
+        [Test]
         public void CallsTheGatewayWithTheCorrectParams()
         {
             _evidenceGateway.VerifyAll();
@@ -131,9 +158,13 @@ namespace EvidenceApi.Tests.V1.UseCase
         private void SetupMocks(Guid id, string teamName)
         {
             _found = TestDataHelper.DocumentSubmission(true);
+            _resident = _fixture.Create<Resident>();
+            _evidenceRequest = TestDataHelper.EvidenceRequest();
+            _evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms };
+            _found.EvidenceRequest = _evidenceRequest;
+            _found.EvidenceRequestId = _evidenceRequest.Id;
 
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(evidenceRequest);
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(_evidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(id)).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
@@ -141,6 +172,9 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, _found.DocumentTypeId))
                 .Returns(TestDataHelper.DocumentType(_found.DocumentTypeId));
+
+            _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident).Verifiable();
+            _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_evidenceRequest).Verifiable();
 
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));
         }

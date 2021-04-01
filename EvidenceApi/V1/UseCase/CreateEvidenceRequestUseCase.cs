@@ -18,7 +18,7 @@ namespace EvidenceApi.V1.UseCase
         private readonly IResidentsGateway _residentsGateway;
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly INotifyGateway _notifyGateway;
-        private readonly ICreateResidentReferenceIdUseCase _createResidentReferenceIdUseCase;
+        private readonly IFindOrCreateResidentReferenceIdUseCase _findOrCreateResidentReferenceIdUseCase;
 
         public CreateEvidenceRequestUseCase(
             IEvidenceRequestValidator validator,
@@ -26,14 +26,14 @@ namespace EvidenceApi.V1.UseCase
             IResidentsGateway residentsGateway,
             IEvidenceGateway evidenceGateway,
             INotifyGateway notifyGateway,
-            ICreateResidentReferenceIdUseCase createResidentReferenceIdUseCase)
+            IFindOrCreateResidentReferenceIdUseCase findOrCreateResidentReferenceIdUseCase)
         {
             _validator = validator;
             _documentTypeGateway = documentTypeGateway;
             _residentsGateway = residentsGateway;
             _evidenceGateway = evidenceGateway;
             _notifyGateway = notifyGateway;
-            _createResidentReferenceIdUseCase = createResidentReferenceIdUseCase;
+            _findOrCreateResidentReferenceIdUseCase = findOrCreateResidentReferenceIdUseCase;
         }
 
         public EvidenceRequestResponse Execute(EvidenceRequestRequest request)
@@ -47,7 +47,7 @@ namespace EvidenceApi.V1.UseCase
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
             var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.ServiceRequestedBy, dt));
 
-            var residentReferenceId = _createResidentReferenceIdUseCase.Execute(resident);
+            var residentReferenceId = _findOrCreateResidentReferenceIdUseCase.Execute(resident);
             var evidenceRequest = BuildEvidenceRequest(request, resident.Id, residentReferenceId);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
 
