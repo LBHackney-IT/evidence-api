@@ -63,7 +63,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(_request);
 
             result.Resident.Id.Should().NotBeEmpty();
-            result.ResidentReferenceId.Should().NotBeEmpty();
             result.Resident.Name.Should().Be(_resident.Name);
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));

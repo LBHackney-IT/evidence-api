@@ -109,7 +109,7 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="200">Found</response>
         /// <response code="400">Request contains invalid parameters</response>
         [HttpGet]
-        public IActionResult FilterEvidenceRequests([FromQuery] EvidenceRequestsSearchQuery request)
+        public IActionResult FilterEvidenceRequests([FromQuery][Required] EvidenceRequestsSearchQuery request)
         {
             try
             {

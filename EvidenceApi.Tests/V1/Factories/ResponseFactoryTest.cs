@@ -15,8 +15,6 @@ namespace EvidenceApi.Tests.V1.Factories
         [Test]
         public void CanMapAnEvidenceRequestDomainObjectToAResponseObject()
         {
-            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
-
             var domain = TestDataHelper.EvidenceRequest();
             domain.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
 
@@ -29,8 +27,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.Reason.Should().Be(response.Reason);
             response.DocumentTypes.Should().BeEquivalentTo(documentTypes);
             response.DeliveryMethods.Should().ContainSingle(x => x == "EMAIL");
-            response.Resident.Should().BeEquivalentTo(resident.ToResponse());
-            response.ResidentReferenceId.Should().Be(domain.ResidentReferenceId);
+            response.Resident.Should().BeEquivalentTo(resident.ToResponse(domain.ResidentReferenceId));
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
         }

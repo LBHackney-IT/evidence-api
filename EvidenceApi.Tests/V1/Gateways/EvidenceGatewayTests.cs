@@ -1,11 +1,8 @@
 #nullable enable annotations
 using System;
 using System.Linq;
-using AutoFixture;
 using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways;
-using EvidenceApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -333,6 +330,36 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             // Act
             var found = _classUnderTest.GetAll();
+
+            // Assert
+            found.Should().Equal(expected);
+        }
+
+        [Test]
+        public void CanGetEvidenceRequestsByServiceRequestedByAndResidentReferenceId()
+        {
+            // Arrange
+            var serviceRequestedBy = "Development Housing Team";
+            var residentReferenceId = "12345";
+            var request = new ResidentSearchQuery { ServiceRequestedBy = serviceRequestedBy, SearchQuery = residentReferenceId };
+
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.ServiceRequestedBy = serviceRequestedBy;
+            evidenceRequest1.ResidentReferenceId = residentReferenceId;
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            evidenceRequest2.ServiceRequestedBy = serviceRequestedBy;
+            evidenceRequest2.ResidentReferenceId = "residentReferenceId";
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.SaveChanges();
+            var expected = new List<EvidenceRequest>()
+            {
+                evidenceRequest1
+            };
+
+            // Act
+            var found = _classUnderTest.GetEvidenceRequests(request);
 
             // Assert
             found.Should().Equal(expected);
