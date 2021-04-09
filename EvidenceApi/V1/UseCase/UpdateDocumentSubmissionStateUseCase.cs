@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -91,7 +92,7 @@ namespace EvidenceApi.V1.UseCase
             try
             {
                 var claimId = Guid.Parse(documentSubmission.ClaimId);
-                var claimUpdateRequest = new ClaimUpdateRequest { ValidUntil = DateTime.Parse(request.ValidUntil) };
+                var claimUpdateRequest = new ClaimUpdateRequest { ValidUntil = DateTime.Parse(request.ValidUntil, new CultureInfo("en-GB")) };
                 var claim = await _documentsApiGateway.UpdateClaim(claimId, claimUpdateRequest).ConfigureAwait(true);
                 return claim;
             }
