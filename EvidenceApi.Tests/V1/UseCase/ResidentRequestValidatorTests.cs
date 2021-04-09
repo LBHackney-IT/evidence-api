@@ -36,7 +36,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         #endregion
 
-        #region Email Validations
+        #region Email and Phone Number Validations
 
         [Test]
         public void ValidatesEmail()
@@ -53,40 +53,14 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void IsInvalidWhenEmailIsEmpty()
+        public void IsInvalidWhenEmailAndPhoneNumberAreEmpty()
         {
             _request.Email = "";
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.Email, _request)
-                .WithErrorMessage("'Email' is not a valid email address.");
-        }
-
-        [Test]
-        public void IsInvalidWhenEmailIsNull()
-        {
-            _request.Email = null;
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.Email, _request)
-                .WithErrorMessage("'Email' must not be empty.");
-        }
-
-        #endregion
-
-        #region Phone Number Validations
-
-        [Test]
-        public void ValidatesPhoneNumber()
-        {
-            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.PhoneNumber, _request);
-
             _request.PhoneNumber = "";
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.Email, _request)
+                .WithErrorMessage("'Email' and 'Phpne number' cannot be both empty.");
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.PhoneNumber, _request)
-                .WithErrorMessage("'Phone Number' must not be empty.");
-        }
-
-        public void IsInvalidWhenPhoneNumberIsEmpty()
-        {
-            _request.PhoneNumber = "";
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.PhoneNumber, _request)
-                .WithErrorMessage("'Phone Number' must not be empty.");
+                .WithErrorMessage("'Email' and 'Phpne number' cannot be both empty.");
         }
 
         #endregion

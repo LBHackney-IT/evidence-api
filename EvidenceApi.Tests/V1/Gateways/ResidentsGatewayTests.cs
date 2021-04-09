@@ -78,6 +78,42 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void FindReturnsAResidentWithoutPhoneNumber()
+        {
+            var entity = _fixture.Build<Resident>()
+                .Without(x => x.PhoneNumber)
+                .Create();
+            DatabaseContext.Residents.Add(entity);
+            DatabaseContext.SaveChanges();
+
+
+            var foundRecord = _classUnderTest.FindResident(entity.Id);
+
+            foundRecord.Id.Should().Be(entity.Id);
+            foundRecord.Email.Should().Be(entity.Email);
+            foundRecord.PhoneNumber.Should().BeNull();
+            foundRecord.Name.Should().Be(entity.Name);
+        }
+
+        [Test]
+        public void FindReturnsAResidentWithoutEmail()
+        {
+            var entity = _fixture.Build<Resident>()
+                .Without(x => x.Email)
+                .Create();
+            DatabaseContext.Residents.Add(entity);
+            DatabaseContext.SaveChanges();
+
+
+            var foundRecord = _classUnderTest.FindResident(entity.Id);
+
+            foundRecord.Id.Should().Be(entity.Id);
+            foundRecord.Email.Should().BeNull();
+            foundRecord.PhoneNumber.Should().Be(entity.PhoneNumber);
+            foundRecord.Name.Should().Be(entity.Name);
+        }
+
+        [Test]
         public void FindResidentsByName()
         {
             // Arrange
