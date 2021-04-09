@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
@@ -9,6 +10,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using EvidenceApi.V1.Boundary.Request;
+using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.UseCase.Interfaces;
 
@@ -19,10 +21,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         private UpdateDocumentSubmissionStateUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
-        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
-        private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
         private Mock<INotifyGateway> _notifyGateway = new Mock<INotifyGateway>();
         private Mock<IResidentsGateway> _residentsGateway = new Mock<IResidentsGateway>();
+        private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
+        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
+        private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
         private Resident _resident;
@@ -35,26 +38,27 @@ namespace EvidenceApi.Tests.V1.UseCase
             _classUnderTest = new UpdateDocumentSubmissionStateUseCase(
                 _evidenceGateway.Object,
                 _documentTypeGateway.Object,
-                _staffSelectedDocumentTypeGateway.Object,
                 _notifyGateway.Object,
                 _residentsGateway.Object,
+                _documentsApiGateway.Object,
+                _staffSelectedDocumentTypeGateway.Object,
                 _updateEvidenceRequestStateUseCase.Object);
         }
 
         [Test]
-        public void ReturnsTheUpdatedDocumentSubmission()
+        public async Task ReturnsTheUpdatedDocumentSubmission()
         {
             var id = Guid.NewGuid();
             SetupMocks(id, teamName);
             DocumentSubmissionUpdateRequest request = BuildDocumentSubmissionUpdateRequest();
-            var result = _classUnderTest.Execute(id, request);
+            var result = await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
 
             result.Id.Should().Be(_found.Id);
             result.State.Should().Be("UPLOADED");
         }
 
         [Test]
-        public void ReturnsTheUpdatedDocumentSubmissionWhenStaffSelectedDocumentTypeIsProvided()
+        public async Task ReturnsTheUpdatedDocumentSubmissionWhenStaffSelectedDocumentTypeIsProvided()
         {
             // Arrange
             var id = Guid.NewGuid();
@@ -63,12 +67,13 @@ namespace EvidenceApi.Tests.V1.UseCase
             var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
                 .With(x => x.StaffSelectedDocumentTypeId, "passport-scan")
+                .Without(x => x.ValidUntil)
                 .Create();
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), request.StaffSelectedDocumentTypeId))
                 .Returns(TestDataHelper.StaffSelectedDocumentType(request.StaffSelectedDocumentTypeId));
 
             // Act
-            var result = _classUnderTest.Execute(id, request);
+            var result = await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
 
             // Assert
             result.Id.Should().Be(_found.Id);
@@ -77,7 +82,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsTheUpdatedDocumentSubmissionWhenRejectionReasonIsProvided()
+        public async Task ReturnsTheUpdatedDocumentSubmissionWhenRejectionReasonIsProvided()
         {
             var id = Guid.NewGuid();
             SetupMocks(id, teamName);
@@ -85,9 +90,10 @@ namespace EvidenceApi.Tests.V1.UseCase
             var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
                 .With(x => x.RejectionReason, "This is the rejection reason")
+                .Without(x => x.ValidUntil)
                 .Create();
 
-            var result = _classUnderTest.Execute(id, request);
+            var result = await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
 
             result.Id.Should().Be(_found.Id);
             result.RejectionReason.Should().Be(_found.RejectionReason);
@@ -98,8 +104,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             Guid id = Guid.NewGuid();
             DocumentSubmissionUpdateRequest request = BuildDocumentSubmissionUpdateRequest();
-            Action act = () => _classUnderTest.Execute(id, request);
-            act.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with id: {id}");
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with id: {id}");
         }
 
         [Test]
@@ -109,10 +115,11 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupMocks(id, teamName);
             DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .Without(x => x.State)
+                .Without(x => x.ValidUntil)
                 .Create();
 
-            Action act = () => _classUnderTest.Execute(id, request);
-            act.Should().Throw<BadRequestException>().WithMessage("State in the request cannot be null");
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("State in the request cannot be null");
         }
 
         [Test]
@@ -122,10 +129,11 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupMocks(id, teamName);
             DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Invalidstate")
+                .Without(x => x.ValidUntil)
                 .Create();
 
-            Action act = () => _classUnderTest.Execute(id, request);
-            act.Should().Throw<BadRequestException>().WithMessage("This state is invalid");
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("This state is invalid");
         }
 
         [Test]
@@ -137,8 +145,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Rejected")
                 .With(x => x.RejectionReason, "This is the rejection reason")
+                .Without(x => x.ValidUntil)
                 .Create();
-            _classUnderTest.Execute(id, request);
+            _classUnderTest.ExecuteAsync(id, request);
 
             _notifyGateway.Verify(x =>
                 x.SendNotification(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
@@ -146,6 +155,53 @@ namespace EvidenceApi.Tests.V1.UseCase
             _notifyGateway.Verify(x =>
                 x.SendNotification(DeliveryMethod.Sms, CommunicationReason.EvidenceRejected, _found, _resident));
 
+        }
+
+        [Test]
+        public void UpdateClaim()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+            Guid claimId = Guid.NewGuid();
+            _found.ClaimId = claimId.ToString();
+
+            var dateTime = DateTime.UtcNow;
+            var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "Uploaded")
+                .With(x => x.ValidUntil, dateTime.ToLongTimeString)
+                .Create();
+
+            // Act
+            _classUnderTest.ExecuteAsync(id, request);
+
+            // Assert
+            _documentsApiGateway.Verify(x =>
+                x.UpdateClaim(claimId, It.IsAny<ClaimUpdateRequest>()), Times.Exactly(1));
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenCannotUpdateClaim()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+            _documentsApiGateway.Setup(x => x.UpdateClaim(It.IsAny<Guid>(), It.IsAny<ClaimUpdateRequest>()))
+                .Throws(new DocumentsApiException("doh!"));
+            Guid claimId = Guid.NewGuid();
+            _found.ClaimId = claimId.ToString();
+
+            var dateTime = DateTime.UtcNow;
+            var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "Uploaded")
+                .With(x => x.ValidUntil, dateTime.ToLongTimeString)
+                .Create();
+
+            // Act
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+
+            // Assert
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Issue with DocumentsApi so cannot update claim: doh!");
         }
 
         [Test]
@@ -177,12 +233,17 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_evidenceRequest).Verifiable();
 
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));
+
+            var claim = _fixture.Create<Claim>();
+            _documentsApiGateway.Setup(x => x.UpdateClaim(It.IsAny<Guid>(), It.IsAny<ClaimUpdateRequest>()))
+                 .ReturnsAsync(claim).Verifiable();
         }
 
         private DocumentSubmissionUpdateRequest BuildDocumentSubmissionUpdateRequest()
         {
             return _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
+                .Without(x => x.ValidUntil)
                 .Create();
         }
     }
