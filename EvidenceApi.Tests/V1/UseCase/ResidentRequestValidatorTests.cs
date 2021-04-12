@@ -58,9 +58,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _request.Email = "";
             _request.PhoneNumber = "";
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.Email, _request)
-                .WithErrorMessage("'Email' and 'Phpne number' cannot be both empty.");
+                .WithErrorMessage("'Email' and 'Phone number' cannot be both empty.");
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.PhoneNumber, _request)
-                .WithErrorMessage("'Email' and 'Phpne number' cannot be both empty.");
+                .WithErrorMessage("'Email' and 'Phone number' cannot be both empty.");
         }
 
         #endregion
