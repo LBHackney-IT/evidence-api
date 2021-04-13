@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using System.Threading.Tasks;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Boundary.Response;
@@ -15,29 +17,32 @@ namespace EvidenceApi.V1.UseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
-        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
-        private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
         private readonly INotifyGateway _notifyGateway;
         private readonly IResidentsGateway _residentsGateway;
+        private readonly IDocumentsApiGateway _documentsApiGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
+        private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
 
         public UpdateDocumentSubmissionStateUseCase(
             IEvidenceGateway evidenceGateway,
             IDocumentTypeGateway documentTypeGateway,
-            IStaffSelectedDocumentTypeGateway selectedDocumentTypeGateway,
             INotifyGateway notifyGateway,
             IResidentsGateway residentsGateway,
+            IDocumentsApiGateway documentsApiGateway,
+            IStaffSelectedDocumentTypeGateway selectedDocumentTypeGateway,
             IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase
         )
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
-            _staffSelectedDocumentTypeGateway = selectedDocumentTypeGateway;
-            _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
             _notifyGateway = notifyGateway;
             _residentsGateway = residentsGateway;
+            _documentsApiGateway = documentsApiGateway;
+            _staffSelectedDocumentTypeGateway = selectedDocumentTypeGateway;
+            _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
         }
 
-        public DocumentSubmissionResponse Execute(Guid id, DocumentSubmissionUpdateRequest request)
+        public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid id, DocumentSubmissionUpdateRequest request)
         {
             var documentSubmission = _evidenceGateway.FindDocumentSubmission(id);
 
@@ -69,11 +74,32 @@ namespace EvidenceApi.V1.UseCase
             {
                 staffSelectedDocumentType = GetStaffSelectedDocumentType(documentSubmission, request);
             }
+
+            if (!String.IsNullOrEmpty(request.ValidUntil))
+            {
+                await UpdateClaim(documentSubmission, request).ConfigureAwait(true);
+            }
+
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
+        }
+
+        private async Task<Claim> UpdateClaim(DocumentSubmission documentSubmission, DocumentSubmissionUpdateRequest request)
+        {
+            try
+            {
+                var claimId = Guid.Parse(documentSubmission.ClaimId);
+                var claimUpdateRequest = new ClaimUpdateRequest { ValidUntil = DateTime.Parse(request.ValidUntil, new CultureInfo("en-GB")) };
+                var claim = await _documentsApiGateway.UpdateClaim(claimId, claimUpdateRequest).ConfigureAwait(true);
+                return claim;
+            }
+            catch (DocumentsApiException ex)
+            {
+                throw new BadRequestException($"Issue with DocumentsApi so cannot update claim: {ex.Message}");
+            }
         }
 
         private void NotifyResident(DocumentSubmission documentSubmission, DocumentSubmissionUpdateRequest request)

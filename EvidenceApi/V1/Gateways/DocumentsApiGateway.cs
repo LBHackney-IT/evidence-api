@@ -17,6 +17,7 @@ namespace EvidenceApi.V1.Gateways
     {
         private readonly HttpClient _client;
         private readonly AppOptions _options;
+
         public DocumentsApiGateway(HttpClient httpClient, AppOptions options)
         {
             _client = httpClient;
@@ -24,16 +25,33 @@ namespace EvidenceApi.V1.Gateways
 
             _client.BaseAddress = _options.DocumentsApiUrl;
         }
+
         public async Task<Claim> CreateClaim(ClaimRequest request)
         {
 
             var uri = new Uri("api/v1/claims", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
 
-            var jsonString = SerializeBody(request);
+            var jsonString = SerializeClaimRequest(request);
 
             var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
             if (response.StatusCode != HttpStatusCode.Created)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
+
+            return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
+        }
+
+        public async Task<Claim> UpdateClaim(Guid id, ClaimUpdateRequest request)
+        {
+            var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPatchClaimsToken);
+
+            var jsonString = SerializeClaimUpdateRequest(request);
+
+            var response = await _client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
             }
@@ -65,7 +83,13 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
-        private static StringContent SerializeBody(ClaimRequest request)
+        private static StringContent SerializeClaimRequest(ClaimRequest request)
+        {
+            var body = JsonConvert.SerializeObject(request);
+            return new StringContent(body, Encoding.UTF8, "application/json");
+        }
+
+        private static StringContent SerializeClaimUpdateRequest(ClaimUpdateRequest request)
         {
             var body = JsonConvert.SerializeObject(request);
             return new StringContent(body, Encoding.UTF8, "application/json");

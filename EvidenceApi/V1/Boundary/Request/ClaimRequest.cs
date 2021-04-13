@@ -8,5 +8,6 @@ namespace EvidenceApi.V1.Boundary.Request
         public string UserCreatedBy { get; set; }
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
+        public DateTime ValidUntil { get; set; }
     }
 }

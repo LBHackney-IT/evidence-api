@@ -25,6 +25,7 @@ functions:
       DOCUMENTS_API_URL: ${ssm:/documents-api/${self:provider.stage}/base-url}
       DOCUMENTS_API_GET_CLAIMS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/get/claims/token}
       DOCUMENTS_API_POST_CLAIMS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/post/claims/token}
+      DOCUMENTS_API_PATCH_CLAIMS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/patch/claims/token}
       DOCUMENTS_API_POST_DOCUMENTS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/post/documents/token}
       NOTIFY_API_KEY: ${ssm:/evidence-api/${self:provider.stage}/notify-api-key~true}
       NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL: ${ssm:/evidence-api/notify/email/evidence-requested}

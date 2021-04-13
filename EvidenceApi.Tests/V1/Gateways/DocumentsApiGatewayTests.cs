@@ -93,11 +93,39 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEquivalentTo(expectedClaim);
         }
 
+        [Test]
+        public async Task CanUpdateAClaimWithValidParameters()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            var claimUpdateRequest = _fixture.Build<ClaimUpdateRequest>()
+                .With(x => x.ValidUntil, DateTime.UtcNow)
+                .Create();
+
+            var expectedClaim = JsonConvert.DeserializeObject<Claim>(_claimResponseFixture);
+
+            _messageHandler.SetupRequest(HttpMethod.Patch, $"{_options.DocumentsApiUrl}api/v1/claims/{id}", async request =>
+                {
+                    var json = await request.Content.ReadAsStringAsync().ConfigureAwait(true);
+                    var body = JsonConvert.DeserializeObject<ClaimRequest>(json);
+                    return body.ValidUntil == claimUpdateRequest.ValidUntil &&
+                           request.Headers.Authorization.ToString() == _options.DocumentsApiPatchClaimsToken;
+                })
+                .ReturnsResponse(HttpStatusCode.OK, _claimResponseFixture, "application/json");
+
+            // Act
+            var result = await _classUnderTest.UpdateClaim(id, claimUpdateRequest).ConfigureAwait(true);
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedClaim);
+        }
+
         private string _claimResponseFixture = @"{
             ""serviceCreatedBy"": ""711"",
             ""apiCreatedBy"": ""evidence-api"",
             ""userCreatedBy"": ""name.surname@hackney.gov.uk"",
             ""retentionExpiresAt"": ""2021-01-14T14:32:15.377Z"",
+            ""validUntil"": ""2021-01-14T14:32:15.377Z"",
             ""id"": ""3fa85f64-5717-4562-b3fc-2c963f66afa6"",
             ""createdAt"": ""2021-01-14T14:32:15.377Z"",
             ""document"": {
