@@ -29,5 +29,16 @@
         "description": "From the past three months"
       }
     ]
+  },
+  {
+    "name": "Security Team",
+    "id": "3",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      }
+    ]
   }
 ]
