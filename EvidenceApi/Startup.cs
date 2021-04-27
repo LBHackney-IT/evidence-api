@@ -141,6 +141,7 @@ namespace EvidenceApi
             services.AddHttpClient<IDocumentsApiGateway, DocumentsApiGateway>();
 
             // Use Cases
+            services.AddScoped<ICreateAuditUseCase, CreateAuditUseCase>();
             services.AddScoped<ICreateEvidenceRequestUseCase, CreateEvidenceRequestUseCase>();
             services.AddScoped<IValidator<ResidentRequest>, ResidentRequestValidator>();
             services.AddScoped<IEvidenceRequestValidator, EvidenceRequestValidator>();

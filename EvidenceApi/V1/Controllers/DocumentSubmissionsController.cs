@@ -19,10 +19,11 @@ namespace EvidenceApi.V1.Controllers
         private readonly IFindDocumentSubmissionsByResidentIdUseCase _findDocumentSubmissionsByResidentIdUseCase;
 
         public DocumentSubmissionsController(
+            ICreateAuditUseCase createAuditUseCase,
             IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase,
             IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase,
             IFindDocumentSubmissionsByResidentIdUseCase findDocumentSubmissionsByResidentIdUseCase
-        )
+        ) : base(createAuditUseCase)
         {
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
             _findDocumentSubmissionByIdUseCase = findDocumentSubmissionByIdUseCase;

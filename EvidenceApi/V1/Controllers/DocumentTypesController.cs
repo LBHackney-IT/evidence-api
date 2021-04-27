@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
+using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,11 @@ namespace EvidenceApi.V1.Controllers
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
 
-        public DocumentTypesController(IDocumentTypeGateway documentTypeGateway, IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway)
+        public DocumentTypesController(
+            ICreateAuditUseCase createAuditUseCase,
+            IDocumentTypeGateway documentTypeGateway,
+            IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway
+        ) : base(createAuditUseCase)
         {
             _documentTypeGateway = documentTypeGateway;
             _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
