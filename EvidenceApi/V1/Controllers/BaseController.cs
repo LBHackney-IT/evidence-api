@@ -45,8 +45,10 @@ namespace EvidenceApi.V1.Controllers
             else
             {
                 var path = filterContext.HttpContext.Request.Path.Value;
+                var method = filterContext.HttpContext.Request.Method;
+                var queryString = filterContext.HttpContext.Request.QueryString.Value;
                 var hackneyTokenValue = hackneyToken[0];
-                _createAuditUseCase.Execute(path, hackneyTokenValue);
+                _createAuditUseCase.Execute(path, method, queryString, hackneyTokenValue);
                 // Pass the request onto the controller it was intended for
                 base.OnActionExecuting(filterContext);
             }
