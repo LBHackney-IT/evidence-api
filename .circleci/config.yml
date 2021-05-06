@@ -222,7 +222,7 @@ workflows:
             - terraform-init-and-apply-to-staging
       - deploy-to-staging:
           requires:
-            - assume-role-staging
+            - terraform-init-and-apply-to-staging
 
       # Production deploy
       # - permit-production-release:
