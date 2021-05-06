@@ -32,7 +32,7 @@ commands:
       - aws_assume_role/assume_role:
           account: <<parameters.aws-account>>
           profile_name: default
-          role: "LBH_Circle_CI_Deployment_Role"
+          role: "LBH_Automation_Deployment_Role"
       - persist_to_workspace:
           root: *workspace_root
           paths:
