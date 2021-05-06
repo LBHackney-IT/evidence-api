@@ -22,7 +22,7 @@ locals {
 
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-staging-apis"
+    bucket  = "terraform-state-document-evidence-store-staging"
     encrypt = true
     region  = "eu-west-2"
     key     = "services/evidence-api/state"
