@@ -33,15 +33,15 @@ terraform {
 
 data "aws_vpc" "staging_vpc" {
   tags = {
-    Name = "vpc-staging-apis-staging"
+    Name = "des-app-stg"
   }
 }
 
 data "aws_subnet_ids" "staging" {
   vpc_id = data.aws_vpc.staging_vpc.id
   filter {
-    name   = "tag:Type"
-    values = ["private"]
+    name   = "tag:Name"
+    values = ["des-app-stg-private-eu-west-2a", "des-app-stg-private-eu-west-2b"]
   }
 }
 
