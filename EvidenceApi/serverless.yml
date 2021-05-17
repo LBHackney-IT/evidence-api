@@ -40,6 +40,9 @@ functions:
           authorizer:
             arn: ${ssm:/platform-apis-lambda-authorizer-arn}
             type: request
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            managedExternally: true
 
 resources:
   Resources:
