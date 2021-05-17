@@ -17,7 +17,7 @@ package:
 
 functions:
   EvidenceApi:
-    name: ${self:service}-${self:provider.stage}
+    name: ${self:service}
     handler: EvidenceApi::EvidenceApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
