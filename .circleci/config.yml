@@ -92,11 +92,11 @@ commands:
       - run:
           name: SSH into RDS and migrate database
           command: |
-            aws ssm get-parameter --name "/platform-apis-jump-box-pem-key" --output text --query Parameter.Value > ./private-key.pem
+            aws ssm get-parameter --name "/document-evidence-store-<<parameters.stage>>-jump-box-pem-key" --output text --query Parameter.Value > ./private-key.pem
             chmod 400 ./private-key.pem
             HOST=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-hostname --query Parameter.Value)
             PORT=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-port --query Parameter.Value)
-            INSTANCE_NAME=$(aws ssm get-parameter --name /platform-apis-jump-box-instance-name --query Parameter.Value)
+            INSTANCE_NAME=$(aws ssm get-parameter --name /document-evidence-store-<<parameters.stage>>-jump-box-instance-name --query Parameter.Value)
             ssh -4 -i ./private-key.pem -Nf -M -L ${PORT//\"}:${HOST//\"}:${PORT//\"} -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o ProxyCommand="aws ssm start-session --target %h --document AWS-StartSSHSession --parameters portNumber=%p --region=eu-west-2" ec2-user@${INSTANCE_NAME//\"}
             PASSWORD=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-password --query Parameter.Value --with-decryption)
             USERNAME=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-username --query Parameter.Value)
