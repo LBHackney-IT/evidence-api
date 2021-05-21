@@ -17,6 +17,14 @@ namespace EvidenceApi.V1.Gateways
             _databaseContext = databaseContext;
         }
 
+        public AuditEvent CreateAuditEvent(AuditEvent request)
+        {
+            if (request.Id == default) _databaseContext.AuditEvents.Add(request);
+            _databaseContext.SaveChanges();
+
+            return request;
+        }
+
         public EvidenceRequest CreateEvidenceRequest(EvidenceRequest request)
         {
             if (request.Id == default) _databaseContext.EvidenceRequests.Add(request);

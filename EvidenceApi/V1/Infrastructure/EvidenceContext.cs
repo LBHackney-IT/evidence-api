@@ -17,6 +17,7 @@ namespace EvidenceApi.V1.Infrastructure
         public DbSet<Resident> Residents { get; set; }
         public DbSet<Communication> Communications { get; set; }
         public DbSet<DocumentSubmission> DocumentSubmissions { get; set; }
+        public DbSet<AuditEvent> AuditEvents { get; set; }
 
         public override int SaveChanges()
         {

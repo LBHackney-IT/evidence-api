@@ -7,6 +7,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface IEvidenceGateway
     {
+        AuditEvent CreateAuditEvent(AuditEvent request);
         EvidenceRequest CreateEvidenceRequest(EvidenceRequest request);
         EvidenceRequest FindEvidenceRequest(Guid id);
         Communication CreateCommunication(Communication request);
