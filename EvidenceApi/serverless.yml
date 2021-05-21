@@ -100,7 +100,7 @@ custom:
   vpc:
     staging:
       securityGroupIds:
-        - sg-099dcf9e7ab2ad118
+        - sg-07ebf46c62b640cd6
       subnetIds:
         - subnet-0aa5f484db1aa801c
         - subnet-012870b02db9a3bf8
