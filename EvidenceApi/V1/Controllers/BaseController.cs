@@ -40,25 +40,44 @@ namespace EvidenceApi.V1.Controllers
             }
 
             var userEmailValue = userEmail[0];
-
-            if (userEmailValue == "resident-dummy-value")
+            if (SkipAuditForResidentRequest(userEmailValue))
             {
                 base.OnActionExecuting(filterContext);
+                return;
             }
 
             var path = filterContext.HttpContext.Request.Path.Value;
             var method = filterContext.HttpContext.Request.Method;
+            var request = "";
+
+            if (method == "POST" || method == "PATCH")
+            {
+                request = JsonConvert.SerializeObject(filterContext.ActionArguments["request"], Formatting.None);
+            }
+
             var queryString = filterContext.HttpContext.Request.QueryString.Value;
+
+            if (method == "GET")
+            {
+                request = queryString;
+            }
+
             var auditEventRequest = new AuditEventRequest
             {
                 Path = path,
                 Method = method,
-                QueryString = queryString,
+                Request = request,
                 UserEmail = userEmailValue
             };
+
             _createAuditUseCase.Execute(auditEventRequest);
             // Pass the request onto the controller it was intended for
             base.OnActionExecuting(filterContext);
+        }
+
+        private static bool SkipAuditForResidentRequest(string userEmailValue)
+        {
+            return userEmailValue == "resident-dummy-value";
         }
     }
 }
