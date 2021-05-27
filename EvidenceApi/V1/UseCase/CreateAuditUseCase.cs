@@ -1,8 +1,6 @@
-using System;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Boundary.Request;
-using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
 
 namespace EvidenceApi.V1.UseCase
@@ -15,11 +13,12 @@ namespace EvidenceApi.V1.UseCase
         {
             _evidenceGateway = evidenceGateway;
         }
+
         public AuditEvent Execute(AuditEventRequest request)
         {
             var auditEvent = BuildAuditEvent(request);
             var createdAuditEvent = _evidenceGateway.CreateAuditEvent(auditEvent);
-            return auditEvent;
+            return createdAuditEvent;
         }
 
         private static AuditEvent BuildAuditEvent(AuditEventRequest request)
@@ -29,7 +28,7 @@ namespace EvidenceApi.V1.UseCase
                 UserEmail = request.UserEmail,
                 UrlVisited = request.Path,
                 HttpMethod = request.Method,
-                RequestBody = request.QueryString
+                RequestBody = request.Request
             };
         }
     }
