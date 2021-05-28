@@ -37,6 +37,7 @@ namespace EvidenceApi.V1.Controllers
             if (userEmail.Count == 0)
             {
                 filterContext.Result = new BadRequestObjectResult("UserEmail request header empty");
+                return;
             }
 
             var userEmailValue = userEmail[0];
