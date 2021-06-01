@@ -56,10 +56,9 @@ namespace EvidenceApi.V1.Controllers
                 request = JsonConvert.SerializeObject(filterContext.ActionArguments["request"], Formatting.None);
             }
 
-            var queryString = filterContext.HttpContext.Request.QueryString.Value;
-
             if (method == "GET")
             {
+                var queryString = filterContext.HttpContext.Request.QueryString.Value;
                 request = queryString;
             }
 

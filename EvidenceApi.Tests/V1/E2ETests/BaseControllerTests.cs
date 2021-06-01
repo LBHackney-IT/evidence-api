@@ -10,6 +10,11 @@ namespace EvidenceApi.Tests.V1.E2ETests
 {
     public class BaseControllerTests : IntegrationTests<Startup>
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Client.DefaultRequestHeaders.Remove("UserEmail");
+        }
         [Test]
         public async Task CanCreateAuditEventForGetRequestWithoutQueryParameters()
         {
@@ -17,7 +22,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"/api/v1/document_submissions/{documentSubmission.Id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Remove("UserEmail");
             Client.DefaultRequestHeaders.Add("UserEmail", "email@email");
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
@@ -33,7 +37,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             var uri = new Uri("/api/v1/evidence_requests?serviceRequestedBy=Development+Housing+Team", UriKind.Relative);
-            Client.DefaultRequestHeaders.Remove("UserEmail");
             Client.DefaultRequestHeaders.Add("UserEmail", "email@email");
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var auditEvent = DatabaseContext.AuditEvents.First();
@@ -48,7 +51,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanCreateAuditEventForPostRequest()
         {
             var uri = new Uri("/api/v1/evidence_requests", UriKind.Relative);
-            Client.DefaultRequestHeaders.Remove("UserEmail");
             Client.DefaultRequestHeaders.Add("UserEmail", "email@email");
             string body = @"
             {
@@ -96,7 +98,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             var uri = new Uri($"/api/v1/evidence_requests/{evidenceRequest.Id}", UriKind.Relative);
-            Client.DefaultRequestHeaders.Remove("UserEmail");
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(400);

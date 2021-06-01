@@ -52,6 +52,7 @@ namespace EvidenceApi.Tests
             MockNotifyClient = CreateMockNotifyClient();
             _factory = new MockWebApplicationFactory<TStartup>(_connection, MockNotifyClient.Object, Options);
             Client = _factory.CreateClient();
+            // setting value for UserEmail HTTP header so BaseController passes the request to the controller
             Client.DefaultRequestHeaders.Add("UserEmail", "resident-dummy-value");
             DatabaseContext = _factory.Server.Host.Services.GetRequiredService<EvidenceContext>();
 

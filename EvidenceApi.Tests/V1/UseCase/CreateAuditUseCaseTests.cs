@@ -23,19 +23,15 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _classUnderTest = new CreateAuditUseCase(_evidenceGateway.Object);
-
+            SetupMocks();
         }
 
         [Test]
         public void ReturnsTheCreatedAuditEvent()
         {
-            SetupMocks();
             var result = _classUnderTest.Execute(_request);
-            Console.WriteLine(_request.Path);
-            Console.WriteLine(_created.UrlVisited);
-            Console.WriteLine(result.UrlVisited);
 
-            //result.Id.Should().NotBeEmpty();
+            result.Id.Should().NotBeEmpty();
             result.UrlVisited.Should().Be(_created.UrlVisited);
             result.UserEmail.Should().Be(_created.UserEmail);
             result.RequestBody.Should().Be(_created.RequestBody);
@@ -45,8 +41,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public void CallsGatewaysUsingCorrectParameters()
         {
-            SetupMocks();
-
             _classUnderTest.Execute(_request);
 
             _evidenceGateway.Verify(x => x.CreateAuditEvent(
