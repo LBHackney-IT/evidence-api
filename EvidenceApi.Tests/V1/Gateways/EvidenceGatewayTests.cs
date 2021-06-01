@@ -8,6 +8,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
+using AutoFixture;
 
 namespace EvidenceApi.Tests.V1.Gateways
 {
@@ -15,11 +16,50 @@ namespace EvidenceApi.Tests.V1.Gateways
     public class EvidenceGatewayTests : DatabaseTests
     {
         private EvidenceGateway _classUnderTest;
+        private static Fixture _fixture = new Fixture();
 
         [SetUp]
         public void Setup()
         {
             _classUnderTest = new EvidenceGateway(DatabaseContext);
+        }
+
+        [Test]
+        public void CreatingAnAuditEventShouldInsertIntoTheDatabase()
+        {
+            var request = _fixture.Build<AuditEvent>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+            var query = DatabaseContext.AuditEvents;
+
+            _classUnderTest.CreateAuditEvent(request);
+
+            query.Count()
+                .Should()
+                .Be(1);
+
+            var foundRecord = query.First();
+            foundRecord.Id.Should().NotBeEmpty();
+            foundRecord.UserEmail.Should().BeEquivalentTo(request.UserEmail);
+            foundRecord.UrlVisited.Should().BeEquivalentTo(request.UrlVisited);
+            foundRecord.HttpMethod.Should().BeEquivalentTo(request.HttpMethod);
+            foundRecord.RequestBody.Should().BeEquivalentTo(request.RequestBody);
+        }
+
+        [Test]
+        public void CreatingAnAuditEventShouldReturnTheCreatedEvent()
+        {
+            var request = _fixture.Build<AuditEvent>()
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+
+            var created = _classUnderTest.CreateAuditEvent(request);
+            var found = DatabaseContext.AuditEvents.First();
+
+            created.Id.Should().Be(found.Id);
+            created.CreatedAt.Should().Be(found.CreatedAt);
         }
 
         [Test]

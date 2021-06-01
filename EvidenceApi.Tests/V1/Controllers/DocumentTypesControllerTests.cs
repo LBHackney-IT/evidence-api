@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Controllers;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
+using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,6 +15,7 @@ namespace EvidenceApi.Tests.V1.Controllers
     public class DocumentTypesControllerTests
     {
         private DocumentTypesController _classUnderTest;
+        private Mock<ICreateAuditUseCase> _mockCreateAuditUseCase;
         private Mock<IDocumentTypeGateway> _mockDocumentTypeGateway;
         private Mock<IStaffSelectedDocumentTypeGateway> _mockStaffSelectedDocumentTypeGateway;
 
@@ -21,9 +23,10 @@ namespace EvidenceApi.Tests.V1.Controllers
         [SetUp]
         public void SetUp()
         {
+            _mockCreateAuditUseCase = new Mock<ICreateAuditUseCase>();
             _mockDocumentTypeGateway = new Mock<IDocumentTypeGateway>();
             _mockStaffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
-            _classUnderTest = new DocumentTypesController(_mockDocumentTypeGateway.Object, _mockStaffSelectedDocumentTypeGateway.Object);
+            _classUnderTest = new DocumentTypesController(_mockCreateAuditUseCase.Object, _mockDocumentTypeGateway.Object, _mockStaffSelectedDocumentTypeGateway.Object);
         }
 
         [Test]
