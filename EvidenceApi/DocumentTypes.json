@@ -40,5 +40,37 @@
         "description": "A valid document that can be used to prove identity"
       }
     ]
+  },
+  {
+    "name": "Repairs Contact Centre",
+    "id": "5",
+    "documentTypes": [
+      {
+        "id": "repair-request",
+        "title": "Repair request",
+        "description": "A request for a repair in a council property"
+      }
+    ]
+  },
+  {
+    "name": "Electoral Services",
+    "id": "6",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document that can be used to prove address"
+      },
+      {
+        "id": "proof-of-nationality",
+        "title": "Proof of nationality",
+        "description": "A valid document that can be used to prove nationality"
+      }
+    ]
   }
 ]
