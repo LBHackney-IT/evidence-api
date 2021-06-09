@@ -68,7 +68,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             };
 
             Action act = () => _classUnderTest.Execute(request);
-            act.Should().Throw<BadRequestException>().WithMessage("Service requested by is null or empty");
+            act.Should().Throw<BadRequestException>().WithMessage("Team is null or empty");
         }
 
         private void SetupMocks()

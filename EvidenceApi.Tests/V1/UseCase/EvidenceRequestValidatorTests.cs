@@ -107,7 +107,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _request.Team = null;
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.Team, _request)
-                .WithErrorMessage("'Service Requested By' must not be empty.");
+                .WithErrorMessage("'Team' must not be empty.");
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _request.Team = "";
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.Team, _request)
-                .WithErrorMessage("'Service Requested By' must not be empty.");
+                .WithErrorMessage("'Team' must not be empty.");
         }
         [Test]
         public void IsValidWhenTeamIsPresent()

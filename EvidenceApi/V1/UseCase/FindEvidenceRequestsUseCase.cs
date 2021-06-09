@@ -29,7 +29,7 @@ namespace EvidenceApi.V1.UseCase
 
             if (String.IsNullOrEmpty(request.Team))
             {
-                throw new BadRequestException("Service requested by is null or empty");
+                throw new BadRequestException("Team is null or empty");
             }
 
             return found.ConvertAll<EvidenceRequestResponse>(er =>

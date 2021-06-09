@@ -85,7 +85,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 ResidentId = residentId
             };
             Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Service requested by is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Team is null or empty");
         }
 
         [Test]
