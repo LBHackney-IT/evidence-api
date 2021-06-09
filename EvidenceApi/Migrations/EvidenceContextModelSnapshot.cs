@@ -168,7 +168,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Team")
-                        .HasColumnName("service_requested_by")
+                        .HasColumnName("team")
                         .HasColumnType("text");
 
                     b.Property<string>("UserRequestedBy")

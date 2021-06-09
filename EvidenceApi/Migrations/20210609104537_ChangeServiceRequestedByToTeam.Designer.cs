@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EvidenceApi.Migrations
 {
     [DbContext(typeof(EvidenceContext))]
-    [Migration("20210608155349_ChangeServiceRequestedByToTeam")]
+    [Migration("20210609104537_ChangeServiceRequestedByToTeam")]
     partial class ChangeServiceRequestedByToTeam
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,7 +170,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Team")
-                        .HasColumnName("service_requested_by")
+                        .HasColumnName("team")
                         .HasColumnType("text");
 
                     b.Property<string>("UserRequestedBy")

@@ -28,7 +28,7 @@ namespace EvidenceApi.V1.Domain
         [Column("document_types")]
         public List<string> DocumentTypes { get; set; }
 
-        [Column("service_requested_by")]
+        [Column("team")]
         public string Team { get; set; }
 
         [Column("reason")]
