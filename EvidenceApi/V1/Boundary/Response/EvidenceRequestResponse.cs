@@ -10,7 +10,7 @@ namespace EvidenceApi.V1.Boundary.Response
         public ResidentResponse Resident { get; set; }
         public List<string> DeliveryMethods { get; set; }
         public List<DocumentType> DocumentTypes { get; set; }
-        public string ServiceRequestedBy { get; set; }
+        public string Team { get; set; }
         public string Reason { get; set; }
         public string UserRequestedBy { get; set; }
         public Guid Id { get; set; }

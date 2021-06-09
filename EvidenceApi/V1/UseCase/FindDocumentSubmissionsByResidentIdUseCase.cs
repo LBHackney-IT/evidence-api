@@ -32,7 +32,7 @@ namespace EvidenceApi.V1.UseCase
 
             EvidenceRequestsSearchQuery evidenceRequestSearchQuery = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = request.ServiceRequestedBy,
+                Team = request.Team,
                 ResidentId = request.ResidentId
             };
             var evidenceRequests = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
@@ -44,8 +44,8 @@ namespace EvidenceApi.V1.UseCase
                 var documentSubmissions = _evidenceGateway.FindDocumentSubmissionsByEvidenceRequestId(evidenceReq.Id);
                 foreach (var ds in documentSubmissions)
                 {
-                    var documentType = FindDocumentType(evidenceReq.ServiceRequestedBy, ds.DocumentTypeId);
-                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.ServiceRequestedBy,
+                    var documentType = FindDocumentType(evidenceReq.Team, ds.DocumentTypeId);
+                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
                         ds.StaffSelectedDocumentTypeId);
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
                     if (claim.Document == null)
@@ -73,9 +73,9 @@ namespace EvidenceApi.V1.UseCase
 
         private static void ValidateRequest(DocumentSubmissionSearchQuery request)
         {
-            if (String.IsNullOrEmpty(request.ServiceRequestedBy))
+            if (String.IsNullOrEmpty(request.Team))
             {
-                throw new BadRequestException("Service requested by is null or empty");
+                throw new BadRequestException("Team is null or empty");
             }
 
             if (request.ResidentId == Guid.Empty)

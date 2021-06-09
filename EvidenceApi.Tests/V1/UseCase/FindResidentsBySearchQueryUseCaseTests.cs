@@ -26,11 +26,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsTheResidentByResidentNameAndServiceRequestedBy()
+        public void ReturnsTheResidentByResidentNameAndTeam()
         {
             // Arrange
-            var serviceRequestedBy = "Development Housing Team";
-            var request = new ResidentSearchQuery { ServiceRequestedBy = serviceRequestedBy, SearchQuery = "Test" };
+            var team = "Development Housing Team";
+            var request = new ResidentSearchQuery { Team = team, SearchQuery = "Test" };
 
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.Name, "TestResident")
@@ -39,9 +39,9 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.Name, "TestResident")
                 .Create();
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = serviceRequestedBy;
+            evidenceRequest1.Team = team;
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            evidenceRequest2.ServiceRequestedBy = "Different Team";
+            evidenceRequest2.Team = "Different Team";
 
             _residentsGateway
                 .Setup(x => x.FindResidents(request.SearchQuery))
@@ -67,18 +67,18 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsTheResidentByResidentReferenceIdAndServiceRequestedBy()
+        public void ReturnsTheResidentByResidentReferenceIdAndTeam()
         {
             // Arrange
-            var serviceRequestedBy = "Development Housing Team";
+            var team = "Development Housing Team";
             var residentReferenceId = "12345";
-            var request = new ResidentSearchQuery { ServiceRequestedBy = serviceRequestedBy, SearchQuery = residentReferenceId };
+            var request = new ResidentSearchQuery { Team = team, SearchQuery = residentReferenceId };
 
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.Name, "TestResident")
                 .Create();
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = serviceRequestedBy;
+            evidenceRequest1.Team = team;
             evidenceRequest1.ResidentReferenceId = residentReferenceId;
             evidenceRequest1.ResidentId = resident1.Id;
 

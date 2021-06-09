@@ -45,7 +45,7 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
-            var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.ServiceRequestedBy, dt));
+            var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.Team, dt));
 
             var residentReferenceId = _findOrCreateResidentReferenceIdUseCase.Execute(resident);
             var evidenceRequest = BuildEvidenceRequest(request, resident.Id, residentReferenceId);
@@ -71,7 +71,7 @@ namespace EvidenceApi.V1.UseCase
             {
                 DocumentTypes = request.DocumentTypes,
                 DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
-                ServiceRequestedBy = request.ServiceRequestedBy,
+                Team = request.Team,
                 Reason = request.Reason,
                 UserRequestedBy = request.UserRequestedBy,
                 ResidentId = residentId,

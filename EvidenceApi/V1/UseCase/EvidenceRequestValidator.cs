@@ -12,8 +12,8 @@ namespace EvidenceApi.V1.UseCase
     {
         public EvidenceRequestValidator(IValidator<ResidentRequest> residentValidator, IDocumentTypeGateway documentTypeGateway)
         {
-            RuleFor(x => x.ServiceRequestedBy).NotEmpty();
-            RuleFor(x => x.ServiceRequestedBy).NotNull();
+            RuleFor(x => x.Team).NotEmpty();
+            RuleFor(x => x.Team).NotNull();
 
             RuleFor(x => x.DocumentTypes).NotEmpty();
             RuleFor(x => x.DocumentTypes).NotNull();
@@ -21,11 +21,11 @@ namespace EvidenceApi.V1.UseCase
             RuleFor(x => x)
                 .Custom((evidenceReqReq, context) =>
                 {
-                    if (String.IsNullOrEmpty(evidenceReqReq.ServiceRequestedBy) || evidenceReqReq.DocumentTypes == null)
+                    if (String.IsNullOrEmpty(evidenceReqReq.Team) || evidenceReqReq.DocumentTypes == null)
                     {
                         return;
                     }
-                    var documentTypesForTeam = documentTypeGateway.GetDocumentTypesByTeamName(evidenceReqReq.ServiceRequestedBy).Select(dt => dt.Id);
+                    var documentTypesForTeam = documentTypeGateway.GetDocumentTypesByTeamName(evidenceReqReq.Team).Select(dt => dt.Id);
                     var documentTypesInRequestAndTeamLookup = evidenceReqReq.DocumentTypes.Intersect(documentTypesForTeam);
                     var allRequestDocumentTypesFoundInTeamDocumentTypes = documentTypesInRequestAndTeamLookup.Count() == evidenceReqReq.DocumentTypes.Count;
                     if (!allRequestDocumentTypesFoundInTeamDocumentTypes)

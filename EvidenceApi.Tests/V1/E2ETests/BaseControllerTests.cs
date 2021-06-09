@@ -36,14 +36,14 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri("/api/v1/evidence_requests?serviceRequestedBy=Development+Housing+Team", UriKind.Relative);
+            var uri = new Uri("/api/v1/evidence_requests?team=Development+Housing+Team", UriKind.Relative);
             Client.DefaultRequestHeaders.Add("UserEmail", "email@email");
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var auditEvent = DatabaseContext.AuditEvents.First();
 
             auditEvent.UrlVisited.Should().Be("/api/v1/evidence_requests");
             auditEvent.HttpMethod.Should().Be("GET");
-            auditEvent.RequestBody.Should().Be("?serviceRequestedBy=Development+Housing+Team");
+            auditEvent.RequestBody.Should().Be("?team=Development+Housing+Team");
             auditEvent.UserEmail.Should().Be("email@email");
         }
 
@@ -61,7 +61,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""proof-of-id""],
-                ""serviceRequestedBy"": ""Development Housing Team"",
+                ""team"": ""Development Housing Team"",
                 ""reason"": ""test-reason"",
                 ""userRequestedBy"": ""staff@test.hackney.gov.uk""
             }";

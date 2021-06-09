@@ -68,7 +68,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentsApiGateway
                 .Setup(x =>
                     x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == evidenceRequest.ServiceRequestedBy &&
+                        cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
                         cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
                         cr.ApiCreatedBy == "evidence_api"
                     ))
@@ -97,7 +97,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentsApiGateway
                 .Setup(x =>
                     x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == evidenceRequest.ServiceRequestedBy &&
+                        cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
                         cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
                         cr.ApiCreatedBy == "evidence_api"
                     ))
@@ -203,7 +203,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentsApiGateway
                 .Setup(x =>
                     x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == evidenceRequest.ServiceRequestedBy &&
+                        cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
                         cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
                         cr.ApiCreatedBy == "evidence_api"
                     ))

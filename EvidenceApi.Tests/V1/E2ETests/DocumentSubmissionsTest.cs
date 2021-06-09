@@ -69,7 +69,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, new List<string> { "proof-of-id" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .With(x => x.ServiceRequestedBy, "Development Housing Team")
+                .With(x => x.Team, "Development Housing Team")
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
@@ -234,7 +234,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             // Arrange
             var evidenceRequest = TestDataHelper.EvidenceRequest();
-            evidenceRequest.ServiceRequestedBy = "Development Housing Team";
+            evidenceRequest.Team = "Development Housing Team";
 
             evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
@@ -283,7 +283,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var resident = TestDataHelper.Resident();
             resident.Id = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
-            evidenceRequest.ServiceRequestedBy = "Development Housing Team";
+            evidenceRequest.Team = "Development Housing Team";
 
             evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
@@ -388,7 +388,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
-            evidenceRequest.ServiceRequestedBy = "Development Housing Team";
+            evidenceRequest.Team = "Development Housing Team";
 
             var documentSubmission1 = TestDataHelper.DocumentSubmission();
             documentSubmission1.EvidenceRequestId = evidenceRequest.Id;
@@ -405,7 +405,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/document_submissions?serviceRequestedBy=Development+Housing+Team&residentId={evidenceRequest.ResidentId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={evidenceRequest.ResidentId}", UriKind.Relative);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -424,9 +424,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task ReturnBadRequestWhenSearchQueryIsInvalid()
         {
-            var serviceRequestedBy = "";
+            var team = "";
             var fakeResidentId = Guid.NewGuid();
-            var uri = new Uri($"api/v1/document_submissions?serviceRequestedBy={serviceRequestedBy}&residentId={fakeResidentId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions?team={team}&residentId={fakeResidentId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             Console.WriteLine(response);
             response.StatusCode.Should().Be(400);

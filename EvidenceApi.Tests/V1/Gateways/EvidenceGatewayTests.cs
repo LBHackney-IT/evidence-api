@@ -112,7 +112,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var foundRecord = query.First();
             foundRecord.Id.Should().NotBeEmpty();
             foundRecord.EvidenceRequest.Id.Should().NotBeEmpty();
-            foundRecord.EvidenceRequest.ServiceRequestedBy.Should().Be(request.EvidenceRequest.ServiceRequestedBy);
+            foundRecord.EvidenceRequest.Team.Should().Be(request.EvidenceRequest.Team);
             foundRecord.EvidenceRequest.Reason.Should().Be(request.EvidenceRequest.Reason);
             foundRecord.EvidenceRequest.UserRequestedBy.Should().Be(request.EvidenceRequest.UserRequestedBy);
             foundRecord.ClaimId.Should().Be(request.ClaimId);
@@ -194,7 +194,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.ResidentReferenceId.Should().Be(entity.ResidentReferenceId);
             found.DeliveryMethods.Should().BeEquivalentTo(expectedDeliveryMethods);
             found.DocumentTypes.Should().Equal(entity.DocumentTypes);
-            found.ServiceRequestedBy.Should().Be(entity.ServiceRequestedBy);
+            found.Team.Should().Be(entity.Team);
             found.Reason.Should().Be(entity.Reason);
         }
 
@@ -235,7 +235,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = "development-team-staging",
+                Team = "development-team-staging",
                 ResidentId = resident.Id,
                 State = EvidenceRequestState.Approved
             };
@@ -254,7 +254,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = "development-team-staging",
+                Team = "development-team-staging",
                 ResidentId = resident.Id
             };
             var expected = ExpectedEvidenceRequestsWithResidentId(request);
@@ -269,7 +269,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = "development-team-staging"
+                Team = "development-team-staging"
             };
             var expected = ExpectedEvidenceRequestsWithService(request);
 
@@ -282,7 +282,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = "invalid-service"
+                Team = "invalid-service"
             };
             ExpectedEvidenceRequestsForEmptyList();
 
@@ -376,18 +376,18 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void CanGetEvidenceRequestsByServiceRequestedByAndResidentReferenceId()
+        public void CanGetEvidenceRequestsByTeamAndResidentReferenceId()
         {
             // Arrange
-            var serviceRequestedBy = "Development Housing Team";
+            var team = "Development Housing Team";
             var residentReferenceId = "12345";
-            var request = new ResidentSearchQuery { ServiceRequestedBy = serviceRequestedBy, SearchQuery = residentReferenceId };
+            var request = new ResidentSearchQuery { Team = team, SearchQuery = residentReferenceId };
 
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = serviceRequestedBy;
+            evidenceRequest1.Team = team;
             evidenceRequest1.ResidentReferenceId = residentReferenceId;
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            evidenceRequest2.ServiceRequestedBy = serviceRequestedBy;
+            evidenceRequest2.Team = team;
             evidenceRequest2.ResidentReferenceId = "residentReferenceId";
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
@@ -414,9 +414,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var resident1 = TestDataHelper.Resident();
             var resident2 = TestDataHelper.Resident();
 
-            evidenceRequest1.ServiceRequestedBy = "some-service";
-            evidenceRequest2.ServiceRequestedBy = "some-other-service";
-            evidenceRequest3.ServiceRequestedBy = request.ServiceRequestedBy;
+            evidenceRequest1.Team = "some-service";
+            evidenceRequest2.Team = "some-other-service";
+            evidenceRequest3.Team = request.Team;
 
             evidenceRequest1.ResidentId = resident1.Id;
             evidenceRequest2.ResidentId = resident2.Id;
@@ -443,8 +443,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
 
-            evidenceRequest1.ServiceRequestedBy = "some-other-service";
-            evidenceRequest2.ServiceRequestedBy = request.ServiceRequestedBy;
+            evidenceRequest1.Team = "some-other-service";
+            evidenceRequest2.Team = request.Team;
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
@@ -464,8 +464,8 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var resident1 = TestDataHelper.Resident();
 
-            evidenceRequest1.ServiceRequestedBy = "some-other-service";
-            evidenceRequest2.ServiceRequestedBy = request.ServiceRequestedBy;
+            evidenceRequest1.Team = "some-other-service";
+            evidenceRequest2.Team = request.Team;
 
             evidenceRequest1.ResidentId = resident1.Id;
             evidenceRequest2.ResidentId = (Guid) request.ResidentId;
@@ -486,8 +486,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
 
-            evidenceRequest1.ServiceRequestedBy = "some-other-service";
-            evidenceRequest2.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest1.Team = "some-other-service";
+            evidenceRequest2.Team = "development-team-staging";
 
             evidenceRequest1.State = EvidenceRequestState.Pending;
             evidenceRequest2.State = EvidenceRequestState.Approved;
@@ -509,8 +509,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
 
-            evidenceRequest1.ServiceRequestedBy = "some-other-service";
-            evidenceRequest2.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest1.Team = "some-other-service";
+            evidenceRequest2.Team = "development-team-staging";
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);

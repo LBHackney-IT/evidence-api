@@ -18,7 +18,7 @@ namespace EvidenceApi.Tests
                 .With(x => x.Communications, new List<Communication>())
                 .With(x => x.DocumentSubmissions, new List<DocumentSubmission>())
                 .With(x => x.RawDeliveryMethods, new List<string>())
-                .With(x => x.ServiceRequestedBy)
+                .With(x => x.Team)
                 .Create();
         }
 

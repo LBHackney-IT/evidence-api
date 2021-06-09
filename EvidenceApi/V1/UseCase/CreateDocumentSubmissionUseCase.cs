@@ -50,7 +50,7 @@ namespace EvidenceApi.V1.UseCase
                 var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
                 var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
-                var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.ServiceRequestedBy, documentSubmission.DocumentTypeId);
+                var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
 
                 return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy);
             }
@@ -64,7 +64,7 @@ namespace EvidenceApi.V1.UseCase
         {
             var claimRequest = new ClaimRequest()
             {
-                ServiceAreaCreatedBy = evidenceRequest.ServiceRequestedBy,
+                ServiceAreaCreatedBy = evidenceRequest.Team,
                 UserCreatedBy = evidenceRequest.UserRequestedBy,
                 ApiCreatedBy = "evidence_api",
                 RetentionExpiresAt = DateTime.UtcNow.AddMonths(3).Date,
