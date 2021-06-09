@@ -27,7 +27,7 @@ namespace EvidenceApi.V1.UseCase
         {
             var found = _evidenceGateway.GetEvidenceRequests(request);
 
-            if (String.IsNullOrEmpty(request.ServiceRequestedBy))
+            if (String.IsNullOrEmpty(request.Team))
             {
                 throw new BadRequestException("Service requested by is null or empty");
             }
@@ -35,7 +35,7 @@ namespace EvidenceApi.V1.UseCase
             return found.ConvertAll<EvidenceRequestResponse>(er =>
             {
                 var resident = _residentsGateway.FindResident(er.ResidentId);
-                var documentTypes = er.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.ServiceRequestedBy, dt));
+                var documentTypes = er.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.Team, dt));
                 return er.ToResponse(resident, documentTypes);
             });
         }

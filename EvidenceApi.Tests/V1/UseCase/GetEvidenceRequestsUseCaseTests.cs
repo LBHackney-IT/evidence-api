@@ -42,7 +42,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             BuildEvidenceRequestsList();
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = "development-team-staging"
+                Team = "development-team-staging"
             };
 
             var expected = _found.ConvertAll<EvidenceRequestResponse>(er =>
@@ -64,7 +64,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = ""
+                Team = ""
             };
 
             Action act = () => _classUnderTest.Execute(request);
@@ -85,8 +85,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
-            evidenceRequest2.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest1.Team = "development-team-staging";
+            evidenceRequest2.Team = "development-team-staging";
             _found.Add(evidenceRequest1);
             _found.Add(evidenceRequest2);
         }

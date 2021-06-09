@@ -39,8 +39,8 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var evidenceRequest = _evidenceGateway.FindEvidenceRequest(found.EvidenceRequestId);
-            var documentType = FindDocumentType(evidenceRequest.ServiceRequestedBy, found.DocumentTypeId);
-            var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceRequest.ServiceRequestedBy,
+            var documentType = FindDocumentType(evidenceRequest.Team, found.DocumentTypeId);
+            var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceRequest.Team,
                 found.StaffSelectedDocumentTypeId);
             try
             {

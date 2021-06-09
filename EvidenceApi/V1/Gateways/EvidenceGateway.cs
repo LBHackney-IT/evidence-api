@@ -58,7 +58,7 @@ namespace EvidenceApi.V1.Gateways
         {
             return _databaseContext.EvidenceRequests
                 .Where(x =>
-                    x.ServiceRequestedBy.Equals(request.ServiceRequestedBy) &&
+                    x.Team.Equals(request.Team) &&
                     (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
                     (request.State == null || x.State.Equals(request.State))
                 ).ToList();
@@ -88,7 +88,7 @@ namespace EvidenceApi.V1.Gateways
         {
             return _databaseContext.EvidenceRequests
                 .Where(x =>
-                    x.ServiceRequestedBy.Equals(request.ServiceRequestedBy) &&
+                    x.Team.Equals(request.Team) &&
                     x.ResidentReferenceId.Equals(request.SearchQuery)
                 ).ToList();
         }

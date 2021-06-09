@@ -36,10 +36,10 @@ namespace EvidenceApi.V1.UseCase
                 var evidenceRequestsForResident = _evidenceGateway.FindEvidenceRequestsByResidentId(resident.Id);
                 foreach (var evidenceRequest in evidenceRequestsForResident)
                 {
-                    if (evidenceRequest.ServiceRequestedBy.Equals(request.ServiceRequestedBy))
+                    if (evidenceRequest.Team.Equals(request.Team))
                     {
                         residents.Add(resident.ToResponse(evidenceRequest.ResidentReferenceId));
-                        // if any of the evidence requests were created by ServiceRequestedBy from the query then this resident should be returned
+                        // if any of the evidence requests were created by Team from the query then this resident should be returned
                         // and we can then break out of the loop early.
                         break;
                     }

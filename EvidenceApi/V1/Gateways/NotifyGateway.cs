@@ -128,7 +128,7 @@ namespace EvidenceApi.V1.Gateways
 
         private DocumentType GetDocumentType(EvidenceRequest evidenceRequest)
         {
-            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.ServiceRequestedBy, evidenceRequest.DocumentTypes[0]);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, evidenceRequest.DocumentTypes[0]);
         }
 
         private string MagicLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}";

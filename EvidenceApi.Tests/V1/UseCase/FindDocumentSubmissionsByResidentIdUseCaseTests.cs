@@ -75,13 +75,13 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestWhenServiceRequestedByIsEmpty()
+        public void ThrowsBadRequestWhenTeamIsEmpty()
         {
-            var serviceRequestedBy = "";
+            var team = "";
             var residentId = Guid.NewGuid();
             var request = new DocumentSubmissionSearchQuery()
             {
-                ServiceRequestedBy = serviceRequestedBy,
+                Team = team,
                 ResidentId = residentId
             };
             Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
@@ -91,11 +91,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public void ThrowsBadRequestWhenResidentIdIsEmpty()
         {
-            var serviceRequestedBy = "some service";
+            var team = "some service";
             Guid residentId = Guid.Empty;
             var request = new DocumentSubmissionSearchQuery()
             {
-                ServiceRequestedBy = serviceRequestedBy,
+                Team = team,
                 ResidentId = residentId
             };
             Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
@@ -107,12 +107,12 @@ namespace EvidenceApi.Tests.V1.UseCase
             var residentId = Guid.NewGuid();
             _evidenceRequest1 = TestDataHelper.EvidenceRequest();
             _evidenceRequest1.Id = Guid.NewGuid();
-            _evidenceRequest1.ServiceRequestedBy = "Housing benefit";
+            _evidenceRequest1.Team = "Housing benefit";
             _evidenceRequest1.ResidentId = residentId;
 
             _evidenceRequest2 = TestDataHelper.EvidenceRequest();
             _evidenceRequest2.Id = Guid.NewGuid();
-            _evidenceRequest2.ServiceRequestedBy = "Housing benefit";
+            _evidenceRequest2.Team = "Housing benefit";
             _evidenceRequest2.ResidentId = residentId;
 
             _documentSubmission1 = TestDataHelper.DocumentSubmission();
@@ -132,7 +132,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _useCaseRequest = new DocumentSubmissionSearchQuery()
             {
-                ServiceRequestedBy = "Housing benefit",
+                Team = "Housing benefit",
                 ResidentId = residentId
             };
 

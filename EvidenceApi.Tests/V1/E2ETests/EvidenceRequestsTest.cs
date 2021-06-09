@@ -34,7 +34,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""proof-of-id""],
-                ""serviceRequestedBy"": ""Development Housing Team"",
+                ""team"": ""Development Housing Team"",
                 ""reason"": ""staging-reason"",
                 ""userRequestedBy"": ""staff@test.hackney.gov.uk""
             }";
@@ -61,7 +61,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "\"documentTypes\":[" +
                                "{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}" +
                                "]," +
-                               "\"serviceRequestedBy\":\"Development Housing Team\"," +
+                               "\"team\":\"Development Housing Team\"," +
                                "\"reason\":\"staging-reason\"," +
                                "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +
                                $"\"id\":\"{created.Id}\"," +
@@ -89,7 +89,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""FOO""],
                 ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""Development Housing Team""
+                ""team"": ""Development Housing Team""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -110,7 +110,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""passport-scan""],
-                ""serviceRequestedBy"": ""Development Housing Team""
+                ""team"": ""Development Housing Team""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -128,7 +128,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .With(x => x.ResidentId, resident.Id)
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .With(x => x.ServiceRequestedBy, "Development Housing Team")
+                .With(x => x.Team, "Development Housing Team")
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
@@ -159,8 +159,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanGetEvidenceRequestsWithValidService()
         {
             var expected = BuildEvidenceRequestsListWithSameResident();
-            var serviceRequestedBy = expected[0].ServiceRequestedBy;
-            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}", UriKind.Relative);
+            var team = expected[0].Team;
+            var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
@@ -174,9 +174,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanGetEvidenceRequestsWithValidServiceAndResidentId()
         {
             var expected = BuildEvidenceRequestsListWithDifferentResident();
-            var serviceRequestedBy = expected[0].ServiceRequestedBy;
+            var team = expected[0].Team;
             var residentId = expected[0].Resident.Id;
-            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
@@ -189,9 +189,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task DoesNotReturnEvidenceRequestsWhenParamsDoNotMatchAny()
         {
             var expected = BuildEvidenceRequestsListWithDifferentResident();
-            var serviceRequestedBy = expected[0].ServiceRequestedBy;
+            var team = expected[0].Team;
             var residentId = expected[1].Resident.Id;
-            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
@@ -203,8 +203,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task ReturnBadRequestWhenServiceIsEmpty()
         {
-            var serviceRequestedBy = "";
-            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}", UriKind.Relative);
+            var team = "";
+            var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(400);
@@ -213,9 +213,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task ReturnBadRequestWhenServiceAndResidentIdAreEmpty()
         {
-            var serviceRequestedBy = "";
+            var team = "";
             var residentId = "";
-            var uri = new Uri($"api/v1/evidence_requests?serviceRequestedBy={serviceRequestedBy}&residentId={residentId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             response.StatusCode.Should().Be(400);
@@ -231,8 +231,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var documentTypes = new List<string> { "passport-scan", "drivers-licence" };
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = "Development Housing Team";
-            evidenceRequest2.ServiceRequestedBy = "another-service-id";
+            evidenceRequest1.Team = "Development Housing Team";
+            evidenceRequest2.Team = "another-service-id";
             evidenceRequest1.ResidentId = resident.Id;
             evidenceRequest2.ResidentId = resident.Id;
             evidenceRequest1.DocumentTypes = documentTypes;
@@ -269,9 +269,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = "Development Housing Team";
-            evidenceRequest2.ServiceRequestedBy = "another-service-id";
-            evidenceRequest3.ServiceRequestedBy = "yet-another-service";
+            evidenceRequest1.Team = "Development Housing Team";
+            evidenceRequest2.Team = "another-service-id";
+            evidenceRequest3.Team = "yet-another-service";
             evidenceRequest1.ResidentId = resident1.Id;
             evidenceRequest2.ResidentId = resident2.Id;
             evidenceRequest3.ResidentId = resident2.Id;

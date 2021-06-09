@@ -66,7 +66,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Resident.Name.Should().Be(_resident.Name);
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
-            result.ServiceRequestedBy.Should().Be(_created.ServiceRequestedBy);
+            result.Team.Should().Be(_created.Team);
             result.Reason.Should().Be(_created.Reason);
             result.UserRequestedBy.Should().Be(_created.UserRequestedBy);
         }
@@ -90,7 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.Verify(x => x.CreateEvidenceRequest(
                 It.Is<EvidenceRequest>(e =>
                     e.ResidentId == _resident.Id &&
-                    e.ServiceRequestedBy == _request.ServiceRequestedBy &&
+                    e.Team == _request.Team &&
                     e.UserRequestedBy == _request.UserRequestedBy
                 )
             ));

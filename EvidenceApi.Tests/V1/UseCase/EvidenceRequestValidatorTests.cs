@@ -100,28 +100,28 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         #endregion
 
-        #region ServiceRequestedBy Validations
+        #region Team Validations
 
         [Test]
-        public void IsInvalidWhenServiceRequestedByIsNull()
+        public void IsInvalidWhenTeamIsNull()
         {
-            _request.ServiceRequestedBy = null;
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.ServiceRequestedBy, _request)
+            _request.Team = null;
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.Team, _request)
                 .WithErrorMessage("'Service Requested By' must not be empty.");
         }
 
         [Test]
-        public void IsInvalidWhenServiceRequestedByIsEmpty()
+        public void IsInvalidWhenTeamIsEmpty()
         {
-            _request.ServiceRequestedBy = "";
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.ServiceRequestedBy, _request)
+            _request.Team = "";
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.Team, _request)
                 .WithErrorMessage("'Service Requested By' must not be empty.");
         }
         [Test]
-        public void IsValidWhenServiceRequestedByIsPresent()
+        public void IsValidWhenTeamIsPresent()
         {
-            _request.ServiceRequestedBy = "housing_needs";
-            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.ServiceRequestedBy, _request);
+            _request.Team = "housing_needs";
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.Team, _request);
         }
 
         #endregion
@@ -166,7 +166,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             return new EvidenceRequestRequest()
             {
-                ServiceRequestedBy = team,
+                Team = team,
                 DeliveryMethods = new List<string>() { "EMAIL", "SMS" },
                 Resident = new ResidentRequest()
                 {

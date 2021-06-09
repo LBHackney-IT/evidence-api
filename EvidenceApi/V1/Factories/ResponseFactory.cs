@@ -14,7 +14,7 @@ namespace EvidenceApi.V1.Factories
                 Resident = resident.ToResponse(domain.ResidentReferenceId),
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()),
                 DocumentTypes = documentTypes,
-                ServiceRequestedBy = domain.ServiceRequestedBy,
+                Team = domain.Team,
                 Reason = domain.Reason,
                 UserRequestedBy = domain.UserRequestedBy,
                 Id = domain.Id,
