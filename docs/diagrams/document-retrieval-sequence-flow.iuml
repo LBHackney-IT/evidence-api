@@ -4,8 +4,7 @@
 
 title Document Evidence Store Document Retrieval Sequence Flow Diagram
 
-Service -> DocumentsAPI: POST /claims/:claimId/download_links
-Service <- DocumentsAPI: S3 presigned download URL
-Service -> S3: GET S3 presigned download URL
+Service -> DocumentsAPI: GET /documents/:documentId
+Service <- DocumentsAPI: 200 document encoded in base64
 
 @enduml
