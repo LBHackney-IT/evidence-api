@@ -127,7 +127,7 @@ namespace EvidenceApi
 
             // Database Context
             services.AddDbContext<EvidenceContext>(
-                opt => opt.UseNpgsql(options.DatabaseConnectionString));
+                opt => opt.UseNpgsql(options.DatabaseConnectionString).AddXRayInterceptor(true));
 
             // Transients
             services.AddTransient<INotificationClient>(x => new NotificationClient(options.NotifyApiKey));
