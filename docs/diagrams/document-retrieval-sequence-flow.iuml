@@ -1,0 +1,10 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Deployment.puml
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Document Evidence Store Document Retrieval Sequence Flow Diagram
+
+Service -> DocumentsAPI: GET /documents/:documentId
+Service <- DocumentsAPI: 200 document encoded in base64
+
+@enduml
