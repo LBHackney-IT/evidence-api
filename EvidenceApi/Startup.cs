@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
@@ -35,6 +36,8 @@ namespace EvidenceApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            AWSSDKHandler.RegisterXRayForAllServices();
         }
 
         public IConfiguration Configuration { get; }
