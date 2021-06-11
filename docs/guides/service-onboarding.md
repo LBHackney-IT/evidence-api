@@ -10,7 +10,7 @@ To ensure the new service can authenticate properly, add their Google Groups to 
 
 The JSON file is designed to be easy to ammend by anyone—all it needs is the Google Group and a human readable name for the service.
 
-⚠️ Do not delete a Google Group—this could break records that exist in the database for that service. If you need to, speak to a developer to update the database records first.
+⚠️ Do not delete a Google Group — this could break records that exist in the database for that service. If you need to, speak to a developer to update the database records first.
 
 ## ⚙️  Configuration
 
@@ -23,6 +23,6 @@ Add any document types that the service deals with to `EvidenceApi/DocumentTypes
 - a description (this will be shown to the **resident**, so please ensure it describes what they need to provide and any important details)
 - a machine readable ID (this should contain no spaces, and only contain lowercase letters, numbers and hyphens)
 
-### Services/Service Areas
+### Service Areas
 
-📝 **TODO**: Complete this section as part of [this ticket](https://hackney.atlassian.net/browse/DES-25)
+Add their team configuration to `document-evidence-store-frontend/teams.json`. Ensure that the `id` is unique

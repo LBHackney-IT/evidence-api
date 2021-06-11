@@ -36,14 +36,14 @@ aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 ```
 7. Next run the following to create a private key and permission it appropriately
 ```sh
-aws ssm get-parameter --name "/platform-apis-jump-box-pem-key" --output text --query Parameter.Value > ./private-key.pem
+aws ssm get-parameter --name "/document-evidence-store-staging-jump-box-pem-key	" --output text --query Parameter.Value > ./private-key.pem
 chmod 400 ./private-key.pem
 ```
 8. Create environment variables by retrieving properties from AWS SSM
 ```sh
 EVIDENCE_API_HOST=$(aws ssm get-parameter --name /evidence-api/staging/postgres-hostname --query Parameter.Value)
 EVIDENCE_API_PORT=$(aws ssm get-parameter --name /evidence-api/staging/postgres-port --query Parameter.Value)
-JUMP_BOX_NAME=$(aws ssm get-parameter --name /platform-apis-jump-box-instance-name --query Parameter.Value)
+JUMP_BOX_NAME=$(aws ssm get-parameter --name /document-evidence-store-staging-jump-box-instance-name --query Parameter.Value)
 ```
 9. Setup port forwarding which creates a tunnel between your local machine and the EvidenceAPI database. It will map `localhost:EVIDENCE_API_PORT` to `aws_host:EVIDENCE_API_PORT`
 ```sh
