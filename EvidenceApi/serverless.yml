@@ -6,6 +6,9 @@ provider:
   stage: ${opt:stage}
   region: eu-west-2
   timeout: 30
+  tracing:
+    apiGateway: true
+    lambda: true
   usagePlan:
     - secureAccess:
         throttle:
@@ -61,6 +64,7 @@ resources:
               Action: sts:AssumeRole
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+          - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
         Policies:
           - PolicyName: manageLogs
             PolicyDocument:
