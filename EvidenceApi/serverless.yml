@@ -6,6 +6,9 @@ provider:
   stage: ${opt:stage}
   region: eu-west-2
   timeout: 30
+  tracing:
+    apiGateway: true
+    lambda: true
   usagePlan:
     - secureAccess:
         throttle:
