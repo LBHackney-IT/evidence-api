@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
-using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -15,20 +14,22 @@ namespace EvidenceApi.V1.Controllers
     [ApiVersion("1.0")]
     public class EvidenceRequestsController : BaseController
     {
-        private readonly IDocumentTypeGateway _gateway;
         private readonly ICreateEvidenceRequestUseCase _creator;
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
-        private readonly IFindEvidenceRequestByIDUseCase _evidenceRequestUseCase;
-        private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
+        private readonly IFindEvidenceRequestByIdUseCase _evidenceRequestUseCase;
         private readonly IFindEvidenceRequestsUseCase _getEvidenceRequestsUseCase;
 
-        public EvidenceRequestsController(IDocumentTypeGateway gateway, ICreateEvidenceRequestUseCase creator, ICreateDocumentSubmissionUseCase createDocumentSubmission, IFindEvidenceRequestByIDUseCase evidenceRequestUseCase, IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase, IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase)
+        public EvidenceRequestsController(
+            ICreateEvidenceRequestUseCase creator,
+            ICreateDocumentSubmissionUseCase createDocumentSubmission,
+            IFindEvidenceRequestByIdUseCase evidenceRequestUseCase,
+            IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase,
+            ICreateAuditUseCase createAuditUseCase
+        ) : base(createAuditUseCase)
         {
-            _gateway = gateway;
             _creator = creator;
             _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
-            _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
             _getEvidenceRequestsUseCase = getEvidenceRequestsUseCase;
         }
 
@@ -109,7 +110,7 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="200">Found</response>
         /// <response code="400">Request contains invalid parameters</response>
         [HttpGet]
-        public IActionResult FilterEvidenceRequests([FromQuery] EvidenceRequestsSearchQuery request)
+        public IActionResult FilterEvidenceRequests([FromQuery][Required] EvidenceRequestsSearchQuery request)
         {
             try
             {

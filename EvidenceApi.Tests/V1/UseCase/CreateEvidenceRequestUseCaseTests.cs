@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -24,6 +25,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
         private Mock<INotifyGateway> _notifyGateway;
+        private Mock<IFindOrCreateResidentReferenceIdUseCase> _createResidentReferenceIdUseCase;
         private readonly IFixture _fixture = new Fixture();
 
         private Resident _resident;
@@ -39,8 +41,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
             _notifyGateway = new Mock<INotifyGateway>();
+            _createResidentReferenceIdUseCase = new Mock<IFindOrCreateResidentReferenceIdUseCase>();
             _classUnderTest = new CreateEvidenceRequestUseCase(_validator.Object, _documentTypesGateway.Object,
-                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object);
+                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object, _createResidentReferenceIdUseCase.Object);
 
         }
 
@@ -63,7 +66,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Resident.Name.Should().Be(_resident.Name);
             result.DocumentTypes.Should().OnlyContain(x => x.Id == _documentType.Id);
             result.DeliveryMethods.Should().BeEquivalentTo(_created.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()));
-            result.ServiceRequestedBy.Should().Be(_created.ServiceRequestedBy);
+            result.Team.Should().Be(_created.Team);
             result.Reason.Should().Be(_created.Reason);
             result.UserRequestedBy.Should().Be(_created.UserRequestedBy);
         }
@@ -87,7 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.Verify(x => x.CreateEvidenceRequest(
                 It.Is<EvidenceRequest>(e =>
                     e.ResidentId == _resident.Id &&
-                    e.ServiceRequestedBy == _request.ServiceRequestedBy &&
+                    e.Team == _request.Team &&
                     e.UserRequestedBy == _request.UserRequestedBy
                 )
             ));
@@ -135,7 +138,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.Resident, residentRequest)
                 .Create();
 
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _residentsGateway.Setup(x => x.FindOrCreateResident(It.IsAny<Resident>())).Returns(_resident).Verifiable();
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_created).Verifiable();
         }

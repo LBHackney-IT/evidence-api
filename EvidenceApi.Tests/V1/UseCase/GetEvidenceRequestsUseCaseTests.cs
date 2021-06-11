@@ -42,7 +42,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             BuildEvidenceRequestsList();
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = "development-team-staging"
+                Team = "development-team-staging"
             };
 
             var expected = _found.ConvertAll<EvidenceRequestResponse>(er =>
@@ -64,11 +64,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var request = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = ""
+                Team = ""
             };
 
             Action act = () => _classUnderTest.Execute(request);
-            act.Should().Throw<BadRequestException>().WithMessage("Service requested by is null or empty");
+            act.Should().Throw<BadRequestException>().WithMessage("Team is null or empty");
         }
 
         private void SetupMocks()
@@ -77,7 +77,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentType = _fixture.Create<DocumentType>();
 
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident);
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(_found);
         }
 
@@ -85,8 +85,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            evidenceRequest1.ServiceRequestedBy = "development-team-staging";
-            evidenceRequest2.ServiceRequestedBy = "development-team-staging";
+            evidenceRequest1.Team = "development-team-staging";
+            evidenceRequest2.Team = "development-team-staging";
             _found.Add(evidenceRequest1);
             _found.Add(evidenceRequest2);
         }

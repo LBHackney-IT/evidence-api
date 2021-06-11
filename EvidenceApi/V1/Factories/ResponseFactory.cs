@@ -11,10 +11,10 @@ namespace EvidenceApi.V1.Factories
         {
             return new EvidenceRequestResponse()
             {
-                Resident = resident.ToResponse(),
+                Resident = resident.ToResponse(domain.ResidentReferenceId),
                 DeliveryMethods = domain.DeliveryMethods.ConvertAll(x => x.ToString().ToUpper()),
                 DocumentTypes = documentTypes,
-                ServiceRequestedBy = domain.ServiceRequestedBy,
+                Team = domain.Team,
                 Reason = domain.Reason,
                 UserRequestedBy = domain.UserRequestedBy,
                 Id = domain.Id,
@@ -22,20 +22,22 @@ namespace EvidenceApi.V1.Factories
             };
         }
 
-        public static ResidentResponse ToResponse(this Resident domain)
+        public static ResidentResponse ToResponse(this Resident domain, string? referenceId = null)
         {
             return new ResidentResponse()
             {
                 Id = domain.Id,
                 Name = domain.Name,
                 Email = domain.Email,
-                PhoneNumber = domain.PhoneNumber
+                PhoneNumber = domain.PhoneNumber,
+                ReferenceId = referenceId
             };
         }
 
         public static DocumentSubmissionResponse ToResponse(
             this DocumentSubmission domain,
             DocumentType documentType,
+            DocumentType? staffSelectedDocumentType = null,
             S3UploadPolicy? s3UploadPolicy = null,
             Document? document = null
         )
@@ -48,7 +50,7 @@ namespace EvidenceApi.V1.Factories
                 RejectionReason = domain.RejectionReason,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
-                // add staffSelectedDocumentType after DES-189
+                StaffSelectedDocumentType = staffSelectedDocumentType,
                 UploadPolicy = s3UploadPolicy,
                 Document = document
             };

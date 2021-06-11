@@ -12,56 +12,80 @@ namespace EvidenceApi.Tests.V1.Gateways
     public class DocumentTypeGatewayTests
     {
         private DocumentTypeGateway _classUnderTest;
-        private Mock<IFileReader<List<DocumentType>>> _fileReaderMock;
+        private Mock<IFileReader<List<Team>>> _fileReaderMock;
 
         [SetUp]
         public void Setup()
         {
-            _fileReaderMock = new Mock<IFileReader<List<DocumentType>>>();
+            _fileReaderMock = new Mock<IFileReader<List<Team>>>();
             _classUnderTest = new DocumentTypeGateway(_fileReaderMock.Object);
         }
 
         [Test]
-        public void GetDocumentTypeByIdReturnsNullIfDocumentTypeDoesNotExist()
+        public void GetDocumentTypeByTeamNameAndDocumentIdReturnsTheDocumentTypeIfItExists()
         {
-            _fileReaderMock.Setup(s => s.GetData()).Returns(new List<DocumentType>());
-            var response = _classUnderTest.GetDocumentTypeById("passport");
-
-            response.Should().BeNull();
-        }
-
-        [Test]
-        public void GetDocumentTypeByIdReturnsTheDocumentTypeIfItExists()
-        {
+            // Arrange
             var docType = new DocumentType { Id = "passport", Title = "Passport" };
             var docTypes = new List<DocumentType> { docType };
-            _fileReaderMock.Setup(s => s.GetData()).Returns(docTypes);
+            var teamName = "teamName";
+            var team = new Team();
+            team.Name = teamName;
+            team.DocumentTypes = docTypes;
+            var teams = new List<Team> { team };
+            _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
 
-            var response = _classUnderTest.GetDocumentTypeById(docType.Id);
+            // Act
+            var response = _classUnderTest.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, docType.Id);
 
+            // Assert
             response.Id.Should().BeSameAs(docType.Id);
             response.Title.Should().BeSameAs(docType.Title);
         }
 
         [Test]
-        public void GetAllReturnsEmptyListIfNoData()
+        public void GetDocumentTypeByTeamNameAndDocumentIdNullIfDocumentTypeDoesNotExist()
         {
-            _fileReaderMock.Setup(s => s.GetData()).Returns(new List<DocumentType>());
-            var response = _classUnderTest.GetAll();
+            _fileReaderMock.Setup(s => s.GetData()).Returns(new List<Team>());
+            var response = _classUnderTest.GetDocumentTypeByTeamNameAndDocumentTypeId("teamName", "passport");
 
-            response.Should().BeEmpty();
+            response.Should().BeNull();
         }
 
         [Test]
-        public void GetAllReturnsDataIfDataPresent()
+        public void GetDocumentTypesByTeamReturnsDocumentTypesIfTeamExists()
         {
+            // Arrange
             var docType = new DocumentType { Id = "passport", Title = "Passport" };
-            var anotherDocType = new DocumentType { Id = "utility_bill", Title = "Utility Bill" };
-            var docTypes = new List<DocumentType> { docType, anotherDocType };
-            _fileReaderMock.Setup(s => s.GetData()).Returns(docTypes);
+            var docTypes = new List<DocumentType> { docType };
+            var teamName = "teamName";
+            var team = new Team();
+            team.Name = teamName;
+            team.DocumentTypes = docTypes;
+            var teams = new List<Team> { team };
+            _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
 
-            var response = _classUnderTest.GetAll();
+            // Act
+            var response = _classUnderTest.GetDocumentTypesByTeamName(teamName);
+
+            // Assert
             response.Should().Contain(docTypes);
+        }
+
+        [Test]
+        public void GetDocumentTypesByTeamReturnsEmptyListIfTeamDoesNotExist()
+        {
+            // Arrange
+            var teamName = "teamName";
+            var team = new Team();
+            team.Name = teamName;
+            var teams = new List<Team> { team };
+            _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
+
+            // Act
+            var response = _classUnderTest.GetDocumentTypesByTeamName("differentTeamName");
+
+            // Assert
+            response.Should().BeEmpty();
         }
     }
 }

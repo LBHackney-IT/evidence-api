@@ -17,6 +17,14 @@ namespace EvidenceApi.V1.Gateways
             _databaseContext = databaseContext;
         }
 
+        public AuditEvent CreateAuditEvent(AuditEvent request)
+        {
+            if (request.Id == default) _databaseContext.AuditEvents.Add(request);
+            _databaseContext.SaveChanges();
+
+            return request;
+        }
+
         public EvidenceRequest CreateEvidenceRequest(EvidenceRequest request)
         {
             if (request.Id == default) _databaseContext.EvidenceRequests.Add(request);
@@ -50,7 +58,7 @@ namespace EvidenceApi.V1.Gateways
         {
             return _databaseContext.EvidenceRequests
                 .Where(x =>
-                    x.ServiceRequestedBy.Contains(request.ServiceRequestedBy) &&
+                    x.Team.Equals(request.Team) &&
                     (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
                     (request.State == null || x.State.Equals(request.State))
                 ).ToList();
@@ -61,9 +69,28 @@ namespace EvidenceApi.V1.Gateways
             return _databaseContext.DocumentSubmissions.Find(id);
         }
 
-        public List<DocumentSubmission> FindDocumentSubmissionByEvidenceRequestId(Guid id)
+        public List<DocumentSubmission> FindDocumentSubmissionsByEvidenceRequestId(Guid id)
         {
             return _databaseContext.DocumentSubmissions.Where(x => x.EvidenceRequestId == id).ToList();
+        }
+
+        public List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id)
+        {
+            return _databaseContext.EvidenceRequests.Where(x => x.ResidentId.Equals(id)).ToList();
+        }
+
+        public List<EvidenceRequest> GetAll()
+        {
+            return _databaseContext.EvidenceRequests.ToList();
+        }
+
+        public List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request)
+        {
+            return _databaseContext.EvidenceRequests
+                .Where(x =>
+                    x.Team.Equals(request.Team) &&
+                    x.ResidentReferenceId.Equals(request.SearchQuery)
+                ).ToList();
         }
     }
 }

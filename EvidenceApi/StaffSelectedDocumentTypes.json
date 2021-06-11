@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Development Housing Team",
+    "id": "2",
+    "documentTypes": [
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "Drivers licence",
+        "description": "A valid UK full or provisional UK driving license"
+      }
+    ]
+  },
+  {
+    "name": "Security Testing",
+    "id": "3",
+    "documentTypes": [
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "Drivers licence",
+        "description": "A valid UK full or provisional UK driving license"
+      }
+    ]
+  },
+  {
+    "name": "Repairs Contact Centre",
+    "id": "5",
+    "documentTypes": [
+      {
+        "id": "photo",
+        "title": "Photo",
+        "description": "A clear photo of the repair"
+      },
+      {
+        "id": "contractor-invoice",
+        "title": "Contractor invoice",
+        "description": "A contractor invoice detailing what the issues is, with tax reference number (in relation to leaseholders, who've had a contractor out, but they've given advice on what the issue is, if communal etc, so that LBH. can take appropriate action)"
+      }
+    ]
+  },
+  {
+    "name": "Electoral Services",
+    "id": "6",
+    "documentTypes": [
+      {
+        "id": "passport",
+        "title": "Passport",
+        "description": "Data page with photo"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "UK driving licence",
+        "description": "Photo side (front)"
+      },
+      {
+        "id": "eu-identity-card",
+        "title": "EU identity card",
+        "description": "Photo page"
+      },
+      {
+        "id": "biometric-card",
+        "title": "Biometric card",
+        "description": "Both sides of the card"
+      },
+      {
+        "id": "birth-certificate",
+        "title": "Birth certificate",
+        "description": ""
+      },
+      {
+        "id": "bank-statement",
+        "title": "Bank statement",
+        "description": "Valid from the last 3 months"
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months"
+      },
+      {
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year"
+      },
+      {
+        "id": "government-letter",
+        "title": "Government letter",
+        "description": "For example, benefit status letters"
+      },
+      {
+        "id": "certificate-of-naturalisation",
+        "title": "Certificate of naturalisation",
+        "description": ""
+      }
+    ]
+  }
+]

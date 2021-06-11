@@ -6,10 +6,8 @@ using EvidenceApi.V1.Gateways.Interfaces;
 using System.Collections.Generic;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Domain;
-using System.Linq;
 using System.Threading.Tasks;
 using System;
-
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -17,12 +15,14 @@ namespace EvidenceApi.V1.UseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
 
-        public FindDocumentSubmissionsByResidentIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IDocumentsApiGateway documentsApiGateway)
+        public FindDocumentSubmissionsByResidentIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway, IDocumentsApiGateway documentsApiGateway)
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
             _documentsApiGateway = documentsApiGateway;
         }
 
@@ -32,46 +32,50 @@ namespace EvidenceApi.V1.UseCase
 
             EvidenceRequestsSearchQuery evidenceRequestSearchQuery = new EvidenceRequestsSearchQuery()
             {
-                ServiceRequestedBy = request.ServiceRequestedBy,
+                Team = request.Team,
                 ResidentId = request.ResidentId
             };
-            var found = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
-
-            var documentSubmissions = new List<DocumentSubmission>();
-
-            foreach (var er in found)
-            {
-                documentSubmissions = documentSubmissions.Concat(_evidenceGateway.FindDocumentSubmissionByEvidenceRequestId(er.Id)).ToList();
-            }
+            var evidenceRequests = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
 
             var result = new List<DocumentSubmissionResponse>();
 
-            foreach (var ds in documentSubmissions)
+            foreach (var evidenceReq in evidenceRequests)
             {
-                var documentType = FindDocumentType(ds.DocumentTypeId);
-                var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
-                if (claim.Document == null)
+                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionsByEvidenceRequestId(evidenceReq.Id);
+                foreach (var ds in documentSubmissions)
                 {
-                    result.Add(ds.ToResponse(documentType, null, null));
-                }
-                else
-                {
-                    result.Add(ds.ToResponse(documentType, null, claim.Document));
+                    var documentType = FindDocumentType(evidenceReq.Team, ds.DocumentTypeId);
+                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
+                        ds.StaffSelectedDocumentTypeId);
+                    var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
+                    if (claim.Document == null)
+                    {
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType));
+                    }
+                    else
+                    {
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document));
+                    }
                 }
             }
             return result;
         }
 
-        private DocumentType FindDocumentType(string documentTypeId)
+        private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, documentTypeId);
+        }
+
+        private DocumentType FindStaffSelectedDocumentType(string teamName, string staffSelectedDocumentTypeId)
+        {
+            return _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, staffSelectedDocumentTypeId);
         }
 
         private static void ValidateRequest(DocumentSubmissionSearchQuery request)
         {
-            if (String.IsNullOrEmpty(request.ServiceRequestedBy))
+            if (String.IsNullOrEmpty(request.Team))
             {
-                throw new BadRequestException("Service requested by is null or empty");
+                throw new BadRequestException("Team is null or empty");
             }
 
             if (request.ResidentId == Guid.Empty)

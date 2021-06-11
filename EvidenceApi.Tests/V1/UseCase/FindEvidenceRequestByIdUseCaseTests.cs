@@ -1,24 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
-using EvidenceApi.V1.Boundary.Request;
-using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase;
-using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
-using FluentValidation.Results;
 using Moq;
 using NUnit.Framework;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
-    public class FindEvidenceREquestUseCaseTests
+    public class FindEvidenceRequestByIdUseCaseTests
     {
-        private FindEvidenceRequestByIDUseCase _classUnderTest;
+        private FindEvidenceRequestByIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IResidentsGateway> _residentsGateway;
@@ -34,7 +28,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
-            _classUnderTest = new FindEvidenceRequestByIDUseCase(_evidenceGateway.Object, _documentTypesGateway.Object, _residentsGateway.Object);
+            _classUnderTest = new FindEvidenceRequestByIdUseCase(_evidenceGateway.Object, _documentTypesGateway.Object, _residentsGateway.Object);
         }
 
         [Test]
@@ -65,7 +59,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _found = TestDataHelper.EvidenceRequest();
 
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident);
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(It.IsAny<Guid>())).Returns(_found);
         }
     }

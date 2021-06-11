@@ -19,6 +19,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private FindDocumentSubmissionsByResidentIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
+        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway;
         private Mock<IDocumentsApiGateway> _documentsApiGateway;
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
@@ -39,10 +40,12 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
+            _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
             _documentsApiGateway = new Mock<IDocumentsApiGateway>();
             _classUnderTest = new FindDocumentSubmissionsByResidentIdUseCase(
                 _evidenceGateway.Object,
                 _documentTypesGateway.Object,
+                _staffSelectedDocumentTypeGateway.Object,
                 _documentsApiGateway.Object
             );
         }
@@ -60,37 +63,39 @@ namespace EvidenceApi.Tests.V1.UseCase
             documentSubmission1.Id.Should().Be(_documentSubmission1.Id);
             documentSubmission1.ClaimId.Should().BeEquivalentTo(_documentSubmission1.ClaimId);
             documentSubmission1.DocumentType.Should().BeEquivalentTo(_documentType);
+            documentSubmission1.StaffSelectedDocumentType.Should().BeEquivalentTo(_documentType);
             documentSubmission1.State.Should().BeEquivalentTo(_documentSubmission1.State.ToString());
             documentSubmission1.RejectionReason.Should().BeEquivalentTo(_documentSubmission1.RejectionReason);
             documentSubmission2.Id.Should().Be(_documentSubmission2.Id);
             documentSubmission2.ClaimId.Should().BeEquivalentTo(_documentSubmission2.ClaimId);
             documentSubmission2.DocumentType.Should().BeEquivalentTo(_documentType);
+            documentSubmission2.StaffSelectedDocumentType.Should().BeEquivalentTo(_documentType);
             documentSubmission2.State.Should().BeEquivalentTo(_documentSubmission2.State.ToString());
             documentSubmission2.RejectionReason.Should().BeEquivalentTo(_documentSubmission2.RejectionReason);
         }
 
         [Test]
-        public void ThrowsBadRequestWhenServiceRequestedByIsEmpty()
+        public void ThrowsBadRequestWhenTeamIsEmpty()
         {
-            var serviceRequestedBy = "";
+            var team = "";
             var residentId = Guid.NewGuid();
             var request = new DocumentSubmissionSearchQuery()
             {
-                ServiceRequestedBy = serviceRequestedBy,
+                Team = team,
                 ResidentId = residentId
             };
             Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Service requested by is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Team is null or empty");
         }
 
         [Test]
         public void ThrowsBadRequestWhenResidentIdIsEmpty()
         {
-            var serviceRequestedBy = "some service";
+            var team = "some service";
             Guid residentId = Guid.Empty;
             var request = new DocumentSubmissionSearchQuery()
             {
-                ServiceRequestedBy = serviceRequestedBy,
+                Team = team,
                 ResidentId = residentId
             };
             Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
@@ -102,12 +107,12 @@ namespace EvidenceApi.Tests.V1.UseCase
             var residentId = Guid.NewGuid();
             _evidenceRequest1 = TestDataHelper.EvidenceRequest();
             _evidenceRequest1.Id = Guid.NewGuid();
-            _evidenceRequest1.ServiceRequestedBy = "Housing benefit";
+            _evidenceRequest1.Team = "Housing benefit";
             _evidenceRequest1.ResidentId = residentId;
 
             _evidenceRequest2 = TestDataHelper.EvidenceRequest();
             _evidenceRequest2.Id = Guid.NewGuid();
-            _evidenceRequest2.ServiceRequestedBy = "Housing benefit";
+            _evidenceRequest2.Team = "Housing benefit";
             _evidenceRequest2.ResidentId = residentId;
 
             _documentSubmission1 = TestDataHelper.DocumentSubmission();
@@ -127,7 +132,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _useCaseRequest = new DocumentSubmissionSearchQuery()
             {
-                ServiceRequestedBy = "Housing benefit",
+                Team = "Housing benefit",
                 ResidentId = residentId
             };
 
@@ -141,10 +146,11 @@ namespace EvidenceApi.Tests.V1.UseCase
                 _documentSubmission1, _documentSubmission2
             };
 
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.GetEvidenceRequests(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(evidenceRequestsResult);
-            _evidenceGateway.Setup(x => x.FindDocumentSubmissionByEvidenceRequestId(_evidenceRequest1.Id)).Returns(_found);
-            _evidenceGateway.Setup(x => x.FindDocumentSubmissionByEvidenceRequestId(_evidenceRequest2.Id)).Returns(new List<DocumentSubmission>());
+            _evidenceGateway.Setup(x => x.FindDocumentSubmissionsByEvidenceRequestId(_evidenceRequest1.Id)).Returns(_found);
+            _evidenceGateway.Setup(x => x.FindDocumentSubmissionsByEvidenceRequestId(_evidenceRequest2.Id)).Returns(new List<DocumentSubmission>());
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
         }

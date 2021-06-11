@@ -19,14 +19,17 @@ namespace EvidenceApi.V1.Domain
         [Column("resident_id")]
         public Guid ResidentId { get; set; }
 
+        [Column("resident_reference_id")]
+        public string ResidentReferenceId { get; set; }
+
         [Column("delivery_methods")]
         public List<string> RawDeliveryMethods { get; set; }
 
         [Column("document_types")]
         public List<string> DocumentTypes { get; set; }
 
-        [Column("service_requested_by")]
-        public string ServiceRequestedBy { get; set; }
+        [Column("team")]
+        public string Team { get; set; }
 
         [Column("reason")]
         public string Reason { get; set; }

@@ -1,17 +1,76 @@
 [
   {
-    "id": "passport-scan",
-    "title": "Passport",
-    "description": "A valid passport open at the photo page"
+    "name": "Development Housing Team",
+    "id": "2",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      },
+      {
+        "id": "repairs-photo",
+        "title": "Repairs photo",
+        "description": "A photo of the issue that need to be repaired"
+      },
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "Drivers licence",
+        "description": "A valid UK full or provisional UK driving license"
+      },
+      {
+        "id": "bank-statement",
+        "title": "Bank statement",
+        "description": "From the past three months"
+      }
+    ]
   },
   {
-    "id": "drivers-licence",
-    "title": "Drivers licence",
-    "description": "A valid UK full or provisional UK driving license"
+    "name": "Security Testing",
+    "id": "3",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      }
+    ]
   },
   {
-    "id": "bank-statement",
-    "title": "Bank statement",
-    "description": "From the past three months"
+    "name": "Repairs Contact Centre",
+    "id": "5",
+    "documentTypes": [
+      {
+        "id": "repair-request",
+        "title": "Repair request",
+        "description": "A request for a repair in a council property"
+      }
+    ]
+  },
+  {
+    "name": "Electoral Services",
+    "id": "6",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document that can be used to prove address"
+      },
+      {
+        "id": "proof-of-nationality",
+        "title": "Proof of nationality",
+        "description": "A valid document that can be used to prove nationality"
+      }
+    ]
   }
 ]

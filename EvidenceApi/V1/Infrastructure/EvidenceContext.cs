@@ -13,6 +13,7 @@ namespace EvidenceApi.V1.Infrastructure
         {
         }
 
+        public DbSet<AuditEvent> AuditEvents { get; set; }
         public DbSet<EvidenceRequest> EvidenceRequests { get; set; }
         public DbSet<Resident> Residents { get; set; }
         public DbSet<Communication> Communications { get; set; }
@@ -27,7 +28,7 @@ namespace EvidenceApi.V1.Infrastructure
             foreach (var entityEntry in entries)
             {
                 var entity = ((IEntity) entityEntry.Entity);
-                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.Now;
+                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.UtcNow;
                 if (entity.Id == default) entity.Id = Guid.NewGuid();
             }
 

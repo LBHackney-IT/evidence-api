@@ -7,11 +7,11 @@ using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class FindResidentByIDUseCase : IFindResidentByIDUseCase
+    public class FindResidentByIdUseCase : IFindResidentByIdUseCase
     {
         private readonly IResidentsGateway _residentsGateway;
 
-        public FindResidentByIDUseCase(IResidentsGateway residentsGateway)
+        public FindResidentByIdUseCase(IResidentsGateway residentsGateway)
         {
             _residentsGateway = residentsGateway;
         }

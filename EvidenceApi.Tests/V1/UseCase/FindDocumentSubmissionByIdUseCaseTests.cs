@@ -17,6 +17,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private FindDocumentSubmissionByIdUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
+        private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway;
         private Mock<IDocumentsApiGateway> _documentsApiGateway;
         private readonly IFixture _fixture = new Fixture();
 
@@ -35,10 +36,12 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
+            _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
             _documentsApiGateway = new Mock<IDocumentsApiGateway>();
             _classUnderTest = new FindDocumentSubmissionByIdUseCase(
                 _evidenceGateway.Object,
                 _documentTypesGateway.Object,
+                _staffSelectedDocumentTypeGateway.Object,
                 _documentsApiGateway.Object
             );
         }
@@ -53,6 +56,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.RejectionReason.Should().Be(_found.RejectionReason);
             result.State.Should().Be(_found.State.ToString().ToUpper());
             result.DocumentType.Should().Be(_documentType);
+            result.StaffSelectedDocumentType.Should().Be(_documentType);
             result.Document.Should().NotBeNull();
         }
 
@@ -77,23 +81,39 @@ namespace EvidenceApi.Tests.V1.UseCase
             testDelegate.Should().Throw<NotFoundException>().WithMessage($"Cannot find document submission with ID: {id}");
         }
 
+        [Test]
+        public void ThrowsAnErrorWhenClaimIsNotFound()
+        {
+            // Arrange
+            SetupMocks();
+            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Throws(new DocumentsApiException("doh!"));
+
+            // Act
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(_documentSubmissionId1).ConfigureAwait(true);
+
+            // Assert
+            testDelegate.Should().Throw<BadRequestException>().WithMessage($"Issue with DocumentsApi so cannot return DocumentSubmissionResponse: doh!");
+        }
+
         private void SetupMocks()
         {
             _documentType = _fixture.Create<DocumentType>();
             _claim1 = _fixture.Create<Task<Claim>>();
             _claim2 = _fixture.Create<Task<Claim>>();
 
-            _found = TestDataHelper.DocumentSubmission();
+            _found = TestDataHelper.DocumentSubmission(true);
             _found.Id = _documentSubmissionId1;
             _found.ClaimId = _claimId1;
 
-            _found2 = TestDataHelper.DocumentSubmission();
+            _found2 = TestDataHelper.DocumentSubmission(true);
             _found2.Id = _documentSubmissionId2;
             _found2.ClaimId = _claimId2;
             _claim2.Result.Document = null;
 
-
-            _documentTypesGateway.Setup(x => x.GetDocumentTypeById(It.IsAny<string>())).Returns(_documentType);
+            _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(_found.EvidenceRequest);
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found2.EvidenceRequestId)).Returns(_found2.EvidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId1)).Returns(_found);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(_documentSubmissionId2)).Returns(_found2);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);

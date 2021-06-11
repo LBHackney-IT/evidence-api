@@ -11,6 +11,7 @@ namespace EvidenceApi.V1.Domain
         public string UserCreatedBy { get; set; }
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
+        public DateTime ValidUntil { get; set; }
     }
 
     public class Document

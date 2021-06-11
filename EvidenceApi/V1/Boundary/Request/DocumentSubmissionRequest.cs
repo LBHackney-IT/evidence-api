@@ -1,6 +1,3 @@
-using EvidenceApi.V1.Domain;
-using EvidenceApi.V1.Domain.Enums;
-
 namespace EvidenceApi.V1.Boundary.Request
 {
     public class DocumentSubmissionRequest

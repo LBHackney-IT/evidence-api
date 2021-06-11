@@ -15,8 +15,6 @@ namespace EvidenceApi.Tests.V1.Factories
         [Test]
         public void CanMapAnEvidenceRequestDomainObjectToAResponseObject()
         {
-            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
-
             var domain = TestDataHelper.EvidenceRequest();
             domain.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
 
@@ -25,11 +23,11 @@ namespace EvidenceApi.Tests.V1.Factories
 
             var response = domain.ToResponse(resident, documentTypes);
 
-            response.ServiceRequestedBy.Should().Be(response.ServiceRequestedBy);
+            response.Team.Should().Be(response.Team);
             response.Reason.Should().Be(response.Reason);
             response.DocumentTypes.Should().BeEquivalentTo(documentTypes);
             response.DeliveryMethods.Should().ContainSingle(x => x == "EMAIL");
-            response.Resident.Should().BeEquivalentTo(resident.ToResponse());
+            response.Resident.Should().BeEquivalentTo(resident.ToResponse(domain.ResidentReferenceId));
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
         }
@@ -54,7 +52,7 @@ namespace EvidenceApi.Tests.V1.Factories
             var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType, s3UploadPolicy);
+            var response = domain.ToResponse(documentType, null, s3UploadPolicy);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);

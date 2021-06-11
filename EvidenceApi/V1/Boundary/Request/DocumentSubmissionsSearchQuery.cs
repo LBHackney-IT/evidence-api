@@ -4,7 +4,7 @@ namespace EvidenceApi.V1.Boundary.Request
 {
     public class DocumentSubmissionSearchQuery
     {
-        public string ServiceRequestedBy { get; set; }
+        public string Team { get; set; }
         public Guid ResidentId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
 using EvidenceApi.V1.Boundary.Request;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EvidenceApi.V1.Domain;
 using System.Net.Http.Headers;
+using EvidenceApi.V1.Boundary.Response.Exceptions;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -15,6 +17,7 @@ namespace EvidenceApi.V1.Gateways
     {
         private readonly HttpClient _client;
         private readonly AppOptions _options;
+
         public DocumentsApiGateway(HttpClient httpClient, AppOptions options)
         {
             _client = httpClient;
@@ -22,15 +25,36 @@ namespace EvidenceApi.V1.Gateways
 
             _client.BaseAddress = _options.DocumentsApiUrl;
         }
+
         public async Task<Claim> CreateClaim(ClaimRequest request)
         {
 
             var uri = new Uri("api/v1/claims", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
 
-            var jsonString = SerializeBody(request);
+            var jsonString = SerializeClaimRequest(request);
 
             var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.Created)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
+
+            return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
+        }
+
+        public async Task<Claim> UpdateClaim(Guid id, ClaimUpdateRequest request)
+        {
+            var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPatchClaimsToken);
+
+            var jsonString = SerializeClaimUpdateRequest(request);
+
+            var response = await _client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
 
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
@@ -40,6 +64,10 @@ namespace EvidenceApi.V1.Gateways
             var uri = new Uri($"api/v1/documents/{id}/upload_policies", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
             var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.Created)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
         }
 
@@ -48,10 +76,20 @@ namespace EvidenceApi.V1.Gateways
             var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
             var response = await _client.GetAsync(uri).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
-        private static StringContent SerializeBody(ClaimRequest request)
+        private static StringContent SerializeClaimRequest(ClaimRequest request)
+        {
+            var body = JsonConvert.SerializeObject(request);
+            return new StringContent(body, Encoding.UTF8, "application/json");
+        }
+
+        private static StringContent SerializeClaimUpdateRequest(ClaimUpdateRequest request)
         {
             var body = JsonConvert.SerializeObject(request);
             return new StringContent(body, Encoding.UTF8, "application/json");

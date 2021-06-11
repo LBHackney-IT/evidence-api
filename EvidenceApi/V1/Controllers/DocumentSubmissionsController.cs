@@ -19,10 +19,11 @@ namespace EvidenceApi.V1.Controllers
         private readonly IFindDocumentSubmissionsByResidentIdUseCase _findDocumentSubmissionsByResidentIdUseCase;
 
         public DocumentSubmissionsController(
+            ICreateAuditUseCase createAuditUseCase,
             IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase,
             IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase,
             IFindDocumentSubmissionsByResidentIdUseCase findDocumentSubmissionsByResidentIdUseCase
-        )
+        ) : base(createAuditUseCase)
         {
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
             _findDocumentSubmissionByIdUseCase = findDocumentSubmissionByIdUseCase;
@@ -37,11 +38,11 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Document submission cannot be found</response>
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult UpdateDocumentSubmissionState([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionRequest request)
+        public async Task<IActionResult> UpdateDocumentSubmissionState([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionUpdateRequest request)
         {
             try
             {
-                var result = _updateDocumentSubmissionStateUseCase.Execute(id, request);
+                var result = await _updateDocumentSubmissionStateUseCase.ExecuteAsync(id, request).ConfigureAwait(true);
                 return Ok(result);
             }
             catch (BadRequestException ex)
@@ -71,6 +72,10 @@ namespace EvidenceApi.V1.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

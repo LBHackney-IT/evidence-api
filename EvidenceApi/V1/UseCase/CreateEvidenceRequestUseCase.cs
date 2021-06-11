@@ -18,19 +18,22 @@ namespace EvidenceApi.V1.UseCase
         private readonly IResidentsGateway _residentsGateway;
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly INotifyGateway _notifyGateway;
+        private readonly IFindOrCreateResidentReferenceIdUseCase _findOrCreateResidentReferenceIdUseCase;
 
         public CreateEvidenceRequestUseCase(
             IEvidenceRequestValidator validator,
             IDocumentTypeGateway documentTypeGateway,
             IResidentsGateway residentsGateway,
             IEvidenceGateway evidenceGateway,
-            INotifyGateway notifyGateway)
+            INotifyGateway notifyGateway,
+            IFindOrCreateResidentReferenceIdUseCase findOrCreateResidentReferenceIdUseCase)
         {
             _validator = validator;
             _documentTypeGateway = documentTypeGateway;
             _residentsGateway = residentsGateway;
             _evidenceGateway = evidenceGateway;
             _notifyGateway = notifyGateway;
+            _findOrCreateResidentReferenceIdUseCase = findOrCreateResidentReferenceIdUseCase;
         }
 
         public EvidenceRequestResponse Execute(EvidenceRequestRequest request)
@@ -42,8 +45,10 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
-            var documentTypes = request.DocumentTypes.ConvertAll(FindDocumentType);
-            var evidenceRequest = BuildEvidenceRequest(request, resident.Id);
+            var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.Team, dt));
+
+            var residentReferenceId = _findOrCreateResidentReferenceIdUseCase.Execute(resident);
+            var evidenceRequest = BuildEvidenceRequest(request, resident.Id, residentReferenceId);
             var created = _evidenceGateway.CreateEvidenceRequest(evidenceRequest);
 
             try
@@ -60,16 +65,17 @@ namespace EvidenceApi.V1.UseCase
             return created.ToResponse(resident, documentTypes);
         }
 
-        private EvidenceRequest BuildEvidenceRequest(EvidenceRequestRequest request, Guid residentId)
+        private EvidenceRequest BuildEvidenceRequest(EvidenceRequestRequest request, Guid residentId, string residentReferenceId)
         {
             return new EvidenceRequest
             {
                 DocumentTypes = request.DocumentTypes,
                 DeliveryMethods = request.DeliveryMethods.ConvertAll(ParseDeliveryMethod),
-                ServiceRequestedBy = request.ServiceRequestedBy,
+                Team = request.Team,
                 Reason = request.Reason,
                 UserRequestedBy = request.UserRequestedBy,
-                ResidentId = residentId
+                ResidentId = residentId,
+                ResidentReferenceId = residentReferenceId
             };
         }
 
@@ -81,11 +87,6 @@ namespace EvidenceApi.V1.UseCase
                 Name = request.Name,
                 PhoneNumber = request.PhoneNumber
             };
-        }
-
-        private DocumentType FindDocumentType(string documentTypeId)
-        {
-            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
         }
 
         private DeliveryMethod ParseDeliveryMethod(string deliveryMethod)

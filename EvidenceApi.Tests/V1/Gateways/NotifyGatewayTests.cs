@@ -21,6 +21,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         private readonly NotifyGateway _classUnderTest;
         private readonly Mock<INotificationClient> _notifyClient;
         private readonly Mock<IEvidenceGateway> _evidenceGateway;
+        private readonly Mock<IDocumentTypeGateway> _documentTypeGateway;
         private readonly AppOptions _options;
 
         public NotifyGatewayTests()
@@ -28,7 +29,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             _options = _fixture.Create<AppOptions>();
             _notifyClient = new Mock<INotificationClient>();
             _evidenceGateway = new Mock<IEvidenceGateway>();
-            _classUnderTest = new NotifyGateway(_notifyClient.Object, _evidenceGateway.Object, _options);
+            _documentTypeGateway = new Mock<IDocumentTypeGateway>();
+            _classUnderTest = new NotifyGateway(_notifyClient.Object, _evidenceGateway.Object, _documentTypeGateway.Object, _options);
         }
 
         [Test]
@@ -86,6 +88,66 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void CanSendAnUpdatedDocumentSubmissionSms()
+        {
+            SetupMocks();
+            var deliveryMethod = DeliveryMethod.Sms;
+            var communicationReason = CommunicationReason.EvidenceRejected;
+            var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REJECTED_SMS";
+            var resident = _fixture.Create<Resident>();
+
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            documentSubmission.EvidenceRequest.ResidentId = resident.Id;
+            documentSubmission.RejectionReason = "This is the rejection reason";
+
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"resident_name", resident.Name},
+                {"evidence_item", "Passport"},
+                {"rejection_reason", documentSubmission.RejectionReason},
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{documentSubmission.EvidenceRequest.Id}"}
+            };
+
+            var response = _fixture.Create<SmsNotificationResponse>();
+            _notifyClient.SetReturnsDefault(response);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, documentSubmission, resident);
+            _notifyClient.Verify(x =>
+                x.SendSms(resident.PhoneNumber, expectedTemplateId,
+                    It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+        }
+
+        [Test]
+        public void CanSendAnUpdatedDocumentSubmissionEmail()
+        {
+            SetupMocks();
+            var deliveryMethod = DeliveryMethod.Email;
+            var communicationReason = CommunicationReason.EvidenceRejected;
+            var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL";
+            var resident = _fixture.Create<Resident>();
+
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            documentSubmission.EvidenceRequest.ResidentId = resident.Id;
+            documentSubmission.RejectionReason = "This is the rejection reason";
+
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"resident_name", resident.Name},
+                {"evidence_item", "Passport"},
+                {"rejection_reason", documentSubmission.RejectionReason},
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{documentSubmission.EvidenceRequest.Id}"}
+            };
+
+            var response = _fixture.Create<EmailNotificationResponse>();
+            _notifyClient.SetReturnsDefault(response);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, documentSubmission, resident);
+            _notifyClient.Verify(x =>
+                x.SendEmail(resident.Email, expectedTemplateId,
+                    It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+        }
+
+        [Test]
         public void CreatesACommunication()
         {
             var deliveryMethod = DeliveryMethod.Email;
@@ -116,5 +178,10 @@ namespace EvidenceApi.Tests.V1.Gateways
             return a.Keys.All(k => b[k].Equals(a[k]));
         }
 
+        private void SetupMocks()
+        {
+            _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(TestDataHelper.DocumentType("passport-scan"));
+        }
     }
 }

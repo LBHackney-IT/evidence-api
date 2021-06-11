@@ -13,16 +13,19 @@ namespace EvidenceApi.V1.UseCase
     {
         private IEvidenceGateway _evidenceGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private IDocumentsApiGateway _documentsApiGateway;
 
         public FindDocumentSubmissionByIdUseCase(
             IEvidenceGateway evidenceGateway,
             IDocumentTypeGateway documentTypeGateway,
+            IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway,
             IDocumentsApiGateway documentsApiGateway
         )
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
+            _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
             _documentsApiGateway = documentsApiGateway;
         }
 
@@ -35,14 +38,29 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document submission with ID: {id}");
             }
 
-            var documentType = FindDocumentType(found.DocumentTypeId);
-            var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
-            return found.ToResponse(documentType, null, claim.Document);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(found.EvidenceRequestId);
+            var documentType = FindDocumentType(evidenceRequest.Team, found.DocumentTypeId);
+            var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceRequest.Team,
+                found.StaffSelectedDocumentTypeId);
+            try
+            {
+                var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
+                return found.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document);
+            }
+            catch (DocumentsApiException ex)
+            {
+                throw new BadRequestException($"Issue with DocumentsApi so cannot return DocumentSubmissionResponse: {ex.Message}");
+            }
         }
 
-        private DocumentType FindDocumentType(string documentTypeId)
+        private DocumentType FindDocumentType(string teamName, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeById(documentTypeId);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, documentTypeId);
+        }
+
+        private DocumentType FindStaffSelectedDocumentType(string teamName, string staffSelectedDocumentTypeId)
+        {
+            return _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(teamName, staffSelectedDocumentTypeId);
         }
     }
 }

@@ -7,12 +7,16 @@ namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface IEvidenceGateway
     {
+        AuditEvent CreateAuditEvent(AuditEvent request);
         EvidenceRequest CreateEvidenceRequest(EvidenceRequest request);
         EvidenceRequest FindEvidenceRequest(Guid id);
         Communication CreateCommunication(Communication request);
         DocumentSubmission CreateDocumentSubmission(DocumentSubmission request);
         DocumentSubmission FindDocumentSubmission(Guid id);
         List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request);
-        List<DocumentSubmission> FindDocumentSubmissionByEvidenceRequestId(Guid id);
+        List<DocumentSubmission> FindDocumentSubmissionsByEvidenceRequestId(Guid id);
+        List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id);
+        List<EvidenceRequest> GetAll();
+        List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request);
     }
 }

@@ -8,9 +8,6 @@ executors:
   docker-python:
     docker:
       - image: circleci/python:3.7
-  docker-terraform:
-    docker:
-      - image: "hashicorp/terraform:light"
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:3.1
@@ -37,25 +34,6 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  terraform-init-then-apply:
-    description: "Initializes and applies terraform configuration"
-    parameters:
-      environment:
-        type: string
-    steps:
-      - *attach_workspace
-      - checkout
-      - run:
-          command: |
-            cd ./terraform/<<parameters.environment>>/
-            terraform get -update=true
-            terraform init
-          name: get and init
-      - run:
-          name: apply
-          command: |
-            cd ./terraform/<<parameters.environment>>/
-            terraform apply -auto-approve
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -114,11 +92,11 @@ commands:
       - run:
           name: SSH into RDS and migrate database
           command: |
-            aws ssm get-parameter --name "/platform-apis-jump-box-pem-key" --output text --query Parameter.Value > ./private-key.pem
+            aws ssm get-parameter --name "/document-evidence-store-<<parameters.stage>>-jump-box-pem-key" --output text --query Parameter.Value > ./private-key.pem
             chmod 400 ./private-key.pem
             HOST=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-hostname --query Parameter.Value)
             PORT=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-port --query Parameter.Value)
-            INSTANCE_NAME=$(aws ssm get-parameter --name /platform-apis-jump-box-instance-name --query Parameter.Value)
+            INSTANCE_NAME=$(aws ssm get-parameter --name /document-evidence-store-<<parameters.stage>>-jump-box-instance-name --query Parameter.Value)
             ssh -4 -i ./private-key.pem -Nf -M -L ${PORT//\"}:${HOST//\"}:${PORT//\"} -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o ProxyCommand="aws ssm start-session --target %h --document AWS-StartSSHSession --parameters portNumber=%p --region=eu-west-2" ec2-user@${INSTANCE_NAME//\"}
             PASSWORD=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-password --query Parameter.Value --with-decryption)
             USERNAME=$(aws ssm get-parameter --name /evidence-api/<<parameters.stage>>/postgres-username --query Parameter.Value)
@@ -162,18 +140,6 @@ jobs:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
 
-  terraform-init-and-apply-to-staging:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "staging"
-
-  terraform-init-and-apply-to-production:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: "production"
-
   deploy-to-staging:
     executor: docker-dotnet
     steps:
@@ -207,22 +173,19 @@ workflows:
 
       # Staging deploy
       - assume-role-staging:
-          context: api-assume-role-staging-context
+          context: api-assume-role-document-evidence-store-staging-context
           requires:
             - build-and-test
           filters:
             branches:
               only:
                 - main
-      - terraform-init-and-apply-to-staging:
-          requires:
-            - assume-role-staging
       - migrate-database-staging:
           requires:
-            - terraform-init-and-apply-to-staging
+            - assume-role-staging
       - deploy-to-staging:
           requires:
-            - assume-role-staging
+            - migrate-database-staging
 
       # Production deploy
       - permit-production-release:
@@ -230,15 +193,12 @@ workflows:
           requires:
             - deploy-to-staging
       - assume-role-production:
-          context: api-assume-role-production-context
+          context: api-assume-role-document-evidence-store-production-context
           requires:
             - permit-production-release
-      - terraform-init-and-apply-to-production:
-          requires:
-            - assume-role-production
       - migrate-database-production:
           requires:
-            - terraform-init-and-apply-to-production
+            - assume-role-production
       - deploy-to-production:
           requires:
-            - terraform-init-and-apply-to-production
+            - migrate-database-production

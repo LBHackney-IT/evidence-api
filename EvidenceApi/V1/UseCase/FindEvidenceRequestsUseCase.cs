@@ -27,15 +27,15 @@ namespace EvidenceApi.V1.UseCase
         {
             var found = _evidenceGateway.GetEvidenceRequests(request);
 
-            if (String.IsNullOrEmpty(request.ServiceRequestedBy))
+            if (String.IsNullOrEmpty(request.Team))
             {
-                throw new BadRequestException("Service requested by is null or empty");
+                throw new BadRequestException("Team is null or empty");
             }
 
             return found.ConvertAll<EvidenceRequestResponse>(er =>
             {
                 var resident = _residentsGateway.FindResident(er.ResidentId);
-                var documentTypes = er.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeById(dt));
+                var documentTypes = er.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.Team, dt));
                 return er.ToResponse(resident, documentTypes);
             });
         }

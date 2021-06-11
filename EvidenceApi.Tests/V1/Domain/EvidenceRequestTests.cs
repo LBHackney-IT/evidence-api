@@ -14,11 +14,11 @@ namespace EvidenceApi.Tests.V1.Domain
         public void EvidenceRequestHaveCorrectAttributes()
         {
             var id = Guid.NewGuid();
-            var createdAt = DateTime.Now;
+            var createdAt = DateTime.UtcNow;
             var residentId = Guid.NewGuid();
             var deliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Sms };
             var documentTypes = new List<string>() { "passport" };
-            var serviceRequestedBy = "some-service";
+            var team = "some-service";
             var reason = "some-reason";
             var userRequestedBy = "some-user";
             var communications = new List<Communication>() { TestDataHelper.Communication() };
@@ -31,7 +31,7 @@ namespace EvidenceApi.Tests.V1.Domain
                 ResidentId = residentId,
                 DeliveryMethods = deliveryMethods,
                 DocumentTypes = documentTypes,
-                ServiceRequestedBy = serviceRequestedBy,
+                Team = team,
                 Reason = reason,
                 UserRequestedBy = userRequestedBy,
                 Communications = communications,
@@ -43,7 +43,7 @@ namespace EvidenceApi.Tests.V1.Domain
             evidenceRequest.ResidentId.Should().Be(residentId);
             evidenceRequest.DeliveryMethods.Should().BeEquivalentTo(deliveryMethods);
             evidenceRequest.DocumentTypes.Should().BeEquivalentTo(documentTypes);
-            evidenceRequest.ServiceRequestedBy.Should().Be(serviceRequestedBy);
+            evidenceRequest.Team.Should().Be(team);
             evidenceRequest.Reason.Should().Be(reason);
             evidenceRequest.UserRequestedBy.Should().Be(userRequestedBy);
             evidenceRequest.Communications.Should().BeEquivalentTo(communications);

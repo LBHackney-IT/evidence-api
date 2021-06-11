@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using EvidenceApi.V1.UseCase;
 using Microsoft.AspNetCore.Mvc;
+using EvidenceApi.V1.UseCase.Interfaces;
 
 namespace EvidenceApi.V1.Controllers
 {
@@ -9,6 +10,10 @@ namespace EvidenceApi.V1.Controllers
     [Produces("application/json")]
     public class HealthCheckController : BaseController
     {
+        public HealthCheckController(ICreateAuditUseCase createAuditUseCase) : base(createAuditUseCase)
+        {
+        }
+
         [HttpGet]
         [Route("ping")]
         [ProducesResponseType(typeof(Dictionary<string, bool>), 200)]
