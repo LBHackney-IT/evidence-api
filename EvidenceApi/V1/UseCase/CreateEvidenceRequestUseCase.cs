@@ -8,6 +8,7 @@ using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Notify.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -19,6 +20,7 @@ namespace EvidenceApi.V1.UseCase
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly INotifyGateway _notifyGateway;
         private readonly IFindOrCreateResidentReferenceIdUseCase _findOrCreateResidentReferenceIdUseCase;
+        private readonly ILogger<CreateEvidenceRequestUseCase> _logger;
 
         public CreateEvidenceRequestUseCase(
             IEvidenceRequestValidator validator,
@@ -26,7 +28,8 @@ namespace EvidenceApi.V1.UseCase
             IResidentsGateway residentsGateway,
             IEvidenceGateway evidenceGateway,
             INotifyGateway notifyGateway,
-            IFindOrCreateResidentReferenceIdUseCase findOrCreateResidentReferenceIdUseCase)
+            IFindOrCreateResidentReferenceIdUseCase findOrCreateResidentReferenceIdUseCase,
+            ILogger<CreateEvidenceRequestUseCase> logger)
         {
             _validator = validator;
             _documentTypeGateway = documentTypeGateway;
@@ -34,6 +37,7 @@ namespace EvidenceApi.V1.UseCase
             _evidenceGateway = evidenceGateway;
             _notifyGateway = notifyGateway;
             _findOrCreateResidentReferenceIdUseCase = findOrCreateResidentReferenceIdUseCase;
+            _logger = logger;
         }
 
         public EvidenceRequestResponse Execute(EvidenceRequestRequest request)
@@ -58,7 +62,7 @@ namespace EvidenceApi.V1.UseCase
             }
             catch (NotifyClientException ex)
             {
-                Console.Error.WriteLine(ex);
+                _logger.LogError(ex, ex.Message);
                 throw new NotificationException(created);
             }
 
