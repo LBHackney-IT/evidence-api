@@ -13,6 +13,7 @@ using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.UseCase.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -26,6 +27,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
         private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
+        private Mock<ILogger<UpdateDocumentSubmissionStateUseCase>> _logger;
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
         private Resident _resident;
@@ -35,6 +37,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
+            _logger = new Mock<ILogger<UpdateDocumentSubmissionStateUseCase>>();
             _classUnderTest = new UpdateDocumentSubmissionStateUseCase(
                 _evidenceGateway.Object,
                 _documentTypeGateway.Object,
@@ -42,7 +45,8 @@ namespace EvidenceApi.Tests.V1.UseCase
                 _residentsGateway.Object,
                 _documentsApiGateway.Object,
                 _staffSelectedDocumentTypeGateway.Object,
-                _updateEvidenceRequestStateUseCase.Object);
+                _updateEvidenceRequestStateUseCase.Object,
+                _logger.Object);
         }
 
         [Test]
