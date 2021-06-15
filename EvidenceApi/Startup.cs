@@ -28,17 +28,14 @@ using Microsoft.OpenApi.Models;
 using Notify.Client;
 using Notify.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi
 {
     public class Startup
     {
-        private readonly ILogger<Startup> _logger;
-        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _logger = logger;
 
             AWSSDKHandler.RegisterXRayForAllServices();
         }
@@ -122,7 +119,7 @@ namespace EvidenceApi
             var success = DotEnv.AutoConfig(5);
             if (success)
             {
-                _logger.LogInformation("LOADED ENVIRONMENT FROM .env");
+                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
             }
 
             var options = AppOptions.FromEnv();
