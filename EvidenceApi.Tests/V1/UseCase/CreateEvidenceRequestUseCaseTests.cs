@@ -14,6 +14,7 @@ using FluentAssertions;
 using FluentValidation.Results;
 using Moq;
 using NUnit.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -26,6 +27,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IResidentsGateway> _residentsGateway;
         private Mock<INotifyGateway> _notifyGateway;
         private Mock<IFindOrCreateResidentReferenceIdUseCase> _createResidentReferenceIdUseCase;
+        private Mock<ILogger<CreateEvidenceRequestUseCase>> _logger;
         private readonly IFixture _fixture = new Fixture();
 
         private Resident _resident;
@@ -42,9 +44,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _residentsGateway = new Mock<IResidentsGateway>();
             _notifyGateway = new Mock<INotifyGateway>();
             _createResidentReferenceIdUseCase = new Mock<IFindOrCreateResidentReferenceIdUseCase>();
+            _logger = new Mock<ILogger<CreateEvidenceRequestUseCase>>();
             _classUnderTest = new CreateEvidenceRequestUseCase(_validator.Object, _documentTypesGateway.Object,
-                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object, _createResidentReferenceIdUseCase.Object);
-
+                _residentsGateway.Object, _evidenceGateway.Object, _notifyGateway.Object, _createResidentReferenceIdUseCase.Object, _logger.Object);
         }
 
         [Test]

@@ -28,14 +28,17 @@ using Microsoft.OpenApi.Models;
 using Notify.Client;
 using Notify.Interfaces;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILogger<Startup> _logger;
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _logger = logger;
 
             AWSSDKHandler.RegisterXRayForAllServices();
         }
@@ -45,7 +48,7 @@ namespace EvidenceApi
         private const string ApiName = "Evidence API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public static void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddMvc()
@@ -119,7 +122,7 @@ namespace EvidenceApi
             var success = DotEnv.AutoConfig(5);
             if (success)
             {
-                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
+                _logger.LogInformation("LOADED ENVIRONMENT FROM .env");
             }
 
             var options = AppOptions.FromEnv();
