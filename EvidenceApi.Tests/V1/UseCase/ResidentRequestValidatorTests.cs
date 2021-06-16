@@ -39,20 +39,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         #region Email and Phone Number Validations
 
         [Test]
-        public void ValidatesEmail()
-        {
-            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.Email, _request);
-        }
-
-        [Test]
-        public void IsInvalidWhenEmailIsNotAnEmail()
-        {
-            _request.Email = "not a valid email";
-            _classUnderTest.ShouldHaveValidationErrorFor(x => x.Email, _request)
-                .WithErrorMessage("'Email' is not a valid email address.");
-        }
-
-        [Test]
         public void IsInvalidWhenEmailAndPhoneNumberAreEmpty()
         {
             _request.Email = "";
