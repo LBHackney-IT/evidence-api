@@ -45,6 +45,7 @@ namespace EvidenceApi.V1.UseCase
             var validation = _validator.Validate(request);
             if (!validation.IsValid)
             {
+                _logger.LogError(validation.ToString());
                 throw new BadRequestException(validation);
             }
 
