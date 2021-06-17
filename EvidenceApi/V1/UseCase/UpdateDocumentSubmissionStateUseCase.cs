@@ -131,7 +131,7 @@ namespace EvidenceApi.V1.UseCase
             catch (NotifyClientException ex)
             {
                 _logger.LogError(ex, ex.Message);
-                throw new NotificationException(documentSubmission.EvidenceRequest);
+                throw new NotificationException(ex.Message);
             }
         }
 
