@@ -45,14 +45,13 @@ namespace EvidenceApi.V1.UseCase
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
                 var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
-                var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
 
                 var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
                 var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
                 var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
 
-                return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy);
+                return createdDocumentSubmission.ToResponse(documentType);
             }
             catch (DocumentsApiException ex)
             {

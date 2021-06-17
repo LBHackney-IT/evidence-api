@@ -13,7 +13,6 @@ namespace EvidenceApi.V1.Boundary.Response
         public string State { get; set; }
         public DocumentType DocumentType { get; set; }
         public DocumentType? StaffSelectedDocumentType { get; set; }
-        public S3UploadPolicy? UploadPolicy { get; set; }
         public Document? Document { get; set; }
     }
 }

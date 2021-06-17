@@ -83,42 +83,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenCannotCreateUploadPolicy()
-        {
-            // Arrange
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-
-            SetupEvidenceGateway(evidenceRequest);
-
-            var claim = _fixture.Create<Claim>();
-            _documentsApiGateway
-                .Setup(x =>
-                    x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
-                        cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
-                        cr.ApiCreatedBy == "evidence_api"
-                    ))
-                )
-                .ReturnsAsync(claim);
-
-            _documentsApiGateway
-                .Setup(x =>
-                    x.CreateUploadPolicy(It.Is<Guid>(id =>
-                        id == claim.Document.Id))
-                )
-                .Throws(new DocumentsApiException("doh!"));
-
-            // Act
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-
-            // Assert
-            testDelegate.Should().Throw<BadRequestException>();
-        }
-
-        [Test]
         public async Task ReturnsTheCreatedDocumentSubmissionWhenRequestIsValid()
         {
             _documentType = _fixture.Create<DocumentType>();
@@ -127,15 +91,13 @@ namespace EvidenceApi.Tests.V1.UseCase
             var evidenceRequest = TestDataHelper.EvidenceRequest();
 
             var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
             var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
-            result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
             result.Id.Should().Be(_created.Id);
             result.ClaimId.Should().Be(_created.ClaimId);
             result.RejectionReason.Should().Be(_created.RejectionReason);
@@ -156,10 +118,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
             SetupDocumentTypeGateway(_request.DocumentType);
 
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
@@ -198,7 +159,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             return submission;
         }
 
-        private void SetupDocumentsApiGateway(EvidenceRequest evidenceRequest, Claim claim, S3UploadPolicy s3UploadPolicy)
+        private void SetupDocumentsApiGateway(EvidenceRequest evidenceRequest, Claim claim)
         {
             _documentsApiGateway
                 .Setup(x =>
@@ -209,13 +170,6 @@ namespace EvidenceApi.Tests.V1.UseCase
                     ))
                 )
                 .ReturnsAsync(claim);
-
-            _documentsApiGateway
-                .Setup(x =>
-                    x.CreateUploadPolicy(It.Is<Guid>(id =>
-                        id == claim.Document.Id))
-                )
-                .ReturnsAsync(s3UploadPolicy);
         }
 
         private void SetupEvidenceGateway(EvidenceRequest evidenceRequest)

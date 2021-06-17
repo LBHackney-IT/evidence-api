@@ -54,7 +54,7 @@ namespace EvidenceApi.V1.UseCase
                     }
                     else
                     {
-                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim.Document));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, claim.Document));
                     }
                 }
             }

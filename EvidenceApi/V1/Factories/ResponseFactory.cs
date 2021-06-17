@@ -38,7 +38,6 @@ namespace EvidenceApi.V1.Factories
             this DocumentSubmission domain,
             DocumentType documentType,
             DocumentType? staffSelectedDocumentType = null,
-            S3UploadPolicy? s3UploadPolicy = null,
             Document? document = null
         )
         {
@@ -51,7 +50,6 @@ namespace EvidenceApi.V1.Factories
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
-                UploadPolicy = s3UploadPolicy,
                 Document = document
             };
         }
