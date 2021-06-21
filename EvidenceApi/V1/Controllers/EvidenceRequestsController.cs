@@ -53,7 +53,7 @@ namespace EvidenceApi.V1.Controllers
             }
             catch (NotificationException ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(400, ex.Message);
             }
         }
 
