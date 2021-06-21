@@ -120,8 +120,6 @@ namespace EvidenceApi.V1.UseCase
                     throw new NotificationException(
                         "There was an error sending the request by " +
                         String.Join(", ", exceptions).ToLower() +
-                        ". The request was still sent by " +
-                        String.Join(", ", successfulDeliveryMethods).ToLower() +
                         "."
                     );
                 }
