@@ -7,6 +7,6 @@ namespace EvidenceApi.V1.UseCase.Interfaces
 {
     public interface ICreateDocumentSubmissionUseCase
     {
-        Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request);
+        Task<DocumentSubmissionResponse> ExecuteAsync(DocumentSubmissionRequest request);
     }
 }

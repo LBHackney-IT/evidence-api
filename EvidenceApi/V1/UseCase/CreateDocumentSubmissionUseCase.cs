@@ -25,14 +25,14 @@ namespace EvidenceApi.V1.UseCase
             _documentTypeGateway = documentTypeGateway;
         }
 
-        public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
+        public async Task<DocumentSubmissionResponse> ExecuteAsync(DocumentSubmissionRequest request)
         {
             ValidateRequest(request);
 
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(evidenceRequestId);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(request.EvidenceRequestId);
             if (evidenceRequest == null)
             {
-                throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
+                throw new NotFoundException($"Cannot find evidence request with id: {request.EvidenceRequestId}");
             }
 
             if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
@@ -45,14 +45,14 @@ namespace EvidenceApi.V1.UseCase
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
                 var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
-                var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
+                await _documentsApiGateway.UploadDocument(claim.Document.Id, request).ConfigureAwait(true);
 
                 var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
                 var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
                 var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
 
-                return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy);
+                return createdDocumentSubmission.ToResponse(documentType);
             }
             catch (DocumentsApiException ex)
             {
@@ -83,7 +83,8 @@ namespace EvidenceApi.V1.UseCase
             {
                 EvidenceRequest = evidenceRequest,
                 DocumentTypeId = request.DocumentType,
-                ClaimId = claim.Id.ToString()
+                ClaimId = claim.Id.ToString(),
+                State = SubmissionState.Uploaded
             };
             return documentSubmission;
         }
@@ -93,6 +94,10 @@ namespace EvidenceApi.V1.UseCase
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");
+            }
+            if (request.Document == null)
+            {
+                throw new BadRequestException("Document is null");
             }
         }
     }
