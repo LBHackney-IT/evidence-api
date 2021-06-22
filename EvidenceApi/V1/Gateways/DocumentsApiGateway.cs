@@ -59,18 +59,6 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
-        public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
-        {
-            var uri = new Uri($"api/v1/documents/{id}/upload_policies", UriKind.Relative);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
-            var response = await _client.PostAsync(uri, null).ConfigureAwait(true);
-            if (response.StatusCode != HttpStatusCode.Created)
-            {
-                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
-            }
-            return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
-        }
-
         public async Task UploadDocument(Guid documentId, DocumentSubmissionRequest request)
         {
             var uri = new Uri($"api/v1/documents/{documentId}", UriKind.Relative);
