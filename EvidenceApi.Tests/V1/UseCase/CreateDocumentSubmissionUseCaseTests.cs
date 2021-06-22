@@ -37,20 +37,23 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.DocumentType)
+                .Without(x => x.Document)
                 .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionRequest).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>();
         }
 
         [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
-            var request = _fixture.Create<DocumentSubmissionRequest>();
+            var request = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.Document)
+                .Create();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == request.DocumentType)))
                 .Returns(() => null)
                 .Verifiable();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
             testDelegate.Should().Throw<NotFoundException>();
         }
 
@@ -58,10 +61,10 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsBadRequestExceptionWhenCannotCreateClaim()
         {
             // Arrange
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture(evidenceRequest);
 
             SetupEvidenceGateway(evidenceRequest);
 
@@ -76,7 +79,33 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Throws(new DocumentsApiException("doh!"));
 
             // Act
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
+
+            // Assert
+            testDelegate.Should().Throw<BadRequestException>();
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenCannotUploadFile()
+        {
+            // Arrange
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture(evidenceRequest);
+;
+            var claim = _fixture.Create<Claim>();
+
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
+
+            _documentsApiGateway
+                .Setup(x =>
+                    x.UploadDocument(It.IsAny<Guid>(), It.IsAny<DocumentSubmissionRequest>()))
+                .Throws(new DocumentsApiException("doh!"));
+
+            // Act
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
 
             // Assert
             testDelegate.Should().Throw<BadRequestException>();
@@ -85,10 +114,10 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public async Task ReturnsTheCreatedDocumentSubmissionWhenRequestIsValid()
         {
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture(evidenceRequest);
 
             var claim = _fixture.Create<Claim>();
 
@@ -96,7 +125,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupDocumentsApiGateway(evidenceRequest, claim);
             var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
-            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            var result = await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
 
             result.Id.Should().Be(_created.Id);
             result.ClaimId.Should().Be(_created.ClaimId);
@@ -109,10 +138,10 @@ namespace EvidenceApi.Tests.V1.UseCase
         [TestCase(SubmissionState.Rejected)]
         public void DoesNotThrowWhenInactiveDocumentSubmissionExists(SubmissionState state)
         {
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture(evidenceRequest);
             var existingDocumentSubmission =
                 new DocumentSubmission { State = state, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
@@ -123,7 +152,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupDocumentsApiGateway(evidenceRequest, claim);
             SetupDocumentTypeGateway(_request.DocumentType);
 
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
             testDelegate.Should().NotThrow();
         }
 
@@ -131,24 +160,26 @@ namespace EvidenceApi.Tests.V1.UseCase
         [TestCase(SubmissionState.Uploaded)]
         public void ThrowsBadRequestIfActiveDocumentSubmissionAlreadyExists(SubmissionState state)
         {
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture(evidenceRequest);
             var existingDocumentSubmission =
                 new DocumentSubmission { State = state, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             SetupEvidenceGateway(evidenceRequest);
 
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>();
         }
 
-        private DocumentSubmissionRequest CreateRequestFixture()
+        private DocumentSubmissionRequest CreateRequestFixture(EvidenceRequest evidenceRequest)
         {
             return _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.EvidenceRequestId, evidenceRequest.Id)
                 .With(x => x.DocumentType, _documentType.Id)
+                .Without(x => x.Document)
                 .Create();
         }
 

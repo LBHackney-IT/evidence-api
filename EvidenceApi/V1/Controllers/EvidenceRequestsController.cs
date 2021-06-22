@@ -87,12 +87,12 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Evidence request cannot be found</response>
         [HttpPost]
         [Route("{evidenceRequestId}/document_submissions")]
-        public async Task<IActionResult> CreateDocumentSubmission([FromRoute][Required] Guid evidenceRequestId, [FromBody][Required] DocumentSubmissionRequest request)
+        public async Task<IActionResult> CreateDocumentSubmission([FromForm] DocumentSubmissionRequest request)
         {
             try
             {
-                var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request).ConfigureAwait(true);
-                return Created(new Uri($"/evidence_requests/{evidenceRequestId}/document_submissions", UriKind.Relative), result);
+                var result = await _createDocumentSubmission.ExecuteAsync(request).ConfigureAwait(true);
+                return Created(new Uri($"/evidence_requests/{request.EvidenceRequestId}/document_submissions", UriKind.Relative), result);
             }
             catch (BadRequestException ex)
             {

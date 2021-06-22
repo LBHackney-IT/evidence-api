@@ -25,14 +25,14 @@ namespace EvidenceApi.V1.UseCase
             _documentTypeGateway = documentTypeGateway;
         }
 
-        public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
+        public async Task<DocumentSubmissionResponse> ExecuteAsync(DocumentSubmissionRequest request)
         {
             ValidateRequest(request);
 
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(evidenceRequestId);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(request.EvidenceRequestId);
             if (evidenceRequest == null)
             {
-                throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
+                throw new NotFoundException($"Cannot find evidence request with id: {request.EvidenceRequestId}");
             }
 
             if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
@@ -45,6 +45,7 @@ namespace EvidenceApi.V1.UseCase
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
                 var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
+                await _documentsApiGateway.UploadDocument(claim.Document.Id, request).ConfigureAwait(true);
 
                 var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
                 var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
@@ -10,6 +11,8 @@ using EvidenceApi.V1.Boundary.Request;
 using System.Threading.Tasks;
 using Moq;
 using System.Net.Http;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Moq.Contrib.HttpClient;
 
@@ -76,6 +79,25 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = await _classUnderTest.CreateUploadPolicy(id).ConfigureAwait(true);
 
             result.Should().BeEquivalentTo(expectedS3UploadPolicy);
+        }
+
+        [Test]
+        public async Task CanUploadDocumentWithValidParameters()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            DocumentSubmissionRequest documentSubmissionRequest = new DocumentSubmissionRequest();
+            IFormFile file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt");
+            documentSubmissionRequest.Document = file;
+
+            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}", request =>
+                {
+                    return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
+                })
+                .ReturnsResponse(HttpStatusCode.OK);
+
+            // Act
+            await _classUnderTest.UploadDocument(id, documentSubmissionRequest).ConfigureAwait(true);
         }
 
         [Test]
