@@ -88,7 +88,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"createdAt\":{formattedCreatedAt}," +
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
-                               $"\"state\":\"PENDING\"," +
+                               $"\"state\":\"UPLOADED\"," +
                                "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
                                "\"staffSelectedDocumentType\":null," +
                                "\"document\":null" +
