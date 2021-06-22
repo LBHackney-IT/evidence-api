@@ -93,7 +93,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentType = _fixture.Create<DocumentType>();
             _created = DocumentSubmissionFixture();
             _request = CreateRequestFixture(evidenceRequest);
-;
+
             var claim = _fixture.Create<Claim>();
 
             SetupEvidenceGateway(evidenceRequest);
