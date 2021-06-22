@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -12,6 +14,7 @@ using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -47,7 +50,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
             var request = _fixture.Build<DocumentSubmissionRequest>()
-                .Without(x => x.Document)
+                .With(x => x.Document, new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt"))
                 .Create();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == request.DocumentType)))
@@ -179,7 +182,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             return _fixture.Build<DocumentSubmissionRequest>()
                 .With(x => x.EvidenceRequestId, evidenceRequest.Id)
                 .With(x => x.DocumentType, _documentType.Id)
-                .Without(x => x.Document)
+                .With(x => x.Document, new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt"))
                 .Create();
         }
 
