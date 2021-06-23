@@ -185,7 +185,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var formDataContent = new MultipartFormDataContent();
             formDataContent.Headers.ContentType.MediaType = "multipart/form-data";
             formDataContent.Add(new StringContent("proof-of-id"), "documentType");
-            formDataContent.Add(new StreamContent(file.OpenReadStream()), "document", file.FileName);
+            var streamContent = new StreamContent(file.OpenReadStream());
+            streamContent.Headers.Add("Content-Type", "application/txt");
+            formDataContent.Add(streamContent, "document", file.FileName);
             return formDataContent;
         }
 

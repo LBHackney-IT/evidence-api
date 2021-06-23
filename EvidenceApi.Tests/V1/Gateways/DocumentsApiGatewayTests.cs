@@ -87,7 +87,12 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Arrange
             Guid id = Guid.NewGuid();
             DocumentSubmissionRequest documentSubmissionRequest = new DocumentSubmissionRequest();
-            IFormFile file = new FormFile(new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file")), 0, 0, "Data", "dummy.txt");
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file"));
+            var file = new FormFile(stream, 0, stream.Length, "Data", "dummy.txt")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/txt"
+            };
             documentSubmissionRequest.Document = file;
 
             _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}", request =>

@@ -79,7 +79,9 @@ namespace EvidenceApi.V1.Gateways
             var document = request.Document;
             formDataContent.Headers.ContentType.MediaType = "multipart/form-data";
             formDataContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("document");
-            formDataContent.Add(new StreamContent(document.OpenReadStream()), document.Name, document.FileName);
+            var documentStreamContent = new StreamContent(document.OpenReadStream());
+            documentStreamContent.Headers.Add("Content-Type", document.ContentType);
+            formDataContent.Add(documentStreamContent, document.Name, document.FileName);
             var response = await _client.PostAsync(uri, formDataContent).ConfigureAwait(true);
             if (response.StatusCode != HttpStatusCode.OK)
             {
