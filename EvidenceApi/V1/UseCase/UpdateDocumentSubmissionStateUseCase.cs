@@ -66,6 +66,11 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException("This state is invalid");
             }
 
+            if (documentSubmission.State == SubmissionState.Approved || documentSubmission.State == SubmissionState.Rejected)
+            {
+                throw new BadRequestException("Document has already been approved/rejected");
+            }
+
             documentSubmission.State = state;
 
             if (!String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected)
