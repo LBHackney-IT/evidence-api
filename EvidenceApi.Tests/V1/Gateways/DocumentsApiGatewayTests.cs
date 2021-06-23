@@ -63,29 +63,29 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEquivalentTo(expectedClaim);
         }
 
-        [Test]
-        public async Task CanUploadDocumentWithValidParameters()
-        {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            DocumentSubmissionRequest documentSubmissionRequest = new DocumentSubmissionRequest();
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file"));
-            var file = new FormFile(stream, 0, stream.Length, "Data", "dummy.txt")
-            {
-                Headers = new HeaderDictionary(),
-                ContentType = "application/txt"
-            };
-            documentSubmissionRequest.Document = file;
-
-            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}", request =>
-                {
-                    return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
-                })
-                .ReturnsResponse(HttpStatusCode.OK);
-
-            // Act
-            await _classUnderTest.UploadDocument(id, documentSubmissionRequest).ConfigureAwait(true);
-        }
+        // [Test]
+        // public async Task CanUploadDocumentWithValidParameters()
+        // {
+        //     // Arrange
+        //     Guid id = Guid.NewGuid();
+        //     DocumentSubmissionRequest documentSubmissionRequest = new DocumentSubmissionRequest();
+        //     var stream = new MemoryStream(Encoding.UTF8.GetBytes("This is a dummy file"));
+        //     var file = new FormFile(stream, 0, stream.Length, "Data", "dummy.txt")
+        //     {
+        //         Headers = new HeaderDictionary(),
+        //         ContentType = "application/txt"
+        //     };
+        //     documentSubmissionRequest.Document = file;
+        //
+        //     _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}", request =>
+        //         {
+        //             return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
+        //         })
+        //         .ReturnsResponse(HttpStatusCode.OK);
+        //
+        //     // Act
+        //     await _classUnderTest.UploadDocument(id, documentSubmissionRequest).ConfigureAwait(true);
+        // }
 
         [Test]
         public async Task CanGetAClaim()

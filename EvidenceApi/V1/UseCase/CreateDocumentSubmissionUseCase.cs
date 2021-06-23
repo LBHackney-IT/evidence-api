@@ -25,14 +25,14 @@ namespace EvidenceApi.V1.UseCase
             _documentTypeGateway = documentTypeGateway;
         }
 
-        public async Task<DocumentSubmissionResponse> ExecuteAsync(DocumentSubmissionRequest request)
+        public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
         {
             ValidateRequest(request);
 
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(request.EvidenceRequestId);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(evidenceRequestId);
             if (evidenceRequest == null)
             {
-                throw new NotFoundException($"Cannot find evidence request with id: {request.EvidenceRequestId}");
+                throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
             }
 
             if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
@@ -94,10 +94,6 @@ namespace EvidenceApi.V1.UseCase
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");
-            }
-            if (request.Document == null)
-            {
-                throw new BadRequestException("Document is null");
             }
         }
     }

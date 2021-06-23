@@ -63,14 +63,10 @@ namespace EvidenceApi.V1.Gateways
         {
             var uri = new Uri($"api/v1/documents/{documentId}", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
-            MultipartFormDataContent formDataContent = new MultipartFormDataContent();
-            var document = request.Document;
-            formDataContent.Headers.ContentType.MediaType = "multipart/form-data";
-            formDataContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("document");
-            var documentStreamContent = new StreamContent(document.OpenReadStream());
-            documentStreamContent.Headers.Add("Content-Type", document.ContentType);
-            formDataContent.Add(documentStreamContent, document.Name, document.FileName);
-            var response = await _client.PostAsync(uri, formDataContent).ConfigureAwait(true);
+            var documentUploadRequest = new DocumentUploadRequest();
+            documentUploadRequest.Base64Document = request.Base64Document;
+            var jsonString = SerializeDocumentUploadRequest(documentUploadRequest);
+            var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
@@ -87,6 +83,12 @@ namespace EvidenceApi.V1.Gateways
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
             }
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
+        }
+
+        private static StringContent SerializeDocumentUploadRequest(DocumentUploadRequest request)
+        {
+            var body = JsonConvert.SerializeObject(request);
+            return new StringContent(body, Encoding.UTF8, "application/json");
         }
 
         private static StringContent SerializeClaimRequest(ClaimRequest request)
