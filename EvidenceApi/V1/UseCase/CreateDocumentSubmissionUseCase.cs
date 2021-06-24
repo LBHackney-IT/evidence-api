@@ -95,6 +95,10 @@ namespace EvidenceApi.V1.UseCase
             {
                 throw new BadRequestException("Document type is null or empty");
             }
+            if (String.IsNullOrEmpty(request.Base64Document))
+            {
+                throw new BadRequestException("Base 64 document is null or empty");
+            }
         }
     }
 }
