@@ -4,10 +4,6 @@ provider:
   runtime: dotnetcore3.1
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
-  apiGateway:
-    binaryMediaTypes:
-      - 'image/*'
-      - 'application/pdf'
   region: eu-west-2
   timeout: 30
   tracing:
