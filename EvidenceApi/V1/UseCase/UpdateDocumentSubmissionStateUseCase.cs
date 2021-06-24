@@ -70,7 +70,7 @@ namespace EvidenceApi.V1.UseCase
                 documentSubmission.State == SubmissionState.Rejected) &&
                 (request.State == "APPROVED" || request.State == "REJECTED"))
             {
-                throw new BadRequestException("Document has already been approved/rejected");
+                throw new BadRequestException($"Document has already been {documentSubmission.State.ToString().ToLower()}");
             }
 
             documentSubmission.State = state;

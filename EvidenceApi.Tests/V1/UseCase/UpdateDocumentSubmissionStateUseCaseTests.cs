@@ -220,7 +220,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Create();
 
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been approved/rejected");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been approved");
         }
 
         [Test]
@@ -235,7 +235,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Create();
 
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been approved/rejected");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been rejected");
         }
 
         [Test]
