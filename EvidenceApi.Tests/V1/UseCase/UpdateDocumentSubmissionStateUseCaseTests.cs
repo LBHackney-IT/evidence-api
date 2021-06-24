@@ -209,6 +209,36 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ThrowsBadRequestExceptionWhenDocumentSubmissionIsAccepted()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+            _found.State = SubmissionState.Approved;
+            DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "APPROVED")
+                .Without(x => x.ValidUntil)
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been approved");
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenDocumentSubmissionIsRejected()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+            _found.State = SubmissionState.Rejected;
+            DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "REJECTED")
+                .Without(x => x.ValidUntil)
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been rejected");
+        }
+
+        [Test]
         public void CallsTheGatewayWithTheCorrectParams()
         {
             _evidenceGateway.VerifyAll();
