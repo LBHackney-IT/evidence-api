@@ -57,6 +57,8 @@ namespace EvidenceApi.Tests.V1.Factories
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.RejectionReason.Should().Be(domain.RejectionReason);
+            response.RejectedAt.Should().Be(domain.RejectedAt);
+            response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
             response.State.Should().Be(domain.State.ToString().ToUpper());
             response.DocumentType.Should().Be(documentType);
         }
