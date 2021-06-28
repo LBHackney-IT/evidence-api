@@ -47,6 +47,8 @@ namespace EvidenceApi.V1.Factories
                 CreatedAt = domain.CreatedAt,
                 ClaimId = domain.ClaimId,
                 RejectionReason = domain.RejectionReason,
+                RejectedAt = domain.RejectedAt,
+                UserUpdatedBy = domain.UserUpdatedBy,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,

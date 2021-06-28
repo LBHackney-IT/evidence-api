@@ -74,9 +74,11 @@ namespace EvidenceApi.V1.UseCase
             }
 
             documentSubmission.State = state;
+            documentSubmission.UserUpdatedBy = request.UserUpdatedBy;
 
             if (!String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected)
             {
+                documentSubmission.RejectedAt = DateTime.UtcNow;
                 NotifyResident(documentSubmission, request);
             }
 
