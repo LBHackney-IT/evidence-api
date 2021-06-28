@@ -90,6 +90,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"createdAt\":{formattedCreatedAt}," +
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
+                               $"\"rejectedAt\":\"0001-01-01T00:00:00\",\"userUpdatedBy\":null," +
                                $"\"state\":\"UPLOADED\"," +
                                "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
                                "\"staffSelectedDocumentType\":null," +
@@ -269,6 +270,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = @"
             {
                 ""state"": ""REJECTED"",
+                ""userUpdatedBy"": ""TestEmail@hackney.gov.uk"",
                 ""rejectionReason"": ""This is the rejection reason""
             }";
 

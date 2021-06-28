@@ -83,6 +83,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Id.Should().Be(_found.Id);
             result.StaffSelectedDocumentType.Should().NotBeNull();
             result.StaffSelectedDocumentType.Id.Should().Be(_found.StaffSelectedDocumentTypeId);
+            result.UserUpdatedBy.Should().Be(_found.UserUpdatedBy);
         }
 
         [Test]
@@ -94,6 +95,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
                 .With(x => x.RejectionReason, "This is the rejection reason")
+                .With(x => x.UserUpdatedBy, "TestEmail@hackney.gov.uk")
                 .Without(x => x.ValidUntil)
                 .Create();
 
@@ -101,6 +103,8 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             result.Id.Should().Be(_found.Id);
             result.RejectionReason.Should().Be(_found.RejectionReason);
+            result.RejectedAt.Should().Be(_found.RejectedAt);
+            result.UserUpdatedBy.Should().Be(_found.UserUpdatedBy);
         }
 
         [Test]
