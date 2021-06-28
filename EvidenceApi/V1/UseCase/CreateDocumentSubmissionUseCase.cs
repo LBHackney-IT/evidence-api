@@ -52,7 +52,7 @@ namespace EvidenceApi.V1.UseCase
 
                 var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
 
-                return createdDocumentSubmission.ToResponse(documentType);
+                return createdDocumentSubmission.ToResponse(documentType, claim);
             }
             catch (DocumentsApiException ex)
             {

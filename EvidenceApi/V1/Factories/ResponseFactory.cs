@@ -37,6 +37,7 @@ namespace EvidenceApi.V1.Factories
         public static DocumentSubmissionResponse ToResponse(
             this DocumentSubmission domain,
             DocumentType documentType,
+            Claim claim,
             DocumentType? staffSelectedDocumentType = null,
             Document? document = null
         )
@@ -50,7 +51,8 @@ namespace EvidenceApi.V1.Factories
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
-                Document = document
+                Document = document,
+                ValidUntil = claim.ValidUntil
             };
         }
     }
