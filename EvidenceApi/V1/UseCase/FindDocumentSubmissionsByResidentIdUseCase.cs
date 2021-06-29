@@ -50,11 +50,11 @@ namespace EvidenceApi.V1.UseCase
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
                     if (claim.Document == null)
                     {
-                        result.Add(ds.ToResponse(documentType, claim, staffSelectedDocumentType));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim));
                     }
                     else
                     {
-                        result.Add(ds.ToResponse(documentType, claim, staffSelectedDocumentType, claim.Document));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, claim.Document, claim));
                     }
                 }
             }

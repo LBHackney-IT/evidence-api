@@ -97,8 +97,7 @@ namespace EvidenceApi.V1.UseCase
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
-            var claim = await _documentsApiGateway.GetClaimById(documentSubmission.ClaimId).ConfigureAwait(true);
-            return documentSubmission.ToResponse(documentType, claim, staffSelectedDocumentType);
+            return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
         }
 
         private async Task<Claim> UpdateClaim(DocumentSubmission documentSubmission, DocumentSubmissionUpdateRequest request)
