@@ -1,5 +1,8 @@
 # Document Evidence Store Diagrams
 
+- [Deployment Diagram](#deployment-diagram)
+- [Flow Diagrams](#flow-diagrams)
+
 Following [Social Care Architecture](https://github.com/LBHackney-IT/social-care-architecture) who use PlantUML to construct diagrams
 
 To create _svg_ representation of diagrams:
@@ -10,3 +13,21 @@ To create _svg_ representation of diagrams:
 4. Click _svg_
 5. Find the exported diagram under `out/docs/diagrams`
 6. Copy it into this directory
+
+## C4 Diagrams
+
+### Deployment Diagram
+
+The [deployment diagram](https://c4model.com/#ContainerDiagram) shows the key aspects of the deployed system in AWS.
+
+![Deployment Diagram](deployment.svg)
+
+## Flow Diagrams
+
+### Document Upload Sequence
+
+![Document Upload Sequence Flow Diagram](document-upload-sequence-flow.svg)
+
+### Document Retrieval Sequence
+
+![Document Retrieval Sequence Flow Diagram](document-retrieval-sequence-flow.svg)
