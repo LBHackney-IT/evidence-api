@@ -1,0 +1,32 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Container.puml
+
+'ref http://plantuml.com/stdlib
+!include <office/Users/user.puml>
+!include <office/Users/mobile_user.puml>
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Document Evidence Store System Container Diagram
+
+Person(resident, Resident)
+Person(council_officer, Council Officer)
+
+System_Boundary(system, "Document Evidence Store") {
+  Container(document_evidence_frontend, "Document Evidence Frontend", "Lambda, Node.js", "Manage and track evidence requests")
+  Container(evidence_api_lambda, "Evidence API", "Lambda, C#", "Provides service API capabilities to manage and track evidence requests")
+  Container(documents_api_lambda, "Documents API", "Lambda, C#", "Provides service API capabilities to manage and upload documents")
+}
+
+System_Boundary(googles, "Google") {
+  System_Ext(google_auth, "Google Groups", "Provides user authentication")
+}
+
+Rel(document_evidence_frontend, google_auth, "Authenticates officers via", "JSON/HTTPS")
+Rel(document_evidence_frontend, evidence_api_lambda, "Retrieves from", "JSON/HTTPS")
+Rel(document_evidence_frontend, documents_api_lambda, "Retrieves from", "JSON/HTTPS")
+
+Rel(council_officer, document_evidence_frontend, "Manage evidence using")
+Rel(resident, document_evidence_frontend, "Upload evidence using")
+
+SHOW_DYNAMIC_LEGEND()
+@enduml
