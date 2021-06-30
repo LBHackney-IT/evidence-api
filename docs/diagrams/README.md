@@ -1,7 +1,7 @@
 # Document Evidence Store Diagrams
 
-- [Deployment Diagram](#deployment-diagram)
-- [Flow Diagrams](#flow-diagrams)
+- [C4 Diagrams](#c4-diagrams)
+- [Sequence Flow Diagrams](#sequence-flow-diagrams)
 
 Following [Social Care Architecture](https://github.com/LBHackney-IT/social-care-architecture) who use PlantUML to construct diagrams
 
@@ -16,18 +16,30 @@ To create _svg_ representation of diagrams:
 
 ## C4 Diagrams
 
+### Context Diagram
+
+The [context diagram](https://c4model.com/#SystemContextDiagram) shows the highest level of the system. It depicts the key users and systems.
+
+![System Context Diagram](system-context.svg)
+
+### Container Diagram
+
+The [container diagram](https://c4model.com/#ContainerDiagram) shows the interacting systems within the system.
+
+![System Container Diagram](system-container.svg)
+
 ### Deployment Diagram
 
-The [deployment diagram](https://c4model.com/#ContainerDiagram) shows the key aspects of the deployed system in AWS.
+The [deployment diagram](https://c4model.com/#DeploymentDiagram) shows the key aspects of the deployed system in AWS.
 
 ![Deployment Diagram](deployment.svg)
 
-## Flow Diagrams
+## Sequence Flow Diagrams
 
-### Document Upload Sequence
+### Document Upload
 
 ![Document Upload Sequence Flow Diagram](document-upload-sequence-flow.svg)
 
-### Document Retrieval Sequence
+### Document Retrieval
 
 ![Document Retrieval Sequence Flow Diagram](document-retrieval-sequence-flow.svg)
