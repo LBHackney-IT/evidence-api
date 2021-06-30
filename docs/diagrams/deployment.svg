@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1464px" preserveAspectRatio="none" style="width:1355px;height:1464px;background:#FFFFFF;" version="1.1" viewBox="0 0 1355 1464" width="1355px" zoomAndPan="magnify"><defs/><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacing" textLength="445" x="448.5" y="16.708">Document Evidence Store Deployment Diagram</text><!--MD5=[c444070a69c905f8781a2e7d91c12e8c]
+cluster aws--><rect fill="#FFFFFF" height="1345" style="stroke:#A2A2A2;stroke-width:1.5;" width="1342" x="7" y="27.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="41" x="657.5" y="44.8047">AWS</text><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="121" x="617.5" y="59.7168">[Region: eu-west-2]</text><!--MD5=[9afe4c35635501012a0dcb7320185655]
+cluster aws_production_apis--><rect fill="#FFFFFF" height="254" style="stroke:#A2A2A2;stroke-width:1.5;" width="286" x="1039" y="379.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="140" x="1112" y="396.8047">ProductionAPIs</text><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="58" x="1153" y="411.7168">[Account]</text><!--MD5=[344dfee7b710af017bd4763858c9bf01]
+cluster aws_production_apis_lambda--><rect fill="#FFFFFF" height="171" style="stroke:#A2A2A2;stroke-width:1.5;" width="238" x="1063" y="438.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="71" x="1146.5" y="455.8047">Lambda</text><!--MD5=[872400e4ac54dae8f7cd53daf322ecaf]
+cluster aws_des_production--><rect fill="#FFFFFF" height="1262" style="stroke:#A2A2A2;stroke-width:1.5;" width="984" x="31" y="86.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="346" x="350" y="103.8047">Document-Evidence-Store-Production</text><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="58" x="494" y="118.7168">[Account]</text><!--MD5=[6d348004f7b73e93d23bf40f2a6ad8ad]
+cluster aws_des_production_api_gateway--><rect fill="#FFFFFF" height="173" style="stroke:#A2A2A2;stroke-width:1.5;" width="736" x="255" y="145.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="115" x="565.5" y="162.8047">API Gateway</text><!--MD5=[284e21f181f896b43a2c80c05a45eedf]
+cluster aws_des_production_lambda--><rect fill="#FFFFFF" height="658.5" style="stroke:#A2A2A2;stroke-width:1.5;" width="637" x="317" y="428.4531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="71" x="600" y="445.3047">Lambda</text><!--MD5=[264b580dc883ae7222d1727426f5f02e]
+cluster aws_des_production_rds--><rect fill="#FFFFFF" height="163" style="stroke:#A2A2A2;stroke-width:1.5;" width="445" x="546" y="1161.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="36" x="750.5" y="1178.8047">RDS</text><!--MD5=[b0d549b848e274036c8d47b306b0b296]
+cluster aws_des_production_s3--><rect fill="#FFFFFF" height="157" style="stroke:#A2A2A2;stroke-width:1.5;" width="238" x="55" y="922.9531"/><text fill="#000000" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="22" x="163" y="939.8047">S3</text><!--MD5=[24e7183a8f3958d5f8eb033728d5cf29]
+entity api_authenticator--><rect fill="#438DD5" height="117.7813" style="stroke:#3C7FC0;stroke-width:1.5;" width="205" x="1079.5" y="475.9531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="164" x="1100" y="500.8047">API Authenticator</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="59" x="1152.5" y="515.7168">[Lambda]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1184" y="531.542"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110" x="1127" y="547.8389">Centralized API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181" x="1089.5" y="564.1357">authentication in a single</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126" x="1119" y="580.4326">Lambda function.</text><!--MD5=[9c8ec11eb43acfbc7c853abd18a65b91]
+entity evidence_api_gateway--><rect fill="#438DD5" height="101.4844" style="stroke:#3C7FC0;stroke-width:1.5;" width="211" x="763.5" y="192.4531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="114" x="812" y="217.3047">Evidence API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="826.5" y="232.2168">[API Gateway]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="871" y="248.042"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="183" x="777.5" y="264.3389">Provides routing and auth</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="89" x="824.5" y="280.6357">via API keys.</text><!--MD5=[56b43b819fa7a3198f134fadc06323ee]
+entity documents_api_gateway--><rect fill="#438DD5" height="101.4844" style="stroke:#3C7FC0;stroke-width:1.5;" width="211" x="271.5" y="192.4531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="139" x="307.5" y="217.3047">Documents API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="334.5" y="232.2168">[API Gateway]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="379" y="248.042"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="183" x="285.5" y="264.3389">Provides routing and auth</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="89" x="332.5" y="280.6357">via API keys.</text><!--MD5=[5aa61cdc3ac1fd3947020c224ef3050c]
+entity document_evidence_frontend_api_gateway--><rect fill="#438DD5" height="120.1094" style="stroke:#3C7FC0;stroke-width:1.5;" width="211" x="517.5" y="182.9531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="179" x="530.5" y="207.8047">Document Evidence</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="118" x="564" y="226.4297">Frontend API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="580.5" y="241.3418">[API Gateway]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="625" y="257.167"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="183" x="531.5" y="273.4639">Provides routing and auth</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="89" x="578.5" y="289.7607">via API keys.</text><!--MD5=[6ac772c4d907da34e86fb7466f701d5c]
+entity evidence_api_lambda--><rect fill="#438DD5" height="117.7813" style="stroke:#3C7FC0;stroke-width:1.5;" width="218" x="720" y="719.4531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="114" x="772" y="744.3047">Evidence API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="786.5" y="759.2168">[Lambda, C#]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="831" y="775.042"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="757.5" y="791.3389">Provides service API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="194" x="730" y="807.6357">capabilities to manage and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="178" x="740" y="823.9326">track evidence requests.</text><!--MD5=[f059107e47b5b7980fe4d785cc88f00a]
+entity documents_api_lambda--><rect fill="#438DD5" height="117.7813" style="stroke:#3C7FC0;stroke-width:1.5;" width="218" x="402" y="952.9531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="139" x="441.5" y="977.8047">Documents API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="468.5" y="992.7168">[Lambda, C#]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="513" y="1008.542"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="439.5" y="1024.8389">Provides service API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="194" x="412" y="1041.1357">capabilities to manage and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="137" x="442.5" y="1057.4326">upload documents.</text><!--MD5=[dd0ac20311fe40dc440e10ebd22121ca]
+entity document_evidence_frontend_api_lambda--><rect fill="#438DD5" height="136.4063" style="stroke:#3C7FC0;stroke-width:1.5;" width="205" x="588.5" y="466.9531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="179" x="598.5" y="491.8047">Document Evidence</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="118" x="632" y="510.4297">Frontend API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="111" x="635.5" y="525.3418">[Lambda, Node.js]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="693" y="541.167"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="626.5" y="557.4639">Provides frontend</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="177" x="600.5" y="573.7607">experience for residents</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="69" x="656.5" y="590.0576">and staff.</text><!--MD5=[0dc7021b84bfa33ee491e34d0779a583]
+entity documents_api_documents_orchestrator_lambda--><rect fill="#438DD5" height="138.7344" style="stroke:#3C7FC0;stroke-width:1.5;" width="220" x="333" y="465.4531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="139" x="370.5" y="490.3047">Documents API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="104" x="388" y="508.9297">Documents</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="121" x="382.5" y="527.5547">Orchestrator</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="109" x="388.5" y="542.4668">[Lambda, Python]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="445" y="558.292"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="196" x="347" y="574.5889">Performs malware scan and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="180" x="353" y="590.8857">moves files in S3 bucket.</text><!--MD5=[6071d0a712ed15d6a543642ea12dbb46]
+entity documents_api_malware_scan_successful_lambda--><rect fill="#438DD5" height="138.7344" style="stroke:#3C7FC0;stroke-width:1.5;" width="198" x="333" y="708.9531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="139" x="359.5" y="733.8047">Documents API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="125" x="366.5" y="752.4297">Malware Scan</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="97" x="383.5" y="771.0547">Successful</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="85" x="389.5" y="785.9668">[Lambda, C#]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="434" y="801.792"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="170" x="347" y="818.0889">Updates Documents DB</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="161" x="351.5" y="834.3857">with object metadata.</text><!--MD5=[001af1077a2913fa3c34204084acd1fa]
+entity evidence_api_rds--><path d="M757,1208.9531 C757,1198.9531 866,1198.9531 866,1198.9531 C866,1198.9531 975,1198.9531 975,1208.9531 L975,1299.4375 C975,1309.4375 866,1309.4375 866,1309.4375 C866,1309.4375 757,1309.4375 757,1299.4375 L757,1208.9531 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M757,1208.9531 C757,1218.9531 866,1218.9531 866,1218.9531 C866,1218.9531 975,1218.9531 975,1208.9531 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="114" x="809" y="1237.8047">Evidence API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="79" x="826.5" y="1252.7168">[PostgreSQL]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="868" y="1268.542"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="182" x="775" y="1284.8389">Stores evidence requests</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="198" x="767" y="1301.1357">and document submissions.</text><!--MD5=[25d076788ee268fed21e7b673412f132]
+entity documents_api_rds--><path d="M562.5,1208.9531 C562.5,1198.9531 642,1198.9531 642,1198.9531 C642,1198.9531 721.5,1198.9531 721.5,1208.9531 L721.5,1299.4375 C721.5,1309.4375 642,1309.4375 642,1309.4375 C642,1309.4375 562.5,1309.4375 562.5,1299.4375 L562.5,1208.9531 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M562.5,1208.9531 C562.5,1218.9531 642,1218.9531 642,1218.9531 C642,1218.9531 721.5,1218.9531 721.5,1208.9531 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="139" x="572.5" y="1237.8047">Documents API</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="79" x="602.5" y="1252.7168">[PostgreSQL]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="644" y="1268.542"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126" x="579" y="1284.8389">Stores claims and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85" x="599.5" y="1301.1357">documents.</text><!--MD5=[922bcdf105ca695fddf3fef25d57bcdf]
+entity documents_s3--><rect fill="#438DD5" height="103.8125" style="stroke:#3C7FC0;stroke-width:1.5;" width="205" x="71.5" y="959.9531"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="179" x="81.5" y="984.8047">Document Evidence</text><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="51" x="148.5" y="1003.4297">Store</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="57" x="145.5" y="1018.3418">[img/pdf]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="176" y="1034.167"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136" x="108" y="1050.4639">Stores documents.</text><!--MD5=[5ac439c10b92d7695c1ef7ae2c90a35a]
+link evidence_api_gateway to api_authenticator--><path d="M974.568,252.6131 C1033.4,263.0631 1103.21,285.7931 1146,334.9531 C1177.4,371.0331 1185.57,425.0581 1186.35,467.7191 " fill="none" id="evidence_api_gateway-to-api_authenticator" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="1186.42,475.8181,1189.3585,467.7953,1183.3587,467.8414,1186.42,475.8181" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="60" x="1183" y="347.0918">Request</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="98" x="1164" y="361.0605">[Lambda Event]</text><!--MD5=[35c3517472aa8a5bebe8ee4e976da1bd]
+link documents_api_gateway to api_authenticator--><path d="M436.34,293.6531 C455.494,306.9331 477.596,319.6231 500,326.9531 C543.966,341.3331 661.952,330.5631 708,334.9531 C793.038,343.0531 813.495,351.4731 898,363.9531 C922.872,367.6231 930.65,362.6331 954,371.9531 C1012.03,395.1181 1069.32,435.9231 1111.96,470.7831 " fill="none" id="documents_api_gateway-to-api_authenticator" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="1118.15,475.8801,1113.8832,468.4778,1110.068,473.1086,1118.15,475.8801" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="60" x="918" y="347.0918">Request</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="98" x="899" y="361.0605">[Lambda Event]</text><!--MD5=[6d1774d4cd62d92838c79b84b5b4685b]
+link document_evidence_frontend_api_gateway to api_authenticator--><path d="M696.262,302.9631 C711.866,312.7031 728.839,321.4131 746,326.9531 C773.506,335.8331 979.834,322.6731 1006,334.9531 C1022.23,342.5731 1083.69,414.3621 1129.43,469.5541 " fill="none" id="document_evidence_frontend_api_gateway-to-api_authenticator" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="1134.65,475.8561,1131.8664,467.7783,1127.2413,471.6004,1134.65,475.8561" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="60" x="1054" y="347.0918">Request</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="98" x="1035" y="361.0605">[Lambda Event]</text><!--MD5=[c389102680acde940bf9ead37a8603da]
+link document_evidence_frontend_api_gateway to document_evidence_frontend_api_lambda--><path d="M636.843,302.9931 C647.4,348.0131 662.015,410.3411 673.402,458.9041 " fill="none" id="document_evidence_frontend_api_gateway-to-document_evidence_frontend_api_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="675.273,466.8811,676.3666,458.4074,670.5252,459.7777,675.273,466.8811" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="34" x="658" y="347.0918">Uses</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="48" x="651" y="361.0605">[HTTPS]</text><!--MD5=[b1c8e775a0749093098825132e920e07]
+link document_evidence_frontend_api_lambda to evidence_api_lambda--><path d="M728.139,603.0551 C741.533,627.0651 756.838,654.2821 771,678.9531 C777.159,689.6831 783.759,701.0281 790.218,712.0531 " fill="none" id="document_evidence_frontend_api_lambda-to-evidence_api_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="794.437,719.2421,792.9759,710.824,787.801,713.8604,794.437,719.2421" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="34" x="796" y="662.0918">Uses</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="82" x="772" y="676.0605">[JSON/HTTPS]</text><!--MD5=[64c797a1d542380d261171bd0fc2900a]
+link document_evidence_frontend_api_lambda to documents_api_lambda--><path d="M662.162,603.0011 C648.667,634.9341 632.608,673.7551 619,708.9531 C587.806,789.6391 554.699,883.6141 533.489,945.0351 " fill="none" id="document_evidence_frontend_api_lambda-to-documents_api_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="530.833,952.7341,536.2776,946.1496,530.6055,944.1932,530.833,952.7341" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="34" x="644" y="776.0918">Uses</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="82" x="620" y="790.0605">[JSON/HTTPS]</text><!--MD5=[297bdf6c6cc0b53040ab6ed0ce149749]
+link evidence_api_gateway to evidence_api_lambda--><path d="M868.62,293.5231 C867.698,399.5751 864.962,641.8471 859,678.9531 C857.288,689.6051 854.717,700.7091 851.785,711.4601 " fill="none" id="evidence_api_gateway-to-evidence_api_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="849.594,719.2141,854.6566,712.3315,848.8828,710.6998,849.594,719.2141" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="34" x="875" y="532.5918">Uses</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="48" x="868" y="546.5605">[HTTPS]</text><!--MD5=[35aa4606e6e5be279bb46f0226b80bec]
+link evidence_api_lambda to evidence_api_rds--><path d="M833.537,837.5131 C840.543,927.1671 853.935,1098.5531 861.135,1190.6881 " fill="none" id="evidence_api_lambda-to-evidence_api_rds" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="861.769,1198.8101,864.137,1190.6008,858.1552,1191.068,861.769,1198.8101" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="114" x="854" y="1002.5918">Reads from and</text><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="66" x="880" y="1016.5605">writes to</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="117" x="854.5" y="1030.5293">[Entity Framework]</text><!--MD5=[2981459548839cc38ed2b4a118e02a05]
+link evidence_api_lambda to documents_api_lambda--><path d="M749.166,837.5711 C702.953,871.2141 644.76,913.5771 597.466,948.0071 " fill="none" id="evidence_api_lambda-to-documents_api_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="590.867,952.8111,599.1002,950.5276,595.5686,945.6771,590.867,952.8111" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="34" x="714" y="890.0918">Uses</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="82" x="690" y="904.0605">[JSON/HTTPS]</text><!--MD5=[f76b5933e1bf03e191e44ff78db9a0a2]
+link documents_api_gateway to documents_api_lambda--><path d="M346.417,293.6931 C334.051,316.6331 321.24,344.7531 315,371.9531 C303.173,423.5021 292.543,800.0691 315,847.9531 C333.841,888.1271 367.987,921.8341 402.56,947.9791 " fill="none" id="documents_api_gateway-to-documents_api_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="409.017,952.7721,404.3823,945.5944,400.8055,950.4117,409.017,952.7721" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="34" x="310" y="662.0918">Uses</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="48" x="303" y="676.0605">[HTTPS]</text><!--MD5=[3bce69e3257b7c9acdf9255933f09ee3]
+link documents_api_lambda to documents_api_rds--><path d="M528.801,1071.1881 C537.13,1095.0521 548.079,1122.5131 561,1145.9531 C569.681,1161.7011 580.489,1177.6791 591.354,1192.3171 " fill="none" id="documents_api_lambda-to-documents_api_rds" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="596.343,1198.9421,593.9284,1190.7464,589.1348,1194.355,596.343,1198.9421" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="114" x="562" y="1115.0918">Reads from and</text><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="66" x="588" y="1129.0605">writes to</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="117" x="562.5" y="1143.0293">[Entity Framework]</text><!--MD5=[0df3d506752c0f56bd23349a627d69d1]
+link documents_api_malware_scan_successful_lambda to documents_api_rds--><path d="M531.207,835.2711 C541.123,839.8951 551.161,844.2191 561,847.9531 C614.011,868.0741 649.936,833.3941 685,877.9531 C721.829,924.7551 696.309,1087.4811 685,1145.9531 C682.07,1161.1011 677.007,1176.8261 671.361,1191.4071 " fill="none" id="documents_api_malware_scan_successful_lambda-to-documents_api_rds" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="668.364,1198.9191,674.1145,1192.6,668.5415,1190.377,668.364,1198.9191" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="68" x="729.5" y="1009.5918">Writes to</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="117" x="705" y="1023.5605">[Entity Framework]</text><!--MD5=[50da4aad53fe5d49c831a7e4366361ca]
+link documents_api_lambda to documents_s3--><path d="M401.968,1011.9531 C364.651,1011.9531 322.872,1011.9531 285.373,1011.9531 " fill="none" id="documents_api_lambda-to-documents_s3" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="276.942,1011.9531,284.942,1014.9531,284.942,1008.9531,276.942,1011.9531" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="48" x="315.25" y="992.0918">Writes</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="89" x="294.75" y="1006.0605">[S3 PutObject]</text><!--MD5=[136ad5857f0f0b7643a1ed2a49d93b32]
+link documents_s3 to documents_api_documents_orchestrator_lambda--><path d="M161.22,959.6861 C148.414,896.9191 135.802,789.0951 176,708.9531 C206.338,648.4681 268.787,606.2541 325.664,578.6761 " fill="none" id="documents_s3-to-documents_api_documents_orchestrator_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="332.929,575.2171,324.4162,575.9472,326.9953,581.3646,332.929,575.2171" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="63" x="214" y="776.0918">Triggers</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="137" x="177" y="790.0605">[S3 Event Notification]</text><!--MD5=[54a0e3e03762bd678c2d279c1fe75141]
+link documents_api_documents_orchestrator_lambda to documents_api_malware_scan_successful_lambda--><path d="M439.877,604.5111 C438.513,634.4661 436.907,669.7261 435.502,700.5681 " fill="none" id="documents_api_documents_orchestrator_lambda-to-documents_api_malware_scan_successful_lambda" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="435.131,708.7231,438.4922,700.868,432.4984,700.5948,435.131,708.7231" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="63" x="473" y="662.0918">Triggers</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="131" x="439" y="676.0605">[Lambda Notification]</text><!--MD5=[de95da1df829b8e7b8832bd79e3c731f]
+link documents_api_malware_scan_successful_lambda to documents_s3--><path d="M355.639,847.9711 C317.854,881.8751 272.797,922.3041 237.011,954.4141 " fill="none" id="documents_api_malware_scan_successful_lambda-to-documents_s3" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="230.897,959.9001,238.8553,956.7911,234.8486,952.3249,230.897,959.9001" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="68" x="336" y="890.0918">Performs</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="100" x="320" y="904.0605">[S3 MoveObject]</text><rect fill="#FFFFFF" height="62.8906" rx="5" ry="5" style="stroke:#FFFFFF;stroke-width:1.0;" width="109" x="1224" y="1385.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="57" x="1230" y="1405.9482">Legend</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1291" y="1405.9482"/><rect fill="#438DD5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="97" x="1230" y="1409.25"/><text fill="#3C7FC0" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="8" x="1234" y="1422.2451">▯</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1246" y="1422.2451"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="69" x="1250" y="1422.2451">container</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1327" y="1422.2451"/><rect fill="#FFFFFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="97" x="1230" y="1425.5469"/><text fill="#A2A2A2" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="8" x="1234" y="1438.542">▯</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1246" y="1438.542"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="36" x="1250" y="1438.542">node</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1294" y="1438.542"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1230" x2="1327" y1="1392.9531" y2="1392.9531"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1230" x2="1327" y1="1409.25" y2="1409.25"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1230" x2="1327" y1="1425.5469" y2="1425.5469"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1230" x2="1327" y1="1441.8438" y2="1441.8438"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1230" x2="1230" y1="1392.9531" y2="1441.8438"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1327" x2="1327" y1="1392.9531" y2="1441.8438"/><!--MD5=[430bab237e2bcf223a84bf1fa329018b]
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Deployment.puml
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Document Evidence Store Deployment Diagram
+
+Deployment_Node(aws, "AWS", "Region: eu-west-2") {
+  Deployment_Node(aws_production_apis, "ProductionAPIs", "Account") {
+    Deployment_Node(aws_production_apis_lambda, "Lambda") {
+      Container(api_authenticator, "API Authenticator", "Lambda", "Centralized API authentication in a single Lambda function.")
+    }
+  }
+
+  Deployment_Node(aws_des_production, "Document-Evidence-Store-Production", "Account") {
+
+    Deployment_Node(aws_des_production_api_gateway, "API Gateway") {
+      Container(evidence_api_gateway, "Evidence API", "API Gateway", "Provides routing and auth via API keys.")
+      Container(documents_api_gateway, "Documents API", "API Gateway", "Provides routing and auth via API keys.")
+      Container(document_evidence_frontend_api_gateway, "Document Evidence Frontend API", "API Gateway", "Provides routing and auth via API keys.")
+    }
+
+    Deployment_Node(aws_des_production_lambda, "Lambda") {
+      Container(evidence_api_lambda, "Evidence API", "Lambda, C#", "Provides service API capabilities to manage and track evidence requests.")
+      Container(documents_api_lambda, "Documents API", "Lambda, C#", "Provides service API capabilities to manage and upload documents.")
+      Container(document_evidence_frontend_api_lambda, "Document Evidence Frontend API", "Lambda, Node.js", "Provides frontend experience for residents and staff.")
+      Container(documents_api_documents_orchestrator_lambda, "Documents API Documents Orchestrator", "Lambda, Python", "Performs malware scan and moves files in S3 bucket.")
+      Container(documents_api_malware_scan_successful_lambda, "Documents API Malware Scan Successful", "Lambda, C#", "Updates Documents DB with object metadata.")
+    }
+
+    Deployment_Node(aws_des_production_rds, "RDS") {
+      ContainerDb(evidence_api_rds, "Evidence API", "PostgreSQL", "Stores evidence requests and document submissions.")
+      ContainerDb(documents_api_rds, "Documents API", "PostgreSQL", "Stores claims and documents.")
+    }
+
+    Deployment_Node(aws_des_production_s3, "S3") {
+      Container(documents_s3, "Document Evidence Store", "img/pdf", "Stores documents.")
+    }
+}
+
+Rel(evidence_api_gateway, api_authenticator, "Request", "Lambda Event")
+Rel(documents_api_gateway, api_authenticator, "Request", "Lambda Event")
+Rel(document_evidence_frontend_api_gateway, api_authenticator, "Request", "Lambda Event")
+
+Rel(document_evidence_frontend_api_gateway, document_evidence_frontend_api_lambda, "Uses", "HTTPS")
+Rel(document_evidence_frontend_api_lambda, evidence_api_lambda, "Uses", "JSON/HTTPS")
+Rel(document_evidence_frontend_api_lambda, documents_api_lambda, "Uses", "JSON/HTTPS")
+
+Rel(evidence_api_gateway, evidence_api_lambda, "Uses", "HTTPS")
+Rel(evidence_api_lambda, evidence_api_rds, "Reads from and writes to", "Entity Framework")
+Rel(evidence_api_lambda, documents_api_lambda, "Uses", "JSON/HTTPS")
+
+Rel(documents_api_gateway, documents_api_lambda, "Uses", "HTTPS")
+Rel(documents_api_lambda, documents_api_rds, "Reads from and writes to", "Entity Framework")
+Rel(documents_api_malware_scan_successful_lambda, documents_api_rds, "Writes to", "Entity Framework")
+
+Rel(documents_api_lambda, documents_s3, "Writes", "S3 PutObject")
+Rel(documents_s3, documents_api_documents_orchestrator_lambda, "Triggers", "S3 Event Notification")
+Rel(documents_api_documents_orchestrator_lambda, documents_api_malware_scan_successful_lambda, "Triggers", "Lambda Notification")
+Rel(documents_api_malware_scan_successful_lambda, documents_s3, "Performs", "S3 MoveObject")
+
+SHOW_DYNAMIC_LEGEND()
+@enduml
+
+@startuml
+
+
+
+
+
+
+
+
+
+skinparam defaultTextAlignment center
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+
+skinparam LegendBorderColor transparent
+skinparam LegendBackgroundColor transparent
+skinparam LegendFontColor #FFFFFF
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam queue {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Arrow {
+    Color #666666
+    FontColor #666666
+    FontSize 12
+}
+
+skinparam package {
+    StereotypeFontSize 6
+    StereotypeFontColor #FFFFFF
+    FontStyle plain
+    BackgroundColor #FFFFFF
+}
+
+skinparam rectangle<<boundary>> {
+    Shadowing false
+    StereotypeFontSize 6
+    StereotypeFontColor #FFFFFF
+    FontColor #444444
+    BorderColor #444444
+    BackgroundColor #FFFFFF
+    BorderStyle dashed
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam database<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam queue<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam database<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam queue<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam database<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam queue<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam database<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam queue<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+
+
+
+
+sprite $person [48x48/16] {
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000025788300000000005886410000000000000
+000000000007DFFFFFFD9643347BFFFFFFFB400000000000
+0000000004EFFFFFFFFFFFFFFFFFFFFFFFFFFB1000000000
+000000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFD200000000
+00000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE10000000
+0000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB0000000
+000000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5000000
+000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD000000
+000009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF200000
+00000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF600000
+00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF800000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00000EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF700000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+0000008FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD3000000
+000000014555555555555555555555555555555300000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+}
+
+sprite $person2 [48x48/16] {
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000002578888300000000005888864100000000000
+0000000007DFFFFFFFFD9643347BFFFFFFFFFB4000000000
+00000004EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB10000000
+0000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD2000000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+00003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+0000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF50000
+0003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD0000
+0009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2000
+000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6000
+000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA000
+000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8000
+000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6000
+0009FFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFFF2000
+0003FFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFFD0000
+0000BFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFF50000
+00003FFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFB00000
+000006FFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFE100000
+0000007FFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFD2000000
+00000004EFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFB10000000
+0000000007DF8FFFFFFFFFFFFFFFFFFFFFF8FB4000000000
+000000000002578888888888888888888864100000000000
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam database<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam queue<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam database<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam queue<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+skinparam database<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+skinparam queue<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+
+skinparam rectangle<<node>> {
+    FontStyle normal
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+skinparam database<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+skinparam queue<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+skinparam database<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+skinparam queue<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+skinparam database<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+skinparam queue<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+skinparam database<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+skinparam queue<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+
+
+skinparam rectangle<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+skinparam database<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+skinparam queue<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+
+skinparam rectangle<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+skinparam database<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+skinparam queue<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+
+
+title Document Evidence Store Deployment Diagram
+
+rectangle "==AWS\n<size:12>[Region: eu-west-2]</size>" <<node>> as aws  {
+  rectangle "==ProductionAPIs\n<size:12>[Account]</size>" <<node>> as aws_production_apis  {
+    rectangle "==Lambda" <<node>> as aws_production_apis_lambda  {
+      rectangle "==API Authenticator\n//<size:12>[Lambda]</size>//\n\n Centralized API authentication in a single Lambda function." <<container>> as api_authenticator 
+    }
+  }
+
+  rectangle "==Document-Evidence-Store-Production\n<size:12>[Account]</size>" <<node>> as aws_des_production  {
+
+    rectangle "==API Gateway" <<node>> as aws_des_production_api_gateway  {
+      rectangle "==Evidence API\n//<size:12>[API Gateway]</size>//\n\n Provides routing and auth via API keys." <<container>> as evidence_api_gateway 
+      rectangle "==Documents API\n//<size:12>[API Gateway]</size>//\n\n Provides routing and auth via API keys." <<container>> as documents_api_gateway 
+      rectangle "==Document Evidence Frontend API\n//<size:12>[API Gateway]</size>//\n\n Provides routing and auth via API keys." <<container>> as document_evidence_frontend_api_gateway 
+    }
+
+    rectangle "==Lambda" <<node>> as aws_des_production_lambda  {
+      rectangle "==Evidence API\n//<size:12>[Lambda, C#]</size>//\n\n Provides service API capabilities to manage and track evidence requests." <<container>> as evidence_api_lambda 
+      rectangle "==Documents API\n//<size:12>[Lambda, C#]</size>//\n\n Provides service API capabilities to manage and upload documents." <<container>> as documents_api_lambda 
+      rectangle "==Document Evidence Frontend API\n//<size:12>[Lambda, Node.js]</size>//\n\n Provides frontend experience for residents and staff." <<container>> as document_evidence_frontend_api_lambda 
+      rectangle "==Documents API Documents Orchestrator\n//<size:12>[Lambda, Python]</size>//\n\n Performs malware scan and moves files in S3 bucket." <<container>> as documents_api_documents_orchestrator_lambda 
+      rectangle "==Documents API Malware Scan Successful\n//<size:12>[Lambda, C#]</size>//\n\n Updates Documents DB with object metadata." <<container>> as documents_api_malware_scan_successful_lambda 
+    }
+
+    rectangle "==RDS" <<node>> as aws_des_production_rds  {
+      database "==Evidence API\n//<size:12>[PostgreSQL]</size>//\n\n Stores evidence requests and document submissions." <<container>> as evidence_api_rds 
+      database "==Documents API\n//<size:12>[PostgreSQL]</size>//\n\n Stores claims and documents." <<container>> as documents_api_rds 
+    }
+
+    rectangle "==S3" <<node>> as aws_des_production_s3  {
+      rectangle "==Document Evidence Store\n//<size:12>[img/pdf]</size>//\n\n Stores documents." <<container>> as documents_s3 
+    }
+}
+
+evidence_api_gateway - ->> api_authenticator : **Request**\n//<size:12>[Lambda Event]</size>//
+documents_api_gateway - ->> api_authenticator : **Request**\n//<size:12>[Lambda Event]</size>//
+document_evidence_frontend_api_gateway - ->> api_authenticator : **Request**\n//<size:12>[Lambda Event]</size>//
+
+document_evidence_frontend_api_gateway - ->> document_evidence_frontend_api_lambda : **Uses**\n//<size:12>[HTTPS]</size>//
+document_evidence_frontend_api_lambda - ->> evidence_api_lambda : **Uses**\n//<size:12>[JSON/HTTPS]</size>//
+document_evidence_frontend_api_lambda - ->> documents_api_lambda : **Uses**\n//<size:12>[JSON/HTTPS]</size>//
+
+evidence_api_gateway - ->> evidence_api_lambda : **Uses**\n//<size:12>[HTTPS]</size>//
+evidence_api_lambda - ->> evidence_api_rds : **Reads from and writes to**\n//<size:12>[Entity Framework]</size>//
+evidence_api_lambda - ->> documents_api_lambda : **Uses**\n//<size:12>[JSON/HTTPS]</size>//
+
+documents_api_gateway - ->> documents_api_lambda : **Uses**\n//<size:12>[HTTPS]</size>//
+documents_api_lambda - ->> documents_api_rds : **Reads from and writes to**\n//<size:12>[Entity Framework]</size>//
+documents_api_malware_scan_successful_lambda - ->> documents_api_rds : **Writes to**\n//<size:12>[Entity Framework]</size>//
+
+documents_api_lambda - ->> documents_s3 : **Writes**\n//<size:12>[S3 PutObject]</size>//
+documents_s3 - ->> documents_api_documents_orchestrator_lambda : **Triggers**\n//<size:12>[S3 Event Notification]</size>//
+documents_api_documents_orchestrator_lambda - ->> documents_api_malware_scan_successful_lambda : **Triggers**\n//<size:12>[Lambda Notification]</size>//
+documents_api_malware_scan_successful_lambda - ->> documents_s3 : **Performs**\n//<size:12>[S3 MoveObject]</size>//
+
+hide stereotype
+legend right
+|<color:#000000>**Legend**</color> |
+|<#438DD5><color:#3C7FC0> <U+25AF></color> <color:#FFFFFF> container </color> |
+|<#FFFFFF><color:#A2A2A2> <U+25AF></color> <color:#000000> node </color> |
+endlegend
+@enduml
+
+PlantUML version 1.2021.8beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
