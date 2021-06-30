@@ -38,7 +38,6 @@ namespace EvidenceApi.V1.Factories
             this DocumentSubmission domain,
             DocumentType documentType,
             DocumentType? staffSelectedDocumentType = null,
-            Document? document = null,
             Claim? claim = null
         )
         {
@@ -52,8 +51,7 @@ namespace EvidenceApi.V1.Factories
                 UserUpdatedBy = domain.UserUpdatedBy,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
-                StaffSelectedDocumentType = staffSelectedDocumentType,
-                Document = document,
+                StaffSelectedDocumentType = staffSelectedDocumentType
             } : new DocumentSubmissionResponse()
             {
                 Id = domain.Id,
@@ -65,8 +63,8 @@ namespace EvidenceApi.V1.Factories
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
-                Document = document,
-                ValidUntil = claim.ValidUntil
+                Document = claim.Document,
+                ClaimValidUntil = claim.ValidUntil
             };
         }
     }

@@ -92,11 +92,11 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"rejectionReason\":null," +
                                $"\"rejectedAt\":null,\"userUpdatedBy\":null," +
-                               $"\"validUntil\":{formattedValidUntil}," +
+                               $"\"claimValidUntil\":{formattedValidUntil}," +
                                $"\"state\":\"UPLOADED\"," +
                                "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
                                "\"staffSelectedDocumentType\":null," +
-                               "\"document\":null" +
+                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +
                                "}";
 
             json.Should().Be(expected);
@@ -304,7 +304,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
 
-            var expected = documentSubmission.ToResponse(null, null, _document, _createdClaim);
+            var expected = documentSubmission.ToResponse(null, null, _createdClaim);
 
             responseFind.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
@@ -379,8 +379,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var expected = new List<DocumentSubmissionResponse>()
             {
-                documentSubmission1.ToResponse(documentType,  null, _document, _createdClaim),
-                documentSubmission2.ToResponse(documentType,  null, _document, _createdClaim)
+                documentSubmission1.ToResponse(documentType,  null, _createdClaim),
+                documentSubmission2.ToResponse(documentType,  null, _createdClaim)
             };
 
             response.StatusCode.Should().Be(200);

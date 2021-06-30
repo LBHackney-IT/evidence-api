@@ -48,13 +48,8 @@ namespace EvidenceApi.V1.UseCase
                     var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
                         ds.StaffSelectedDocumentTypeId);
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
-                    if (claim.Document == null)
                     {
-                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim));
-                    }
-                    else
-                    {
-                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, claim.Document, claim));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, claim));
                     }
                 }
             }
