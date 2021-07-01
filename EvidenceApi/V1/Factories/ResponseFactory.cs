@@ -38,10 +38,21 @@ namespace EvidenceApi.V1.Factories
             this DocumentSubmission domain,
             DocumentType documentType,
             DocumentType? staffSelectedDocumentType = null,
-            Document? document = null
+            Claim? claim = null
         )
         {
-            return new DocumentSubmissionResponse()
+            return claim == null ? new DocumentSubmissionResponse()
+            {
+                Id = domain.Id,
+                CreatedAt = domain.CreatedAt,
+                ClaimId = domain.ClaimId,
+                RejectionReason = domain.RejectionReason,
+                RejectedAt = domain.RejectedAt,
+                UserUpdatedBy = domain.UserUpdatedBy,
+                State = domain.State.ToString().ToUpper(),
+                DocumentType = documentType,
+                StaffSelectedDocumentType = staffSelectedDocumentType
+            } : new DocumentSubmissionResponse()
             {
                 Id = domain.Id,
                 CreatedAt = domain.CreatedAt,
@@ -52,7 +63,8 @@ namespace EvidenceApi.V1.Factories
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
-                Document = document
+                Document = claim.Document,
+                ClaimValidUntil = claim.ValidUntil
             };
         }
     }
