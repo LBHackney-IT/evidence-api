@@ -7,7 +7,7 @@ title Document Evidence Store Deployment Diagram
 Deployment_Node(aws, "AWS", "Region: eu-west-2") {
   Deployment_Node(aws_production_apis, "ProductionAPIs", "Account") {
     Deployment_Node(aws_production_apis_lambda, "Lambda") {
-      Container(api_authenticator, "API Authenticator", "Lambda", "Centralized API authentication in a single Lambda function")
+      Container(api_authenticator, "API Authenticator", "Lambda", "Centralized API authentication")
     }
   }
 
@@ -16,15 +16,15 @@ Deployment_Node(aws, "AWS", "Region: eu-west-2") {
     Deployment_Node(aws_des_production_api_gateway, "API Gateway") {
       Container(evidence_api_gateway, "Evidence API", "API Gateway", "Provides routing and auth via API keys")
       Container(documents_api_gateway, "Documents API", "API Gateway", "Provides routing and auth via API keys")
-      Container(document_evidence_frontend_api_gateway, "Document Evidence Frontend API", "API Gateway", "Provides routing and auth via API keys")
+      Container(document_evidence_frontend_api_gateway, "Document Evidence Frontend", "API Gateway", "Provides routing")
     }
 
     Deployment_Node(aws_des_production_lambda, "Lambda") {
       Container(evidence_api_lambda, "Evidence API", "Lambda, C#", "Provides service API capabilities to manage and track evidence requests")
       Container(documents_api_lambda, "Documents API", "Lambda, C#", "Provides service API capabilities to manage and upload documents")
-      Container(document_evidence_frontend_api_lambda, "Document Evidence Frontend API", "Lambda, Node.js", "Provides frontend experience for residents and staff")
-      Container(documents_api_documents_orchestrator_lambda, "Documents API Documents Orchestrator", "Lambda, Python", "Performs malware scan and moves files in S3 bucket")
-      Container(documents_api_malware_scan_successful_lambda, "Documents API Malware Scan Successful", "Lambda, C#", "Updates Documents DB with object metadata")
+      Container(document_evidence_frontend_api_lambda, "Document Evidence Frontend", "Lambda, Node.js", "Provides frontend experience for residents and staff")
+      Container(documents_orchestrator_lambda, "Documents Orchestrator", "Lambda, Python", "Performs malware scan and moves files in S3 bucket")
+      Container(malware_scan_successful_lambda, "Malware Scan Successful", "Lambda, C#", "Updates Documents DB with object metadata")
     }
 
     Deployment_Node(aws_des_production_rds, "RDS") {
@@ -33,30 +33,29 @@ Deployment_Node(aws, "AWS", "Region: eu-west-2") {
     }
 
     Deployment_Node(aws_des_production_s3, "S3") {
-      Container(documents_s3, "Document Evidence Store", "img/pdf", "Stores documents")
+      Container(documents_s3, "Document Evidence Store", "S3 Bucket", "Stores documents")
     }
 }
 
 Rel(evidence_api_gateway, api_authenticator, "Request", "Lambda Event")
 Rel(documents_api_gateway, api_authenticator, "Request", "Lambda Event")
-Rel(document_evidence_frontend_api_gateway, api_authenticator, "Request", "Lambda Event")
 
 Rel(document_evidence_frontend_api_gateway, document_evidence_frontend_api_lambda, "Uses", "HTTPS")
 Rel(document_evidence_frontend_api_lambda, evidence_api_lambda, "Uses", "JSON/HTTPS")
 Rel(document_evidence_frontend_api_lambda, documents_api_lambda, "Uses", "JSON/HTTPS")
 
 Rel(evidence_api_gateway, evidence_api_lambda, "Uses", "HTTPS")
-Rel(evidence_api_lambda, evidence_api_rds, "Reads from and writes to", "Entity Framework")
+Rel(evidence_api_lambda, evidence_api_rds, "Read / Write", "Entity Framework")
 Rel(evidence_api_lambda, documents_api_lambda, "Uses", "JSON/HTTPS")
 
 Rel(documents_api_gateway, documents_api_lambda, "Uses", "HTTPS")
-Rel(documents_api_lambda, documents_api_rds, "Reads from and writes to", "Entity Framework")
-Rel(documents_api_malware_scan_successful_lambda, documents_api_rds, "Writes to", "Entity Framework")
+Rel(documents_api_lambda, documents_api_rds, "Read / Write", "Entity Framework")
+Rel(malware_scan_successful_lambda, documents_api_rds, "Writes to", "Entity Framework")
 
 Rel(documents_api_lambda, documents_s3, "Writes", "S3 PutObject")
-Rel(documents_s3, documents_api_documents_orchestrator_lambda, "Triggers", "S3 Event Notification")
-Rel(documents_api_documents_orchestrator_lambda, documents_api_malware_scan_successful_lambda, "Triggers", "Lambda Notification")
-Rel(documents_api_malware_scan_successful_lambda, documents_s3, "Performs", "S3 MoveObject")
+Rel(documents_s3, documents_orchestrator_lambda, "Triggers", "S3 Event Notification")
+Rel(documents_orchestrator_lambda, malware_scan_successful_lambda, "Triggers", "Lambda Notification")
+Rel(malware_scan_successful_lambda, documents_s3, "Performs", "S3 MoveObject")
 
 SHOW_DYNAMIC_LEGEND()
 @enduml
