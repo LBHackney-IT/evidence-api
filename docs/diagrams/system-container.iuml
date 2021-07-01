@@ -15,6 +15,9 @@ System_Boundary(system, "Document Evidence Store") {
   Container(document_evidence_frontend, "Document Evidence Frontend", "Lambda, Node.js", "Manage and track evidence requests")
   Container(evidence_api_lambda, "Evidence API", "Lambda, C#", "Provides service API capabilities to manage and track evidence requests")
   Container(documents_api_lambda, "Documents API", "Lambda, C#", "Provides service API capabilities to manage and upload documents")
+  Container(documents_orchestrator_lambda, "Documents Orchestrator", "Lambda, Python", "Performs malware scan and moves files in S3 bucket")
+  Container(malware_scan_successful_lambda, "Malware Scan Successful", "Lambda, C#", "Updates Documents DB with object metadata")
+  Container(documents_s3, "Document Evidence Store", "S3 Bucket", "Stores documents")
 }
 
 System_Boundary(googles, "Google") {
@@ -22,11 +25,16 @@ System_Boundary(googles, "Google") {
 }
 
 Rel(document_evidence_frontend, google_auth, "Authenticates officers via", "JSON/HTTPS")
-Rel(document_evidence_frontend, evidence_api_lambda, "Retrieves from", "JSON/HTTPS")
-Rel(document_evidence_frontend, documents_api_lambda, "Retrieves from", "JSON/HTTPS")
+Rel(document_evidence_frontend, evidence_api_lambda, "Read / Write", "JSON/HTTPS")
+Rel(document_evidence_frontend, documents_api_lambda, "Read / Write", "JSON/HTTPS")
 
 Rel(council_officer, document_evidence_frontend, "Manage evidence using")
 Rel(resident, document_evidence_frontend, "Upload evidence using")
+
+Rel(documents_api_lambda, documents_s3, "Writes", "S3 PutObject")
+Rel(documents_s3, documents_orchestrator_lambda, "Triggers", "S3 Event Notification")
+Rel(documents_orchestrator_lambda, malware_scan_successful_lambda, "Triggers", "Lambda Notification")
+Rel(malware_scan_successful_lambda, documents_s3, "Performs", "S3 MoveObject")
 
 SHOW_DYNAMIC_LEGEND()
 @enduml
