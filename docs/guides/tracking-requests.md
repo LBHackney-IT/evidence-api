@@ -35,6 +35,7 @@ aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 ```
 7. Next run the following to create a private key and permission it appropriately
+   Note: If you already have the file (from a previous run of this step for example) you will need to remove it before running.
 ```sh
 aws ssm get-parameter --name "/document-evidence-store-staging-jump-box-pem-key	" --output text --query Parameter.Value > ./private-key.pem
 chmod 400 ./private-key.pem
