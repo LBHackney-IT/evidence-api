@@ -25,7 +25,7 @@ Our databases (evidence-api, documents-api) sit behind an AWS VPC and are not ex
 This was written for the EvidenceAPI staging database and the steps can be easily changed for the DocumentsAPI or production instances
 
 1. Navigate to the [Hackney AWS start page](https://hackney.awsapps.com/start#/)
-2. Select _StagingAPIs_ domain
+2. Select _Document Evidence Store Staging_ account
 3. Click on _Command line or programmatic access_
 4. Option 1 lets you copy the values to AWS environment variables, click the box to copy
 5. Paste these into your terminal
@@ -35,18 +35,18 @@ aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 ```
 7. Next run the following to create a private key and permission it appropriately
-   Note: If you already have the file (from a previous run of this step for example) you will need to remove it before running.
 ```sh
 aws ssm get-parameter --name "/document-evidence-store-staging-jump-box-pem-key	" --output text --query Parameter.Value > ./private-key.pem
 chmod 400 ./private-key.pem
 ```
+  * Note: If you already have the file (from a previous run of this step for example) you will need to remove it before running.
 8. Create environment variables by retrieving properties from AWS SSM
 ```sh
 EVIDENCE_API_HOST=$(aws ssm get-parameter --name /evidence-api/staging/postgres-hostname --query Parameter.Value)
 EVIDENCE_API_PORT=$(aws ssm get-parameter --name /evidence-api/staging/postgres-port --query Parameter.Value)
 JUMP_BOX_NAME=$(aws ssm get-parameter --name /document-evidence-store-staging-jump-box-instance-name --query Parameter.Value)
 ```
-9. Setup port forwarding which creates a tunnel between your local machine and the EvidenceAPI database. It will map `localhost:EVIDENCE_API_PORT` to `aws_host:EVIDENCE_API_PORT`
+9. Setup port forwarding which creates a tunnel between your local machine and the jump host. It will map `localhost:EVIDENCE_API_PORT` to `jumpboxhost:EVIDENCE_API_PORT`
 ```sh
 ssh -4 -i ./private-key.pem -Nf -M -L ${EVIDENCE_API_PORT//\"}:${EVIDENCE_API_HOST//\"}:${EVIDENCE_API_PORT//\"} -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o ProxyCommand="aws ssm start-session --target %h --document AWS-StartSSHSession --parameters portNumber=%p --region=eu-west-2" ec2-user@${JUMP_BOX_NAME//\"}
 ```
@@ -69,7 +69,7 @@ aws ssm get-parameter --name /evidence-api/staging/postgres-database --query Par
 #### Steps
 
 1. Navigate to the [Hackney AWS start page](https://hackney.awsapps.com/start#/)
-2. Select _StagingAPIs_ domain
+2. Select _Document Evidence Store Staging_ account
 3. Click on _Management Console_
 4. Click _Services_ > _Lambda_
 5. Search for the function name, for example _evidence-api-staging_
