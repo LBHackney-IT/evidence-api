@@ -17,13 +17,17 @@ The JSON file is designed to be easy to amend by anyone—all it needs is the Go
 
 There are a couple of configurations that need to take place:
 
+### Service Areas
+
+Add their team configuration to `document-evidence-store-frontend/teams.json`. Ensure to add:
+- a machine readable ID (this should contain no spaces, and only contain lowercase letters, numbers and hyphens)
+- a human readable group name
+- Google Group that matches configuration in `auth-groups.json`
+- Other fields which the service provided in the onboarding sheet, such as _reasons_ and _landingMessage_
+
 ### Document Types
 
 Add any document types that the service deals with to `EvidenceApi/DocumentTypes.json` and `EvidenceAPi/StaffSelectedDocumentTypes.json`. Ensure to add:
+- the ID that was created in `teams.json`
 - a human readable title
 - a description (this will be shown to the **resident**, so please ensure it describes what they need to provide and any important details)
-- a machine readable ID (this should contain no spaces, and only contain lowercase letters, numbers and hyphens)
-
-### Service Areas
-
-Add their team configuration to `document-evidence-store-frontend/teams.json`. Ensure that the `id` is unique
