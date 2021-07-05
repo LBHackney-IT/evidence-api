@@ -10,6 +10,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Domain.Enums;
 using Notify.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -22,6 +23,7 @@ namespace EvidenceApi.V1.UseCase
         private readonly IDocumentsApiGateway _documentsApiGateway;
         private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
+        private readonly ILogger<UpdateDocumentSubmissionStateUseCase> _logger;
 
         public UpdateDocumentSubmissionStateUseCase(
             IEvidenceGateway evidenceGateway,
@@ -30,7 +32,8 @@ namespace EvidenceApi.V1.UseCase
             IResidentsGateway residentsGateway,
             IDocumentsApiGateway documentsApiGateway,
             IStaffSelectedDocumentTypeGateway selectedDocumentTypeGateway,
-            IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase
+            IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase,
+            ILogger<UpdateDocumentSubmissionStateUseCase> logger
         )
         {
             _evidenceGateway = evidenceGateway;
@@ -40,6 +43,7 @@ namespace EvidenceApi.V1.UseCase
             _documentsApiGateway = documentsApiGateway;
             _staffSelectedDocumentTypeGateway = selectedDocumentTypeGateway;
             _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
+            _logger = logger;
         }
 
         public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid id, DocumentSubmissionUpdateRequest request)
@@ -62,10 +66,19 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException("This state is invalid");
             }
 
+            if ((documentSubmission.State == SubmissionState.Approved ||
+                documentSubmission.State == SubmissionState.Rejected) &&
+                (request.State == "APPROVED" || request.State == "REJECTED"))
+            {
+                throw new BadRequestException($"Document has already been {documentSubmission.State.ToString().ToLower()}");
+            }
+
             documentSubmission.State = state;
+            documentSubmission.UserUpdatedBy = request.UserUpdatedBy;
 
             if (!String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected)
             {
+                documentSubmission.RejectedAt = DateTime.UtcNow;
                 NotifyResident(documentSubmission, request);
             }
 
@@ -126,8 +139,8 @@ namespace EvidenceApi.V1.UseCase
             }
             catch (NotifyClientException ex)
             {
-                Console.Error.WriteLine(ex);
-                throw new NotificationException(documentSubmission.EvidenceRequest);
+                _logger.LogError(ex, ex.Message);
+                throw new NotificationException(ex.Message);
             }
         }
 

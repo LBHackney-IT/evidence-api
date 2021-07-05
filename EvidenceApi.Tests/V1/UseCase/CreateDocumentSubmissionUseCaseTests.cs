@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -12,6 +14,7 @@ using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -58,10 +61,10 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsBadRequestExceptionWhenCannotCreateClaim()
         {
             // Arrange
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
 
             SetupEvidenceGateway(evidenceRequest);
 
@@ -83,32 +86,22 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenCannotCreateUploadPolicy()
+        public void ThrowsBadRequestExceptionWhenCannotUploadFile()
         {
             // Arrange
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
-
-            SetupEvidenceGateway(evidenceRequest);
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
 
             var claim = _fixture.Create<Claim>();
-            _documentsApiGateway
-                .Setup(x =>
-                    x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                        cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
-                        cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
-                        cr.ApiCreatedBy == "evidence_api"
-                    ))
-                )
-                .ReturnsAsync(claim);
+
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
 
             _documentsApiGateway
                 .Setup(x =>
-                    x.CreateUploadPolicy(It.Is<Guid>(id =>
-                        id == claim.Document.Id))
-                )
+                    x.UploadDocument(It.IsAny<Guid>(), It.IsAny<DocumentSubmissionRequest>()))
                 .Throws(new DocumentsApiException("doh!"));
 
             // Act
@@ -121,21 +114,19 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public async Task ReturnsTheCreatedDocumentSubmissionWhenRequestIsValid()
         {
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
 
             var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
             var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
-            result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
             result.Id.Should().Be(_created.Id);
             result.ClaimId.Should().Be(_created.ClaimId);
             result.RejectionReason.Should().Be(_created.RejectionReason);
@@ -147,19 +138,18 @@ namespace EvidenceApi.Tests.V1.UseCase
         [TestCase(SubmissionState.Rejected)]
         public void DoesNotThrowWhenInactiveDocumentSubmissionExists(SubmissionState state)
         {
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
             var existingDocumentSubmission =
                 new DocumentSubmission { State = state, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
 
             var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
             SetupDocumentTypeGateway(_request.DocumentType);
 
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
@@ -170,10 +160,10 @@ namespace EvidenceApi.Tests.V1.UseCase
         [TestCase(SubmissionState.Uploaded)]
         public void ThrowsBadRequestIfActiveDocumentSubmissionAlreadyExists(SubmissionState state)
         {
-            _documentType = _fixture.Create<DocumentType>();
-            _request = CreateRequestFixture();
-            _created = DocumentSubmissionFixture();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
             var existingDocumentSubmission =
                 new DocumentSubmission { State = state, DocumentTypeId = _documentType.Id };
             evidenceRequest.DocumentSubmissions = new List<DocumentSubmission> { existingDocumentSubmission };
@@ -198,7 +188,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             return submission;
         }
 
-        private void SetupDocumentsApiGateway(EvidenceRequest evidenceRequest, Claim claim, S3UploadPolicy s3UploadPolicy)
+        private void SetupDocumentsApiGateway(EvidenceRequest evidenceRequest, Claim claim)
         {
             _documentsApiGateway
                 .Setup(x =>
@@ -209,13 +199,6 @@ namespace EvidenceApi.Tests.V1.UseCase
                     ))
                 )
                 .ReturnsAsync(claim);
-
-            _documentsApiGateway
-                .Setup(x =>
-                    x.CreateUploadPolicy(It.Is<Guid>(id =>
-                        id == claim.Document.Id))
-                )
-                .ReturnsAsync(s3UploadPolicy);
         }
 
         private void SetupEvidenceGateway(EvidenceRequest evidenceRequest)

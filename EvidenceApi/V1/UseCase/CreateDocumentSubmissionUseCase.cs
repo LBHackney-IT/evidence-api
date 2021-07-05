@@ -45,14 +45,14 @@ namespace EvidenceApi.V1.UseCase
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
                 var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
-                var createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
+                await _documentsApiGateway.UploadDocument(claim.Document.Id, request).ConfigureAwait(true);
 
                 var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
                 var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
 
                 var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
 
-                return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy);
+                return createdDocumentSubmission.ToResponse(documentType, null, claim);
             }
             catch (DocumentsApiException ex)
             {
@@ -83,7 +83,8 @@ namespace EvidenceApi.V1.UseCase
             {
                 EvidenceRequest = evidenceRequest,
                 DocumentTypeId = request.DocumentType,
-                ClaimId = claim.Id.ToString()
+                ClaimId = claim.Id.ToString(),
+                State = SubmissionState.Uploaded
             };
             return documentSubmission;
         }
@@ -93,6 +94,10 @@ namespace EvidenceApi.V1.UseCase
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");
+            }
+            if (String.IsNullOrEmpty(request.Base64Document))
+            {
+                throw new BadRequestException("Base 64 document is null or empty");
             }
         }
     }

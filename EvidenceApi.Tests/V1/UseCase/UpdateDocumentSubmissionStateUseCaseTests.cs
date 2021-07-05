@@ -13,6 +13,7 @@ using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.UseCase.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -26,6 +27,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
         private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
+        private Mock<ILogger<UpdateDocumentSubmissionStateUseCase>> _logger;
         private readonly IFixture _fixture = new Fixture();
         private DocumentSubmission _found;
         private Resident _resident;
@@ -35,6 +37,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
+            _logger = new Mock<ILogger<UpdateDocumentSubmissionStateUseCase>>();
             _classUnderTest = new UpdateDocumentSubmissionStateUseCase(
                 _evidenceGateway.Object,
                 _documentTypeGateway.Object,
@@ -42,7 +45,8 @@ namespace EvidenceApi.Tests.V1.UseCase
                 _residentsGateway.Object,
                 _documentsApiGateway.Object,
                 _staffSelectedDocumentTypeGateway.Object,
-                _updateEvidenceRequestStateUseCase.Object);
+                _updateEvidenceRequestStateUseCase.Object,
+                _logger.Object);
         }
 
         [Test]
@@ -79,6 +83,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Id.Should().Be(_found.Id);
             result.StaffSelectedDocumentType.Should().NotBeNull();
             result.StaffSelectedDocumentType.Id.Should().Be(_found.StaffSelectedDocumentTypeId);
+            result.UserUpdatedBy.Should().Be(_found.UserUpdatedBy);
         }
 
         [Test]
@@ -90,6 +95,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var request = _fixture.Build<DocumentSubmissionUpdateRequest>()
                 .With(x => x.State, "Uploaded")
                 .With(x => x.RejectionReason, "This is the rejection reason")
+                .With(x => x.UserUpdatedBy, "TestEmail@hackney.gov.uk")
                 .Without(x => x.ValidUntil)
                 .Create();
 
@@ -97,6 +103,8 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             result.Id.Should().Be(_found.Id);
             result.RejectionReason.Should().Be(_found.RejectionReason);
+            result.RejectedAt.Should().Be(_found.RejectedAt);
+            result.UserUpdatedBy.Should().Be(_found.UserUpdatedBy);
         }
 
         [Test]
@@ -202,6 +210,36 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             // Assert
             testDelegate.Should().Throw<BadRequestException>().WithMessage("Issue with DocumentsApi so cannot update claim: doh!");
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenDocumentSubmissionIsAccepted()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+            _found.State = SubmissionState.Approved;
+            DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "APPROVED")
+                .Without(x => x.ValidUntil)
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been approved");
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenDocumentSubmissionIsRejected()
+        {
+            Guid id = Guid.NewGuid();
+            SetupMocks(id, teamName);
+            _found.State = SubmissionState.Rejected;
+            DocumentSubmissionUpdateRequest request = _fixture.Build<DocumentSubmissionUpdateRequest>()
+                .With(x => x.State, "REJECTED")
+                .Without(x => x.ValidUntil)
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(id, request).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document has already been rejected");
         }
 
         [Test]

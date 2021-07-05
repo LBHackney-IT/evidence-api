@@ -20,6 +20,12 @@ namespace EvidenceApi.V1.Domain
         [Column("rejection_reason")]
         public string RejectionReason { get; set; }
 
+        [Column("rejected_at")]
+        public DateTime? RejectedAt { get; set; }
+
+        [Column("user_updated_by")]
+        public string UserUpdatedBy { get; set; }
+
         [Column("state")]
         public SubmissionState State { get; set; }
 

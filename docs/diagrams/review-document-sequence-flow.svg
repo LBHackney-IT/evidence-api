@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="857px" preserveAspectRatio="none" style="width:724px;height:857px;background:#FFFFFF;" version="1.1" viewBox="0 0 724 857" width="724px" zoomAndPan="magnify"><defs><filter height="300%" id="f104wx9f7jq4to" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacing" textLength="385" x="167.75" y="28.708">Review document sequence flow diagram</text><rect fill="#FFFFFF" filter="url(#f104wx9f7jq4to)" height="73.0703" style="stroke:#000000;stroke-width:2.0;" width="272.5" x="338" y="497.6875"/><rect fill="#FFFFFF" filter="url(#f104wx9f7jq4to)" height="59.0703" style="stroke:#000000;stroke-width:2.0;" width="372.5" x="338" y="584.7578"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="39" x2="39" y1="75.25" y2="814.6094"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="213" x2="213" y1="75.25" y2="814.6094"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="401" x2="401" y1="75.25" y2="814.6094"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="538.5" x2="538.5" y1="75.25" y2="814.6094"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="655.5" x2="655.5" y1="75.25" y2="814.6094"/><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="64" x="5" y="39.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50" x="12" y="59.9482">Officer</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="64" x="5" y="813.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50" x="12" y="833.6045">Officer</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="80" x="171" y="39.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="66" x="178" y="59.9482">Frontend</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="80" x="171" y="813.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="66" x="178" y="833.6045">Frontend</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="102" x="348" y="39.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88" x="355" y="59.9482">EvidenceAPI</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="102" x="348" y="813.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="88" x="355" y="833.6045">EvidenceAPI</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="119" x="477.5" y="39.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105" x="484.5" y="59.9482">DocumentsAPI</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="119" x="477.5" y="813.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105" x="484.5" y="833.6045">DocumentsAPI</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="86" x="610.5" y="39.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72" x="617.5" y="59.9482">GovNotify</text><rect fill="#FEFECE" filter="url(#f104wx9f7jq4to)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="86" x="610.5" y="813.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72" x="617.5" y="833.6045">GovNotify</text><polygon fill="#666666" points="201,101.2188,211,105.2188,201,109.2188,205,105.2188" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="39" x2="207" y1="105.2188" y2="105.2188"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="117" x="46" y="100.3887">Search for resident</text><polygon fill="#666666" points="389,143.1563,399,147.1563,389,151.1563,393,147.1563" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="213" x2="395" y1="147.1563" y2="147.1563"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="23" x="220" y="128.3574">GET</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="130" x="220" y="142.3262">/residents/:residentId</text><polygon fill="#666666" points="224,171.125,214,175.125,224,179.125,220,175.125" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="218" x2="400" y1="175.125" y2="175.125"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="118" x="230" y="170.2949">200 Resident found</text><polygon fill="#666666" points="50,199.0938,40,203.0938,50,207.0938,46,203.0938" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="44" x2="212" y1="203.0938" y2="203.0938"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="90" x="56" y="198.2637">Resident found</text><polygon fill="#666666" points="389,241.0313,399,245.0313,389,249.0313,393,245.0313" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="213" x2="395" y1="245.0313" y2="245.0313"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="23" x="220" y="226.2324">GET</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="164" x="220" y="240.2012">/document_submissions/:id</text><polygon fill="#666666" points="224,282.9688,214,286.9688,224,290.9688,220,286.9688" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="218" x2="400" y1="286.9688" y2="286.9688"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="89" x="230" y="268.1699">200 Document</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="106" x="230" y="282.1387">submission found</text><polygon fill="#666666" points="527,324.9063,537,328.9063,527,332.9063,531,328.9063" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="213" x2="533" y1="328.9063" y2="328.9063"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="23" x="220" y="310.1074">GET</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="150" x="220" y="324.0762">/documents/:documentId</text><polygon fill="#666666" points="224,366.8438,214,370.8438,224,374.8438,220,370.8438" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="218" x2="538" y1="370.8438" y2="370.8438"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="147" x="230" y="352.0449">200 Document encoded</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="60" x="230" y="366.0137">in base64</text><polygon fill="#666666" points="50,394.8125,40,398.8125,50,402.8125,46,398.8125" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="44" x2="212" y1="398.8125" y2="398.8125"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="150" x="56" y="393.9824">Show document preview</text><polygon fill="#666666" points="201,436.75,211,440.75,201,444.75,205,440.75" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="39" x2="207" y1="440.75" y2="440.75"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="134" x="46" y="421.9512">Approve/Request new</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="18" x="46" y="435.9199">file</text><polygon fill="#666666" points="389,478.6875,399,482.6875,389,486.6875,393,482.6875" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="213" x2="395" y1="482.6875" y2="482.6875"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="38" x="220" y="463.8887">PATCH</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="164" x="220" y="477.8574">/document_submissions/:id</text><path d="M338,497.6875 L445,497.6875 L445,504.6875 L435,514.6875 L338,514.6875 L338,497.6875 " fill="#EEEEEE" style="stroke:#000000;stroke-width:1.0;"/><rect fill="none" height="73.0703" style="stroke:#000000;stroke-width:2.0;" width="272.5" x="338" y="497.6875"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="62" x="353" y="510.7544">Approve</text><polygon fill="#666666" points="527,530.7891,537,534.7891,527,538.7891,531,534.7891" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="401" x2="533" y1="534.7891" y2="534.7891"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="103" x="408" y="529.959">PATCH /claims/:id</text><polygon fill="#666666" points="412,558.7578,402,562.7578,412,566.7578,408,562.7578" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="406" x2="538" y1="562.7578" y2="562.7578"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="114" x="418" y="557.9277">200 Claim updated</text><path d="M338,584.7578 L509,584.7578 L509,591.7578 L499,601.7578 L338,601.7578 L338,584.7578 " fill="#EEEEEE" style="stroke:#000000;stroke-width:1.0;"/><rect fill="none" height="59.0703" style="stroke:#000000;stroke-width:2.0;" width="372.5" x="338" y="584.7578"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="126" x="353" y="597.8247">Request new file</text><polygon fill="#666666" points="643.5,631.8281,653.5,635.8281,643.5,639.8281,647.5,635.8281" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="401" x2="649.5" y1="635.8281" y2="635.8281"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="116" x="408" y="617.0293">Send notification to</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="102" x="408" y="630.998">resident with link</text><polygon fill="#666666" points="224,694.7344,214,698.7344,224,702.7344,220,698.7344" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="218" x2="400" y1="698.7344" y2="698.7344"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="89" x="230" y="665.9668">200 Document</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="102" x="230" y="679.9355">submission state</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="50" x="230" y="693.9043">updated</text><polygon fill="#666666" points="389,736.6719,399,740.6719,389,744.6719,393,740.6719" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="213" x2="395" y1="740.6719" y2="740.6719"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="23" x="220" y="721.873">GET</text><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="130" x="220" y="735.8418">/residents/:residentId</text><polygon fill="#666666" points="224,764.6406,214,768.6406,224,772.6406,220,768.6406" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="218" x2="538" y1="768.6406" y2="768.6406"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="118" x="230" y="763.8105">200 Resident found</text><polygon fill="#666666" points="50,792.6094,40,796.6094,50,800.6094,46,796.6094" style="stroke:#666666;stroke-width:1.0;"/><line style="stroke:#666666;stroke-width:1.0;" x1="44" x2="212" y1="796.6094" y2="796.6094"/><text fill="#666666" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="87" x="56" y="791.7793">Show resident</text><!--MD5=[7cf5bef8109f8a47c705a9df274b9a28]
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Deployment.puml
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Review document sequence flow diagram
+
+Officer -> Frontend: Search for resident
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- EvidenceAPI: 200 Resident found
+Officer <- Frontend: Resident found
+Frontend -> EvidenceAPI: GET /document_submissions/:id
+Frontend <- EvidenceAPI: 200 Document submission found
+Frontend -> DocumentsAPI: GET /documents/:documentId
+Frontend <- DocumentsAPI: 200 Document encoded in base64
+Officer <- Frontend: Show document preview
+Officer -> Frontend: Approve/Request new file
+Frontend -> EvidenceAPI: PATCH /document_submissions/:id
+group Approve
+EvidenceAPI -> DocumentsAPI: PATCH /claims/:id
+EvidenceAPI <- DocumentsAPI: 200 Claim updated
+end
+group Request new file
+EvidenceAPI -> GovNotify: Send notification to resident with link
+end
+Frontend <- EvidenceAPI: 200 Document submission state updated
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- DocumentsAPI: 200 Resident found
+Officer <- Frontend: Show resident
+@enduml
+
+@startuml
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam defaultTextAlignment center
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+
+skinparam LegendBorderColor transparent
+skinparam LegendBackgroundColor transparent
+skinparam LegendFontColor #FFFFFF
+
+skinparam shadowing<<legendArea>> false
+skinparam rectangle<<legendArea>> {
+    backgroundcolor #00000000
+    bordercolor #00000000
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam queue {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam arrow {
+    Color #666666
+    FontColor #666666
+    FontSize 12
+}
+
+skinparam actor {
+    StereotypeFontSize 12
+    shadowing false
+    style awesome
+}
+
+skinparam person {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam package {
+    StereotypeFontSize 6
+    StereotypeFontColor transparent
+    FontStyle plain
+    BackgroundColor transparent
+}
+
+skinparam rectangle<<boundary>> {
+    Shadowing false
+    StereotypeFontSize 6
+    StereotypeFontColor transparent
+    FontColor #444444
+    BorderColor #444444
+    BackgroundColor transparent
+    BorderStyle dashed
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam database<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam queue<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam actor<<person>> {
+    StereotypeFontColor #08427B
+    FontColor #08427B
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam person<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam database<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam queue<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam actor<<external_person>> {
+    StereotypeFontColor #686868
+    FontColor #686868
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam person<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam database<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam queue<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam actor<<system>> {
+    StereotypeFontColor #1168BD
+    FontColor #1168BD
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam person<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam database<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam queue<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam actor<<external_system>> {
+    StereotypeFontColor #999999
+    FontColor #999999
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam person<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+
+
+
+
+
+sprite $person [48x48/16] {
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000025788300000000005886410000000000000
+000000000007DFFFFFFD9643347BFFFFFFFB400000000000
+0000000004EFFFFFFFFFFFFFFFFFFFFFFFFFFB1000000000
+000000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFD200000000
+00000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE10000000
+0000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB0000000
+000000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5000000
+000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD000000
+000009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF200000
+00000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF600000
+00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF800000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00000EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF700000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+0000008FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD3000000
+000000014555555555555555555555555555555300000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+}
+
+sprite $person2 [48x48/16] {
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000002578888300000000005888864100000000000
+0000000007DFFFFFFFFD9643347BFFFFFFFFFB4000000000
+00000004EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB10000000
+0000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD2000000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+00003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+0000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF50000
+0003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD0000
+0009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2000
+000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6000
+000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA000
+000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8000
+000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6000
+0009FFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFFF2000
+0003FFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFFD0000
+0000BFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFF50000
+00003FFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFB00000
+000006FFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFE100000
+0000007FFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFD2000000
+00000004EFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFB10000000
+0000000007DF8FFFFFFFFFFFFFFFFFFFFFF8FB4000000000
+000000000002578888888888888888888864100000000000
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam database<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam queue<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam actor<<container>> {
+    StereotypeFontColor #438DD5
+    FontColor #438DD5
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam person<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+
+
+skinparam rectangle<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam database<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam queue<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam actor<<external_container>> {
+    StereotypeFontColor #B3B3B3
+    FontColor #B3B3B3
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam person<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+skinparam database<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+skinparam queue<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+skinparam actor<<node>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+skinparam person<<node>> {
+    StereotypeFontColor #000000
+    FontColor #000000
+    BackgroundColor #FFFFFF
+    BorderColor #A2A2A2
+}
+
+
+skinparam rectangle<<node>> {
+    FontStyle normal
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+skinparam database<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+skinparam queue<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+skinparam actor<<person>> {
+    StereotypeFontColor #00664f
+    FontColor #00664f
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+skinparam person<<person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00664f
+    BorderColor #0b0c0c
+    Shadowing<<person>> true
+}
+
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+skinparam database<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+skinparam queue<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+skinparam actor<<system>> {
+    StereotypeFontColor #00b341
+    FontColor #00b341
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+skinparam person<<system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #00b341
+    BorderColor #a4d65e
+}
+
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+skinparam database<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+skinparam queue<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+skinparam actor<<external_person>> {
+    StereotypeFontColor #672146
+    FontColor #672146
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+skinparam person<<external_person>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #672146
+    BorderColor #0b0c0c
+}
+
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+skinparam database<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+skinparam queue<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+skinparam actor<<external_system>> {
+    StereotypeFontColor #aa0061
+    FontColor #aa0061
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+skinparam person<<external_system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #aa0061
+    BorderColor #eb6fbd
+}
+
+
+
+skinparam rectangle<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+skinparam database<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+skinparam queue<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+skinparam actor<<hackney system>> {
+    StereotypeFontColor #84bd00
+    FontColor #84bd00
+    BackgroundColor #84bd00
+}
+skinparam person<<hackney system>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #84bd00
+}
+
+
+skinparam rectangle<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+skinparam database<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+skinparam queue<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+skinparam actor<<legacy>> {
+    StereotypeFontColor #be3a34
+    FontColor #be3a34
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+skinparam person<<legacy>> {
+    StereotypeFontColor #ffffff
+    FontColor #ffffff
+    BackgroundColor #be3a34
+    BorderColor #ff6a13
+}
+
+
+
+title Review document sequence flow diagram
+
+Officer -> Frontend: Search for resident
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- EvidenceAPI: 200 Resident found
+Officer <- Frontend: Resident found
+Frontend -> EvidenceAPI: GET /document_submissions/:id
+Frontend <- EvidenceAPI: 200 Document submission found
+Frontend -> DocumentsAPI: GET /documents/:documentId
+Frontend <- DocumentsAPI: 200 Document encoded in base64
+Officer <- Frontend: Show document preview
+Officer -> Frontend: Approve/Request new file
+Frontend -> EvidenceAPI: PATCH /document_submissions/:id
+group Approve
+EvidenceAPI -> DocumentsAPI: PATCH /claims/:id
+EvidenceAPI <- DocumentsAPI: 200 Claim updated
+end
+group Request new file
+EvidenceAPI -> GovNotify: Send notification to resident with link
+end
+Frontend <- EvidenceAPI: 200 Document submission state updated
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- DocumentsAPI: 200 Resident found
+Officer <- Frontend: Show resident
+@enduml
+
+PlantUML version 1.2021.9beta2(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

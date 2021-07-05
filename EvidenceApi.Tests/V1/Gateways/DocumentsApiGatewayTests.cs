@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
@@ -10,6 +11,8 @@ using EvidenceApi.V1.Boundary.Request;
 using System.Threading.Tasks;
 using Moq;
 using System.Net.Http;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Moq.Contrib.HttpClient;
 
@@ -61,21 +64,22 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public async Task CanCreateUploadPolicyWithValidParameters()
+        public async Task CanUploadDocumentWithValidParameters()
         {
+            // Arrange
             Guid id = Guid.NewGuid();
+            DocumentSubmissionRequest documentSubmissionRequest = new DocumentSubmissionRequest();
+            documentSubmissionRequest.Base64Document = "file";
+            documentSubmissionRequest.DocumentType = "passport";
 
-            var expectedS3UploadPolicy = JsonConvert.DeserializeObject<S3UploadPolicy>(_s3UploadPolicyResponse);
-
-            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}/upload_policies", request =>
+            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}", request =>
                 {
                     return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
                 })
-                    .ReturnsResponse(HttpStatusCode.Created, _s3UploadPolicyResponse, "application/json");
+                .ReturnsResponse(HttpStatusCode.OK);
 
-            var result = await _classUnderTest.CreateUploadPolicy(id).ConfigureAwait(true);
-
-            result.Should().BeEquivalentTo(expectedS3UploadPolicy);
+            // Act
+            await _classUnderTest.UploadDocument(id, documentSubmissionRequest).ConfigureAwait(true);
         }
 
         [Test]
@@ -133,21 +137,6 @@ namespace EvidenceApi.Tests.V1.Gateways
                 ""createdAt"": ""2021-01-14T14:32:15.377Z"",
                 ""fileSize"": 25300,
                 ""fileType"": ""image/png""
-            }
-        }";
-
-        private string _s3UploadPolicyResponse = @"{
-            ""url"": ""string"",
-            ""fields"": {
-                ""acl"": ""private"",
-                ""key"": ""uuid-document-id"",
-                ""X-Amz-Server-Side-Encryption"": ""AES256"",
-                ""bucket"": ""documents-api-dev-documents"",
-                ""X-Amz-Algorithm"": ""AWS4-HMAC-SHA256"",
-                ""X-Amz-Credential"": ""SECRET/20210113/eu-west-2/s3/aws4_request"",
-                ""X-Amz-Date"": ""20210113T154042Z"",
-                ""Policy"": ""base64 encoded policy"",
-                ""X-Amz-Signature"": ""aws generated signature""
             }
         }";
     }

@@ -1,0 +1,21 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Deployment.puml
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Resident sequence flow diagram
+
+Resident -> Resident: Receive notification
+Resident -> Frontend: Click link in notification
+Frontend -> EvidenceAPI: GET /evidence_requests/:id
+Frontend <- EvidenceAPI: 200 Evidence request found
+Resident <- Frontend: Show instructions
+Resident -> Frontend: Attach and upload file(s)
+Frontend -> EvidenceAPI: POST /evidence_requests/:id/document_submissions
+EvidenceAPI -> DocumentsAPI: POST /claims
+EvidenceAPI <- DocumentsAPI: 201 Claim with claimId, documentId
+EvidenceAPI -> DocumentsAPI: POST /documents/:documentId
+EvidenceAPI <- DocumentsAPI: 200 Document uploaded
+Frontend <- EvidenceAPI: 201 Document submission created
+Resident <- Frontend: Upload confirmation
+
+@enduml

@@ -154,3 +154,7 @@ If changes to the database schema are made then the docker image for the databas
 [universal-housing-simulator]: https://github.com/LBHackney-IT/lbh-universal-housing-simulator
 [made-tech]: https://madetech.com/
 [aws-cli]: https://aws.amazon.com/cli/
+
+# License
+
+[MIT](./LICENSE)

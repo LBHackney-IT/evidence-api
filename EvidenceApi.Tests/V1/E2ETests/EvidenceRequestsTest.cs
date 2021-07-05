@@ -105,8 +105,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             {
                 ""resident"": {
                     ""name"": ""Frodo Baggins"",
-                    ""email"": ""invalid email"",
-                    ""phoneNumber"": ""+447123456789""
+                    ""email"": "",
+                    ""phoneNumber"": ""
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""passport-scan""],

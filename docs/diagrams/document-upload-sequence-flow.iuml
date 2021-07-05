@@ -5,10 +5,8 @@
 title Document Evidence Store Document Upload Sequence Flow Diagram
 
 Service -> DocumentsAPI: POST /claims
-Service <- DocumentsAPI: Claim with claimId, documentId
-Service -> DocumentsAPI: POST /documents/:documentId/upload_policies
-Service <- DocumentsAPI: S3 presigned URL
-Service -> S3: POST file to presigned URL
-Service <- S3: 201 Created
+Service <- DocumentsAPI: 201 Claim with claimId, documentId
+Service -> DocumentsAPI: POST /documents/:documentId
+Service <- DocumentsAPI: 200 OK
 
 @enduml

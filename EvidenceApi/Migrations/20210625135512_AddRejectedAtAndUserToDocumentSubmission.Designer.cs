@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EvidenceApi.Migrations
 {
     [DbContext(typeof(EvidenceContext))]
-    partial class EvidenceContextModelSnapshot : ModelSnapshot
+    [Migration("20210625135512_AddRejectedAtAndUserToDocumentSubmission")]
+    partial class AddRejectedAtAndUserToDocumentSubmission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,7 +115,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("evidence_request_id")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("RejectedAt")
+                    b.Property<DateTime>("RejectedAt")
                         .HasColumnName("rejected_at")
                         .HasColumnType("timestamp without time zone");
 

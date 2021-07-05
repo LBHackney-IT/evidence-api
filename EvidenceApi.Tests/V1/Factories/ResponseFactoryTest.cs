@@ -50,17 +50,38 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
             var domain = TestDataHelper.DocumentSubmission();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType, null, s3UploadPolicy);
+            var response = domain.ToResponse(documentType);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.RejectionReason.Should().Be(domain.RejectionReason);
+            response.RejectedAt.Should().Be(domain.RejectedAt);
+            response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
             response.State.Should().Be(domain.State.ToString().ToUpper());
             response.DocumentType.Should().Be(documentType);
-            response.UploadPolicy.Should().Be(s3UploadPolicy);
+        }
+
+        [Test]
+        public void CanMapADocumentSubmissionDomainObjectToAResponseObjectWithClaim()
+        {
+            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
+            var claim = _fixture.Build<Claim>().Create();
+            var domain = TestDataHelper.DocumentSubmission();
+
+            var response = domain.ToResponse(documentType, null, claim);
+
+            response.Id.Should().Be(domain.Id);
+            response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.ClaimId.Should().Be(domain.ClaimId);
+            response.RejectionReason.Should().Be(domain.RejectionReason);
+            response.RejectedAt.Should().Be(domain.RejectedAt);
+            response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
+            response.State.Should().Be(domain.State.ToString().ToUpper());
+            response.DocumentType.Should().Be(documentType);
+            response.ClaimValidUntil.Should().Be(claim.ValidUntil);
+            response.Document.Should().Be(claim.Document);
         }
     }
 }

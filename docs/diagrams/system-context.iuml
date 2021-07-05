@@ -1,0 +1,24 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Context.puml
+
+'ref http://plantuml.com/stdlib
+!include <office/Users/user.puml>
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Document Evidence Store System Context Diagram
+
+Person(resident, Resident)
+Person(council_officer, Council Officer)
+
+System_Boundary(system, "Document Evidence Store") {
+  System(des_application, "Document Evidence Service", "Manage and track evidence requests")
+  System_Ext(google, "Google Services", "Groups")
+}
+
+Rel(council_officer, des_application, "Manage evidence using")
+Rel(resident, des_application, "Upload evidence using")
+
+Rel(des_application, google, "Authenticates with groups")
+
+SHOW_DYNAMIC_LEGEND()
+@enduml
