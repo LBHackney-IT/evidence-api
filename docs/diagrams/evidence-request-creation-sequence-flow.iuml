@@ -4,15 +4,15 @@
 
 title Evidence request creation sequence flow diagram
 
-Officer -> Next.JS: Search for resident
-Next.JS -> EvidenceAPI: GET /residents/:residentId
-Next.JS <- EvidenceAPI: 200 Resident found
-Officer <- Next.JS: Resident found
-Officer -> Next.JS: Request evidence
-Next.JS -> EvidenceAPI: POST /evidence_requests
+Officer -> Frontend: Search for resident
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- EvidenceAPI: 200 Resident found
+Officer <- Frontend: Resident found
+Officer -> Frontend: Request evidence
+Frontend -> EvidenceAPI: POST /evidence_requests
 EvidenceAPI -> EvidenceAPI: Create evidence request in database
-EvidenceAPI -> GovNotify: Send email to resident with link
-Next.JS <- EvidenceAPI: 201 Evidence request created
-Officer <- Next.JS: Evidence request created
+EvidenceAPI -> GovNotify: Send notification to resident with link
+Frontend <- EvidenceAPI: 201 Evidence request created
+Officer <- Frontend: Evidence request created
 
 @enduml

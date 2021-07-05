@@ -4,18 +4,18 @@
 
 title Resident sequence flow diagram
 
-Resident -> Resident: Receive email
-Resident -> Next.JS: Click link in email
-Next.JS -> EvidenceAPI: GET /evidence_requests/:id
-Next.JS <- EvidenceAPI: 200 Evidence request found
-Resident <- Next.JS: Show instructions
-Resident -> Next.JS: Click continue
-Next.JS -> EvidenceAPI: POST /evidence_requests/:id/document_submissions
+Resident -> Resident: Receive notification
+Resident -> Frontend: Click link in notification
+Frontend -> EvidenceAPI: GET /evidence_requests/:id
+Frontend <- EvidenceAPI: 200 Evidence request found
+Resident <- Frontend: Show instructions
+Resident -> Frontend: Attach and upload file(s)
+Frontend -> EvidenceAPI: POST /evidence_requests/:id/document_submissions
 EvidenceAPI -> DocumentsAPI: POST /claims
 EvidenceAPI <- DocumentsAPI: 201 Claim with claimId, documentId
 EvidenceAPI -> DocumentsAPI: POST /documents/:documentId
 EvidenceAPI <- DocumentsAPI: 200 Document uploaded
-Next.JS <- EvidenceAPI: 201 Document submission created
-Resident <- Next.JS: Upload confirmation
+Frontend <- EvidenceAPI: 201 Document submission created
+Resident <- Frontend: Upload confirmation
 
 @enduml

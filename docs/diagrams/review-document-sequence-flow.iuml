@@ -4,23 +4,27 @@
 
 title Review document sequence flow diagram
 
-Officer -> Next.JS: Search for resident
-Next.JS -> EvidenceAPI: GET /residents/:residentId
-Next.JS <- EvidenceAPI: 200 Resident found
-Officer <- Next.JS: Resident found
-Next.JS -> EvidenceAPI: GET /document_submissions/:id
-Next.JS -> DocumentsAPI: GET /documents/:documentId
-Next.JS <- DocumentsAPI: 200 Document encoded in base64
-Next.JS <- EvidenceAPI: 200 Document submission found
-Officer <- Next.JS: Show document preview
-Officer -> Next.JS: Approve/Request new file
-Next.JS -> EvidenceAPI: PATCH /document_submissions/:id
-EvidenceAPI -> DocumentsAPI: (Approve only) PATCH /claims/:id
+Officer -> Frontend: Search for resident
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- EvidenceAPI: 200 Resident found
+Officer <- Frontend: Resident found
+Frontend -> EvidenceAPI: GET /document_submissions/:id
+Frontend <- EvidenceAPI: 200 Document submission found
+Frontend -> DocumentsAPI: GET /documents/:documentId
+Frontend <- DocumentsAPI: 200 Document encoded in base64
+Officer <- Frontend: Show document preview
+Officer -> Frontend: Approve/Request new file
+Frontend -> EvidenceAPI: PATCH /document_submissions/:id
+group Approve
+EvidenceAPI -> DocumentsAPI: PATCH /claims/:id
 EvidenceAPI <- DocumentsAPI: 200 Claim updated
-EvidenceAPI -> GovNotify: (Request new file only) Send email to resident with link
-Next.JS <- EvidenceAPI: 200 Document submission state updated
-Next.JS -> EvidenceAPI: GET /residents/:residentId
-Next.JS <- DocumentsAPI: 200 Resident found
-Officer <- Next.JS: Show resident
+end
+group Request new file
+EvidenceAPI -> GovNotify: Send notification to resident with link
+end
+Frontend <- EvidenceAPI: 200 Document submission state updated
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- DocumentsAPI: 200 Resident found
+Officer <- Frontend: Show resident
 
 @enduml
