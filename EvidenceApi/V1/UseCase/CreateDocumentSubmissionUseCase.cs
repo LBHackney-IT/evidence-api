@@ -41,23 +41,23 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");
             }
 
+            Claim claim;
+
             try
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
-                var claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
+                claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
                 await _documentsApiGateway.UploadDocument(claim.Document.Id, request).ConfigureAwait(true);
-
-                var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
-                var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
-
-                var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
-
-                return createdDocumentSubmission.ToResponse(documentType, null, claim);
             }
             catch (DocumentsApiException ex)
             {
                 throw new BadRequestException($"Issue with DocumentsApi so cannot create DocumentSubmission: {ex.Message}");
             }
+
+            var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
+            var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
+            var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
+            return createdDocumentSubmission.ToResponse(documentType, null, claim);
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)
