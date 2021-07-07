@@ -195,7 +195,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             Guid id = Guid.NewGuid();
             SetupMocks(id, teamName);
             _documentsApiGateway.Setup(x => x.UpdateClaim(It.IsAny<Guid>(), It.IsAny<ClaimUpdateRequest>()))
-                .Throws(new DocumentsApiException("doh!"));
+                .Throws(new DocumentsApiException("Issue with DocumentsApi so cannot update claim: doh!"));
             Guid claimId = Guid.NewGuid();
             _found.ClaimId = claimId.ToString();
 

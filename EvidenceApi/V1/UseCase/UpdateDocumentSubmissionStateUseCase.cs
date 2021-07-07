@@ -111,7 +111,7 @@ namespace EvidenceApi.V1.UseCase
             }
             catch (DocumentsApiException ex)
             {
-                throw new BadRequestException($"Issue with DocumentsApi so cannot update claim: {ex.Message}");
+                throw new BadRequestException(ex.Message);
             }
         }
 
