@@ -43,3 +43,15 @@ The [deployment diagram](https://c4model.com/#DeploymentDiagram) shows the key a
 ### Document Retrieval
 
 ![Document Retrieval Sequence Flow Diagram](document-retrieval-sequence-flow.svg)
+
+### Evidence request creation
+
+![Evidence request creation Sequence Flow Diagram](evidence-request-creation-sequence-flow.svg)
+
+### Resident
+
+![Resident Sequence Flow Diagram](resident-sequence-flow.svg)
+
+### Review Document
+
+![Review Document Sequence Flow Diagram](review-document-sequence-flow.svg)
