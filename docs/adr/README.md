@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+We have linked to these records from the [Hackney ADR repository](https://github.com/LBHackney-IT/lbh-adrs/tree/master/DES). Records found in [Platform ADRs](https://github.com/LBHackney-IT/lbh-adrs/tree/master/Platform) should take precedence.
+
 * [1. Record architecture decisions](0001-record-architecture-decisions.md)
 * [2. Create two platform APIs instead of a single API](0002-create-two-platform-apis-instead-of-a-single-api.md)
 * [3. Use ASP.NET for Platform APIs](0003-use-asp-net-for-platform-apis.md)
