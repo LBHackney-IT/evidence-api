@@ -53,7 +53,8 @@ namespace EvidenceApi.V1.Gateways
             var response = await _client.PatchAsync(uri, jsonString).ConfigureAwait(true);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+                var errorBody = await DeserializeResponse<string>(response).ConfigureAwait(true);
+                throw new DocumentsApiException(errorBody);
             }
 
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
