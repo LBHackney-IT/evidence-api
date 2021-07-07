@@ -2,7 +2,7 @@
 
 Onboarding a new service to the Document Evidence Service means getting **configuration** setup, and ensuring the new officers will be **authenticated** correctly.
 
-The easiest way to do this is to use Github to edit the file directly and open a Pull Request for a developer to review. If this is your first time doing that, there is a [handy guide here](https://docs.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository).
+The easiest way to do this is to use Github to edit the file directly and open a Pull Request for a developer to review. If this is your first time doing that, there is a [handy guide here](https://docs.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository). Alternatively, you can ask a developer to help you with this instead.
 
 ## 🔐 Authentication
 
