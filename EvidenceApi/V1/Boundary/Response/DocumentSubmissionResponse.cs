@@ -13,6 +13,7 @@ namespace EvidenceApi.V1.Boundary.Response
         public DateTime? RejectedAt { get; set; }
         public string UserUpdatedBy { get; set; }
         public DateTime ClaimValidUntil { get; set; }
+        public DateTime RetentionExpiresAt { get; set; }
         public string State { get; set; }
         public DocumentType DocumentType { get; set; }
         public DocumentType? StaffSelectedDocumentType { get; set; }

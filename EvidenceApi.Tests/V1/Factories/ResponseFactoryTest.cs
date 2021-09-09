@@ -81,6 +81,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.State.Should().Be(domain.State.ToString().ToUpper());
             response.DocumentType.Should().Be(documentType);
             response.ClaimValidUntil.Should().Be(claim.ValidUntil);
+            response.RetentionExpiresAt.Should().Be(claim.RetentionExpiresAt);
             response.Document.Should().Be(claim.Document);
         }
     }
