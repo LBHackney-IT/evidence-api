@@ -72,5 +72,36 @@
         "description": "A valid document that can be used to prove nationality"
       }
     ]
+  },
+  {
+    "name": "Housing Register",
+    "id": "7",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document to provide proof of your identity"
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document to provide proof of your current accommodation"
+      },
+      {
+        "id": "proof-of-income",
+        "title": "Proof of income",
+        "description": "Please include salary, benefits and any other income for everyone in your household"
+      },
+      {
+        "id": "proof-of-savings",
+        "title": "Proof of savings",
+        "description": "This includes the total amount in all your current accounts, saving accounts, and any other types of savings"
+      },
+      {
+        "id": "proof-of-pension",
+        "title": "Proof of pension",
+        "description": "A valid document to provide proof of your pension"
+      }
+    ]
   }
 ]

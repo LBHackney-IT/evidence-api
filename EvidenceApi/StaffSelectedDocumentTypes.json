@@ -102,5 +102,101 @@
         "description": ""
       }
     ]
+  },
+  {
+    "name": "Housing Register",
+    "id": "7",
+    "documentTypes": [
+      {
+        "id": "passport",
+        "title": "Passport",
+        "description": "Data page with photo"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "UK driving licence",
+        "description": "Photo side (front)"
+      },
+      {
+        "id": "eu-identity-card",
+        "title": "EU identity card",
+        "description": "Photo page"
+      },
+      {
+        "id": "biometric-card",
+        "title": "Biometric card",
+        "description": "Both sides of the card"
+      },
+      {
+        "id": "birth-certificate",
+        "title": "Birth certificate",
+        "description": ""
+      },
+      {
+        "id": "certificate-of-naturalisation",
+        "title": "Certificate of naturalisation",
+        "description": ""
+      },
+      {
+        "id": "nhs-medical-card",
+        "title": "NHS medical card",
+        "description": ""
+      },
+      {
+        "id": "bank-statement",
+        "title": "Bank statement",
+        "description": "Valid from the last 3 months"
+      },
+      {
+        "id": "utility-bills",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months"
+      },
+      {
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year"
+      },
+      {
+        "id": "mortgage-deed",
+        "title": "Mortgage deed",
+        "description": ""
+      },
+      {
+        "id": "tenancy-agreement",
+        "title": "Tenancy agreement",
+        "description": ""
+      },
+      {
+        "id": "details-of-host",
+        "title": "Details of host",
+        "description": ""
+      },
+      {
+        "id": "payslip",
+        "title": "Payslip",
+        "description": "Valid from the last 3 months"
+      },
+      {
+        "id": "company-accounts",
+        "title": "Company accounts",
+        "description": "Show last 12 months"
+      },
+      {
+        "id": "self-assessment",
+        "title": "Self assessment",
+        "description": "Show last 12 months"
+      },
+      {
+        "id": "state-pension-statement",
+        "title": "State pension statement",
+        "description": "From within the last year"
+      },
+      {
+        "id": "private-pension-statement",
+        "title": "Private pension statement",
+        "description": "From within the last year"
+      }
+    ]
   }
 ]
