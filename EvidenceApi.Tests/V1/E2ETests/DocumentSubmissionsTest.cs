@@ -86,6 +86,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
             var formattedValidUntil = JsonConvert.SerializeObject(_createdClaim.ValidUntil);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(_createdClaim.RetentionExpiresAt);
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
@@ -93,6 +94,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"rejectionReason\":null," +
                                $"\"rejectedAt\":null,\"userUpdatedBy\":null," +
                                $"\"claimValidUntil\":{formattedValidUntil}," +
+                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                                $"\"state\":\"UPLOADED\"," +
                                "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
                                "\"staffSelectedDocumentType\":null," +
