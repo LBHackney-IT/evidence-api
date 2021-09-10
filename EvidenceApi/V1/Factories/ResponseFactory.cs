@@ -64,7 +64,8 @@ namespace EvidenceApi.V1.Factories
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
                 Document = claim.Document,
-                ClaimValidUntil = claim.ValidUntil
+                ClaimValidUntil = claim.ValidUntil,
+                RetentionExpiresAt = claim.RetentionExpiresAt
             };
         }
     }
