@@ -143,6 +143,35 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void FindResidentsByNameIsCaseInsensitive()
+        {
+            // Arrange
+            var resident1 = _fixture.Build<Resident>()
+                .With(x => x.Name, "test Resident")
+                .Create();
+            var resident2 = _fixture.Build<Resident>()
+                .With(x => x.Name, "other Resident")
+                .Create();
+            var resident3 = _fixture.Build<Resident>()
+                .With(x => x.Name, "test Resident2")
+                .Create();
+            DatabaseContext.Residents.Add(resident1);
+            DatabaseContext.Residents.Add(resident2);
+            DatabaseContext.Residents.Add(resident3);
+            DatabaseContext.SaveChanges();
+
+            // Act
+            var result = _classUnderTest.FindResidents("TEST");
+
+            // Assert
+            result.Count.Should().Be(2);
+            var resultResident1 = result.Find(r => r.Name == "test Resident");
+            resultResident1.Should().NotBeNull();
+            var resultResident2 = result.Find(r => r.Name == "test Resident2");
+            resultResident2.Should().NotBeNull();
+        }
+
+        [Test]
         public void FindResidentsByEmail()
         {
             // Arrange
