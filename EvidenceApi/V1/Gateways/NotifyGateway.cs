@@ -61,6 +61,15 @@ namespace EvidenceApi.V1.Gateways
             var personalisation = GetParamsFor(communicationReason, evidenceRequest);
             var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
             var result = DeliverEmail(templateId, evidenceRequest, personalisation);
+            var communication = new Communication
+            {
+                DeliveryMethod = deliveryMethod,
+                NotifyId = result.id,
+                EvidenceRequestId = evidenceRequest.Id,
+                Reason = communicationReason,
+                TemplateId = templateId
+            };
+            _evidenceGateway.CreateCommunication(communication);
         }
 
         private NotificationResponse Deliver(DeliveryMethod deliveryMethod, string templateId, Resident resident, Dictionary<string, object> personalisation)

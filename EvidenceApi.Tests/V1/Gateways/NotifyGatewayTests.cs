@@ -173,7 +173,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void CreatesACommunication()
+        public void CreatesACommunicationForEvidenceRequested()
         {
             var deliveryMethod = DeliveryMethod.Email;
             var communicationReason = CommunicationReason.EvidenceRequest;
@@ -192,6 +192,31 @@ namespace EvidenceApi.Tests.V1.Gateways
                 .Returns(response);
 
             _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
+
+            _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
+                x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
+                x.NotifyId == response.id)));
+        }
+
+        [Test]
+        public void CreatesACommunicationForDocumentUploaded()
+        {
+            var deliveryMethod = DeliveryMethod.Email;
+            var communicationReason = CommunicationReason.DocumentUploaded;
+            var request = TestDataHelper.EvidenceRequest();
+            request.Reason = "some-reason";
+            request.NotificationEmail = "some@email";
+
+            var envVar = "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL";
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+
+            var response = _fixture.Create<EmailNotificationResponse>();
+            _notifyClient.Setup(x =>
+                    x.SendEmail(request.NotificationEmail, expectedTemplateId, It.IsAny<Dictionary<string, dynamic>>(), null,
+                        null))
+                .Returns(response);
+
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request);
 
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
                 x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
