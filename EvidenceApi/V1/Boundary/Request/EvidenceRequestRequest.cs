@@ -10,5 +10,6 @@ namespace EvidenceApi.V1.Boundary.Request
         public string Team { get; set; }
         public string Reason { get; set; }
         public string UserRequestedBy { get; set; }
+        public string NotificationEmail { get; set; }
     }
 }

@@ -56,6 +56,13 @@ namespace EvidenceApi.V1.Gateways
             _evidenceGateway.CreateCommunication(communication);
         }
 
+        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        {
+            var personalisation = GetParamsFor(communicationReason, evidenceRequest);
+            var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
+            var result = DeliverEmail(templateId, evidenceRequest, personalisation);
+        }
+
         private NotificationResponse Deliver(DeliveryMethod deliveryMethod, string templateId, Resident resident, Dictionary<string, object> personalisation)
         {
             return deliveryMethod switch
@@ -65,6 +72,11 @@ namespace EvidenceApi.V1.Gateways
                 _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod, $"Delivery Method {deliveryMethod.ToString()} not recognised")
 
             };
+        }
+
+        private NotificationResponse DeliverEmail(string templateId, EvidenceRequest evidenceRequest, Dictionary<string, object> personalisation)
+        {
+            return _client.SendEmail(evidenceRequest.NotificationEmail, templateId, personalisation, null, null);
         }
 
         private static string GetTemplateIdFor(DeliveryMethod deliveryMethod, CommunicationReason communicationReason)
@@ -86,6 +98,8 @@ namespace EvidenceApi.V1.Gateways
                         "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL"),
                     CommunicationReason.EvidenceRejected => Environment.GetEnvironmentVariable(
                         "NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL"),
+                    CommunicationReason.DocumentUploaded => Environment.GetEnvironmentVariable(
+                        "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL"),
                     _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason,
                         $"Communication Reason {communicationReason.ToString()} not recognised")
                 },
@@ -105,6 +119,18 @@ namespace EvidenceApi.V1.Gateways
                     {"resident_name", resident.Name},
                     {"reason", evidenceRequest.Reason},
                     {"magic_link", MagicLinkFor(evidenceRequest)}
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
+            };
+        }
+
+        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        {
+            return communicationReason switch
+            {
+                CommunicationReason.DocumentUploaded => new Dictionary<string, object>
+                {
+                    {"resident_page_link", ResidentPageLinkFor(evidenceRequest)}
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
             };
@@ -132,5 +158,6 @@ namespace EvidenceApi.V1.Gateways
         }
 
         private string MagicLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}";
+        private string ResidentPageLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}teams/{_documentTypeGateway.GetTeamIdByTeamName(evidenceRequest.Team)}/dashboard/residents/{evidenceRequest.ResidentId}";
     }
 }

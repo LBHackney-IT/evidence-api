@@ -148,6 +148,31 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void CanSendADocumentUploadedEmail()
+        {
+            SetupMocks();
+            var deliveryMethod = DeliveryMethod.Email;
+            var communicationReason = CommunicationReason.DocumentUploaded;
+            var envVar = "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.NotificationEmail = "some@email";
+            evidenceRequest.Reason = "some-reason";
+
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"resident_page_link", $"{_options.EvidenceRequestClientUrl}teams/2/dashboard/residents/{evidenceRequest.ResidentId}"}
+            };
+
+            var response = _fixture.Create<EmailNotificationResponse>();
+            _notifyClient.SetReturnsDefault(response);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, evidenceRequest);
+            _notifyClient.Verify(x =>
+                    x.SendEmail(evidenceRequest.NotificationEmail, expectedTemplateId,
+                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+        }
+
+        [Test]
         public void CreatesACommunication()
         {
             var deliveryMethod = DeliveryMethod.Email;
@@ -182,6 +207,8 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(TestDataHelper.DocumentType("passport-scan"));
+            _documentTypeGateway.Setup(x => x.GetTeamIdByTeamName(It.IsAny<string>()))
+                .Returns("2");
         }
     }
 }

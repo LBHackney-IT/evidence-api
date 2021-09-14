@@ -14,7 +14,7 @@ using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -24,6 +24,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
+        private Mock<INotifyGateway> _notifyGateway = new Mock<INotifyGateway>();
+        private Mock<ILogger<CreateDocumentSubmissionUseCase>> _logger = new Mock<ILogger<CreateDocumentSubmissionUseCase>>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
         private DocumentSubmission _created;
@@ -32,7 +34,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object);
+            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _notifyGateway.Object, _logger.Object);
         }
 
         [Test]
@@ -132,6 +134,25 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.RejectionReason.Should().Be(_created.RejectionReason);
             result.State.Should().Be(_created.State.ToString().ToUpper());
             result.DocumentType.Should().Be(docType);
+        }
+
+        [Test]
+        public async Task SendsANotificationWhenNotificationEmailIsNotNull()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
+
+            var claim = _fixture.Create<Claim>();
+
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
+            var docType = SetupDocumentTypeGateway(_request.DocumentType);
+
+            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            _notifyGateway.Verify(x =>
+                x.SendNotification(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest));
         }
 
         [TestCase(SubmissionState.Pending)]

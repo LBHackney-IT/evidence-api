@@ -63,7 +63,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 ""documentTypes"": [""proof-of-id""],
                 ""team"": ""Development Housing Team"",
                 ""reason"": ""test-reason"",
-                ""userRequestedBy"": ""staff@test.hackney.gov.uk""
+                ""userRequestedBy"": ""staff@test.hackney.gov.uk"",
+                ""notificationEmail"": ""null""
             }";
             string trimmedBody = String.Concat(body.Where(c => !Char.IsWhiteSpace(c)));
             var jsonString = new StringContent(trimmedBody, Encoding.UTF8, "application/json");
