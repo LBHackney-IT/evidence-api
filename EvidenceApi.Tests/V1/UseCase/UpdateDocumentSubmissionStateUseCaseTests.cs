@@ -81,6 +81,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             // Assert
             result.Id.Should().Be(_found.Id);
+            result.AcceptedAt.Should().NotBeNull();
             result.StaffSelectedDocumentType.Should().NotBeNull();
             result.StaffSelectedDocumentType.Id.Should().Be(_found.StaffSelectedDocumentTypeId);
             result.UserUpdatedBy.Should().Be(_found.UserUpdatedBy);

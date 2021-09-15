@@ -76,7 +76,12 @@ namespace EvidenceApi.V1.UseCase
             documentSubmission.State = state;
             documentSubmission.UserUpdatedBy = request.UserUpdatedBy;
 
-            if (RequestIsRejection(request, documentSubmission))
+            if (IsApprovalRequest(documentSubmission))
+            {
+                documentSubmission.AcceptedAt = DateTime.UtcNow;
+            }
+
+            if (IsRejectRequest(request, documentSubmission))
             {
                 documentSubmission.RejectedAt = DateTime.UtcNow;
                 NotifyResident(documentSubmission, request);
@@ -100,7 +105,12 @@ namespace EvidenceApi.V1.UseCase
             return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
         }
 
-        private static bool RequestIsRejection(DocumentSubmissionUpdateRequest request, DocumentSubmission documentSubmission)
+        private static bool IsApprovalRequest(DocumentSubmission documentSubmission)
+        {
+            return documentSubmission.State == SubmissionState.Approved;
+        }
+
+        private static bool IsRejectRequest(DocumentSubmissionUpdateRequest request, DocumentSubmission documentSubmission)
         {
             return !String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected;
         }
