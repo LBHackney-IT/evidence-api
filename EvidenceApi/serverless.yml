@@ -35,7 +35,7 @@ functions:
       NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS: ${ssm:/evidence-api/notify/sms/evidence-requested}
       NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL: ${ssm:/evidence-api/notify/email/evidence-rejected}
       NOTIFY_TEMPLATE_EVIDENCE_REJECTED_SMS: ${ssm:/evidence-api/notify/sms/evidence-rejected}
-      NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL: ${ssm:/evidence-api/notify/sms/document-uploaded}
+      NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL: ${ssm:/evidence-api/notify/email/document-uploaded}
       EVIDENCE_REQUEST_CLIENT_URL: https://${ssm:/evidence-api/${self:provider.stage}/client-url}
     events:
       - http:
