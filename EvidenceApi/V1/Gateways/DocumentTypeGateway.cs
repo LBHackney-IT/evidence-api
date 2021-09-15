@@ -31,5 +31,15 @@ namespace EvidenceApi.V1.Gateways
             }
             return teamFromFile.DocumentTypes;
         }
+
+        public string GetTeamIdByTeamName(string teamName)
+        {
+            var teamFromFile = _reader.GetData().Find(t => t.Name == teamName);
+            if (teamFromFile == null)
+            {
+                return "";
+            }
+            return teamFromFile.Id;
+        }
     }
 }

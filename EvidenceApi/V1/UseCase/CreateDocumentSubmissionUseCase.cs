@@ -9,6 +9,8 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
+using Notify.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -17,12 +19,16 @@ namespace EvidenceApi.V1.UseCase
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly INotifyGateway _notifyGateway;
+        private readonly ILogger<CreateDocumentSubmissionUseCase> _logger;
 
-        public CreateDocumentSubmissionUseCase(IEvidenceGateway evidenceGateway, IDocumentsApiGateway documentsApiGateway, IDocumentTypeGateway documentTypeGateway)
+        public CreateDocumentSubmissionUseCase(IEvidenceGateway evidenceGateway, IDocumentsApiGateway documentsApiGateway, IDocumentTypeGateway documentTypeGateway, INotifyGateway notifyGateway, ILogger<CreateDocumentSubmissionUseCase> logger)
         {
             _evidenceGateway = evidenceGateway;
             _documentsApiGateway = documentsApiGateway;
             _documentTypeGateway = documentTypeGateway;
+            _notifyGateway = notifyGateway;
+            _logger = logger;
         }
 
         public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
@@ -57,6 +63,17 @@ namespace EvidenceApi.V1.UseCase
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
+            if (evidenceRequest.NotificationEmail != null)
+            {
+                try
+                {
+                    _notifyGateway.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest);
+                }
+                catch (NotifyClientException e)
+                {
+                    _logger.LogError(e, e.Message);
+                }
+            }
             return createdDocumentSubmission.ToResponse(documentType, null, claim);
         }
 

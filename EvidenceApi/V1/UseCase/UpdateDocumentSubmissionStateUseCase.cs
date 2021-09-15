@@ -135,7 +135,7 @@ namespace EvidenceApi.V1.UseCase
             try
             {
                 documentSubmission.EvidenceRequest.DeliveryMethods.ForEach(dm =>
-                    _notifyGateway.SendNotification(dm, CommunicationReason.EvidenceRejected, documentSubmission, resident));
+                    _notifyGateway.SendNotificationEvidenceRejected(dm, CommunicationReason.EvidenceRejected, documentSubmission, resident));
             }
             catch (NotifyClientException ex)
             {
