@@ -67,7 +67,7 @@ namespace EvidenceApi.V1.UseCase
             {
                 try
                 {
-                    _notifyGateway.SendNotification(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest);
+                    _notifyGateway.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest);
                 }
                 catch (NotifyClientException e)
                 {

@@ -152,7 +152,27 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
             _notifyGateway.Verify(x =>
-                x.SendNotification(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest));
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest));
+        }
+
+        [Test]
+        public async Task DoesNotSendANotificationEmailWhenNotificationEmailIsNull()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.NotificationEmail = null;
+            _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
+
+            var claim = _fixture.Create<Claim>();
+
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(evidenceRequest, claim);
+            var docType = SetupDocumentTypeGateway(_request.DocumentType);
+
+            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            _notifyGateway.Verify(x =>
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest), Times.Never());
         }
 
         [TestCase(SubmissionState.Pending)]

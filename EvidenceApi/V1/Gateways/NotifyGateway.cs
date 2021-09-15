@@ -40,9 +40,9 @@ namespace EvidenceApi.V1.Gateways
             _evidenceGateway.CreateCommunication(communication);
         }
 
-        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
+        public void SendNotificationEvidenceRejected(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
         {
-            var personalisation = GetParamsFor(communicationReason, documentSubmission, resident);
+            var personalisation = GetParamsForEvidenceRejected(communicationReason, documentSubmission, resident);
             var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
             var result = Deliver(deliveryMethod, templateId, resident, personalisation);
             var communication = new Communication
@@ -56,11 +56,11 @@ namespace EvidenceApi.V1.Gateways
             _evidenceGateway.CreateCommunication(communication);
         }
 
-        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        public void SendNotificationDocumentUploaded(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
         {
-            var personalisation = GetParamsFor(communicationReason, evidenceRequest);
+            var personalisation = GetParamsForDocumentUploaded(communicationReason, evidenceRequest);
             var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
-            var result = DeliverEmail(templateId, evidenceRequest, personalisation);
+            var result = DeliverEmail(templateId, evidenceRequest.NotificationEmail, personalisation);
             var communication = new Communication
             {
                 DeliveryMethod = deliveryMethod,
@@ -83,9 +83,9 @@ namespace EvidenceApi.V1.Gateways
             };
         }
 
-        private NotificationResponse DeliverEmail(string templateId, EvidenceRequest evidenceRequest, Dictionary<string, object> personalisation)
+        private NotificationResponse DeliverEmail(string templateId, string emailAddress, Dictionary<string, object> personalisation)
         {
-            return _client.SendEmail(evidenceRequest.NotificationEmail, templateId, personalisation, null, null);
+            return _client.SendEmail(emailAddress, templateId, personalisation, null, null);
         }
 
         private static string GetTemplateIdFor(DeliveryMethod deliveryMethod, CommunicationReason communicationReason)
@@ -133,32 +133,32 @@ namespace EvidenceApi.V1.Gateways
             };
         }
 
-        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        private Dictionary<string, object> GetParamsForDocumentUploaded(CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
         {
-            return communicationReason switch
+            if (communicationReason == CommunicationReason.DocumentUploaded)
             {
-                CommunicationReason.DocumentUploaded => new Dictionary<string, object>
+                return new Dictionary<string, object>
                 {
                     {"resident_page_link", ResidentPageLinkFor(evidenceRequest)}
-                },
-                _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
-            };
+                };
+            }
+            throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");
         }
 
         // passing in the document submission so we can track back to the evidence request it belongs to
-        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
+        private Dictionary<string, object> GetParamsForEvidenceRejected(CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
         {
-            return communicationReason switch
+            if (communicationReason == CommunicationReason.EvidenceRejected)
             {
-                CommunicationReason.EvidenceRejected => new Dictionary<string, object>
+                return new Dictionary<string, object>
                 {
                     {"resident_name", resident.Name},
                     {"evidence_item", GetDocumentType(documentSubmission.EvidenceRequest).Title},
                     {"rejection_reason", documentSubmission.RejectionReason},
                     {"magic_link", MagicLinkFor(documentSubmission.EvidenceRequest)}
-                },
-                _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
-            };
+                };
+            }
+            throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");
         }
 
         private DocumentType GetDocumentType(EvidenceRequest evidenceRequest)

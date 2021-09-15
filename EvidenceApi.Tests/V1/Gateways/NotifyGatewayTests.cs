@@ -111,7 +111,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var response = _fixture.Create<SmsNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, documentSubmission, resident);
+            _classUnderTest.SendNotificationEvidenceRejected(deliveryMethod, communicationReason, documentSubmission, resident);
             _notifyClient.Verify(x =>
                 x.SendSms(resident.PhoneNumber, expectedTemplateId,
                     It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
@@ -141,7 +141,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, documentSubmission, resident);
+            _classUnderTest.SendNotificationEvidenceRejected(deliveryMethod, communicationReason, documentSubmission, resident);
             _notifyClient.Verify(x =>
                 x.SendEmail(resident.Email, expectedTemplateId,
                     It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
@@ -166,7 +166,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, evidenceRequest);
+            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, evidenceRequest);
             _notifyClient.Verify(x =>
                     x.SendEmail(evidenceRequest.NotificationEmail, expectedTemplateId,
                         It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
@@ -216,7 +216,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                         null))
                 .Returns(response);
 
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request);
+            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, request);
 
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
                 x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&

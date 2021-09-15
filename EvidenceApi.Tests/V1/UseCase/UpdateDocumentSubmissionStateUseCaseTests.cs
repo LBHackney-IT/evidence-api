@@ -158,10 +158,10 @@ namespace EvidenceApi.Tests.V1.UseCase
             _classUnderTest.ExecuteAsync(id, request);
 
             _notifyGateway.Verify(x =>
-                x.SendNotification(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
+                x.SendNotificationEvidenceRejected(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
 
             _notifyGateway.Verify(x =>
-                x.SendNotification(DeliveryMethod.Sms, CommunicationReason.EvidenceRejected, _found, _resident));
+                x.SendNotificationEvidenceRejected(DeliveryMethod.Sms, CommunicationReason.EvidenceRejected, _found, _resident));
 
         }
 
