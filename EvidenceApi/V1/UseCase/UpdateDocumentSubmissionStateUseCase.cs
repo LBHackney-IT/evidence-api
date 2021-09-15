@@ -76,19 +76,19 @@ namespace EvidenceApi.V1.UseCase
             documentSubmission.State = state;
             documentSubmission.UserUpdatedBy = request.UserUpdatedBy;
 
-            if (!String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected)
+            if (RequestIsRejection(request, documentSubmission))
             {
                 documentSubmission.RejectedAt = DateTime.UtcNow;
                 NotifyResident(documentSubmission, request);
             }
 
             DocumentType staffSelectedDocumentType = null;
-            if (!String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
+            if (RequestContainsStaffSelectedDocumentType(request))
             {
                 staffSelectedDocumentType = GetStaffSelectedDocumentType(documentSubmission, request);
             }
 
-            if (!String.IsNullOrEmpty(request.ValidUntil))
+            if (RequestContainsValidUntil(request))
             {
                 await UpdateClaim(documentSubmission, request).ConfigureAwait(true);
             }
@@ -98,6 +98,21 @@ namespace EvidenceApi.V1.UseCase
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
+        }
+
+        private static bool RequestIsRejection(DocumentSubmissionUpdateRequest request, DocumentSubmission documentSubmission)
+        {
+            return !String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected;
+        }
+
+        private static bool RequestContainsValidUntil(DocumentSubmissionUpdateRequest request)
+        {
+            return !String.IsNullOrEmpty(request.ValidUntil);
+        }
+
+        private static bool RequestContainsStaffSelectedDocumentType(DocumentSubmissionUpdateRequest request)
+        {
+            return !String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId);
         }
 
         private async Task<Claim> UpdateClaim(DocumentSubmission documentSubmission, DocumentSubmissionUpdateRequest request)
