@@ -17,6 +17,9 @@ namespace EvidenceApi.V1.Domain
         [Column("claim_id")]
         public string ClaimId { get; set; }
 
+        [Column("accepted_at")]
+        public DateTime? AcceptedAt { get; set; }
+
         [Column("rejection_reason")]
         public string RejectionReason { get; set; }
 

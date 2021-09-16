@@ -56,6 +56,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
+            response.AcceptedAt.Should().Be(domain.AcceptedAt);
             response.RejectionReason.Should().Be(domain.RejectionReason);
             response.RejectedAt.Should().Be(domain.RejectedAt);
             response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
@@ -75,6 +76,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
+            response.AcceptedAt.Should().Be(domain.AcceptedAt);
             response.RejectionReason.Should().Be(domain.RejectionReason);
             response.RejectedAt.Should().Be(domain.RejectedAt);
             response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);

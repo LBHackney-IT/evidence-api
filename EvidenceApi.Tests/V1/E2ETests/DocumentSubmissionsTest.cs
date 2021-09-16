@@ -91,6 +91,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
+                               $"\"acceptedAt\":null," +
                                $"\"rejectionReason\":null," +
                                $"\"rejectedAt\":null,\"userUpdatedBy\":null," +
                                $"\"claimValidUntil\":{formattedValidUntil}," +
