@@ -62,26 +62,26 @@ commands:
           command: |
             cd ./EvidenceApi/
             sls deploy --stage <<parameters.stage>> --conceal
-#  publish-to-swaggerhub:
-#    description: "Publishes API docs to SwaggerHub"
-#    steps:
-#      - *attach_workspace
-#      - checkout
-#      - setup_remote_docker
-#      - run:
-#          name: Install Node.js
-#          command: |
-#            curl -sL https://deb.nodesource.com/setup_12.x | bash -
-#            apt-get update && apt-get install -y nodejs
-#      - run:
-#          name: Install SwaggerHub CLI
-#          command: npm i -g swaggerhub-cli
-#      - run:
-#          name: Publish to SwaggerHub
-#          command: |
-#            cd ./DocumentsApi/
-#            chmod +x ./publish-to-swagger-hub.sh
-#            ./publish-to-swagger-hub.sh
+  publish-to-swaggerhub:
+    description: "Publishes API docs to SwaggerHub"
+    steps:
+      - *attach_workspace
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Node.js
+          command: |
+            curl -sL https://deb.nodesource.com/setup_12.x | bash -
+            apt-get update && apt-get install -y nodejs
+      - run:
+          name: Install SwaggerHub CLI
+          command: npm i -g swaggerhub-cli
+      - run:
+          name: Publish to SwaggerHub
+          command: |
+            cd ./EvidenceApi/
+            chmod +x ./publish-to-swagger-hub.sh
+            ./publish-to-swagger-hub.sh
 
   migrate-database:
     description: "Migrate database"
@@ -184,10 +184,10 @@ jobs:
       - migrate-database:
           stage: "production"
 
-#  publish-to-swaggerhub:
-#    executor: docker-dotnet
-#    steps:
-#      - publish-to-swaggerhub
+  publish-to-swaggerhub:
+    executor: docker-dotnet
+    steps:
+      - publish-to-swaggerhub
 
 workflows:
   check-and-deploy-staging-and-production:
@@ -227,7 +227,7 @@ workflows:
       - deploy-to-production:
           requires:
             - migrate-database-production
-#      - publish-to-swaggerhub:
-#          context: api-assume-role-document-evidence-store-production-context
-#          requires:
-#            - deploy-to-production
+      - publish-to-swaggerhub:
+          context: api-assume-role-document-evidence-store-production-context
+          requires:
+            - deploy-to-production
