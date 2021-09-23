@@ -79,7 +79,7 @@ commands:
       - run:
           name: Publish to SwaggerHub
           command: |
-            cd ./DocumentsApi/
+            cd ./EvidenceApi/
             chmod +x ./publish-to-swagger-hub.sh
             ./publish-to-swagger-hub.sh
 
