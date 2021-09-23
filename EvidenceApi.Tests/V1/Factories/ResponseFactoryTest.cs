@@ -56,11 +56,35 @@ namespace EvidenceApi.Tests.V1.Factories
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
             response.ClaimId.Should().Be(domain.ClaimId);
+            response.AcceptedAt.Should().Be(domain.AcceptedAt);
             response.RejectionReason.Should().Be(domain.RejectionReason);
             response.RejectedAt.Should().Be(domain.RejectedAt);
             response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
             response.State.Should().Be(domain.State.ToString().ToUpper());
             response.DocumentType.Should().Be(documentType);
+        }
+
+        [Test]
+        public void CanMapADocumentSubmissionDomainObjectToAResponseObjectWithClaim()
+        {
+            var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
+            var claim = _fixture.Build<Claim>().Create();
+            var domain = TestDataHelper.DocumentSubmission();
+
+            var response = domain.ToResponse(documentType, null, claim);
+
+            response.Id.Should().Be(domain.Id);
+            response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.ClaimId.Should().Be(domain.ClaimId);
+            response.AcceptedAt.Should().Be(domain.AcceptedAt);
+            response.RejectionReason.Should().Be(domain.RejectionReason);
+            response.RejectedAt.Should().Be(domain.RejectedAt);
+            response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
+            response.State.Should().Be(domain.State.ToString().ToUpper());
+            response.DocumentType.Should().Be(documentType);
+            response.ClaimValidUntil.Should().Be(claim.ValidUntil);
+            response.RetentionExpiresAt.Should().Be(claim.RetentionExpiresAt);
+            response.Document.Should().Be(claim.Document);
         }
     }
 }

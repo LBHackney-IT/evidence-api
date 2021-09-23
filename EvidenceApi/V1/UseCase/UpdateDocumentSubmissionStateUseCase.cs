@@ -76,19 +76,24 @@ namespace EvidenceApi.V1.UseCase
             documentSubmission.State = state;
             documentSubmission.UserUpdatedBy = request.UserUpdatedBy;
 
-            if (!String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected)
+            if (IsApprovalRequest(documentSubmission))
+            {
+                documentSubmission.AcceptedAt = DateTime.UtcNow;
+            }
+
+            if (IsRejectRequest(request, documentSubmission))
             {
                 documentSubmission.RejectedAt = DateTime.UtcNow;
                 NotifyResident(documentSubmission, request);
             }
 
             DocumentType staffSelectedDocumentType = null;
-            if (!String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
+            if (RequestContainsStaffSelectedDocumentType(request))
             {
                 staffSelectedDocumentType = GetStaffSelectedDocumentType(documentSubmission, request);
             }
 
-            if (!String.IsNullOrEmpty(request.ValidUntil))
+            if (RequestContainsValidUntil(request))
             {
                 await UpdateClaim(documentSubmission, request).ConfigureAwait(true);
             }
@@ -98,6 +103,26 @@ namespace EvidenceApi.V1.UseCase
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
+        }
+
+        private static bool IsApprovalRequest(DocumentSubmission documentSubmission)
+        {
+            return documentSubmission.State == SubmissionState.Approved;
+        }
+
+        private static bool IsRejectRequest(DocumentSubmissionUpdateRequest request, DocumentSubmission documentSubmission)
+        {
+            return !String.IsNullOrEmpty(request.RejectionReason) && documentSubmission.State == SubmissionState.Rejected;
+        }
+
+        private static bool RequestContainsValidUntil(DocumentSubmissionUpdateRequest request)
+        {
+            return !String.IsNullOrEmpty(request.ValidUntil);
+        }
+
+        private static bool RequestContainsStaffSelectedDocumentType(DocumentSubmissionUpdateRequest request)
+        {
+            return !String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId);
         }
 
         private async Task<Claim> UpdateClaim(DocumentSubmission documentSubmission, DocumentSubmissionUpdateRequest request)
@@ -111,7 +136,7 @@ namespace EvidenceApi.V1.UseCase
             }
             catch (DocumentsApiException ex)
             {
-                throw new BadRequestException($"Issue with DocumentsApi so cannot update claim: {ex.Message}");
+                throw new BadRequestException(ex.Message);
             }
         }
 
@@ -135,7 +160,7 @@ namespace EvidenceApi.V1.UseCase
             try
             {
                 documentSubmission.EvidenceRequest.DeliveryMethods.ForEach(dm =>
-                    _notifyGateway.SendNotification(dm, CommunicationReason.EvidenceRejected, documentSubmission, resident));
+                    _notifyGateway.SendNotificationEvidenceRejected(dm, CommunicationReason.EvidenceRejected, documentSubmission, resident));
             }
             catch (NotifyClientException ex)
             {

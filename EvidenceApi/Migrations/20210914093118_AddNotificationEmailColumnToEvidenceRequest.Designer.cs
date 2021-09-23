@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EvidenceApi.Migrations
 {
     [DbContext(typeof(EvidenceContext))]
-    partial class EvidenceContextModelSnapshot : ModelSnapshot
+    [Migration("20210914093118_AddNotificationEmailColumnToEvidenceRequest")]
+    partial class AddNotificationEmailColumnToEvidenceRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,10 +98,6 @@ namespace EvidenceApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id")
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("AcceptedAt")
-                        .HasColumnName("accepted_at")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("ClaimId")
                         .HasColumnName("claim_id")

@@ -40,6 +40,9 @@ namespace EvidenceApi.V1.Domain
         [Column("state")]
         public EvidenceRequestState State { get; set; }
 
+        [Column("notification_email")]
+        public string NotificationEmail { get; set; }
+
         public virtual ICollection<Communication> Communications { get; set; }
         public virtual ICollection<DocumentSubmission> DocumentSubmissions { get; set; }
 

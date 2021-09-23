@@ -1,0 +1,30 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/v2.2.0/C4_Deployment.puml
+!include https://raw.githubusercontent.com/LBHackney-IT/cv-19-res-support-v3/development/docs/diagrams/c4_shared.puml
+
+title Review document sequence flow diagram
+
+Officer -> Frontend: Search for resident
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- EvidenceAPI: 200 Resident found
+Officer <- Frontend: Resident found
+Frontend -> EvidenceAPI: GET /document_submissions/:id
+Frontend <- EvidenceAPI: 200 Document submission found
+Frontend -> DocumentsAPI: GET /documents/:documentId
+Frontend <- DocumentsAPI: 200 Document encoded in base64
+Officer <- Frontend: Show document preview
+Officer -> Frontend: Approve/Request new file
+Frontend -> EvidenceAPI: PATCH /document_submissions/:id
+group Approve
+EvidenceAPI -> DocumentsAPI: PATCH /claims/:id
+EvidenceAPI <- DocumentsAPI: 200 Claim updated
+end
+group Request new file
+EvidenceAPI -> GovNotify: Send notification to resident with link
+end
+Frontend <- EvidenceAPI: 200 Document submission state updated
+Frontend -> EvidenceAPI: GET /residents/:residentId
+Frontend <- DocumentsAPI: 200 Resident found
+Officer <- Frontend: Show resident
+
+@enduml
