@@ -6,6 +6,7 @@ using System.Reflection;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
+using EvidenceApi.V1.Controllers;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -88,6 +89,8 @@ namespace EvidenceApi
                         new List<string>()
                     }
                 });
+
+                c.OperationFilter<UserTokenHeaderParameterOperationFilter>();
 
                 //Looks at the APIVersionAttribute [ApiVersion("x")] on controllers and decides whether or not
                 //to include it in that version of the swagger document
