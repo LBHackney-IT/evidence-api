@@ -4,6 +4,7 @@ namespace EvidenceApi.V1.Domain.Enums
     {
         EvidenceRejected,
         Reminder,
-        EvidenceRequest
+        EvidenceRequest,
+        DocumentUploaded
     }
 }

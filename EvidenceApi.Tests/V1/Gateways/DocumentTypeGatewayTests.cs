@@ -87,5 +87,41 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Assert
             response.Should().BeEmpty();
         }
+
+        [Test]
+        public void GetTeamIdByTeamNameReturnsTeamIdIfTeamNameDoesNotExist()
+        {
+            // Arrange
+            var teamName = "teamName";
+            var team = new Team();
+            team.Name = teamName;
+            var teams = new List<Team> { team };
+            _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
+
+            // Act
+            var response = _classUnderTest.GetTeamIdByTeamName("differentTeamName");
+
+            // Assert
+            response.Should().BeEmpty();
+        }
+
+        [Test]
+        public void GetTeamIdByTeamNameReturnsTeamIdIfTeamExists()
+        {
+            // Arrange
+            var teamId = "1";
+            var teamName = "teamName";
+            var team = new Team();
+            team.Name = teamName;
+            team.Id = teamId;
+            var teams = new List<Team> { team };
+            _fileReaderMock.Setup(s => s.GetData()).Returns(teams);
+
+            // Act
+            var response = _classUnderTest.GetTeamIdByTeamName(teamName);
+
+            // Assert
+            response.Should().Contain(teamId);
+        }
     }
 }

@@ -8,5 +8,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         DocumentType GetDocumentTypeByTeamNameAndDocumentTypeId(string teamName, string documentTypeId);
 
         List<DocumentType> GetDocumentTypesByTeamName(string teamName);
+
+        string GetTeamIdByTeamName(string teamName);
     }
 }

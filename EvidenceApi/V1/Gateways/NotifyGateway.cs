@@ -40,9 +40,9 @@ namespace EvidenceApi.V1.Gateways
             _evidenceGateway.CreateCommunication(communication);
         }
 
-        public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
+        public void SendNotificationEvidenceRejected(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
         {
-            var personalisation = GetParamsFor(communicationReason, documentSubmission, resident);
+            var personalisation = GetParamsForEvidenceRejected(communicationReason, documentSubmission, resident);
             var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
             var result = Deliver(deliveryMethod, templateId, resident, personalisation);
             var communication = new Communication
@@ -50,6 +50,22 @@ namespace EvidenceApi.V1.Gateways
                 DeliveryMethod = deliveryMethod,
                 NotifyId = result.id,
                 EvidenceRequestId = documentSubmission.EvidenceRequestId,
+                Reason = communicationReason,
+                TemplateId = templateId
+            };
+            _evidenceGateway.CreateCommunication(communication);
+        }
+
+        public void SendNotificationDocumentUploaded(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        {
+            var personalisation = GetParamsForDocumentUploaded(communicationReason, evidenceRequest);
+            var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
+            var result = DeliverEmail(templateId, evidenceRequest.NotificationEmail, personalisation);
+            var communication = new Communication
+            {
+                DeliveryMethod = deliveryMethod,
+                NotifyId = result.id,
+                EvidenceRequestId = evidenceRequest.Id,
                 Reason = communicationReason,
                 TemplateId = templateId
             };
@@ -65,6 +81,11 @@ namespace EvidenceApi.V1.Gateways
                 _ => throw new ArgumentOutOfRangeException(nameof(deliveryMethod), deliveryMethod, $"Delivery Method {deliveryMethod.ToString()} not recognised")
 
             };
+        }
+
+        private NotificationResponse DeliverEmail(string templateId, string emailAddress, Dictionary<string, object> personalisation)
+        {
+            return _client.SendEmail(emailAddress, templateId, personalisation, null, null);
         }
 
         private static string GetTemplateIdFor(DeliveryMethod deliveryMethod, CommunicationReason communicationReason)
@@ -86,6 +107,8 @@ namespace EvidenceApi.V1.Gateways
                         "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL"),
                     CommunicationReason.EvidenceRejected => Environment.GetEnvironmentVariable(
                         "NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL"),
+                    CommunicationReason.DocumentUploaded => Environment.GetEnvironmentVariable(
+                        "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL"),
                     _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason,
                         $"Communication Reason {communicationReason.ToString()} not recognised")
                 },
@@ -110,20 +133,32 @@ namespace EvidenceApi.V1.Gateways
             };
         }
 
-        // passing in the document submission so we can track back to the evidence request it belongs to
-        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
+        private Dictionary<string, object> GetParamsForDocumentUploaded(CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
         {
-            return communicationReason switch
+            if (communicationReason == CommunicationReason.DocumentUploaded)
             {
-                CommunicationReason.EvidenceRejected => new Dictionary<string, object>
+                return new Dictionary<string, object>
+                {
+                    {"resident_page_link", ResidentPageLinkFor(evidenceRequest)}
+                };
+            }
+            throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");
+        }
+
+        // passing in the document submission so we can track back to the evidence request it belongs to
+        private Dictionary<string, object> GetParamsForEvidenceRejected(CommunicationReason communicationReason, DocumentSubmission documentSubmission, Resident resident)
+        {
+            if (communicationReason == CommunicationReason.EvidenceRejected)
+            {
+                return new Dictionary<string, object>
                 {
                     {"resident_name", resident.Name},
                     {"evidence_item", GetDocumentType(documentSubmission.EvidenceRequest).Title},
                     {"rejection_reason", documentSubmission.RejectionReason},
                     {"magic_link", MagicLinkFor(documentSubmission.EvidenceRequest)}
-                },
-                _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
-            };
+                };
+            }
+            throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");
         }
 
         private DocumentType GetDocumentType(EvidenceRequest evidenceRequest)
@@ -132,5 +167,6 @@ namespace EvidenceApi.V1.Gateways
         }
 
         private string MagicLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}";
+        private string ResidentPageLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}teams/{_documentTypeGateway.GetTeamIdByTeamName(evidenceRequest.Team)}/dashboard/residents/{evidenceRequest.ResidentId}";
     }
 }

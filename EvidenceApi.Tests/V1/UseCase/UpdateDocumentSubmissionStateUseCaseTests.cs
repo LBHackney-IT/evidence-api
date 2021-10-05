@@ -81,6 +81,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             // Assert
             result.Id.Should().Be(_found.Id);
+            result.AcceptedAt.Should().NotBeNull();
             result.StaffSelectedDocumentType.Should().NotBeNull();
             result.StaffSelectedDocumentType.Id.Should().Be(_found.StaffSelectedDocumentTypeId);
             result.UserUpdatedBy.Should().Be(_found.UserUpdatedBy);
@@ -158,10 +159,10 @@ namespace EvidenceApi.Tests.V1.UseCase
             _classUnderTest.ExecuteAsync(id, request);
 
             _notifyGateway.Verify(x =>
-                x.SendNotification(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
+                x.SendNotificationEvidenceRejected(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
 
             _notifyGateway.Verify(x =>
-                x.SendNotification(DeliveryMethod.Sms, CommunicationReason.EvidenceRejected, _found, _resident));
+                x.SendNotificationEvidenceRejected(DeliveryMethod.Sms, CommunicationReason.EvidenceRejected, _found, _resident));
 
         }
 

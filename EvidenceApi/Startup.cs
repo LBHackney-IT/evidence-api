@@ -6,6 +6,7 @@ using System.Reflection;
 using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
+using EvidenceApi.V1.Controllers;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -41,7 +42,6 @@ namespace EvidenceApi
         }
 
         public IConfiguration Configuration { get; }
-        private static List<ApiVersionDescription> _apiVersions { get; set; }
         private const string ApiName = "Evidence API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -50,12 +50,21 @@ namespace EvidenceApi
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddApiVersioning(o =>
+
+            var apiVersions = new List<ApiVersion>();
+            apiVersions.Add(new ApiVersion(1, 0));
+
+            foreach (var apiVersion in apiVersions)
             {
-                o.DefaultApiVersion = new ApiVersion(1, 0);
-                o.AssumeDefaultVersionWhenUnspecified = true; // assume that the caller wants the default version if they don't specify
-                o.ApiVersionReader = new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
-            });
+                services.AddApiVersioning(o =>
+                {
+                    o.DefaultApiVersion = apiVersion;
+                    o.AssumeDefaultVersionWhenUnspecified =
+                        true; // assume that the caller wants the default version if they don't specify
+                    o.ApiVersionReader =
+                        new UrlSegmentApiVersionReader(); // read the version number from the url segment header)
+                });
+            }
 
             services.AddSingleton<IApiVersionDescriptionProvider, DefaultApiVersionDescriptionProvider>();
 
@@ -81,6 +90,8 @@ namespace EvidenceApi
                     }
                 });
 
+                c.OperationFilter<UserTokenHeaderParameterOperationFilter>();
+
                 //Looks at the APIVersionAttribute [ApiVersion("x")] on controllers and decides whether or not
                 //to include it in that version of the swagger document
                 //Controllers must have this [ApiVersion("x")] to be included in swagger documentation!!
@@ -97,15 +108,17 @@ namespace EvidenceApi
                 });
 
                 //Get every ApiVersion attribute specified and create swagger docs for them
-                foreach (var apiVersion in _apiVersions)
+                foreach (var apiVersion in apiVersions)
                 {
-                    var version = $"v{apiVersion.ApiVersion.ToString()}";
-                    c.SwaggerDoc(version, new OpenApiInfo
-                    {
-                        Title = $"{ApiName}-api {version}",
-                        Version = version,
-                        Description = $"{ApiName} version {version}. Please check older versions for depreciated endpoints."
-                    });
+                    var version = $"v{apiVersion.ToString()}";
+                    c.SwaggerDoc(version,
+                        new OpenApiInfo
+                        {
+                            Title = $"{ApiName}-api {version}",
+                            Version = version,
+                            Description =
+                                $"{ApiName} version {version}. Please check older versions for deprecated endpoints."
+                        });
                 }
 
                 c.CustomSchemaIds(x => x.FullName);
@@ -174,12 +187,12 @@ namespace EvidenceApi
 
             //Get All ApiVersions,
             var api = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
-            _apiVersions = api.ApiVersionDescriptions.ToList();
+            var swaggerUiApiVersions = api.ApiVersionDescriptions.ToList();
 
             //Swagger ui to view the swagger.json file
             app.UseSwaggerUI(c =>
             {
-                foreach (var apiVersionDescription in _apiVersions)
+                foreach (var apiVersionDescription in swaggerUiApiVersions)
                 {
                     //Create a swagger endpoint for each swagger version
                     c.SwaggerEndpoint($"{apiVersionDescription.GetFormattedApiVersion()}/swagger.json",
