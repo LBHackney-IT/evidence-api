@@ -50,6 +50,8 @@ JUMP_BOX_NAME=$(aws ssm get-parameter --name /document-evidence-store-staging-ju
 ```sh
 ssh -4 -i ./private-key.pem -Nf -M -L ${EVIDENCE_API_PORT//\"}:${EVIDENCE_API_HOST//\"}:${EVIDENCE_API_PORT//\"} -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o ProxyCommand="aws ssm start-session --target %h --document AWS-StartSSHSession --parameters portNumber=%p --region=eu-west-2" ec2-user@${JUMP_BOX_NAME//\"}
 ```
+  * Note: you need to install [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html).
+  You may also need to install Python 2.6.5 or later, or Python 3.3 or later (https://www.python.org/downloads/)
 10. Print Evidence API database configuration
 ```sh
 echo $EVIDENCE_API_PORT
