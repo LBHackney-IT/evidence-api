@@ -42,6 +42,22 @@
     ]
   },
   {
+    "name": "Document Products Team",
+    "id": "123",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document that can be used to prove address"
+      }
+    ]
+  },
+  {
     "name": "Repairs Contact Centre",
     "id": "5",
     "documentTypes": [
