@@ -32,6 +32,32 @@
     ]
   },
   {
+    "name": "Document Products Team",
+    "id": "123",
+    "documentTypes": [
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "Drivers licence",
+        "description": "A valid UK full or provisional UK driving license"
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months"
+      },
+      {
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year"
+      }
+    ]
+  },
+  {
     "name": "Repairs Contact Centre",
     "id": "5",
     "documentTypes": [
