@@ -190,15 +190,15 @@ jobs:
       - publish-to-swaggerhub
 
   owasp-zap-baseline-scan:
-    machine:
-      image: ubuntu-2004:202104-01
+    executor: docker-dotnet
+    # machine:
+    #   image: ubuntu-2004:202104-01
     steps:
       - checkout
       - *attach_workspace
-
       - run:
           name: Run application in background
-          command: PORT=3000 dotnet run --project EvidenceAPI
+          command: dotnet run --project EvidenceApi
           background: true
 
       - run:
