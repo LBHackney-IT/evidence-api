@@ -190,12 +190,19 @@ jobs:
       - publish-to-swaggerhub
 
   owasp-zap-baseline-scan:
-    executor: docker-dotnet
-    # machine:
-    #   image: ubuntu-2004:202104-01
+    machine:
+      image: ubuntu-2004:202104-01
     steps:
       - checkout
       - *attach_workspace
+      - run: 
+          name: Intall dotnet
+          command: |
+            sudo apt-get update; \
+            sudo apt-get install -y apt-transport-https && \
+            sudo apt-get update && \
+            sudo apt-get install -y dotnet-sdk-5.0
+            
       - run:
           name: Run application in background
           command: dotnet run --project EvidenceApi
