@@ -196,7 +196,7 @@ jobs:
       - checkout
       - *attach_workspace
 
-      - run: 
+      - run:
           name: Install dotnet APT
           command: |
             wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -210,7 +210,7 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y dotnet-sdk-5.0
 
-      - run: 
+      - run:
           name: intall runtime dotnet
           comand: |
             sudo apt-get install -y aspnetcore-runtime-5.0
@@ -233,15 +233,13 @@ jobs:
           # 3: Any other failure
           # Link to above:https://github.com/zaproxy/zaproxy/blob/main/docker/zap-baseline.py#L31-L35
           command: |
-              (
-                docker run -t owasp/zap2docker-stable:2.10.0 zap-baseline.py \
-                -j \
-                -u https://raw.githubusercontent.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/zap-baseline.conf \
-                -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):3000 || \
-                if [[ $? == 0 || $? == 2 ]]; then exit 0; else exit 1; fi;
-              )
-
-
+            (
+              docker run -t owasp/zap2docker-stable:2.10.0 zap-baseline.py \
+              -j \
+              -u https://raw.githubusercontent.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}/zap-baseline.conf \
+              -t http://$(ip -f inet -o addr show docker0 | awk '{print $4}' | cut -d '/' -f 1):3000 || \
+              if [[ $? == 0 || $? == 2 ]]; then exit 0; else exit 1; fi;
+            )
 
 workflows:
   check-and-deploy-staging-and-production:
