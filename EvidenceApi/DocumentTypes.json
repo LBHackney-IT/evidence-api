@@ -1,5 +1,16 @@
 [
   {
+    "name": "Staging Demo Team",
+    "id": "1",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      }
+    ]
+  },
+  {
     "name": "Development Housing Team",
     "id": "2",
     "documentTypes": [
