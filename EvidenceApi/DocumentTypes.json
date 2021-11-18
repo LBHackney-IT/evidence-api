@@ -20,24 +20,19 @@
         "description": "A valid document that can be used to prove identity"
       },
       {
-        "id": "repairs-photo",
-        "title": "Repairs photo",
-        "description": "A photo of the issue that need to be repaired"
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document that can be used to prove your address"
       },
       {
-        "id": "passport-scan",
-        "title": "Passport",
-        "description": "A valid passport open at the photo page"
+        "id": "proof-of-income",
+        "title": "Proof of income",
+        "description": "A valid document that can prove your income"
       },
       {
-        "id": "drivers-licence",
-        "title": "Drivers licence",
-        "description": "A valid UK full or provisional UK driving license"
-      },
-      {
-        "id": "bank-statement",
-        "title": "Bank statement",
-        "description": "From the past three months"
+        "id": "proof-of-savings",
+        "title": "Proof of savings",
+        "description": "A valid document that can prove your savings"
       }
     ]
   },
