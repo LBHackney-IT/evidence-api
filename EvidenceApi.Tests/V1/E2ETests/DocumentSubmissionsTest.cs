@@ -204,14 +204,14 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Team = "Development Housing Team";
 
-            evidenceRequest.DocumentTypes = new List<string> { "proof-of-id" };
+            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
 
             var documentSubmission = TestDataHelper.DocumentSubmission();
             documentSubmission.EvidenceRequest = evidenceRequest;
-            documentSubmission.DocumentTypeId = "proof-of-id";
+            documentSubmission.DocumentTypeId = "passport-scan";
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
@@ -238,8 +238,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
 
-            var documentType = TestDataHelper.DocumentType("proof-of-id");
-            var staffSelectedDocumentType = TestDataHelper.StaffSelectedDocumentType("drivers-licence");
+            var documentType = TestDataHelper.DocumentType("passport-scan");
+            var staffSelectedDocumentType = TestDataHelper.DocumentType("drivers-licence");
             var expected = createdDocumentSubmission.ToResponse(documentType, staffSelectedDocumentType);
             result.Should().BeEquivalentTo(expected);
         }
@@ -253,7 +253,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Team = "Development Housing Team";
 
-            evidenceRequest.DocumentTypes = new List<string> { "proof-of-id" };
+            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
             evidenceRequest.ResidentId = resident.Id;
 
@@ -262,7 +262,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentSubmission = TestDataHelper.DocumentSubmission();
             documentSubmission.EvidenceRequest = evidenceRequest;
-            documentSubmission.DocumentTypeId = "proof-of-id";
+            documentSubmission.DocumentTypeId = "passport-scan";
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
