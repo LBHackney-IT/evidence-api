@@ -104,7 +104,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
-                {"evidence_item", "Passport"},
+                {"evidence_item", "Proof of ID"},
                 {"rejection_reason", documentSubmission.RejectionReason},
                 {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{documentSubmission.EvidenceRequest.Id}"}
             };
@@ -134,7 +134,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
-                {"evidence_item", "Passport"},
+                {"evidence_item", "Proof of ID"},
                 {"rejection_reason", documentSubmission.RejectionReason},
                 {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{documentSubmission.EvidenceRequest.Id}"}
             };
@@ -231,7 +231,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         private void SetupMocks()
         {
             _documentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(TestDataHelper.DocumentType("passport-scan"));
+                .Returns(TestDataHelper.DocumentType("proof-of-id"));
             _documentTypeGateway.Setup(x => x.GetTeamIdByTeamName(It.IsAny<string>()))
                 .Returns("2");
         }
