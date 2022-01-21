@@ -33,9 +33,9 @@ See the [Architectural Decision Log](/docs/adr).
 
 In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access.
 
-Navigate to the evidence-api repo via the terminal and run `docker-compose up -d dev-database` to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-Once you have the environment variables and database container running, navigate via the terminal to the root of evidence-api and run `touch .env`. This will create an `.env` file where you can store the environment variables (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
+To set up the databse container, run `docker-compose up -d dev-database` in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
 
 Run `dotnet run --project EvidenceApi` to start the API locally. It will run on `http://localhost:5000`.
 
