@@ -262,17 +262,17 @@
       {
         "id": "state-pension-statement",
         "title": "State pension statement",
-        "description": "From within the last year"
+        "description": ""
       },
       {
         "id": "private-pension-statement",
         "title": "Private pension statement",
-        "description": "From within the last year"
+        "description": ""
       },
       {
-        "id": "occupation-pension",
-        "title": "Occupation pension",
-        "description": "From within the last year"
+        "id": "occupation-pension-statement",
+        "title": "Occupation pension statement",
+        "description": ""
       },
       {
         "id": "child-benefit-award-letter",
