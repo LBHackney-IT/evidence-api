@@ -128,6 +128,31 @@
         "id": "proof-of-pension",
         "title": "Proof of pension",
         "description": "A valid document to provide proof of your pension"
+      },
+      {
+        "id": "dependant-children",
+        "title": "Dependant children",
+        "description": "A valid document to confirm dependants in household"
+      },
+      {
+        "id": "tenancy",
+        "title": "Tenancy",
+        "description": "Valid documents to confirm applicant's tenancy or property details"
+      },
+      {
+        "id": "national-insurance-number",
+        "title": "National Insurance number",
+        "description": "Valid document to confirm NINO"
+      },
+      {
+        "id": "proof-of-medical",
+        "title": "Proof of medical",
+        "description": "Valid document to support applicant and household members medical conditions"
+      },
+      {
+        "id": "miscellaneous",
+        "title": "Miscellaneous",
+        "description": "This is for internal use only to upload documents"
       }
     ]
   }
