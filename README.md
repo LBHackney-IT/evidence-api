@@ -27,16 +27,17 @@ See the [Architectural Decision Log](/docs/adr).
 1. Install [Docker][docker-download].
 2. Install [AWS CLI][aws-cli].
 3. Clone this repository.
-4. Rename the initial template.
-5. Open it in your IDE.
+4. Open it in your IDE.
 
 ### Development
 
-Build and serve the application. It will be available in the port 5000.
+In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access.
 
-```sh
-$ make build && make serve
-```
+Navigate to the evidence-api repo via the terminal and run `docker-compose up -d dev-database` to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+
+Once you have the environment variables and database container running, navigate via the terminal to the root of evidence-api and run `touch .env`. This will create an `.env` file where you can store the environment variables (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
+
+Run `dotnet run --project EvidenceApi` to start the API locally. It will run on `http://localhost:5000`.
 
 #### Database Things
 
