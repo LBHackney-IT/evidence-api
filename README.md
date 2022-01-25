@@ -35,7 +35,9 @@ In order to run the API locally, you will first need access to the environment v
 
 Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-To set up the databse container, run `docker-compose up -d dev-database` in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+To set up the database container, run `docker-compose up -d dev-database` in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+
+Once the environment variables have been added for evidence-api and the database is running, update the database by running the migration command `dotnet ef --project EvidenceApi database update`.
 
 Run `dotnet run --project EvidenceApi` to start the API locally. It will run on `http://localhost:5000`.
 
