@@ -165,13 +165,18 @@
         "description": "Photo page"
       },
       {
+        "id": "resident-permit",
+        "title": "Resident permit",
+        "description": "Both sides of the card"
+      },
+      {
         "id": "biometric-card",
         "title": "Biometric card",
         "description": "Both sides of the card"
       },
       {
         "id": "birth-certificate",
-        "title": "Birth certificate",
+        "title": "Full birth certificate",
         "description": ""
       },
       {
@@ -182,6 +187,26 @@
       {
         "id": "nhs-medical-card",
         "title": "NHS medical card",
+        "description": ""
+      },
+      {
+        "id": "immigration-document",
+        "title": "Immigration document",
+        "description": ""
+      },
+      {
+        "id": "marriage-certificate",
+        "title": "Marriage Certificate/Civil Partnership certificate",
+        "description": ""
+      },
+      {
+        "id": "divorce-papers",
+        "title": "Divorce papers from the court",
+        "description": ""
+      },
+      {
+        "id": "settled-status",
+        "title": "Settled or pre-settled status document",
         "description": ""
       },
       {
@@ -230,14 +255,184 @@
         "description": "Show last 12 months"
       },
       {
+        "id": "tax-credit-award-letter",
+        "title": "Tax Credit award letter",
+        "description": ""
+      },
+      {
         "id": "state-pension-statement",
         "title": "State pension statement",
-        "description": "From within the last year"
+        "description": ""
       },
       {
         "id": "private-pension-statement",
         "title": "Private pension statement",
-        "description": "From within the last year"
+        "description": ""
+      },
+      {
+        "id": "occupation-pension-statement",
+        "title": "Occupation pension statement",
+        "description": ""
+      },
+      {
+        "id": "child-benefit-award-letter",
+        "title": "Child Benefit award letter",
+        "description": "Current address and all the pages"
+      },
+      {
+        "id": "evidence-of-child-school",
+        "title": "Evidence of child school",
+        "description": "For example a headed letter with child's name and address"
+      },
+      {
+        "id": "custody-adoption-court-residence",
+        "title": "Custody papers, adoption papers or court residence order",
+        "description": ""
+      },
+      {
+        "id": "letter-from-landlord",
+        "title": "Letter from landlord/agent",
+        "description": ""
+      },
+      {
+        "id": "letter-from-host",
+        "title": "Letter from the host",
+        "description": ""
+      },
+      {
+        "id": "national-insurance-card",
+        "title": "National Insurance Card",
+        "description": ""
+      },
+      {
+        "id": "award-letter-dwp",
+        "title": "Award letter from the DWP/Jobcentre plus",
+        "description": ""
+      },
+      {
+        "id": "p60-p45-payslip",
+        "title": "P60, P45, pay slip",
+        "description": ""
+      },
+      {
+        "id": "letter-from-gp",
+        "title": "Letter from GP",
+        "description": ""
+      },
+      {
+        "id": "hospital-letter",
+        "title": "Hospital letter",
+        "description": ""
+      },
+      {
+        "id": "rehousing-report",
+        "title": "OT rehousing report",
+        "description": ""
+      },
+      {
+        "id": "other-medical-information",
+        "title": "Other medical information",
+        "description": ""
+      },
+      {
+        "id": "medical-history-report",
+        "title": "Medical history report",
+        "description": ""
+      },
+      {
+        "id": "nowmedical-outcome-report",
+        "title": "NowMedical outcome report",
+        "description": ""
+      },
+      {
+        "id": "medical-assessement-outcome",
+        "title": "Medical assessment outcome",
+        "description": ""
+      },
+      {
+        "id": "email-incoming",
+        "title": "Email incoming",
+        "description": ""
+      },
+      {
+        "id": "email-outgoing",
+        "title": "Email outgoing",
+        "description": ""
+      },
+      {
+        "id": "experian-check",
+        "title": "Experian check",
+        "description": ""
+      },
+      {
+        "id": "land-registry",
+        "title": "Land Registry",
+        "description": ""
+      },
+      {
+        "id": "academy-check",
+        "title": "Academy check",
+        "description": ""
+      },
+      {
+        "id": "call-credit-check",
+        "title": "Call Credit check (360 check)",
+        "description": ""
+      },
+      {
+        "id": "decision-letter",
+        "title": "Decision letter",
+        "description": ""
+      },
+      {
+        "id": "other",
+        "title": "Other",
+        "description": ""
+      },
+      {
+        "id": "solicitors",
+        "title": "Solicitors",
+        "description": ""
+      },
+      {
+        "id": "complaint",
+        "title": "Complaint",
+        "description": ""
+      },
+      {
+        "id": "appeal",
+        "title": "Appeal",
+        "description": ""
+      },
+      {
+        "id": "correspondence",
+        "title": "Correspondence",
+        "description": ""
+      },
+      {
+        "id": "premium-bonds-certificate",
+        "title": "Certificate of premium bonds",
+        "description": ""
+      },
+      {
+        "id": "national-savings-certificate",
+        "title": "National savings certificate",
+        "description": ""
+      },
+      {
+        "id": "isa",
+        "title": "ISAs",
+        "description": ""
+      },
+      {
+        "id": "stocks",
+        "title": "Stocks",
+        "description": ""
+      },
+      {
+        "id": "shares-unit-trusts",
+        "title": "Shares and unit trusts",
+        "description": ""
       }
     ]
   }
