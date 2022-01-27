@@ -35,13 +35,72 @@ In order to run the API locally, you will first need access to the environment v
 
 Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-To set up the database container, run `docker-compose up -d dev-database` in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+To set up the database container, run 
+```sh
+docker-compose up -d dev-database
+``` 
+in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
 
-Once the environment variables have been added for evidence-api and the database is running, update the database by running the migration command `dotnet ef --project EvidenceApi database update`.
+Once the environment variables have been added for evidence-api and the database is running, update the database by running the migration command 
+```sh
+dotnet ef --project EvidenceApi database update
+```
 
-Run `dotnet run --project EvidenceApi` to start the API locally. It will run on `http://localhost:5000`.
+Then run 
+```sh 
+dotnet run --project EvidenceApi
+``` 
+to start the API locally. It will run on `http://localhost:5000`.
 
-#### Database Things
+### Testing
+
+To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer.
+
+There are two approaches to testing the evidence-api -- for different purposes. Your approach depends on whether you have inserted any data into `evidence-api_dev-datase_1` for manual/UI testing purposes.
+
+> _1. I don't have any data seeded into my local database!_
+
+Then, assuming that you have already followed the steps above to set up the repo and database container, and run the migration, you should have now one image running in Docker called `evidence-api_dev-databse_1`. In order to run the tests, all you need to do is run 
+```sh
+$ dotnet test
+```
+
+> _2. I do have data in my local seeded because I inserted it myself!_
+
+Having locally seeded data in your db will cause tests to fail. In order to save your locally seeded data but run the tests as well, we're going to assume that you have done all the set up steps above already. In order to run the tests the second way, you will need to stop the container called `evidence-api_dev-database_1` by navigating via the UI or by running 
+```sh
+$ docker stop evidence-api_dev-databse_1
+```
+
+**Please note: as long as the attached volume for this container continues to run, you will not lose any manually seeded data when you stop this container.**
+
+The reason why you need to stop it, is because we need to free up that port for a new container. Run 
+```sh
+$ make test
+```
+and a script will run to run all the tests on two new containers called `evidence-api_test-database_1` and `evidence-api_evidence-api-test_1`. These will be totally seaparate from your local dev db.
+
+When all the test have passed, to start up the local db again, run 
+```sh
+$ docker stop evidence-api_test-database_1
+```
+
+If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
+
+### Agreed Testing Approach
+
+-   Use nUnit, FluentAssertions and Moq
+-   Always follow a TDD approach
+-   Tests should be independent of each other
+-   Gateway tests should interact with a real test instance of the database
+-   Test coverage should never go down
+-   All use cases should be covered by E2E tests
+-   Optimise when test run speed starts to hinder development
+-   Unit tests and E2E tests should run in CI
+-   Test database schemas should match up with production database schema
+-   Have integration tests which test from the PostgreSQL database to API Gateway
+
+### Database Things
 
 To modify the database schema:
 
@@ -54,7 +113,7 @@ _Prerequsite: Make sure you have your database running—something like `docker-
     - If the migration looks good, run `bin/dotnet ef --project EvidenceApi database update`  to run the migrations
     - If the migration looks bad, run `bin/dotnet ef --project EvidenceApi migrations remove` to wipe the migration
 
-#### Notify
+### Notify
 
 The application uses GOV.UK Notify to send emails and SMS.
 
@@ -62,7 +121,7 @@ When running the application locally we make calls to the Notify service and so 
 1. Ask to be invited to the _Hackney Upload_ group so you can access the Notify dashboard
 2. Update your local `.env` file with the correct values for the properties `NOTIFY_TEMPLATE_REMINDER_*`, `NOTIFY_TEMPLATE_EVIDENCE_*` and `NOTIFY_API_KEY` (these should use the **staging** API key)
 
-### Release process
+## Release process
 
 We use a pull request workflow, where changes are made on a branch and approved by one or more other maintainers before the developer can merge into `master` branch.
 
@@ -95,35 +154,6 @@ Both the API and Test projects have been set up to **treat all warnings from the
 
 However, we can select which errors to suppress by setting the severity of the responsible rule to none, e.g `dotnet_analyzer_diagnostic.<Category-or-RuleId>.severity = none`, within the `.editorconfig` file.
 Documentation on how to do this can be found [here](https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019).
-
-## Testing
-
-### Run the tests
-
-```sh
-$ make test
-```
-
-To run database tests locally (e.g. via Visual Studio) the `CONNECTION_STRING` environment variable will need to be populated with:
-
-`Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`
-
-Note: The Host name needs to be the name of the stub database docker-compose service, in order to run tests via Docker.
-
-If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The restart-db make command will do this for you.
-
-### Agreed Testing Approach
-
--   Use nUnit, FluentAssertions and Moq
--   Always follow a TDD approach
--   Tests should be independent of each other
--   Gateway tests should interact with a real test instance of the database
--   Test coverage should never go down
--   All use cases should be covered by E2E tests
--   Optimise when test run speed starts to hinder development
--   Unit tests and E2E tests should run in CI
--   Test database schemas should match up with production database schema
--   Have integration tests which test from the PostgreSQL database to API Gateway
 
 ## Data Migrations
 
