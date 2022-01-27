@@ -56,6 +56,8 @@ to start the API locally. It will run on `http://localhost:5000`.
 
 To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer.
 
+If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
+
 There are two approaches to testing the evidence-api -- for different purposes. Your approach depends on whether you have inserted any data into `evidence-api_dev-datase_1` for manual/UI testing purposes.
 
 > _1. I don't have any data seeded into my local database!_
@@ -84,8 +86,6 @@ When all the test have passed, to start up the local db again, run
 ```sh
 $ docker stop evidence-api_test-database_1
 ```
-
-If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
 
 ### Agreed Testing Approach
 
