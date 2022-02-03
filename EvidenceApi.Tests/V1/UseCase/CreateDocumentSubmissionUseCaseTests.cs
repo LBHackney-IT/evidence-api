@@ -70,6 +70,17 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void DoesNotThrowBadRequestExceptionWhenBase64DocumentIsAcceptedMimeType()
+        {
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.Base64Document, "data:application/pdf;")
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            testDelegate.Should().NotThrow<BadRequestException>();
+        }
+
+        [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
             var request = _fixture.Build<DocumentSubmissionRequest>()
