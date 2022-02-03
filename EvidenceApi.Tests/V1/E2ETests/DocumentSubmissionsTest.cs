@@ -72,7 +72,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             string body = "{" +
-                          "\"base64Document\": \"abcd\"," +
+                          "\"base64Document\": \"data:application/pdf;\"," +
                           "\"documentType\": \"proof-of-id\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -186,7 +186,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
             string body = "{" +
-                          "\"base64Document\": \"abcd\"," +
+                          "\"base64Document\": \"data:application/pdf;\"," +
                           "\"documentType\": \"proof-of-id\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");

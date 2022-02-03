@@ -50,7 +50,9 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
-            var request = _fixture.Create<DocumentSubmissionRequest>();
+            var request = _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.Base64Document, "data:application/pdf;")
+                .Create();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == request.DocumentType)))
                 .Returns(() => null)
@@ -218,6 +220,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private DocumentSubmissionRequest CreateRequestFixture()
         {
             return _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.Base64Document, "data:application/pdf;")
                 .With(x => x.DocumentType, _documentType.Id)
                 .Create();
         }
