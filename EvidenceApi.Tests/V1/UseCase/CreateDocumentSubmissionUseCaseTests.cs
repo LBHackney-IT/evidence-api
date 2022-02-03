@@ -48,6 +48,17 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void ThrowsBadRequestExceptionWhenBase64DocumentIsEmptyOrNull() 
+        {
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.Base64Document)
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>(); 
+        }
+
+        [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
             var request = _fixture.Build<DocumentSubmissionRequest>()
