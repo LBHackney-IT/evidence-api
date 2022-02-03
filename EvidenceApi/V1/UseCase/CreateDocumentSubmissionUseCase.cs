@@ -109,7 +109,7 @@ namespace EvidenceApi.V1.UseCase
 
         private static void ValidateRequest(DocumentSubmissionRequest request)
         {
-            var acceptedMimeTypes = new string[] {"image/jpeg", "image/png", "application/pdf"};
+            var acceptedMimeTypes = new string[] { "image/jpeg", "image/png", "application/pdf" };
 
             if (String.IsNullOrEmpty(request.DocumentType))
             {
