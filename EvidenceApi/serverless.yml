@@ -1,4 +1,5 @@
 service: evidence-api
+variablesResolutionMode: 20210326
 provider:
   name: aws
   runtime: dotnetcore3.1
