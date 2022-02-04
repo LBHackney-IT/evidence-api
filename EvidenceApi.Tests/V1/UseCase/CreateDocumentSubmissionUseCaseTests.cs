@@ -44,7 +44,40 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.DocumentType)
                 .Create();
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>();
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Document type is null or empty");
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenBase64DocumentIsEmptyOrNull()
+        {
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .Without(x => x.Base64Document)
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base 64 document is null or empty");
+        }
+
+        [Test]
+        public void ThrowsBadRequestExceptionWhenBase64DocumentIsNotAcceptedMimeType()
+        {
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.Base64Document, "data:image/svg+xml;")
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base64 mime type is not accepted");
+        }
+
+        [Test]
+        public void DoesNotThrowBadRequestExceptionWhenBase64DocumentIsAcceptedMimeType()
+        {
+            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
+                .With(x => x.Base64Document, "data:application/pdf;")
+                .Create();
+
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            testDelegate.Should().NotThrow<BadRequestException>();
         }
 
         [Test]
