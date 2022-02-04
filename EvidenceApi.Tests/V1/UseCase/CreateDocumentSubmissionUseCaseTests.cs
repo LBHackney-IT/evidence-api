@@ -48,14 +48,14 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenBase64DocumentIsEmptyOrNull() 
+        public void ThrowsBadRequestExceptionWhenBase64DocumentIsEmptyOrNull()
         {
             var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.Base64Document)
                 .Create();
 
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base 64 document is null or empty"); 
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base 64 document is null or empty");
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Create();
 
             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base64 mime type is not accepted"); 
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base64 mime type is not accepted");
         }
 
         [Test]
