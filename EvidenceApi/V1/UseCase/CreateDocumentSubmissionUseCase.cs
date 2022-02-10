@@ -112,7 +112,7 @@ namespace EvidenceApi.V1.UseCase
             return documentSubmission;
         }
 
-        private void ValidateRequest(DocumentSubmissionRequest request)
+        private static void ValidateRequest(DocumentSubmissionRequest request)
         {
             var acceptedMimeTypes = AcceptedMimeTypes.acceptedMimeTypes;
 
