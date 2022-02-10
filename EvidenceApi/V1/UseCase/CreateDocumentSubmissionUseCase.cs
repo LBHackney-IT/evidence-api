@@ -23,7 +23,12 @@ namespace EvidenceApi.V1.UseCase
         private readonly INotifyGateway _notifyGateway;
         private readonly ILogger<CreateDocumentSubmissionUseCase> _logger;
 
-        public CreateDocumentSubmissionUseCase(IEvidenceGateway evidenceGateway, IDocumentsApiGateway documentsApiGateway, IDocumentTypeGateway documentTypeGateway, INotifyGateway notifyGateway, ILogger<CreateDocumentSubmissionUseCase> logger)
+        public CreateDocumentSubmissionUseCase(
+            IEvidenceGateway evidenceGateway,
+            IDocumentsApiGateway documentsApiGateway,
+            IDocumentTypeGateway documentTypeGateway,
+            INotifyGateway notifyGateway,
+            ILogger<CreateDocumentSubmissionUseCase> logger)
         {
             _evidenceGateway = evidenceGateway;
             _documentsApiGateway = documentsApiGateway;
@@ -107,9 +112,9 @@ namespace EvidenceApi.V1.UseCase
             return documentSubmission;
         }
 
-        private static void ValidateRequest(DocumentSubmissionRequest request)
+        private void ValidateRequest(DocumentSubmissionRequest request)
         {
-            var acceptedMimeTypes = new string[] { "image/jpeg", "image/png", "application/pdf" };
+            var acceptedMimeTypes = AcceptedMimeTypes.acceptedMimeTypes;
 
             if (String.IsNullOrEmpty(request.DocumentType))
             {
