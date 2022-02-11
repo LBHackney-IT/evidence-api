@@ -19,9 +19,9 @@ namespace EvidenceApi
             "image/jpeg",
             "image/png",
             "text/plain",
-            "video/3gpp",
-            "video/mp4",
-            "video/quicktime",
+            //"video/3gpp",
+            //"video/mp4",
+            //"video/quicktime",
             };
     }
 }
