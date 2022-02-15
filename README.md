@@ -183,6 +183,37 @@ Documentation on how to do this can be found [here](https://docs.microsoft.com/e
 -   Observable monitoring in place
 -   Should not affect any existing databases
 
+## File Uploads
+
+For security reasons, the MIME types that a resident can upload must be whitelisted on both client side and server side. This means that a resident cannot upload a file that does not meet the approved whitelist. For example, a resident cannot upload a file with an extension of `.svg` because the MIME type `image/svg+xml` has not been added to the whitelist. Please see the previous pen-test reports for more information. The following MIME types are blacklisted:
+
+- `image/svg+xml` (could contain scripts)
+- `application/octet-stream` (unknown binary-type files)
+
+### Adding a new accepted MIME type
+
+There are two places where a new MIME type needs to be whitelisted; the client (frontend) and the server (evidence-api). To update how the client accepts MIME types, please see the README on [Document Evidence Store Frontend](https://github.com/LBHackney-IT/document-evidence-store-frontend).
+
+To update the accepted MIME types on the server, navigate to [AcceptedMimeTypes.cs](EvidenceApi/AcceptedMimeTypes.cs) and add the MIME types to the `acceptedMimeTypes` property of the class. A list of authoritative MIME types can be found on [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) and [IANA](https://www.iana.org/assignments/media-types/media-types.xhtml).
+
+### Current accepted MIME types
+
+| MIME type                                                               | File extension |
+| ----------------------------------------------------------------------- | -------------- |
+| application/msword                                                      | .doc           |
+| application/pdf                                                         | .pdf           |
+| application/vnd.apple.numbers                                           | .numbers       |
+| application/vnd.apple.pages                                             | .pages         |
+| application/vnd.ms-excel                                                | .xls           |
+| application/vnd.openxmlformats-officedocument.spreadsheetml.sheet       | .xlsx          |
+| application/vnd.openxmlformats-officedocument.wordprocessingml.document | .docx          |
+| image/bmp                                                               | .bmp           |
+| image/gif                                                               | .gif           |
+| image/heic                                                              | .heic          |
+| image/jpeg                                                              | .jpeg or .jpg  |
+| image/png                                                               | .png           |
+| text/plain                                                              | .txt           |
+
 ## Contacts
 
 ### Active Maintainers
