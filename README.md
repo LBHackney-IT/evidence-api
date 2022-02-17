@@ -65,7 +65,7 @@ to start the API locally. It will run on `http://localhost:5000`.
 
 ### Testing
 
-To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer.
+To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer, or populated them yourself.
 
 If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
 
