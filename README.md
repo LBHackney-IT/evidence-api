@@ -31,9 +31,20 @@ See the [Architectural Decision Log](/docs/adr).
 
 ### Development
 
-In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access.
+In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access or see below. Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in [.env.example](.env.example)).
 
-Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in `.env.example`). This file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
+Alternatively, you can populate the values yourself. You will need access to the application's staging environment on AWS. Create a new `.env` file with the values from `.env.example` as above. Then, retrieve the values from the staging environment in AWS following the variables listed in [serverless.yml](EvidenceApi/serverless.yml).
+
+The only values you do not need to copy from AWS are:
+- CONNECTION_STRING -- use the value in `.env.example`
+- EVIDENCE_REQUEST_CLIENT_URL -- use the value in `.env.example`
+- DOCUMENTS_API_URL -- use the value in `.env.example`
+- DOCUMENTS_API_POST_CLAIMS_TOKEN - assign this to `value`
+- DOCUMENTS_API_POST_DOCUMENTS_TOKEN - assign this to `value`
+- DOCUMENTS_API_GET_CLAIMS_TOKEN - assign this to `value`
+- DOCUMENTS_API_PATCH_CLAIMS_TOKEN - assign this to `value`
+
+This `.env` file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
 To set up the database container, run 
 ```sh
