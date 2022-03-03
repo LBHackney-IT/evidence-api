@@ -82,7 +82,7 @@ $ dotnet test
 
 Having locally seeded data in your db will cause tests to fail. In order to save your locally seeded data but run the tests as well, we're going to assume that you have done all the set up steps above already. In order to run the tests the second way, you will need to stop the container called `evidence-api_dev-database_1` by navigating via the UI or by running 
 ```sh
-$ docker stop evidence-api_dev-databse_1
+$ docker stop evidence-api_dev-database_1
 ```
 
 **Please note: as long as the attached volume for this container continues to run, you will not lose any manually seeded data when you stop this container.**
