@@ -15,6 +15,7 @@ namespace EvidenceApi.V1.Infrastructure
         public string DocumentsApiPostClaimsToken { get; set; }
         public string DocumentsApiPatchClaimsToken { get; set; }
         public string DocumentsApiPostDocumentsToken { get; set; }
+        public string DocumentsApiGetDocumentsToken { get; set; }
 
         public static AppOptions FromEnv()
         {
@@ -31,7 +32,8 @@ namespace EvidenceApi.V1.Infrastructure
                 DocumentsApiGetClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_GET_CLAIMS_TOKEN"),
                 DocumentsApiPostClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_CLAIMS_TOKEN"),
                 DocumentsApiPatchClaimsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_PATCH_CLAIMS_TOKEN"),
-                DocumentsApiPostDocumentsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_DOCUMENTS_TOKEN")
+                DocumentsApiPostDocumentsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_POST_DOCUMENTS_TOKEN"),
+                DocumentsApiGetDocumentsToken = Environment.GetEnvironmentVariable("DOCUMENTS_API_GET_DOCUMENTS_TOKEN")
             };
         }
     }

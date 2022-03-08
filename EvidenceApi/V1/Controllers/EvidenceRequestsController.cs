@@ -5,6 +5,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using EvidenceApi.V1.Gateways.Interfaces;
 
 namespace EvidenceApi.V1.Controllers
 {
@@ -18,19 +19,22 @@ namespace EvidenceApi.V1.Controllers
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
         private readonly IFindEvidenceRequestByIdUseCase _evidenceRequestUseCase;
         private readonly IFindEvidenceRequestsUseCase _getEvidenceRequestsUseCase;
+        private readonly IDocumentsApiGateway _documentsApiGateway;
 
         public EvidenceRequestsController(
             ICreateEvidenceRequestUseCase creator,
             ICreateDocumentSubmissionUseCase createDocumentSubmission,
             IFindEvidenceRequestByIdUseCase evidenceRequestUseCase,
             IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase,
-            ICreateAuditUseCase createAuditUseCase
+            ICreateAuditUseCase createAuditUseCase,
+            IDocumentsApiGateway documentsApiGateway
         ) : base(createAuditUseCase)
         {
             _creator = creator;
             _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
             _getEvidenceRequestsUseCase = getEvidenceRequestsUseCase;
+            _documentsApiGateway = documentsApiGateway;
         }
 
         /// <summary>
@@ -75,6 +79,32 @@ namespace EvidenceApi.V1.Controllers
             catch (NotFoundException)
             {
                 return NotFound();
+            }
+        }
+
+        /// <summary>
+        /// Calls documents api to create a pre-signed upload url
+        /// </summary>
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Evidence request cannot be found</response>
+        [HttpGet]
+        [Route("/generate_upload_url")]
+        public async Task<IActionResult> CallDocumentsApiToGenerateUploadUrl()
+        {
+            try
+            {
+                var result = await _documentsApiGateway.CreateUploadPolicy().ConfigureAwait(true);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
 

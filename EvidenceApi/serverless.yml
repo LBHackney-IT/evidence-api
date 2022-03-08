@@ -31,6 +31,7 @@ functions:
       DOCUMENTS_API_POST_CLAIMS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/post/claims/token}
       DOCUMENTS_API_PATCH_CLAIMS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/patch/claims/token}
       DOCUMENTS_API_POST_DOCUMENTS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/post/documents/token}
+      DOCUMENTS_API_GET_DOCUMENTS_TOKEN: ${ssm:/documents-api/${self:provider.stage}/get/documents/token}
       NOTIFY_API_KEY: ${ssm:/evidence-api/${self:provider.stage}/notify-api-key}
       NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL: ${ssm:/evidence-api/notify/email/evidence-requested}
       NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS: ${ssm:/evidence-api/notify/sms/evidence-requested}
