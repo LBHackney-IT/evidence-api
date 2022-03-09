@@ -90,7 +90,7 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="401">Request lacks valid API token</response>
         /// <response code="404">Evidence request cannot be found</response>
         [HttpGet]
-        [Route("/generate_upload_url")]
+        [Route("generate_upload_url")]
         public async Task<IActionResult> CallDocumentsApiToGenerateUploadUrl()
         {
             try
