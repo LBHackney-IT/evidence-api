@@ -67,6 +67,7 @@ namespace EvidenceApi.V1.Factories
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
+                UploadPolicy = s3UploadPolicy,
                 Document = claim.Document,
                 ClaimValidUntil = claim.ValidUntil,
                 RetentionExpiresAt = claim.RetentionExpiresAt
