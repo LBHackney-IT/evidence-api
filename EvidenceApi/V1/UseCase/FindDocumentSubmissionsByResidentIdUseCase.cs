@@ -49,7 +49,7 @@ namespace EvidenceApi.V1.UseCase
                         ds.StaffSelectedDocumentTypeId);
                     var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
                     {
-                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, claim));
+                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim));
                     }
                 }
             }
