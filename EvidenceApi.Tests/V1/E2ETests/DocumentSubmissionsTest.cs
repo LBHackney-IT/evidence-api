@@ -22,6 +22,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         private readonly IFixture _fixture = new Fixture();
         private Claim _createdClaim;
         private Document _document;
+        private S3UploadPolicy _createdUploadPolicy;
         private Guid id = Guid.NewGuid();
 
         [SetUp]
@@ -33,6 +34,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             _createdClaim = _fixture.Build<Claim>()
                 .With(x => x.Document, _document)
                 .Create();
+
+            _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             DocumentsApiServer.Given(
                 Request.Create().WithPath("/api/v1/claims")
@@ -54,6 +57,14 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 Request.Create().WithPath($"/api/v1/documents/{id}")
             ).RespondWith(
                 Response.Create().WithStatusCode(200)
+            );
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/documents/{id}/upload_policies")
+            ).RespondWith(
+                Response.Create().WithStatusCode(200).WithBody(
+                    JsonConvert.SerializeObject(_createdUploadPolicy)
+                )
             );
         }
 
@@ -99,6 +110,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"state\":\"UPLOADED\"," +
                                "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
                                "\"staffSelectedDocumentType\":null," +
+                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
                                $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +
                                "}";
 
@@ -307,7 +319,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
 
-            var expected = documentSubmission.ToResponse(null, null, _createdClaim);
+            var expected = documentSubmission.ToResponse(null, null, null, _createdClaim);
 
             responseFind.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
@@ -382,8 +394,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var expected = new List<DocumentSubmissionResponse>()
             {
-                documentSubmission1.ToResponse(documentType,  null, _createdClaim),
-                documentSubmission2.ToResponse(documentType,  null, _createdClaim)
+                documentSubmission1.ToResponse(documentType,  null, null, _createdClaim),
+                documentSubmission2.ToResponse(documentType,  null, null, _createdClaim)
             };
 
             response.StatusCode.Should().Be(200);

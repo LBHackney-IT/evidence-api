@@ -54,11 +54,13 @@ namespace EvidenceApi.V1.UseCase
             }
 
             Claim claim;
+            S3UploadPolicy createdS3UploadPolicy;
 
             try
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
                 claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
+                createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
                 await _documentsApiGateway.UploadDocument(claim.Document.Id, request).ConfigureAwait(true);
             }
             catch (DocumentsApiException ex)
@@ -80,7 +82,7 @@ namespace EvidenceApi.V1.UseCase
                     _logger.LogError(e, e.Message);
                 }
             }
-            return createdDocumentSubmission.ToResponse(documentType, null, claim);
+            return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy, claim);
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)
