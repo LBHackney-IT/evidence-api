@@ -70,8 +70,9 @@ namespace EvidenceApi.Tests.V1.Factories
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
             var claim = _fixture.Build<Claim>().Create();
             var domain = TestDataHelper.DocumentSubmission();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType, null, claim);
+            var response = domain.ToResponse(documentType, null, s3UploadPolicy, claim);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
