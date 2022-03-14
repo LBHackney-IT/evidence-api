@@ -150,40 +150,40 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-         public void ThrowsBadRequestExceptionWhenCannotCreateUploadPolicy()
-         {
-             // Arrange
-             _documentType = _fixture.Create<DocumentType>();
-             _request = CreateRequestFixture();
-             _created = DocumentSubmissionFixture();
-             var evidenceRequest = TestDataHelper.EvidenceRequest();
+        public void ThrowsBadRequestExceptionWhenCannotCreateUploadPolicy()
+        {
+            // Arrange
+            _documentType = _fixture.Create<DocumentType>();
+            _request = CreateRequestFixture();
+            _created = DocumentSubmissionFixture();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
 
-             SetupEvidenceGateway(evidenceRequest);
+            SetupEvidenceGateway(evidenceRequest);
 
-             var claim = _fixture.Create<Claim>();
-             _documentsApiGateway
-                 .Setup(x =>
-                     x.CreateClaim(It.Is<ClaimRequest>(cr =>
-                         cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
-                         cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
-                         cr.ApiCreatedBy == "evidence_api"
-                     ))
-                 )
-                 .ReturnsAsync(claim);
+            var claim = _fixture.Create<Claim>();
+            _documentsApiGateway
+                .Setup(x =>
+                    x.CreateClaim(It.Is<ClaimRequest>(cr =>
+                        cr.ServiceAreaCreatedBy == evidenceRequest.Team &&
+                        cr.UserCreatedBy == evidenceRequest.UserRequestedBy &&
+                        cr.ApiCreatedBy == "evidence_api"
+                    ))
+                )
+                .ReturnsAsync(claim);
 
-             _documentsApiGateway
-                 .Setup(x =>
-                     x.CreateUploadPolicy(It.Is<Guid>(id =>
-                         id == claim.Document.Id))
-                 )
-                 .Throws(new DocumentsApiException("doh!"));
+            _documentsApiGateway
+                .Setup(x =>
+                    x.CreateUploadPolicy(It.Is<Guid>(id =>
+                        id == claim.Document.Id))
+                )
+                .Throws(new DocumentsApiException("doh!"));
 
-             // Act
-             Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            // Act
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
 
-             // Assert
-             testDelegate.Should().Throw<BadRequestException>();
-         }
+            // Assert
+            testDelegate.Should().Throw<BadRequestException>();
+        }
 
         [Test]
         public async Task ReturnsTheCreatedDocumentSubmissionWhenRequestIsValid()
@@ -318,7 +318,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                     ))
                 )
                 .ReturnsAsync(claim);
-            
+
             _documentsApiGateway
                  .Setup(x =>
                      x.CreateUploadPolicy(It.Is<Guid>(id =>
