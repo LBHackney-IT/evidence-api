@@ -50,8 +50,9 @@ namespace EvidenceApi.Tests.V1.Factories
         {
             var documentType = new DocumentType() { Id = "passport", Title = "Passport" };
             var domain = TestDataHelper.DocumentSubmission();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType);
+            var response = domain.ToResponse(documentType, null, s3UploadPolicy);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
@@ -62,6 +63,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.UserUpdatedBy.Should().Be(domain.UserUpdatedBy);
             response.State.Should().Be(domain.State.ToString().ToUpper());
             response.DocumentType.Should().Be(documentType);
+            response.UploadPolicy.Should().Be(s3UploadPolicy);
         }
 
         [Test]
@@ -86,6 +88,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.ClaimValidUntil.Should().Be(claim.ValidUntil);
             response.RetentionExpiresAt.Should().Be(claim.RetentionExpiresAt);
             response.Document.Should().Be(claim.Document);
+            response.UploadPolicy.Should().Be(s3UploadPolicy);
         }
     }
 }
