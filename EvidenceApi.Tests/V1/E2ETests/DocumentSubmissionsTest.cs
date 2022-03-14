@@ -403,6 +403,48 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
+         public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateUploadPolicy()
+         {
+             // Arrange
+             var entity = _fixture.Build<EvidenceRequest>()
+                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                 .Without(x => x.Communications)
+                 .Without(x => x.DocumentSubmissions)
+                 .Create();
+             DatabaseContext.EvidenceRequests.Add(entity);
+             DatabaseContext.SaveChanges();
+
+             DocumentsApiServer.Reset();
+             DocumentsApiServer.Given(
+                 Request.Create().WithPath("/api/v1/claims")
+             ).RespondWith(
+                 Response.Create().WithStatusCode(201).WithBody(
+                     JsonConvert.SerializeObject(_createdClaim)
+                 )
+             );
+             DocumentsApiServer.Given(
+                 Request.Create().WithPath($"/api/v1/documents/{id}/upload_policies")
+             ).RespondWith(
+                 Response.Create().WithStatusCode(404)
+             );
+
+             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
+             string body = "{" +
+                          "\"base64Document\": \"data:application/pdf;\"," +
+                          "\"documentType\": \"proof-of-id\"" +
+                          "}";
+
+             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
+             // Act
+             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+
+             // Assert
+             response.StatusCode.Should().Be(400);
+         }
+
+        [Test]
         public async Task ReturnBadRequestWhenSearchQueryIsInvalid()
         {
             var team = "";
