@@ -61,7 +61,6 @@ namespace EvidenceApi.V1.UseCase
                 var claimRequest = BuildClaimRequest(evidenceRequest);
                 claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
                 createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
-                await _documentsApiGateway.UploadDocument(claim.Document.Id, request).ConfigureAwait(true);
             }
             catch (DocumentsApiException ex)
             {
@@ -121,24 +120,6 @@ namespace EvidenceApi.V1.UseCase
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");
-            }
-            if (String.IsNullOrEmpty(request.Base64Document))
-            {
-                throw new BadRequestException("Base 64 document is null or empty");
-            }
-
-            var mimeTypePart = Regex.Match(request.Base64Document, @"(?<=:).+(?=;)").Value;
-            var isNotFound = true;
-            foreach (var mimeType in acceptedMimeTypes)
-            {
-                if (mimeTypePart == mimeType)
-                {
-                    isNotFound = false;
-                }
-            }
-            if (isNotFound)
-            {
-                throw new BadRequestException("Base64 mime type is not accepted");
             }
         }
     }

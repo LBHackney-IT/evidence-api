@@ -48,43 +48,9 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenBase64DocumentIsEmptyOrNull()
-        {
-            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
-                .Without(x => x.Base64Document)
-                .Create();
-
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base 64 document is null or empty");
-        }
-
-        [Test]
-        public void ThrowsBadRequestExceptionWhenBase64DocumentIsNotAcceptedMimeType()
-        {
-            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.Base64Document, "data:image/svg+xml;")
-                .Create();
-
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Base64 mime type is not accepted");
-        }
-
-        [Test]
-        public void DoesNotThrowBadRequestExceptionWhenBase64DocumentIsAcceptedMimeType()
-        {
-            var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.Base64Document, "data:application/pdf;")
-                .Create();
-
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
-            testDelegate.Should().NotThrow<BadRequestException>();
-        }
-
-        [Test]
         public void ThrowsNotFoundExceptionWhenEvidenceRequestIsNull()
         {
             var request = _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.Base64Document, "data:application/pdf;")
                 .Create();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == request.DocumentType)))
@@ -113,33 +79,6 @@ namespace EvidenceApi.Tests.V1.UseCase
                         cr.ApiCreatedBy == "evidence_api"
                     ))
                 )
-                .Throws(new DocumentsApiException("doh!"));
-
-            // Act
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-
-            // Assert
-            testDelegate.Should().Throw<BadRequestException>();
-        }
-
-        [Test]
-        public void ThrowsBadRequestExceptionWhenCannotUploadFile()
-        {
-            // Arrange
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-            _documentType = _fixture.Create<DocumentType>();
-            _created = DocumentSubmissionFixture();
-            _request = CreateRequestFixture();
-
-            var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
-
-            SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
-
-            _documentsApiGateway
-                .Setup(x =>
-                    x.UploadDocument(It.IsAny<Guid>(), It.IsAny<DocumentSubmissionRequest>()))
                 .Throws(new DocumentsApiException("doh!"));
 
             // Act
@@ -295,7 +234,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         private DocumentSubmissionRequest CreateRequestFixture()
         {
             return _fixture.Build<DocumentSubmissionRequest>()
-                .With(x => x.Base64Document, "data:application/pdf;")
                 .With(x => x.DocumentType, _documentType.Id)
                 .Create();
         }
