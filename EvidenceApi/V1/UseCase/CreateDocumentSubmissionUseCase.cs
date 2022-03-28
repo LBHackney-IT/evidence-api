@@ -115,8 +115,6 @@ namespace EvidenceApi.V1.UseCase
 
         private static void ValidateRequest(DocumentSubmissionRequest request)
         {
-            var acceptedMimeTypes = AcceptedMimeTypes.acceptedMimeTypes;
-
             if (String.IsNullOrEmpty(request.DocumentType))
             {
                 throw new BadRequestException("Document type is null or empty");

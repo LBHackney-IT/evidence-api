@@ -84,12 +84,6 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
         }
 
-        private static StringContent SerializeDocumentUploadRequest(DocumentUploadRequest request)
-        {
-            var body = JsonConvert.SerializeObject(request);
-            return new StringContent(body, Encoding.UTF8, "application/json");
-        }
-
         private static StringContent SerializeClaimRequest(ClaimRequest request)
         {
             var body = JsonConvert.SerializeObject(request);
