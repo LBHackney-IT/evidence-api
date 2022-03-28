@@ -64,25 +64,6 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public async Task CanUploadDocumentWithValidParameters()
-        {
-            // Arrange
-            Guid id = Guid.NewGuid();
-            DocumentSubmissionRequest documentSubmissionRequest = new DocumentSubmissionRequest();
-            documentSubmissionRequest.Base64Document = "file";
-            documentSubmissionRequest.DocumentType = "passport";
-
-            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/documents/{id}", request =>
-                {
-                    return request.Headers.Authorization.ToString() == _options.DocumentsApiPostDocumentsToken;
-                })
-                .ReturnsResponse(HttpStatusCode.OK);
-
-            // Act
-            await _classUnderTest.UploadDocument(id, documentSubmissionRequest).ConfigureAwait(true);
-        }
-
-        [Test]
         public async Task CanCreateUploadPolicyWithValidParameters()
         {
             Guid id = Guid.NewGuid();

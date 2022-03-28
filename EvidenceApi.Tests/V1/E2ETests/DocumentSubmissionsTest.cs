@@ -83,7 +83,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             string body = "{" +
-                          "\"base64Document\": \"data:application/pdf;\"," +
                           "\"documentType\": \"proof-of-id\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -129,30 +128,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
 
-            string body = "{" +
-                          "\"base64Document\": \"abcd\"" +
-                          "}";
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            response.StatusCode.Should().Be(400);
-        }
-
-        [Test]
-        public async Task CreateDocumentSubmissionUnsuccessfulWhenNoDocumentProvided()
-        {
-            var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Create();
-            DatabaseContext.EvidenceRequests.Add(entity);
-            DatabaseContext.SaveChanges();
-
-            string body = "{" +
-                          "\"documentType\": \"proof-of-id\"" +
-                          "}";
+            string body = "{}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
@@ -180,7 +156,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             );
 
             string body = "{" +
-                          "\"base64Document\": \"abcd\"," +
                           "\"documentType\": \"proof-of-id\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -198,7 +173,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
             string body = "{" +
-                          "\"base64Document\": \"data:application/pdf;\"," +
                           "\"documentType\": \"proof-of-id\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -431,7 +405,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
             string body = "{" +
-                         "\"base64Document\": \"data:application/pdf;\"," +
                          "\"documentType\": \"proof-of-id\"" +
                          "}";
 

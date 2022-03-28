@@ -60,20 +60,6 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
-        public async Task UploadDocument(Guid documentId, DocumentSubmissionRequest request)
-        {
-            var uri = new Uri($"api/v1/documents/{documentId}", UriKind.Relative);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostDocumentsToken);
-            var documentUploadRequest = new DocumentUploadRequest();
-            documentUploadRequest.Base64Document = request.Base64Document;
-            var jsonString = SerializeDocumentUploadRequest(documentUploadRequest);
-            var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
-            }
-        }
-
         public async Task<Claim> GetClaimById(string id)
         {
             var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
@@ -96,12 +82,6 @@ namespace EvidenceApi.V1.Gateways
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
             }
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
-        }
-
-        private static StringContent SerializeDocumentUploadRequest(DocumentUploadRequest request)
-        {
-            var body = JsonConvert.SerializeObject(request);
-            return new StringContent(body, Encoding.UTF8, "application/json");
         }
 
         private static StringContent SerializeClaimRequest(ClaimRequest request)
