@@ -27,18 +27,95 @@ See the [Architectural Decision Log](/docs/adr).
 1. Install [Docker][docker-download].
 2. Install [AWS CLI][aws-cli].
 3. Clone this repository.
-4. Rename the initial template.
-5. Open it in your IDE.
+4. Open it in your IDE.
 
 ### Development
 
-Build and serve the application. It will be available in the port 5000.
+In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access or see below. Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in [.env.example](.env.example)).
 
+Alternatively, you can populate the values yourself. You will need access to the application's staging environment on AWS. Create a new `.env` file with the values from `.env.example` as above. Then, retrieve the values from the staging environment in AWS following the variables listed in [serverless.yml](EvidenceApi/serverless.yml).
+
+The only values you do not need to copy from AWS are:
+- CONNECTION_STRING -- use the value in `.env.example`
+- EVIDENCE_REQUEST_CLIENT_URL -- use the value in `.env.example`
+- DOCUMENTS_API_URL -- use the value in `.env.example`
+- DOCUMENTS_API_POST_CLAIMS_TOKEN - assign this to `value`
+- DOCUMENTS_API_POST_DOCUMENTS_TOKEN - assign this to `value`
+- DOCUMENTS_API_GET_CLAIMS_TOKEN - assign this to `value`
+- DOCUMENTS_API_PATCH_CLAIMS_TOKEN - assign this to `value`
+
+This `.env` file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
+
+To set up the database container, run 
 ```sh
-$ make build && make serve
+docker-compose up -d dev-database
+``` 
+in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+
+Once the environment variables have been added for evidence-api and the database is running, update the database by running the migration command 
+```sh
+dotnet ef --project EvidenceApi database update
 ```
 
-#### Database Things
+Then run 
+```sh 
+dotnet run --project EvidenceApi
+``` 
+to start the API locally. It will run on `http://localhost:5000`.
+
+### Testing
+
+To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer, or populated them yourself.
+
+If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
+
+There are two approaches to testing the evidence-api -- for different purposes. Your approach depends on whether you have inserted any data into `evidence-api_dev-datase_1` for manual/UI testing purposes.
+
+> _1. I don't have any data seeded into my local database!_
+
+Then, assuming that you have already followed the steps above to set up the repo and database container, and run the migration, you should have now one image running in Docker called `evidence-api_dev-databse_1`. In order to run the tests, all you need to do is run 
+```sh
+$ dotnet test
+```
+
+> _2. I do have data in my local seeded because I inserted it myself!_
+
+Having locally seeded data in your db will cause tests to fail. In order to save your locally seeded data but run the tests as well, we're going to assume that you have done all the set up steps above already. In order to run the tests the second way, you will need to stop the container called `evidence-api_dev-database_1` by navigating via the UI or by running 
+```sh
+$ docker stop evidence-api_dev-database_1
+```
+
+**Please note: as long as the attached volume for this container continues to run, you will not lose any manually seeded data when you stop this container.**
+
+The reason why you need to stop it, is because we need to free up that port for a new container. Run 
+```sh
+$ make test
+```
+and a script will run to run all the tests on two new containers called `evidence-api_test-database_1` and `evidence-api_evidence-api-test_1`. These will be totally seaparate from your local dev db.
+
+When all the test have passed, to start up the local db again, run 
+```sh
+$ docker stop evidence-api_test-database_1
+```
+And then start the local development database by starting it via the UI or running:
+```sh
+docker-compose up -d dev-database
+``` 
+
+### Agreed Testing Approach
+
+-   Use nUnit, FluentAssertions and Moq
+-   Always follow a TDD approach
+-   Tests should be independent of each other
+-   Gateway tests should interact with a real test instance of the database
+-   Test coverage should never go down
+-   All use cases should be covered by E2E tests
+-   Optimise when test run speed starts to hinder development
+-   Unit tests and E2E tests should run in CI
+-   Test database schemas should match up with production database schema
+-   Have integration tests which test from the PostgreSQL database to API Gateway
+
+### Database Things
 
 To modify the database schema:
 
@@ -51,7 +128,7 @@ _Prerequsite: Make sure you have your database running—something like `docker-
     - If the migration looks good, run `bin/dotnet ef --project EvidenceApi database update`  to run the migrations
     - If the migration looks bad, run `bin/dotnet ef --project EvidenceApi migrations remove` to wipe the migration
 
-#### Notify
+### Notify
 
 The application uses GOV.UK Notify to send emails and SMS.
 
@@ -59,7 +136,7 @@ When running the application locally we make calls to the Notify service and so 
 1. Ask to be invited to the _Hackney Upload_ group so you can access the Notify dashboard
 2. Update your local `.env` file with the correct values for the properties `NOTIFY_TEMPLATE_REMINDER_*`, `NOTIFY_TEMPLATE_EVIDENCE_*` and `NOTIFY_API_KEY` (these should use the **staging** API key)
 
-### Release process
+## Release process
 
 We use a pull request workflow, where changes are made on a branch and approved by one or more other maintainers before the developer can merge into `master` branch.
 
@@ -78,7 +155,20 @@ Our staging and production environments are hosted by AWS. We would deploy to pr
 
 ### Creating A PR
 
+Before you commit or push your code, you will need to run:
+
+```sh
+make lint
+``` 
+
+Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
+```sh
+dotnet format
+``` 
+to format your code.
+
 To help with making changes to code easier to understand when being reviewed, we've added a PR template.
+
 When a new PR is created on a repo that uses this API template, the PR template will automatically fill in the `Open a pull request` description textbox.
 The PR author can edit and change the PR description using the template as a guide.
 
@@ -93,35 +183,6 @@ Both the API and Test projects have been set up to **treat all warnings from the
 However, we can select which errors to suppress by setting the severity of the responsible rule to none, e.g `dotnet_analyzer_diagnostic.<Category-or-RuleId>.severity = none`, within the `.editorconfig` file.
 Documentation on how to do this can be found [here](https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019).
 
-## Testing
-
-### Run the tests
-
-```sh
-$ make test
-```
-
-To run database tests locally (e.g. via Visual Studio) the `CONNECTION_STRING` environment variable will need to be populated with:
-
-`Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`
-
-Note: The Host name needs to be the name of the stub database docker-compose service, in order to run tests via Docker.
-
-If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The restart-db make command will do this for you.
-
-### Agreed Testing Approach
-
--   Use nUnit, FluentAssertions and Moq
--   Always follow a TDD approach
--   Tests should be independent of each other
--   Gateway tests should interact with a real test instance of the database
--   Test coverage should never go down
--   All use cases should be covered by E2E tests
--   Optimise when test run speed starts to hinder development
--   Unit tests and E2E tests should run in CI
--   Test database schemas should match up with production database schema
--   Have integration tests which test from the PostgreSQL database to API Gateway
-
 ## Data Migrations
 
 ### A good data migration
@@ -132,6 +193,37 @@ If changes to the database schema are made then the docker image for the databas
 -   As close to real time as possible
 -   Observable monitoring in place
 -   Should not affect any existing databases
+
+## File Uploads
+
+For security reasons, the MIME types that a resident can upload must be whitelisted on both client side and server side. This means that a resident cannot upload a file that does not meet the approved whitelist. For example, a resident cannot upload a file with an extension of `.svg` because the MIME type `image/svg+xml` has not been added to the whitelist. Please see the previous pen-test reports for more information. The following MIME types are blacklisted:
+
+- `image/svg+xml` (could contain scripts)
+- `application/octet-stream` (unknown binary-type files)
+
+### Adding a new accepted MIME type
+
+There are two places where a new MIME type needs to be whitelisted; the client (frontend) and the server (evidence-api). To update how the client accepts MIME types, please see the README on [Document Evidence Store Frontend](https://github.com/LBHackney-IT/document-evidence-store-frontend).
+
+To update the accepted MIME types on the server, navigate to [AcceptedMimeTypes.cs](EvidenceApi/AcceptedMimeTypes.cs) and add the MIME types to the `acceptedMimeTypes` property of the class. A list of authoritative MIME types can be found on [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) and [IANA](https://www.iana.org/assignments/media-types/media-types.xhtml).
+
+### Current accepted MIME types
+
+| MIME type                                                               | File extension |
+| ----------------------------------------------------------------------- | -------------- |
+| application/msword                                                      | .doc           |
+| application/pdf                                                         | .pdf           |
+| application/vnd.apple.numbers                                           | .numbers       |
+| application/vnd.apple.pages                                             | .pages         |
+| application/vnd.ms-excel                                                | .xls           |
+| application/vnd.openxmlformats-officedocument.spreadsheetml.sheet       | .xlsx          |
+| application/vnd.openxmlformats-officedocument.wordprocessingml.document | .docx          |
+| image/bmp                                                               | .bmp           |
+| image/gif                                                               | .gif           |
+| image/heic                                                              | .heic          |
+| image/jpeg                                                              | .jpeg or .jpg  |
+| image/png                                                               | .png           |
+| text/plain                                                              | .txt           |
 
 ## Contacts
 
