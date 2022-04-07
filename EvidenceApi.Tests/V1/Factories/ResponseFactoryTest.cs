@@ -30,6 +30,7 @@ namespace EvidenceApi.Tests.V1.Factories
             response.Resident.Should().BeEquivalentTo(resident.ToResponse(domain.ResidentReferenceId));
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.NoteToResident.Should().Be(domain.NoteToResident);
         }
 
         [Test]

@@ -43,6 +43,9 @@ namespace EvidenceApi.V1.Domain
         [Column("notification_email")]
         public string NotificationEmail { get; set; }
 
+        [Column("note_to_resident")]
+        public string NoteToResident { get; set; }
+
         public virtual ICollection<Communication> Communications { get; set; }
         public virtual ICollection<DocumentSubmission> DocumentSubmissions { get; set; }
 

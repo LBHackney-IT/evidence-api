@@ -36,7 +36,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 ""documentTypes"": [""proof-of-id""],
                 ""team"": ""Development Housing Team"",
                 ""reason"": ""staging-reason"",
-                ""userRequestedBy"": ""staff@test.hackney.gov.uk""
+                ""userRequestedBy"": ""staff@test.hackney.gov.uk"",
+                ""noteToResident"": ""This is a note to resident""
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -66,7 +67,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "\"userRequestedBy\":\"staff@test.hackney.gov.uk\"," +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
-                               "\"documentSubmission\":null" +
+                               "\"documentSubmission\":null," +
+                               "\"noteToResident\":\"This is a note to resident\"" +
                                "}";
 
             json.Should().Be(expected);

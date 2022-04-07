@@ -71,6 +71,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Team.Should().Be(_created.Team);
             result.Reason.Should().Be(_created.Reason);
             result.UserRequestedBy.Should().Be(_created.UserRequestedBy);
+            result.NoteToResident.Should().Be(_created.NoteToResident);
         }
 
         [Test]
@@ -111,7 +112,6 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _notifyGateway.Verify(x =>
                 x.SendNotification(DeliveryMethod.Sms, CommunicationReason.EvidenceRequest, _created, _resident));
-
         }
 
         private void SetupValidatorToReturn(bool valid)
@@ -135,9 +135,12 @@ namespace EvidenceApi.Tests.V1.UseCase
                 Name = _resident.Name,
                 PhoneNumber = _resident.PhoneNumber
             };
+            var noteToResident = "This is a note to resident";
+
             _request = _fixture.Build<EvidenceRequestRequest>()
                 .With(x => x.DeliveryMethods, new List<string> { "EMAIL" })
                 .With(x => x.Resident, residentRequest)
+                .With(x => x.NoteToResident, noteToResident)
                 .Create();
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
