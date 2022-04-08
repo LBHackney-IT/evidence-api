@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -7,7 +6,6 @@ using Microsoft.Extensions.Options;
 
 namespace EvidenceApi.V1.Controllers.Filters
 {
-    [UsedImplicitly]
     public class HandleExceptionAttribute : ExceptionFilterAttribute
     {
         private readonly ILogger<HandleExceptionAttribute> _logger;
