@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace EvidenceApi.V1.Filters
+namespace EvidenceApi.V1.Controllers.Filters
 {
     [UsedImplicitly]
     public class HandleExceptionAttribute : ExceptionFilterAttribute

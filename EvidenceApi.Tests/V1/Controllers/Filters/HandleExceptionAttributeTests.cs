@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using EvidenceApi.V1.Filters;
+using EvidenceApi.V1.Controllers.Filters;
 using FluentAssertions;
 using FluentAssertions.Common;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 
-namespace EvidenceApi.Tests.V1.Filters
+namespace EvidenceApi.Tests.V1.Controllers.Filters
 {
     public class HandleExceptionAttributeTests
     {
