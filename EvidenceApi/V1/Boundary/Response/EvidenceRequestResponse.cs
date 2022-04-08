@@ -16,5 +16,6 @@ namespace EvidenceApi.V1.Boundary.Response
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DocumentSubmission? DocumentSubmission { get; set; }
+        public string NoteToResident { get; set; }
     }
 }

@@ -127,6 +127,7 @@ _Prerequsite: Make sure you have your database running—something like `docker-
 4.
     - If the migration looks good, run `bin/dotnet ef --project EvidenceApi database update`  to run the migrations
     - If the migration looks bad, run `bin/dotnet ef --project EvidenceApi migrations remove` to wipe the migration
+5. Run `update-schema-sql` file to update `schema.sql`
 
 ### Notify
 

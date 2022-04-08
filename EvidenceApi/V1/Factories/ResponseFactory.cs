@@ -18,7 +18,8 @@ namespace EvidenceApi.V1.Factories
                 Reason = domain.Reason,
                 UserRequestedBy = domain.UserRequestedBy,
                 Id = domain.Id,
-                CreatedAt = domain.CreatedAt
+                CreatedAt = domain.CreatedAt,
+                NoteToResident = domain.NoteToResident
             };
         }
 

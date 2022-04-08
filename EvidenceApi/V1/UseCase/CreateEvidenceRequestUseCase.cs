@@ -91,7 +91,8 @@ namespace EvidenceApi.V1.UseCase
                 UserRequestedBy = request.UserRequestedBy,
                 NotificationEmail = request.NotificationEmail,
                 ResidentId = residentId,
-                ResidentReferenceId = residentReferenceId
+                ResidentReferenceId = residentReferenceId,
+                NoteToResident = request.NoteToResident
             };
         }
 
