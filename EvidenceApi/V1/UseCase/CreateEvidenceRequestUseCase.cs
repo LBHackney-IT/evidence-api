@@ -92,7 +92,7 @@ namespace EvidenceApi.V1.UseCase
                 NotificationEmail = request.NotificationEmail,
                 ResidentId = residentId,
                 ResidentReferenceId = residentReferenceId,
-                NoteToResident = request.NoteToResident
+                NoteToResident = String.IsNullOrEmpty(request.NoteToResident) ? "There is no additional information" : request.NoteToResident
             };
         }
 

@@ -127,7 +127,8 @@ namespace EvidenceApi.V1.Gateways
                 {
                     {"resident_name", resident.Name},
                     {"reason", evidenceRequest.Reason},
-                    {"magic_link", MagicLinkFor(evidenceRequest)}
+                    {"magic_link", MagicLinkFor(evidenceRequest)},
+                    {"note_to_resident", evidenceRequest.NoteToResident}
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
             };
