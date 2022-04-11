@@ -137,3 +137,6 @@ dotnet_diagnostic.CA2000.severity = none
 
 #Can reassign collections
 dotnet_diagnostic.CA2227.severity = none
+
+#For ConfigureAwait(true) errors when calling async methods
+dotnet_diagnostic.CA2007.severity = none

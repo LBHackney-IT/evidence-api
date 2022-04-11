@@ -7,6 +7,7 @@ using Amazon.XRay.Recorder.Handlers.AwsSdk;
 using dotenv.net;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Controllers;
+using EvidenceApi.V1.Controllers.Filters;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -48,7 +49,10 @@ namespace EvidenceApi
         public static void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddMvc(c =>
+                {
+                    c.Filters.Add<HandleExceptionAttribute>();
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             var apiVersions = new List<ApiVersion>();
