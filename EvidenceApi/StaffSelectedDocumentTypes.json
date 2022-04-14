@@ -435,5 +435,51 @@
         "description": ""
       }
     ]
+  },
+  {
+    "name": "Property Sales Team",
+    "id": "8",
+    "documentTypes": [
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "Data page with photo"
+      },
+      {
+        "id": "drivers-licence",
+        "title": "UK Drivers licence",
+        "description": "Photo side (front)"
+      },
+      {
+        "id": "eu-identity-card",
+        "title": "EU identity card",
+        "description": "Photo page"
+      },
+      {
+        "id": "biometric-card",
+        "title": "Biometric card",
+        "description": "Both sides of the card"
+      },
+      {
+        "id": "birth-certificate",
+        "title": "Birth certificate",
+        "description": "Photo side (front)"
+      },
+      {
+        "id": "proof-of-tenancy-agreement",
+        "title": "Proof of tenancy agreement",
+        "description": "Photo of both sides of valid tenancy agreement for your home including signatures"
+      },
+      {
+        "id": "certificate-of-naturalisation",
+        "title": "Certificate of naturalisation",
+        "description": "Photo side (front)"
+      },
+      {
+        "id": "proof-of-rtb",
+        "title": "Proof of previous Right to Buy discount",
+        "description": "If you have previously purchased a property under Right to Buy and completed Part D of the RTB1, please supply any relevant documentation. (add website link to form)"
+      }
+    ]
   }
 ]
