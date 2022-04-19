@@ -49,7 +49,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 {"resident_name", resident.Name},
                 {"reason", request.Reason},
-                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"}
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"},
+                {"note_to_resident", request.NoteToResident}
             };
 
             var response = _fixture.Create<SmsNotificationResponse>();
@@ -76,7 +77,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             {
                 {"resident_name", resident.Name},
                 {"reason", request.Reason},
-                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"}
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"},
+                {"note_to_resident", request.NoteToResident}
             };
 
             var response = _fixture.Create<EmailNotificationResponse>();
