@@ -486,9 +486,9 @@
         "description": "Upload of completed document (website link to download)"
       },
       {
-        "id": "proof-of-marriage",
-        "title": "Proof of marriage",
-        "description": "A valid document that can be used to prove marriage. If the tenant is applying with a family member, supply a copy of the marriage certificate. Photo of whole document must be readable."
+        "id": "marriage-certificate",
+        "title": "Marriage certificate",
+        "description": "If the tenant applying with a family member, please supply a copy of the marriage certificate. Photo of whole document readable."
       },
       {
         "id": "bank-statement",
@@ -509,6 +509,16 @@
         "id": "government-letter",
         "title": "Government letter",
         "description": "For example, benefit status letters"
+      },
+      {
+        "id": "permission-booklet",
+        "title": "Permission booklet",
+        "description": "Photo of all pages of the booklet (Add link to form online)"
+      },
+      {
+        "id": "anti-money-laundering",
+        "title": "Anti Money Laundering form",
+        "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet"
       }
     ]
   }
