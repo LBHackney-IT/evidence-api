@@ -488,7 +488,7 @@
       {
         "id": "marriage-certificate",
         "title": "Marriage certificate",
-        "description": "If the tenant applying with a family member, please supply a copy of the marriage certificate. Photo of whole document readable."
+        "description": "A valid document that can be used to prove marriage. If the tenant is applying with a family member, supply a copy of the marriage certificate. Photo of whole document must be readable."
       },
       {
         "id": "bank-statement",
