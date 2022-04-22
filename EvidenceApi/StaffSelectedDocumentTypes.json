@@ -437,7 +437,7 @@
     ]
   },
   {
-    "name": "Property Sales Team",
+    "name": "Leasehold and Right to Buy",
     "id": "8",
     "documentTypes": [
       {
@@ -468,17 +468,47 @@
       {
         "id": "proof-of-tenancy-agreement",
         "title": "Proof of tenancy agreement",
-        "description": "Photo of both sides of valid tenancy agreement for your home including signatures"
+        "description": "Photo of both sides of valid tenancy agreement for the resident's home including signatures"
       },
       {
         "id": "certificate-of-naturalisation",
         "title": "Certificate of naturalisation",
-        "description": "Photo side (front)"
+        "description": "Photo side (front). IMPORTANT: If the resident is an overseas national they also need to provide us with proof of their entitlement to reside in the UK, ie they must have indefinite leave to remain."
       },
       {
         "id": "proof-of-rtb",
         "title": "Proof of previous Right to Buy discount",
-        "description": "If you have previously purchased a property under Right to Buy and completed Part D of the RTB1, please supply any relevant documentation. (add website link to form)"
+        "description": "If they have previously purchased a property under Right to Buy and completed Part D of the RTB1, resident to supply any relevant documentation. (website link to form)"
+      },
+      {
+        "id": "opt-out-rtb",
+        "title": "Joint tenant opting out of the Right to Buy",
+        "description": "Upload of completed document (website link to download)"
+      },
+      {
+        "id": "proof-of-marriage",
+        "title": "Proof of marriage",
+        "description": "A valid document that can be used to prove marriage. If the tenant is applying with a family member, supply a copy of the marriage certificate. Photo of whole document must be readable."
+      },
+      {
+        "id": "bank-statement",
+        "title": "Bank statement",
+        "description": "Valid from the last 3, 6 or 12 months"
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3, 6 or 12 months. For all utility bills - provide at least THREE of the following: All the documents you provide must show this information or we won’t be able to accept them: Applicants name (matching what’s shown on the RTB application)/Address/Date of the document (not just the dates that a document may cover). We cannot accept hand-written letters, undated documents or junk mail as sufficient evidence of where you live and how long you have lived there. Neither can we accept documents sent to you by Hackney Council or Hackney Homes. Documents must be from more than one organisation or company.  Please remember that one of the documents you provide must have a date from at least twelve months ago and one must be recent."
+      },
+      {
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year"
+      },
+      {
+        "id": "government-letter",
+        "title": "Government letter",
+        "description": "For example, benefit status letters"
       }
     ]
   }
