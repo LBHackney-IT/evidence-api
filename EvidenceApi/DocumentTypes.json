@@ -155,5 +155,61 @@
         "description": "This is for internal use only to upload documents"
       }
     ]
+  },
+  {
+    "name": "Leasehold and Right to Buy",
+    "id": "8",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of ID",
+        "description": "A valid document that can be used to prove identity"
+      },
+      {
+        "id": "proof-of-tenancy",
+        "title": "Proof of tenancy",
+        "description": "Photo of both sides of valid tenancy agreement for your home including signatures"
+      },
+      {
+        "id": "previous-tenancy-confirmation",
+        "title": "Previous tenancy confirmation",
+        "description": "If you have completed previous tenancy details on page 5 of the RTB1, please supply and tenancy agreements or relevant confirmation of tenancy."
+      },
+      {
+        "id": "proof-of-nationality",
+        "title": "Proof of nationality",
+        "description": "A valid document that can be used to prove nationality. IMPORTANT: If you are an overseas national you also need to provide us with proof of your entitlement to reside in the UK, ie you must have indefinite leave to remain."
+      },
+      {
+        "id": "proof-of-rtb",
+        "title": "Proof of previous Right to Buy discount",
+        "description": "If you have previously purchased a property under Right to Buy and completed Part D of the RTB1, please supply any relevant documentation."
+      },
+      {
+        "id": "opt-out-rtb",
+        "title": "Joint tenant opting out of the Right to Buy",
+        "description": "Upload of completed document"
+      },
+      {
+        "id": "proof-of-marriage",
+        "title": "Proof of marriage",
+        "description": "A valid document that can be used to prove marriage. If you are a tenant applying with a family member to whom you are married please supply a copy of the marriage certificate. Photo of whole document must be readable."
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document to confirm residency"
+      },
+      {
+        "id": "give-up-permissions",
+        "title": "Confirmation to give up permissions",
+        "description": "All sections must be completed in full and signed by all applicants. Photo of all pages of the booklet"
+      },
+      {
+        "id": "anti-money-laundering",
+        "title": "Anti Money Laundering form",
+        "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet"
+      }
+    ]
   }
 ]
