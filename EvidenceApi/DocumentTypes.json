@@ -219,7 +219,7 @@
       {
         "id": "proof-of-address",
         "title": "Proof of Address",
-        "description": "Two valid documents to provide proof of address. It must inculde the name of the Parent who is applying clearly wittren on the document provided."
+        "description": "Two valid documents to provide proof of address. It must inculde the name of the Parent who is applying clearly written on the document provided."
       },
       {
         "id": "proof-of-child-dob",
@@ -228,7 +228,7 @@
       },
       {
         "id": "proof-of-arrival",
-        "title": "Proof of Child's Date of Birth",
+        "title": "Proof of Arrival",
         "description": "A valid document to provide arrival details of child in the UK. A picture of an E-ticket with the name of child clearly written with date of arrival must be shown."
       },
       {
