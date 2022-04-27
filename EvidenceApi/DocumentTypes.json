@@ -211,5 +211,31 @@
         "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet"
       }
     ]
+  },
+  {
+    "name": "Admission and Pupil Benefits",
+    "id": "9",
+    "documentTypes": [
+      {
+        "id": "proof-of-address",
+        "title": "Proof of Address",
+        "description": "Two valid documents to provide proof of address. It must inculde the name of the Parent who is applying clearly written on the document provided."
+      },
+      {
+        "id": "proof-of-child-dob",
+        "title": "Proof of Child's Date of Birth",
+        "description": "A valid document to provide proof of child's identity. Picture of child's full name and date of birth must be in the Evidence."
+      },
+      {
+        "id": "proof-of-arrival",
+        "title": "Proof of Arrival",
+        "description": "A valid document to provide arrival details of child in the UK. A picture of an E-ticket with the name of child clearly written with date of arrival must be shown."
+      },
+      {
+        "id": "proof-of-residency",
+        "title": "Proof of Residency",
+        "description": "A valid letter from the occupant of the property stating that the parent and the child are currently residing with them."
+      }
+    ]
   }
 ]
