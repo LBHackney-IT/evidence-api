@@ -18,6 +18,7 @@ namespace EvidenceApi.V1.UseCase
     public class CreateDocumentSubmissionUseCase : ICreateDocumentSubmissionUseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
+        private readonly IResidentsGateway _residentsGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly INotifyGateway _notifyGateway;
@@ -25,12 +26,14 @@ namespace EvidenceApi.V1.UseCase
 
         public CreateDocumentSubmissionUseCase(
             IEvidenceGateway evidenceGateway,
+            IResidentsGateway residentsGateway,
             IDocumentsApiGateway documentsApiGateway,
             IDocumentTypeGateway documentTypeGateway,
             INotifyGateway notifyGateway,
             ILogger<CreateDocumentSubmissionUseCase> logger)
         {
             _evidenceGateway = evidenceGateway;
+            _residentsGateway = residentsGateway;
             _documentsApiGateway = documentsApiGateway;
             _documentTypeGateway = documentTypeGateway;
             _notifyGateway = notifyGateway;
@@ -53,6 +56,8 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");
             }
 
+            var resident = _residentsGateway.FindResident(evidenceRequest.ResidentId);
+
             Claim claim;
             S3UploadPolicy createdS3UploadPolicy;
 
@@ -74,7 +79,7 @@ namespace EvidenceApi.V1.UseCase
             {
                 try
                 {
-                    _notifyGateway.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest);
+                    _notifyGateway.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident);
                 }
                 catch (NotifyClientException e)
                 {
