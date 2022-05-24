@@ -56,9 +56,9 @@ namespace EvidenceApi.V1.Gateways
             _evidenceGateway.CreateCommunication(communication);
         }
 
-        public void SendNotificationDocumentUploaded(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        public void SendNotificationDocumentUploaded(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident)
         {
-            var personalisation = GetParamsForDocumentUploaded(communicationReason, evidenceRequest);
+            var personalisation = GetParamsForDocumentUploaded(communicationReason, evidenceRequest, resident);
             var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
             var result = DeliverEmail(templateId, evidenceRequest.NotificationEmail, personalisation);
             var communication = new Communication
@@ -134,12 +134,13 @@ namespace EvidenceApi.V1.Gateways
             };
         }
 
-        private Dictionary<string, object> GetParamsForDocumentUploaded(CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        private Dictionary<string, object> GetParamsForDocumentUploaded(CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident)
         {
             if (communicationReason == CommunicationReason.DocumentUploaded)
             {
                 return new Dictionary<string, object>
                 {
+                    {"resident_name", resident.Name},
                     {"resident_page_link", ResidentPageLinkFor(evidenceRequest)}
                 };
             }

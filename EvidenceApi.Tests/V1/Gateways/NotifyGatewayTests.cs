@@ -157,18 +157,21 @@ namespace EvidenceApi.Tests.V1.Gateways
             var communicationReason = CommunicationReason.DocumentUploaded;
             var envVar = "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL";
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
             evidenceRequest.NotificationEmail = "some@email";
             evidenceRequest.Reason = "some-reason";
+            evidenceRequest.ResidentId = resident.Id;
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
             var expectedParams = new Dictionary<string, object>
             {
+                {"resident_name", resident.Name},
                 {"resident_page_link", $"{_options.EvidenceRequestClientUrl}teams/2/dashboard/residents/{evidenceRequest.ResidentId}"}
             };
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, evidenceRequest);
+            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, evidenceRequest, resident);
             _notifyClient.Verify(x =>
                     x.SendEmail(evidenceRequest.NotificationEmail, expectedTemplateId,
                         It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
@@ -206,8 +209,10 @@ namespace EvidenceApi.Tests.V1.Gateways
             var deliveryMethod = DeliveryMethod.Email;
             var communicationReason = CommunicationReason.DocumentUploaded;
             var request = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
             request.Reason = "some-reason";
             request.NotificationEmail = "some@email";
+            request.ResidentId = resident.Id;
 
             var envVar = "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL";
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
@@ -218,7 +223,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                         null))
                 .Returns(response);
 
-            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, request);
+            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, request, resident);
 
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
                 x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&

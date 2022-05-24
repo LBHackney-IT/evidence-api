@@ -9,6 +9,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
             Resident resident);
         public void SendNotificationEvidenceRejected(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, DocumentSubmission documentSubmission,
             Resident resident);
-        public void SendNotificationDocumentUploaded(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest);
+        public void SendNotificationDocumentUploaded(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident);
     }
 }

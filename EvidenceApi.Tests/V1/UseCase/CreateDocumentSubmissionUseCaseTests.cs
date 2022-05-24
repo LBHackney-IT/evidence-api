@@ -22,6 +22,7 @@ namespace EvidenceApi.Tests.V1.UseCase
     {
         private CreateDocumentSubmissionUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
+        private Mock<IResidentsGateway> _residentsGateway = new Mock<IResidentsGateway>();
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
         private Mock<INotifyGateway> _notifyGateway = new Mock<INotifyGateway>();
@@ -34,7 +35,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _notifyGateway.Object, _logger.Object);
+            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _residentsGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _notifyGateway.Object, _logger.Object);
         }
 
         [Test]
@@ -153,6 +154,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         public async Task SendsANotificationWhenNotificationEmailIsNotNull()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
+            evidenceRequest.ResidentId = resident.Id;
             _documentType = _fixture.Create<DocumentType>();
             _created = DocumentSubmissionFixture();
             _request = CreateRequestFixture();
@@ -161,19 +164,22 @@ namespace EvidenceApi.Tests.V1.UseCase
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
             SetupEvidenceGateway(evidenceRequest);
+            SetupResidentsGateway(resident);
             SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
             var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
             _notifyGateway.Verify(x =>
-                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest));
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident));
         }
 
         [Test]
         public async Task DoesNotSendANotificationEmailWhenNotificationEmailIsNull()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
             evidenceRequest.NotificationEmail = null;
+            evidenceRequest.ResidentId = resident.Id;
             _documentType = _fixture.Create<DocumentType>();
             _created = DocumentSubmissionFixture();
             _request = CreateRequestFixture();
@@ -187,7 +193,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
             _notifyGateway.Verify(x =>
-                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest), Times.Never());
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident), Times.Never());
         }
 
         [TestCase(SubmissionState.Pending)]
@@ -272,6 +278,11 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
                 .Returns(_created)
                 .Verifiable();
+        }
+
+        private void SetupResidentsGateway(Resident resident)
+        {
+            _residentsGateway.Setup(x => x.FindResident(resident.Id)).Returns(resident).Verifiable();
         }
 
         private DocumentType SetupDocumentTypeGateway(string documentTypeId)

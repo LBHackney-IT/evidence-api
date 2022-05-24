@@ -72,6 +72,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task CanCreateDocumentSubmissionWithValidParams()
         {
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
             var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, new List<string> { "proof-of-id" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
@@ -79,6 +81,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
+            entity.ResidentId = resident.Id;
+            DatabaseContext.Residents.Add(resident);
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
 
