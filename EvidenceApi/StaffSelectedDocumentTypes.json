@@ -471,6 +471,11 @@
         "description": "Photo of both sides of valid tenancy agreement for the resident's home including signatures"
       },
       {
+        "id": "previous-tenancy-agreement",
+        "title": "Previous Tenancy Agreement",
+        "description": "If you have completed previous tenancy details on page 5 of the RTB1, please supply and tenancy agreements or relevant confirmation of tenancy."
+      },
+      {
         "id": "certificate-of-naturalisation",
         "title": "Certificate of naturalisation",
         "description": "Photo side (front). IMPORTANT: If the resident is an overseas national they also need to provide us with proof of their entitlement to reside in the UK, ie they must have indefinite leave to remain."
