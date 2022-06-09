@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using FluentAssertions;
@@ -27,7 +28,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ReturnsTheUpdatedEvidenceRequestWhenStateIsApproved()
         {
             var id = Guid.NewGuid();
-            SetupMocks();
+            SetupMocks("approved");
             EvidenceRequestApprovedState(_found);
             var result = _classUnderTest.Execute(id);
 
@@ -39,7 +40,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ReturnsTheUpdatedEvidenceRequestWhenStateIsForReview()
         {
             var id = Guid.NewGuid();
-            SetupMocks();
+            SetupMocks("for review");
             EvidenceRequestForReviewState(_found);
             var result = _classUnderTest.Execute(id);
 
@@ -51,7 +52,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ReturnsTheUpdatedEvidenceRequestWhenStateIsPending()
         {
             var id = Guid.NewGuid();
-            SetupMocks();
+            SetupMocks("pending");
             EvidenceRequestForPendingState(_found);
             var result = _classUnderTest.Execute(id);
 
@@ -73,11 +74,25 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway.VerifyAll();
         }
 
-        private void SetupMocks()
+        private void SetupMocks(string state)
         {
             _found = TestDataHelper.EvidenceRequest();
 
+            switch(state)
+            {
+                case "approved":
+                    EvidenceRequestApprovedState(_found);
+                break;
+                case "for review":
+                    EvidenceRequestForReviewState(_found);
+                    break;
+                case "pending":
+                    EvidenceRequestForPendingState(_found);
+                    break;
+            }
+
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(It.IsAny<Guid>())).Returns(_found);
+            _evidenceGateway.Setup(x => x.FindDocumentSubmissionsByEvidenceRequestId(It.IsAny<Guid>())).Returns(_found.DocumentSubmissions.ToList());
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_found);
         }
 

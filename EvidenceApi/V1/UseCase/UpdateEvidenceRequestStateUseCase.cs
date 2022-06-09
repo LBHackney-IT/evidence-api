@@ -21,18 +21,22 @@ namespace EvidenceApi.V1.UseCase
         public EvidenceRequest Execute(Guid id)
         {
             var evidenceRequest = _evidenceGateway.FindEvidenceRequest(id);
+
             if (evidenceRequest == null)
             {
                 throw new NotFoundException($"Cannot find an evidence request with ID: {id}");
             }
 
-            if (allDocumentSubmissionsAreApproved(evidenceRequest))
+            var documentSubmissions = _evidenceGateway.FindDocumentSubmissionsByEvidenceRequestId(id);
+            evidenceRequest.DocumentSubmissions = documentSubmissions;
+
+            if (AllDocumentSubmissionsAreApproved(evidenceRequest))
             {
                 evidenceRequest.State = EvidenceRequestState.Approved;
             }
             else
             {
-                if (atLeastOneDocumentSubmissionisUploaded(evidenceRequest))
+                if (AtLeastOneDocumentSubmissionIsUploaded(evidenceRequest))
                 {
                     evidenceRequest.State = EvidenceRequestState.ForReview;
                 }
@@ -45,7 +49,7 @@ namespace EvidenceApi.V1.UseCase
             return evidenceRequest;
         }
 
-        private static bool allDocumentSubmissionsAreApproved(EvidenceRequest evidenceRequest)
+        private static bool AllDocumentSubmissionsAreApproved(EvidenceRequest evidenceRequest)
         {
             return evidenceRequest.DocumentTypes.ToArray().All(dt =>
                 evidenceRequest.DocumentSubmissions.Any(ds =>
@@ -53,7 +57,7 @@ namespace EvidenceApi.V1.UseCase
             );
         }
 
-        private static bool atLeastOneDocumentSubmissionisUploaded(EvidenceRequest evidenceRequest)
+        private static bool AtLeastOneDocumentSubmissionIsUploaded(EvidenceRequest evidenceRequest)
         {
             return evidenceRequest.DocumentTypes.ToArray().Any(dt =>
                 evidenceRequest.DocumentSubmissions.Any(ds =>
