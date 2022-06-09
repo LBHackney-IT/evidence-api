@@ -78,11 +78,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _found = TestDataHelper.EvidenceRequest();
 
-            switch(state)
+            switch (state)
             {
                 case "approved":
                     EvidenceRequestApprovedState(_found);
-                break;
+                    break;
                 case "for review":
                     EvidenceRequestForReviewState(_found);
                     break;
