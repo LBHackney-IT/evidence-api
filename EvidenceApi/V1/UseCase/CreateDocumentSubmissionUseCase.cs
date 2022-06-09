@@ -22,6 +22,7 @@ namespace EvidenceApi.V1.UseCase
         private readonly IDocumentsApiGateway _documentsApiGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly INotifyGateway _notifyGateway;
+        private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
         private readonly ILogger<CreateDocumentSubmissionUseCase> _logger;
 
         public CreateDocumentSubmissionUseCase(
@@ -30,6 +31,7 @@ namespace EvidenceApi.V1.UseCase
             IDocumentsApiGateway documentsApiGateway,
             IDocumentTypeGateway documentTypeGateway,
             INotifyGateway notifyGateway,
+            IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase,
             ILogger<CreateDocumentSubmissionUseCase> logger)
         {
             _evidenceGateway = evidenceGateway;
@@ -37,6 +39,7 @@ namespace EvidenceApi.V1.UseCase
             _documentsApiGateway = documentsApiGateway;
             _documentTypeGateway = documentTypeGateway;
             _notifyGateway = notifyGateway;
+            _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
             _logger = logger;
         }
 
@@ -75,6 +78,7 @@ namespace EvidenceApi.V1.UseCase
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
+            _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
             if (evidenceRequest.NotificationEmail != null)
             {
                 try

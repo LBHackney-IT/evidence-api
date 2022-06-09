@@ -9,6 +9,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase;
+using EvidenceApi.V1.UseCase.Interfaces;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -26,6 +27,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
         private Mock<INotifyGateway> _notifyGateway = new Mock<INotifyGateway>();
+        private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
         private Mock<ILogger<CreateDocumentSubmissionUseCase>> _logger = new Mock<ILogger<CreateDocumentSubmissionUseCase>>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
@@ -35,7 +37,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _residentsGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _notifyGateway.Object, _logger.Object);
+            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _residentsGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _notifyGateway.Object, _updateEvidenceRequestStateUseCase.Object, _logger.Object);
         }
 
         [Test]
@@ -171,6 +173,22 @@ namespace EvidenceApi.Tests.V1.UseCase
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
             _notifyGateway.Verify(x =>
                 x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident));
+        }
+
+        [Test]
+        public async Task UpdatesEvidenceRequestStateWhenDocumentSubmissionIsCreated()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            _documentType = _fixture.Create<DocumentType>();
+            var claim = _fixture.Create<Claim>();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
+            _request = CreateRequestFixture();
+            SetupEvidenceGateway(evidenceRequest);
+            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            var docType = SetupDocumentTypeGateway(_request.DocumentType);
+            evidenceRequest.State.Should().Be(0);
+            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            evidenceRequest.State.Should().Be(1);
         }
 
         [Test]
