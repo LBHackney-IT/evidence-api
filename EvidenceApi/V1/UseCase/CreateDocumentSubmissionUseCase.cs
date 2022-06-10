@@ -78,7 +78,7 @@ namespace EvidenceApi.V1.UseCase
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
-            _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
+            _updateEvidenceRequestStateUseCase.Execute(createdDocumentSubmission.EvidenceRequestId);
             if (evidenceRequest.NotificationEmail != null)
             {
                 try

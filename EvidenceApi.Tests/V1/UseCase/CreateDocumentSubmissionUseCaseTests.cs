@@ -180,13 +180,15 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             _documentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
             var claim = _fixture.Create<Claim>();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
             _request = CreateRequestFixture();
             SetupEvidenceGateway(evidenceRequest);
             SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
+            _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_created.EvidenceRequestId)).Returns(evidenceRequest).Verifiable();
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-            _updateEvidenceRequestStateUseCase.Verify(x => x.Execute(evidenceRequest.Id), Times.Once);
+            _updateEvidenceRequestStateUseCase.Verify(x => x.Execute(_created.EvidenceRequestId), Times.Once);
         }
 
         [Test]
@@ -289,13 +291,11 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         private void SetupEvidenceGateway(EvidenceRequest evidenceRequest)
         {
-            _created = DocumentSubmissionFixture();
             _evidenceGateway.Setup(x => x.FindEvidenceRequest(evidenceRequest.Id)).Returns(evidenceRequest).Verifiable();
             _evidenceGateway
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
                 .Returns(_created)
                 .Verifiable();
-            evidenceRequest.DocumentSubmissions.Add(_created);
         }
 
         private void SetupResidentsGateway(Resident resident)
