@@ -51,18 +51,12 @@ namespace EvidenceApi.V1.UseCase
 
         private static bool AllDocumentSubmissionsAreApproved(EvidenceRequest evidenceRequest)
         {
-            return evidenceRequest.DocumentTypes.ToArray().All(dt =>
-                evidenceRequest.DocumentSubmissions.Any(ds =>
-                ds.State == SubmissionState.Approved && ds.DocumentTypeId == dt)
-            );
+            return evidenceRequest.DocumentSubmissions.All(ds => ds.State == SubmissionState.Approved);
         }
 
         private static bool AtLeastOneDocumentSubmissionIsUploaded(EvidenceRequest evidenceRequest)
         {
-            return evidenceRequest.DocumentTypes.ToArray().Any(dt =>
-                evidenceRequest.DocumentSubmissions.Any(ds =>
-                ds.State == SubmissionState.Uploaded && ds.DocumentTypeId == dt)
-            );
+            return evidenceRequest.DocumentSubmissions.Any(ds => ds.State == SubmissionState.Uploaded);
         }
     }
 }
