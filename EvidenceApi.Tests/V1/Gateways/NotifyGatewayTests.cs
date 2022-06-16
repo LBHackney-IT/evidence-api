@@ -69,24 +69,36 @@ namespace EvidenceApi.Tests.V1.Gateways
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var resident = _fixture.Create<Resident>();
             var request = TestDataHelper.EvidenceRequest();
+            request.DocumentTypes = new List<string> { "proof-of-id", "repairs-photo" };
             request.ResidentId = resident.Id;
             request.Reason = "some-reason";
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+
+            var formattedDocumentTypes = "Proof of ID,\nRepairs Photo";
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
                 {"reason", request.Reason},
                 {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"},
-                {"note_to_resident", request.NoteToResident}
+                {"note_to_resident", request.NoteToResident},
+                {"document_types", formattedDocumentTypes}
             };
+
+            var documentTypesByTeamName = new List<DocumentType>
+            {
+                new DocumentType() {Id = "proof-of-id", Title = "Proof of ID", Description = ""},
+                new DocumentType() {Id = "repairs-photo", Title = "Repairs Photo", Description = ""}
+            };
+            _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
+                .Returns(documentTypesByTeamName);
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
             _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
             _notifyClient.Verify(x =>
                     x.SendEmail(resident.Email, expectedTemplateId,
-                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null), Times.Once);
         }
 
         [Test]
