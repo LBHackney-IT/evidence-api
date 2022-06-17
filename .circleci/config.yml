@@ -108,7 +108,7 @@ commands:
             dpkg -i session-manager-plugin.deb
       - run:
           name: Install dotnet ef core
-          command: dotnet tool install dotnet-ef --tool-path ./dotnet-ef-local/
+          command: dotnet tool install dotnet-ef --version 6.0.5 --tool-path ./dotnet-ef-local/
       - run:
           name: SSH into RDS and migrate database
           command: |
