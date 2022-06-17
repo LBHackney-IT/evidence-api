@@ -46,7 +46,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             request.Reason = "some-reason";
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
-            var formattedDocumentTypes = "Proof of ID,\nRepairs Photo";
+            var formattedDocumentTypes = "Proof of ID,\nRepairs photo";
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
@@ -56,13 +56,8 @@ namespace EvidenceApi.Tests.V1.Gateways
                 {"document_types", formattedDocumentTypes}
             };
 
-            var documentTypesByTeamName = new List<DocumentType>
-            {
-                new DocumentType() {Id = "proof-of-id", Title = "Proof of ID", Description = ""},
-                new DocumentType() {Id = "repairs-photo", Title = "Repairs Photo", Description = ""}
-            };
             _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
-                .Returns(documentTypesByTeamName);
+                .Returns(TestDataHelper.GetDistinctDocumentTypes);
 
             var response = _fixture.Create<SmsNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
@@ -86,7 +81,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
 
-            var formattedDocumentTypes = "Proof of ID,\nRepairs Photo";
+            var formattedDocumentTypes = "Proof of ID,\nRepairs photo";
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
@@ -96,13 +91,8 @@ namespace EvidenceApi.Tests.V1.Gateways
                 {"document_types", formattedDocumentTypes}
             };
 
-            var documentTypesByTeamName = new List<DocumentType>
-            {
-                new DocumentType() {Id = "proof-of-id", Title = "Proof of ID", Description = ""},
-                new DocumentType() {Id = "repairs-photo", Title = "Repairs Photo", Description = ""}
-            };
             _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
-                .Returns(documentTypesByTeamName);
+                .Returns(TestDataHelper.GetDistinctDocumentTypes);
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
@@ -213,13 +203,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
 
-            var documentTypesByTeamName = new List<DocumentType>
-            {
-                new DocumentType() {Id = "proof-of-id", Title = "Proof of ID", Description = ""},
-                new DocumentType() {Id = "repairs-photo", Title = "Repairs Photo", Description = ""}
-            };
             _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
-                .Returns(documentTypesByTeamName);
+                .Returns(TestDataHelper.GetDistinctDocumentTypes);
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.Setup(x =>
