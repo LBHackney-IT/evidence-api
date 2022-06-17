@@ -236,8 +236,8 @@
         "description": "For example, benefit status letters"
       },
       {
-        "id": "permission-booklet",
-        "title": "Permission booklet",
+        "id": "additional-information-booklet",
+        "title": "Additional information booklet",
         "description": "All sections must be completed in full and signed by all applicants. Photo of all pages of the booklet (Add link to form online)"
       },
       {
