@@ -53,6 +53,18 @@ namespace EvidenceApi.Tests
             return reader.GetData().SelectMany(t => t.DocumentTypes).ToList().Find(dt => dt.Id == id);
         }
 
+        public static List<DocumentType> GetDistinctDocumentTypes()
+        {
+            var options = AppOptions.FromEnv();
+            var reader = new FileReader<List<Team>>(options.DocumentTypeConfigPath);
+
+
+            var listOfAllDocumentTypes = reader.GetData().SelectMany(team => team.DocumentTypes).ToList();
+            var distinctDocumentTypesById = listOfAllDocumentTypes.GroupBy(documentType => documentType.Id)
+                .Select(documentType => documentType.First()).ToList();
+            return distinctDocumentTypesById;
+        }
+
         public static DocumentType StaffSelectedDocumentType(string id)
         {
             var options = AppOptions.FromEnv();

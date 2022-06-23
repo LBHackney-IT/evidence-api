@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -26,7 +27,8 @@ namespace EvidenceApi.V1.Gateways
 
         public void SendNotification(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident)
         {
-            var personalisation = GetParamsFor(communicationReason, evidenceRequest, resident);
+            var formattedDocumentTypes = FormatDocumentTypes(evidenceRequest);
+            var personalisation = GetParamsFor(communicationReason, evidenceRequest, resident, formattedDocumentTypes);
             var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
             var result = Deliver(deliveryMethod, templateId, resident, personalisation);
             var communication = new Communication
@@ -119,7 +121,7 @@ namespace EvidenceApi.V1.Gateways
         }
 
 
-        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident)
+        private Dictionary<string, object> GetParamsFor(CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident, string documentTypes)
         {
             return communicationReason switch
             {
@@ -128,7 +130,8 @@ namespace EvidenceApi.V1.Gateways
                     {"resident_name", resident.Name},
                     {"reason", evidenceRequest.Reason},
                     {"magic_link", MagicLinkFor(evidenceRequest)},
-                    {"note_to_resident", evidenceRequest.NoteToResident}
+                    {"note_to_resident", evidenceRequest.NoteToResident},
+                    {"document_types", documentTypes}
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised")
             };
@@ -170,5 +173,15 @@ namespace EvidenceApi.V1.Gateways
 
         private string MagicLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}";
         private string ResidentPageLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}teams/{_documentTypeGateway.GetTeamIdByTeamName(evidenceRequest.Team)}/dashboard/residents/{evidenceRequest.ResidentId}";
+
+        private string FormatDocumentTypes(EvidenceRequest evidenceRequest)
+        {
+            var teamDocumentTypes = _documentTypeGateway.GetDocumentTypesByTeamName(evidenceRequest.Team);
+            var evidenceRequestDocumentTypes = evidenceRequest.DocumentTypes;
+
+            var documentTypeTitles = teamDocumentTypes.Where(tdt => evidenceRequestDocumentTypes.Contains(tdt.Id)).Select(dt => dt.Title);
+
+            return string.Join(",\n", documentTypeTitles);
+        }
     }
 }

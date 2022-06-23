@@ -40,25 +40,31 @@ namespace EvidenceApi.Tests.V1.Gateways
             var communicationReason = CommunicationReason.EvidenceRequest;
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS";
             var resident = _fixture.Create<Resident>();
-            var request = TestDataHelper.EvidenceRequest();
-            request.ResidentId = resident.Id;
-            request.Reason = "some-reason";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.DocumentTypes = new List<string> { "proof-of-id", "repairs-photo" };
+            evidenceRequest.ResidentId = resident.Id;
+            evidenceRequest.Reason = "some-reason";
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var formattedDocumentTypes = "Proof of ID,\nRepairs photo";
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
-                {"reason", request.Reason},
-                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"},
-                {"note_to_resident", request.NoteToResident}
+                {"reason", evidenceRequest.Reason},
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}"},
+                {"note_to_resident", evidenceRequest.NoteToResident},
+                {"document_types", formattedDocumentTypes}
             };
+
+            _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
+                .Returns(TestDataHelper.GetDistinctDocumentTypes);
 
             var response = _fixture.Create<SmsNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, evidenceRequest, resident);
             _notifyClient.Verify(x =>
                 x.SendSms(resident.PhoneNumber, expectedTemplateId,
-                    It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+                    It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null), Times.Once);
         }
 
         [Test]
@@ -68,25 +74,32 @@ namespace EvidenceApi.Tests.V1.Gateways
             var communicationReason = CommunicationReason.EvidenceRequest;
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var resident = _fixture.Create<Resident>();
-            var request = TestDataHelper.EvidenceRequest();
-            request.ResidentId = resident.Id;
-            request.Reason = "some-reason";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.DocumentTypes = new List<string> { "proof-of-id", "repairs-photo" };
+            evidenceRequest.ResidentId = resident.Id;
+            evidenceRequest.Reason = "some-reason";
 
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+
+            var formattedDocumentTypes = "Proof of ID,\nRepairs photo";
             var expectedParams = new Dictionary<string, object>
             {
                 {"resident_name", resident.Name},
-                {"reason", request.Reason},
-                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{request.Id}"},
-                {"note_to_resident", request.NoteToResident}
+                {"reason", evidenceRequest.Reason},
+                {"magic_link", $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}"},
+                {"note_to_resident", evidenceRequest.NoteToResident},
+                {"document_types", formattedDocumentTypes}
             };
+
+            _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
+                .Returns(TestDataHelper.GetDistinctDocumentTypes);
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.SetReturnsDefault(response);
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, evidenceRequest, resident);
             _notifyClient.Verify(x =>
                     x.SendEmail(resident.Email, expectedTemplateId,
-                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null), Times.Once);
         }
 
         [Test]
@@ -183,12 +196,16 @@ namespace EvidenceApi.Tests.V1.Gateways
             var deliveryMethod = DeliveryMethod.Email;
             var communicationReason = CommunicationReason.EvidenceRequest;
             var resident = _fixture.Create<Resident>();
-            var request = TestDataHelper.EvidenceRequest();
-            request.ResidentId = resident.Id;
-            request.Reason = "some-reason";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.ResidentId = resident.Id;
+            evidenceRequest.DocumentTypes = new List<string> { "proof-of-id", "repairs-photo" };
+            evidenceRequest.Reason = "some-reason";
 
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+
+            _documentTypeGateway.Setup(x => x.GetDocumentTypesByTeamName(It.IsAny<string>()))
+                .Returns(TestDataHelper.GetDistinctDocumentTypes);
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.Setup(x =>
@@ -196,7 +213,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                         null))
                 .Returns(response);
 
-            _classUnderTest.SendNotification(deliveryMethod, communicationReason, request, resident);
+            _classUnderTest.SendNotification(deliveryMethod, communicationReason, evidenceRequest, resident);
 
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
                 x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
@@ -208,22 +225,22 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var deliveryMethod = DeliveryMethod.Email;
             var communicationReason = CommunicationReason.DocumentUploaded;
-            var request = TestDataHelper.EvidenceRequest();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
             var resident = TestDataHelper.Resident();
-            request.Reason = "some-reason";
-            request.NotificationEmail = "some@email";
-            request.ResidentId = resident.Id;
+            evidenceRequest.Reason = "some-reason";
+            evidenceRequest.NotificationEmail = "some@email";
+            evidenceRequest.ResidentId = resident.Id;
 
             var envVar = "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL";
             var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
 
             var response = _fixture.Create<EmailNotificationResponse>();
             _notifyClient.Setup(x =>
-                    x.SendEmail(request.NotificationEmail, expectedTemplateId, It.IsAny<Dictionary<string, dynamic>>(), null,
+                    x.SendEmail(evidenceRequest.NotificationEmail, expectedTemplateId, It.IsAny<Dictionary<string, dynamic>>(), null,
                         null))
                 .Returns(response);
 
-            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, request, resident);
+            _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, evidenceRequest, resident);
 
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
                 x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
