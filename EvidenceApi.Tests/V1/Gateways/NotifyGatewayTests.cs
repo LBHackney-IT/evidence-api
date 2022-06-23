@@ -198,6 +198,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var resident = _fixture.Create<Resident>();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.ResidentId = resident.Id;
+            evidenceRequest.DocumentTypes = new List<string> { "proof-of-id", "repairs-photo" };
             evidenceRequest.Reason = "some-reason";
 
             var envVar = "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_EMAIL";

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -177,15 +178,8 @@ namespace EvidenceApi.V1.Gateways
         {
             var teamDocumentTypes = _documentTypeGateway.GetDocumentTypesByTeamName(evidenceRequest.Team);
             var evidenceRequestDocumentTypes = evidenceRequest.DocumentTypes;
-            var documentTypeTitles = new List<string>();
 
-            foreach (var documentType in teamDocumentTypes)
-            {
-                if (evidenceRequestDocumentTypes.Contains(documentType.Id))
-                {
-                    documentTypeTitles.Add(documentType.Title);
-                }
-            }
+            var documentTypeTitles = teamDocumentTypes.Where(tdt => evidenceRequestDocumentTypes.Contains(tdt.Id)).Select(dt => dt.Title);
 
             return string.Join(",\n", documentTypeTitles);
         }
