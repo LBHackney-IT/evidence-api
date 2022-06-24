@@ -39,8 +39,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupMocks();
             Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
             act.Should().NotThrow();
-             _notifyGateway.Verify(x =>
-                x.SendNotificationUploadConfirmationForResident(DeliveryMethod.Email, CommunicationReason.DocumentsUploadedResidentConfirmation, _evidenceRequest, _resident));
+            _notifyGateway.Verify(x =>
+               x.SendNotificationUploadConfirmationForResident(DeliveryMethod.Email, CommunicationReason.DocumentsUploadedResidentConfirmation, _evidenceRequest, _resident));
 
             _notifyGateway.Verify(x =>
                 x.SendNotificationUploadConfirmationForResident(DeliveryMethod.Sms, CommunicationReason.DocumentsUploadedResidentConfirmation, _evidenceRequest, _resident));
@@ -70,7 +70,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsNotFoundExceptionWhenResidentCannotBefound()
         {
             _evidenceRequest = TestDataHelper.EvidenceRequest();
-            _evidenceGateway.Setup(x => 
+            _evidenceGateway.Setup(x =>
                 x.FindEvidenceRequest(It.IsAny<Guid>())).Returns(_evidenceRequest).Verifiable();
             Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
             act.Should().Throw<NotFoundException>().WithMessage($"Cannot find resident with id: {_evidenceRequest.ResidentId}");
@@ -80,11 +80,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyError()
         {
             SetupMocks();
-            _notifyGateway.Setup(x => 
+            _notifyGateway.Setup(x =>
                 x.SendNotificationUploadConfirmationForResident(
-                    It.IsAny<DeliveryMethod>(), 
-                    CommunicationReason.DocumentsUploadedResidentConfirmation, 
-                    _evidenceRequest, 
+                    It.IsAny<DeliveryMethod>(),
+                    CommunicationReason.DocumentsUploadedResidentConfirmation,
+                    _evidenceRequest,
                     _resident))
                 .Throws(new NotifyClientException()).Verifiable();
             Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);

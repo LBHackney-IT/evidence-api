@@ -271,7 +271,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var resident = TestDataHelper.Resident();
             resident.Email = "";
             resident.PhoneNumber = "";
-            evidenceRequest.DeliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Email, DeliveryMethod.Sms};
+            evidenceRequest.DeliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Email, DeliveryMethod.Sms };
             DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
             evidenceRequest.ResidentId = resident.Id;

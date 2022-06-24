@@ -53,7 +53,7 @@ namespace EvidenceApi.V1.Controllers
 
             if (method == "POST" || method == "PATCH")
             {
-                request = filterContext.ActionArguments.ContainsKey("request") ? 
+                request = filterContext.ActionArguments.ContainsKey("request") ?
                     JsonConvert.SerializeObject(filterContext.ActionArguments["request"], Formatting.None)
                     :
                     "";

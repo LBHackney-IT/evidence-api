@@ -17,9 +17,9 @@ namespace EvidenceApi.V1.UseCase
         private readonly ILogger<SendNotificationUploadConfirmationForResident> _logger;
 
         public SendNotificationUploadConfirmationForResident(
-            INotifyGateway notifyGateway, 
-            IEvidenceGateway evidenceGateway, 
-            IResidentsGateway residentsGateway, 
+            INotifyGateway notifyGateway,
+            IEvidenceGateway evidenceGateway,
+            IResidentsGateway residentsGateway,
             ILogger<SendNotificationUploadConfirmationForResident> logger)
         {
             _notifyGateway = notifyGateway;
