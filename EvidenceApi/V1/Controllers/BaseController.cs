@@ -53,7 +53,10 @@ namespace EvidenceApi.V1.Controllers
 
             if (method == "POST" || method == "PATCH")
             {
-                request = JsonConvert.SerializeObject(filterContext.ActionArguments["request"], Formatting.None);
+                request = filterContext.ActionArguments.ContainsKey("request") ? 
+                    JsonConvert.SerializeObject(filterContext.ActionArguments["request"], Formatting.None)
+                    :
+                    "";
             }
 
             if (method == "GET")

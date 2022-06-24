@@ -5,16 +5,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using EvidenceApi.V1.Infrastructure;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Factories;
+using Notify.Exceptions;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -45,7 +44,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(201);
 
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-
             var created = DatabaseContext.EvidenceRequests.First();
             var resident = DatabaseContext.Residents.First();
 
@@ -223,6 +221,71 @@ namespace EvidenceApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(400);
         }
 
+        [Test]
+        public async Task CanSendANotificationUploadConfirmationToResident()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
+
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+            evidenceRequest.ResidentId = resident.Id;
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.SaveChanges();
+            var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(200);
+        }
+
+        [Test]
+        public async Task CannotSendANotificationUploadConfirmationToResidentWhenCannotFindEvidenceRequest()
+        {
+            var id = Guid.NewGuid();
+            var uri = new Uri($"api/v1/evidence_requests/{id}/confirmation", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            var message = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+            message.Should().Contain($"Cannot find evidence request with id: {id}");
+        }
+
+        [Test]
+        public async Task CannotSendANotificationUploadConfirmationToResidentWhenCannotFindResident()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.SaveChanges();
+            var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            var message = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+
+            response.StatusCode.Should().Be(404);
+            message.Should().Contain($"Cannot find resident with id: {evidenceRequest.ResidentId}");
+        }
+
+        [Test]
+        public async Task CannotSendANotificationUploadConfirmationToResidentWhenThereIsAGovNotifyError()
+        {
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
+            resident.Email = "";
+            resident.PhoneNumber = "";
+            evidenceRequest.DeliveryMethods = new List<DeliveryMethod>() { DeliveryMethod.Email, DeliveryMethod.Sms};
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+            evidenceRequest.ResidentId = resident.Id;
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.SaveChanges();
+
+            MockNotifyClient.Setup(x =>
+                x.SendEmail("", It.IsAny<string>(), It.IsAny<Dictionary<string, dynamic>>(), null, null)).Throws(new NotifyClientException());
+
+            var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
+            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            response.StatusCode.Should().Be(400);
+        }
+
         private List<EvidenceRequestResponse> BuildEvidenceRequestsListWithSameResident()
         {
             var resident = TestDataHelper.Resident();
@@ -257,7 +320,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 return er.ToResponse(resident, documentTypes);
             });
         }
-
         private List<EvidenceRequestResponse> BuildEvidenceRequestsListWithDifferentResident()
         {
             var resident1 = TestDataHelper.Resident();
