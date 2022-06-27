@@ -5,7 +5,6 @@ using System.Linq;
 using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
-using System.Collections.Generic;
 
 namespace EvidenceApi.V1.UseCase
 {

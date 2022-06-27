@@ -9,38 +9,27 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
-using Notify.Exceptions;
 using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
 
 namespace EvidenceApi.V1.UseCase
 {
     public class CreateDocumentSubmissionUseCase : ICreateDocumentSubmissionUseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
-        private readonly IResidentsGateway _residentsGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
-        private readonly INotifyGateway _notifyGateway;
         private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
-        private readonly ILogger<CreateDocumentSubmissionUseCase> _logger;
 
         public CreateDocumentSubmissionUseCase(
             IEvidenceGateway evidenceGateway,
-            IResidentsGateway residentsGateway,
             IDocumentsApiGateway documentsApiGateway,
             IDocumentTypeGateway documentTypeGateway,
-            INotifyGateway notifyGateway,
-            IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase,
-            ILogger<CreateDocumentSubmissionUseCase> logger)
+            IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase)
         {
             _evidenceGateway = evidenceGateway;
-            _residentsGateway = residentsGateway;
             _documentsApiGateway = documentsApiGateway;
             _documentTypeGateway = documentTypeGateway;
-            _notifyGateway = notifyGateway;
             _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
-            _logger = logger;
         }
 
         public async Task<DocumentSubmissionResponse> ExecuteAsync(Guid evidenceRequestId, DocumentSubmissionRequest request)
@@ -54,12 +43,12 @@ namespace EvidenceApi.V1.UseCase
             }
 
             if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
-                (d.State == SubmissionState.Approved || d.State == SubmissionState.Uploaded) && d.DocumentTypeId == request.DocumentType))
+                    (d.State == SubmissionState.Approved || d.State == SubmissionState.Uploaded) &&
+                    d.DocumentTypeId == request.DocumentType))
             {
-                throw new BadRequestException($"An active document submission for document type ${request.DocumentType} already exists");
+                throw new BadRequestException(
+                    $"An active document submission for document type ${request.DocumentType} already exists");
             }
-
-            var resident = _residentsGateway.FindResident(evidenceRequest.ResidentId);
 
             Claim claim;
             S3UploadPolicy createdS3UploadPolicy;
@@ -79,17 +68,7 @@ namespace EvidenceApi.V1.UseCase
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
             _updateEvidenceRequestStateUseCase.Execute(createdDocumentSubmission.EvidenceRequestId);
-            if (evidenceRequest.NotificationEmail != null)
-            {
-                try
-                {
-                    _notifyGateway.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident);
-                }
-                catch (NotifyClientException e)
-                {
-                    _logger.LogError(e, e.Message);
-                }
-            }
+
             return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy, claim);
         }
 
