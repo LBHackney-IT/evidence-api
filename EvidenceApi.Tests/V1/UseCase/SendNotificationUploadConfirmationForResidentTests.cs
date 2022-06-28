@@ -98,8 +98,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceRequest.ResidentId = _resident.Id;
             _evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email, DeliveryMethod.Sms };
 
-            _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident).Verifiable();
-            _evidenceGateway.Setup(x => x.FindEvidenceRequest(It.IsAny<Guid>())).Returns(_evidenceRequest).Verifiable();
+            _residentsGateway.Setup(x => x.FindResident(_resident.Id)).Returns(_resident).Verifiable();
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_evidenceRequest.Id)).Returns(_evidenceRequest).Verifiable();
         }
     }
 }
