@@ -38,6 +38,8 @@ functions:
       NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL: ${ssm:/evidence-api/${self:provider.stage}/notify/email/evidence-rejected}
       NOTIFY_TEMPLATE_EVIDENCE_REJECTED_SMS: ${ssm:/evidence-api/${self:provider.stage}/notify/sms/evidence-rejected}
       NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL: ${ssm:/evidence-api/${self:provider.stage}/notify/email/document-uploaded}
+      NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_EMAIL: ${ssm:/evidence-api/${self:provider.stage}/notify/email/documents-uploaded-resident-confirmation}
+      NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_SMS: ${ssm:/evidence-api/${self:provider.stage}/notify/sms/documents-uploaded-resident-confirmation}
       EVIDENCE_REQUEST_CLIENT_URL: https://${ssm:/evidence-api/${self:provider.stage}/client-url}
     events:
       - http:

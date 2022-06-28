@@ -74,6 +74,22 @@ namespace EvidenceApi.V1.Gateways
             _evidenceGateway.CreateCommunication(communication);
         }
 
+        public void SendNotificationUploadConfirmationForResident(DeliveryMethod deliveryMethod, CommunicationReason communicationReason, EvidenceRequest evidenceRequest, Resident resident)
+        {
+            var personalisation = GetParamsForUploadConfirmationForResident(communicationReason, evidenceRequest);
+            var templateId = GetTemplateIdFor(deliveryMethod, communicationReason);
+            var result = Deliver(deliveryMethod, templateId, resident, personalisation);
+            var communication = new Communication
+            {
+                DeliveryMethod = deliveryMethod,
+                NotifyId = result.id,
+                EvidenceRequestId = evidenceRequest.Id,
+                Reason = communicationReason,
+                TemplateId = templateId
+            };
+            _evidenceGateway.CreateCommunication(communication);
+        }
+
         private NotificationResponse Deliver(DeliveryMethod deliveryMethod, string templateId, Resident resident, Dictionary<string, object> personalisation)
         {
             return deliveryMethod switch
@@ -100,6 +116,8 @@ namespace EvidenceApi.V1.Gateways
                         "NOTIFY_TEMPLATE_EVIDENCE_REQUESTED_SMS"),
                     CommunicationReason.EvidenceRejected => Environment.GetEnvironmentVariable(
                         "NOTIFY_TEMPLATE_EVIDENCE_REJECTED_SMS"),
+                    CommunicationReason.DocumentsUploadedResidentConfirmation => Environment.GetEnvironmentVariable(
+                        "NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_SMS"),
                     _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason,
                         $"Communication Reason {communicationReason.ToString()} not recognised")
                 },
@@ -111,6 +129,8 @@ namespace EvidenceApi.V1.Gateways
                         "NOTIFY_TEMPLATE_EVIDENCE_REJECTED_EMAIL"),
                     CommunicationReason.DocumentUploaded => Environment.GetEnvironmentVariable(
                         "NOTIFY_TEMPLATE_DOCUMENT_UPLOADED_EMAIL"),
+                    CommunicationReason.DocumentsUploadedResidentConfirmation => Environment.GetEnvironmentVariable(
+                        "NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_EMAIL"),
                     _ => throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason,
                         $"Communication Reason {communicationReason.ToString()} not recognised")
                 },
@@ -161,6 +181,19 @@ namespace EvidenceApi.V1.Gateways
                     {"evidence_item", GetDocumentType(documentSubmission.EvidenceRequest).Title},
                     {"rejection_reason", documentSubmission.RejectionReason},
                     {"magic_link", MagicLinkFor(documentSubmission.EvidenceRequest)}
+                };
+            }
+            throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");
+        }
+
+        private static Dictionary<string, object> GetParamsForUploadConfirmationForResident(CommunicationReason communicationReason, EvidenceRequest evidenceRequest)
+        {
+            if (communicationReason == CommunicationReason.DocumentsUploadedResidentConfirmation)
+            {
+                return new Dictionary<string, object>
+                {
+                    {"team", evidenceRequest.Team},
+                    {"ref", evidenceRequest.ResidentReferenceId}
                 };
             }
             throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");

@@ -191,6 +191,62 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void CanSendADocumentsUploadedResidentConfirmationEmail()
+        {
+            SetupMocks();
+            var deliveryMethod = DeliveryMethod.Email;
+            var communicationReason = CommunicationReason.DocumentsUploadedResidentConfirmation;
+            var envVar = "NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_EMAIL";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
+            evidenceRequest.Team = "some-team";
+            evidenceRequest.ResidentReferenceId = "AB123456";
+            evidenceRequest.ResidentId = resident.Id;
+
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"team", evidenceRequest.Team},
+                {"ref", evidenceRequest.ResidentReferenceId}
+            };
+
+            var response = _fixture.Create<EmailNotificationResponse>();
+            _notifyClient.SetReturnsDefault(response);
+            _classUnderTest.SendNotificationUploadConfirmationForResident(deliveryMethod, communicationReason, evidenceRequest, resident);
+            _notifyClient.Verify(x =>
+                    x.SendEmail(resident.Email, expectedTemplateId,
+                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+        }
+
+        [Test]
+        public void CanSendADocumentsUploadedResidentConfirmationSms()
+        {
+            SetupMocks();
+            var deliveryMethod = DeliveryMethod.Sms;
+            var communicationReason = CommunicationReason.DocumentsUploadedResidentConfirmation;
+            var envVar = "NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_SMS";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
+            evidenceRequest.Team = "some-team";
+            evidenceRequest.ResidentReferenceId = "AB123456";
+            evidenceRequest.ResidentId = resident.Id;
+
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"team", evidenceRequest.Team},
+                {"ref", evidenceRequest.ResidentReferenceId}
+            };
+
+            var response = _fixture.Create<SmsNotificationResponse>();
+            _notifyClient.SetReturnsDefault(response);
+            _classUnderTest.SendNotificationUploadConfirmationForResident(deliveryMethod, communicationReason, evidenceRequest, resident);
+            _notifyClient.Verify(x =>
+                    x.SendSms(resident.PhoneNumber, expectedTemplateId,
+                        It.Is<Dictionary<string, object>>(x => CompareDictionaries(expectedParams, x)), null, null));
+        }
+
+        [Test]
         public void CreatesACommunicationForEvidenceRequested()
         {
             var deliveryMethod = DeliveryMethod.Email;
@@ -242,6 +298,35 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             _classUnderTest.SendNotificationDocumentUploaded(deliveryMethod, communicationReason, evidenceRequest, resident);
 
+            _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
+                x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
+                x.NotifyId == response.id)));
+        }
+
+        [Test]
+        public void CreatesACommunicationForDocumentsUploadedResidentConfirmation()
+        {
+            var deliveryMethod = DeliveryMethod.Email;
+            var communicationReason = CommunicationReason.DocumentsUploadedResidentConfirmation;
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var resident = TestDataHelper.Resident();
+            evidenceRequest.Reason = "some-reason";
+            evidenceRequest.ResidentId = resident.Id;
+
+            var envVar = "NOTIFY_TEMPLATE_DOCUMENTS_UPLOADED_RESIDENT_CONFIRMATION_EMAIL";
+            var expectedTemplateId = Environment.GetEnvironmentVariable(envVar);
+            var expectedParams = new Dictionary<string, object>
+            {
+                {"team", evidenceRequest.Team},
+                {"ref", evidenceRequest.ResidentReferenceId}
+            };
+
+            var response = _fixture.Create<EmailNotificationResponse>();
+            _notifyClient.Setup(x =>
+                    x.SendEmail(resident.Email, expectedTemplateId, It.IsAny<Dictionary<string, dynamic>>(), null,
+                        null))
+                .Returns(response);
+            _classUnderTest.SendNotificationUploadConfirmationForResident(deliveryMethod, communicationReason, evidenceRequest, resident);
             _evidenceGateway.Verify(x => x.CreateCommunication(It.Is<Communication>(x =>
                 x.Reason == communicationReason && x.DeliveryMethod == deliveryMethod && x.TemplateId == expectedTemplateId &&
                 x.NotifyId == response.id)));

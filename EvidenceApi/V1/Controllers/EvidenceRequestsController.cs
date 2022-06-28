@@ -5,7 +5,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using EvidenceApi.V1.Gateways.Interfaces;
+using Notify.Exceptions;
 
 namespace EvidenceApi.V1.Controllers
 {
@@ -19,19 +19,22 @@ namespace EvidenceApi.V1.Controllers
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
         private readonly IFindEvidenceRequestByIdUseCase _evidenceRequestUseCase;
         private readonly IFindEvidenceRequestsUseCase _getEvidenceRequestsUseCase;
+        private readonly ISendNotificationUploadConfirmationForResident _sendNotificationUploadConfirmationForResident;
 
         public EvidenceRequestsController(
             ICreateEvidenceRequestUseCase creator,
             ICreateDocumentSubmissionUseCase createDocumentSubmission,
             IFindEvidenceRequestByIdUseCase evidenceRequestUseCase,
             IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase,
-            ICreateAuditUseCase createAuditUseCase
+            ICreateAuditUseCase createAuditUseCase,
+            ISendNotificationUploadConfirmationForResident sendNotificationUploadConfirmationForResident
         ) : base(createAuditUseCase)
         {
             _creator = creator;
             _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
             _getEvidenceRequestsUseCase = getEvidenceRequestsUseCase;
+            _sendNotificationUploadConfirmationForResident = sendNotificationUploadConfirmationForResident;
         }
 
         /// <summary>
@@ -121,6 +124,33 @@ namespace EvidenceApi.V1.Controllers
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Sends a notification to the resident after successful upload 
+        /// </summary>
+        /// <response code="200">Ok</response>
+        /// <response code="400">GovNotify error</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="404">Evidence request cannot be found</response>
+        /// <response code="404">Resident cannot be found</response>
+        [HttpPost]
+        [Route("{evidenceRequestId}/confirmation")]
+        public IActionResult UploadConfirmationForResident([FromRoute][Required] Guid evidenceRequestId)
+        {
+            try
+            {
+                _sendNotificationUploadConfirmationForResident.Execute(evidenceRequestId);
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (NotifyClientException ex)
+            {
+                return StatusCode(400, ex.Message);
             }
         }
     }
