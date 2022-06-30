@@ -143,11 +143,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: build
-          command: docker-compose build evidence-api-test
-      - run:
           name: Run tests
-          command: docker-compose run evidence-api-test
+          command: docker-compose -f EvidenceApi.Tests/compose.yml run test
 
   assume-role-staging:
     executor: docker-python
