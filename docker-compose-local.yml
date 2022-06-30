@@ -1,0 +1,23 @@
+version: "3.2"
+
+services:
+  local-evidence-api:
+    build:
+      context: .
+      dockerfile: ./EvidenceApi/Dockerfile
+    container_name: local-evidence-api
+    ports:
+      - "3001:3000"
+    environment:
+      - CONNECTION_STRING=Host=local-database;Port=3002;Database=evidence_api_local;Username=postgres;Password=mypassword
+  local-database:
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=evidence_api_local
+    image: postgres:11
+    container_name: local-database
+    ports:
+      - "3002:5432"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
