@@ -1,3 +1,3 @@
-FROM postgres:12-buster
+FROM postgres:11
 
 COPY ./database/schema.sql ./docker-entrypoint-initdb.d
