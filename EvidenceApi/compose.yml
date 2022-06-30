@@ -1,0 +1,30 @@
+services:
+  api:
+    build:
+      context: ../
+      dockerfile: ./EvidenceApi/Dockerfile
+    environment:
+      CONNECTION_STRING: Host=db;Port=5432;Database=evidence_api;Username=postgres;Password=mypassword
+      DOCUMENT_API_URL: host.docker.internal:3003
+    ports:
+      - 3000:3000
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    extends:
+      file: ../database/compose.yml
+      service: migrate
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    extends:
+      file: ../database/compose.yml
+      service: db
+    ports:
+      - 3001:5432
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
