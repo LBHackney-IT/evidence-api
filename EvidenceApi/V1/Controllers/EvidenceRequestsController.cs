@@ -137,7 +137,7 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Resident cannot be found</response>
         [HttpPost]
         [Route("{evidenceRequestId}/confirmation")]
-        public IActionResult UploadConfirmationForResident([FromRoute][Required] Guid evidenceRequestId)
+        public IActionResult UploadConfirmationToResidentAndStaff([FromRoute][Required] Guid evidenceRequestId)
         {
             try
             {
