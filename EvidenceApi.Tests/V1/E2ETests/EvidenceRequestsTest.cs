@@ -40,10 +40,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(201);
 
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync();
             var created = DatabaseContext.EvidenceRequests.First();
             var resident = DatabaseContext.Residents.First();
 
@@ -93,7 +93,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
         }
 
@@ -114,7 +114,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
         }
 
@@ -136,8 +136,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}", UriKind.Relative);
-            var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
-            var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var responseFind = await Client.GetAsync(uri);
+            var jsonFind = await responseFind.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<EvidenceRequestResponse>(jsonFind);
 
             var expectedDocumentType = TestDataHelper.DocumentType("passport-scan");
@@ -151,7 +151,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
             var uri = new Uri($"api/v1/evidence_requests/{fakeId}", UriKind.Relative);
-            var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
+            var responseFind = await Client.GetAsync(uri);
             responseFind.StatusCode.Should().Be(404);
         }
 
@@ -161,8 +161,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var expected = BuildEvidenceRequestsListWithSameResident();
             var team = expected[0].Team;
             var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
@@ -177,8 +177,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var team = expected[0].Team;
             var residentId = expected[0].Resident.Id;
             var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
@@ -192,8 +192,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var team = expected[0].Team;
             var residentId = expected[1].Resident.Id;
             var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
@@ -205,7 +205,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var team = "";
             var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(400);
         }
@@ -216,13 +216,13 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var team = "";
             var residentId = "";
             var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(400);
         }
 
         [Test]
-        public async Task CanSendANotificationUploadConfirmationToResident()
+        public async Task CanSendANotificationUploadConfirmationToResidentAndStaff()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var resident = TestDataHelper.Resident();
@@ -233,7 +233,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
 
             response.StatusCode.Should().Be(200);
         }
@@ -243,8 +243,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var id = Guid.NewGuid();
             var uri = new Uri($"api/v1/evidence_requests/{id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-            var message = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
+            var message = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(404);
             message.Should().Contain($"Cannot find evidence request with id: {id}");
@@ -257,8 +257,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-            var message = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
+            var message = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(404);
             message.Should().Contain($"Cannot find resident with id: {evidenceRequest.ResidentId}");
@@ -282,7 +282,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 x.SendEmail("", It.IsAny<string>(), It.IsAny<Dictionary<string, dynamic>>(), null, null)).Throws(new NotifyClientException());
 
             var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
             response.StatusCode.Should().Be(400);
         }
 
