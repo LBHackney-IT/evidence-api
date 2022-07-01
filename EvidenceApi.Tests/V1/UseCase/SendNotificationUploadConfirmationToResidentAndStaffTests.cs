@@ -13,13 +13,13 @@ using Notify.Exceptions;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
-    public class SendNotificationUploadConfirmationForResidentTests
+    public class SendNotificationUploadConfirmationToResidentAndStaffTests
     {
-        private SendNotificationUploadConfirmationForResident _classUnderTest;
+        private SendNotificationUploadConfirmationToResidentAndStaff _classUnderTest;
         private Mock<INotifyGateway> _notifyGateway;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IResidentsGateway> _residentsGateway;
-        private Mock<ILogger<SendNotificationUploadConfirmationForResident>> _logger;
+        private Mock<ILogger<SendNotificationUploadConfirmationToResidentAndStaff>> _logger;
         private Resident _resident;
         private EvidenceRequest _evidenceRequest;
 
@@ -29,8 +29,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             _notifyGateway = new Mock<INotifyGateway>();
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
-            _logger = new Mock<ILogger<SendNotificationUploadConfirmationForResident>>();
-            _classUnderTest = new SendNotificationUploadConfirmationForResident(_notifyGateway.Object, _evidenceGateway.Object, _residentsGateway.Object, _logger.Object);
+            _logger = new Mock<ILogger<SendNotificationUploadConfirmationToResidentAndStaff>>();
+            _classUnderTest = new SendNotificationUploadConfirmationToResidentAndStaff(_notifyGateway.Object, _evidenceGateway.Object, _residentsGateway.Object, _logger.Object);
         }
 
         [Test]

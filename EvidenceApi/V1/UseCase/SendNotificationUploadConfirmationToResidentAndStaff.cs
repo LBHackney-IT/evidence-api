@@ -9,18 +9,18 @@ using Notify.Exceptions;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class SendNotificationUploadConfirmationForResident : ISendNotificationUploadConfirmationForResident
+    public class SendNotificationUploadConfirmationToResidentAndStaff : ISendNotificationUploadConfirmationToResidentAndStaff
     {
         private readonly INotifyGateway _notifyGateway;
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IResidentsGateway _residentsGateway;
-        private readonly ILogger<SendNotificationUploadConfirmationForResident> _logger;
+        private readonly ILogger<SendNotificationUploadConfirmationToResidentAndStaff> _logger;
 
-        public SendNotificationUploadConfirmationForResident(
+        public SendNotificationUploadConfirmationToResidentAndStaff(
             INotifyGateway notifyGateway,
             IEvidenceGateway evidenceGateway,
             IResidentsGateway residentsGateway,
-            ILogger<SendNotificationUploadConfirmationForResident> logger)
+            ILogger<SendNotificationUploadConfirmationToResidentAndStaff> logger)
         {
             _notifyGateway = notifyGateway;
             _evidenceGateway = evidenceGateway;
