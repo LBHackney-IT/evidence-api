@@ -95,7 +95,7 @@ namespace EvidenceApi.V1.Controllers
         {
             try
             {
-                var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request).ConfigureAwait(true);
+                var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request);
                 return Created(new Uri($"/evidence_requests/{evidenceRequestId}/document_submissions", UriKind.Relative), result);
             }
             catch (BadRequestException ex)

@@ -40,7 +40,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var documentSubmissionRequest = _fixture.Build<DocumentSubmissionRequest>()
                 .Without(x => x.DocumentType)
                 .Create();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), documentSubmissionRequest);
             testDelegate.Should().Throw<BadRequestException>().WithMessage("Document type is null or empty");
         }
 
@@ -53,7 +53,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == request.DocumentType)))
                 .Returns(() => null)
                 .Verifiable();
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(Guid.NewGuid(), request);
             testDelegate.Should().Throw<NotFoundException>();
         }
 
@@ -79,7 +79,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Throws(new DocumentsApiException("doh!"));
 
             // Act
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request);
 
             // Assert
             testDelegate.Should().Throw<BadRequestException>();
@@ -115,7 +115,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Throws(new DocumentsApiException("doh!"));
 
             // Act
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request);
 
             // Assert
             testDelegate.Should().Throw<BadRequestException>();
@@ -158,7 +158,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupEvidenceGateway(evidenceRequest);
             SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_created.EvidenceRequestId)).Returns(evidenceRequest).Verifiable();
-            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request);
             _updateEvidenceRequestStateUseCase.Verify(x => x.Execute(_created.EvidenceRequestId), Times.Once);
         }
 
@@ -181,7 +181,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
             SetupDocumentTypeGateway(_request.DocumentType);
 
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request);
             testDelegate.Should().NotThrow();
         }
 
@@ -199,7 +199,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             SetupEvidenceGateway(evidenceRequest);
 
-            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request);
             testDelegate.Should().Throw<BadRequestException>();
         }
 

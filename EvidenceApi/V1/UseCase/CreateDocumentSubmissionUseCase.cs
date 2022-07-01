@@ -9,7 +9,6 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -56,8 +55,8 @@ namespace EvidenceApi.V1.UseCase
             try
             {
                 var claimRequest = BuildClaimRequest(evidenceRequest);
-                claim = await _documentsApiGateway.CreateClaim(claimRequest).ConfigureAwait(true);
-                createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id).ConfigureAwait(true);
+                claim = await _documentsApiGateway.CreateClaim(claimRequest);
+                createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id);
             }
             catch (DocumentsApiException ex)
             {
