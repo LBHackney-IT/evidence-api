@@ -239,7 +239,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CannotSendANotificationUploadConfirmationToResidentWhenCannotFindEvidenceRequest()
+        public async Task CannotSendANotificationUploadConfirmationToResidentAndStaffWhenCannotFindEvidenceRequest()
         {
             var id = Guid.NewGuid();
             var uri = new Uri($"api/v1/evidence_requests/{id}/confirmation", UriKind.Relative);
@@ -251,7 +251,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CannotSendANotificationUploadConfirmationToResidentWhenCannotFindResident()
+        public async Task CannotSendANotificationUploadConfirmationToResidentAndStaffWhenCannotFindResident()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
@@ -265,7 +265,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task CannotSendANotificationUploadConfirmationToResidentWhenThereIsAGovNotifyError()
+        public async Task CannotSendANotificationUploadConfirmationToResidentAndStaffWhenThereIsAGovNotifyError()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var resident = TestDataHelper.Resident();

@@ -47,6 +47,19 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void CanSendNotificationUploadConfirmationToStaff()
+        {
+            SetupMocks();
+            Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
+            act.Should().NotThrow();
+            _notifyGateway.Verify(x =>
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, _evidenceRequest, _resident));
+
+            _notifyGateway.Verify(x =>
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Sms, CommunicationReason.DocumentUploaded, _evidenceRequest, _resident));
+        }
+
+        [Test]
         public void CallsGatewaysUsingCorrectIds()
         {
             SetupMocks();
@@ -59,7 +72,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundExceptionWhenEvidenceRequestCannotBefound()
+        public void ThrowsNotFoundExceptionWhenEvidenceRequestCannotBeFound()
         {
             var id = Guid.Empty;
             Action act = () => _classUnderTest.Execute(id);
@@ -67,7 +80,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundExceptionWhenResidentCannotBefound()
+        public void ThrowsNotFoundExceptionWhenResidentCannotBeFound()
         {
             _evidenceRequest = TestDataHelper.EvidenceRequest();
             _evidenceGateway.Setup(x =>
@@ -77,7 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyError()
+        public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyErrorForResident()
         {
             SetupMocks();
             _notifyGateway.Setup(x =>
@@ -86,6 +99,21 @@ namespace EvidenceApi.Tests.V1.UseCase
                     CommunicationReason.DocumentsUploadedResidentConfirmation,
                     _evidenceRequest,
                     _resident))
+                .Throws(new NotifyClientException()).Verifiable();
+            Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
+            act.Should().Throw<NotifyClientException>();
+        }
+
+        [Test]
+        public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyErrorForStaff()
+        {
+            SetupMocks();
+            _notifyGateway.Setup(x =>
+                    x.SendNotificationDocumentUploaded(
+                        It.IsAny<DeliveryMethod>(),
+                        CommunicationReason.DocumentUploaded,
+                        _evidenceRequest,
+                        _resident))
                 .Throws(new NotifyClientException()).Verifiable();
             Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
             act.Should().Throw<NotifyClientException>();
