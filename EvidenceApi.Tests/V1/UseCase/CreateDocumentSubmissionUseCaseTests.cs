@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
@@ -15,7 +13,6 @@ using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -23,12 +20,9 @@ namespace EvidenceApi.Tests.V1.UseCase
     {
         private CreateDocumentSubmissionUseCase _classUnderTest;
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
-        private Mock<IResidentsGateway> _residentsGateway = new Mock<IResidentsGateway>();
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
-        private Mock<INotifyGateway> _notifyGateway = new Mock<INotifyGateway>();
         private Mock<IUpdateEvidenceRequestStateUseCase> _updateEvidenceRequestStateUseCase = new Mock<IUpdateEvidenceRequestStateUseCase>();
-        private Mock<ILogger<CreateDocumentSubmissionUseCase>> _logger = new Mock<ILogger<CreateDocumentSubmissionUseCase>>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
         private DocumentSubmission _created;
@@ -37,7 +31,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _residentsGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _notifyGateway.Object, _updateEvidenceRequestStateUseCase.Object, _logger.Object);
+            _classUnderTest = new CreateDocumentSubmissionUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _documentTypeGateway.Object, _updateEvidenceRequestStateUseCase.Object);
         }
 
         [Test]
@@ -153,29 +147,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public async Task SendsANotificationWhenNotificationEmailIsNotNull()
-        {
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-            var resident = TestDataHelper.Resident();
-            evidenceRequest.ResidentId = resident.Id;
-            _documentType = _fixture.Create<DocumentType>();
-            _created = DocumentSubmissionFixture();
-            _request = CreateRequestFixture();
-
-            var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
-
-            SetupEvidenceGateway(evidenceRequest);
-            SetupResidentsGateway(resident);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
-            var docType = SetupDocumentTypeGateway(_request.DocumentType);
-
-            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-            _notifyGateway.Verify(x =>
-                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident));
-        }
-
-        [Test]
         public async Task UpdatesEvidenceRequestStateWhenDocumentSubmissionIsCreated()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
@@ -189,29 +160,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_created.EvidenceRequestId)).Returns(evidenceRequest).Verifiable();
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
             _updateEvidenceRequestStateUseCase.Verify(x => x.Execute(_created.EvidenceRequestId), Times.Once);
-        }
-
-        [Test]
-        public async Task DoesNotSendANotificationEmailWhenNotificationEmailIsNull()
-        {
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-            var resident = TestDataHelper.Resident();
-            evidenceRequest.NotificationEmail = null;
-            evidenceRequest.ResidentId = resident.Id;
-            _documentType = _fixture.Create<DocumentType>();
-            _created = DocumentSubmissionFixture();
-            _request = CreateRequestFixture();
-
-            var claim = _fixture.Create<Claim>();
-            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
-
-            SetupEvidenceGateway(evidenceRequest);
-            SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
-            var docType = SetupDocumentTypeGateway(_request.DocumentType);
-
-            var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-            _notifyGateway.Verify(x =>
-                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident), Times.Never());
         }
 
         [TestCase(SubmissionState.Pending)]
@@ -296,11 +244,6 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(x => x.DocumentTypeId == _request.DocumentType)))
                 .Returns(_created)
                 .Verifiable();
-        }
-
-        private void SetupResidentsGateway(Resident resident)
-        {
-            _residentsGateway.Setup(x => x.FindResident(resident.Id)).Returns(resident).Verifiable();
         }
 
         private DocumentType SetupDocumentTypeGateway(string documentTypeId)
