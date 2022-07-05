@@ -19,7 +19,7 @@ namespace EvidenceApi.V1.Controllers
         private readonly ICreateDocumentSubmissionUseCase _createDocumentSubmission;
         private readonly IFindEvidenceRequestByIdUseCase _evidenceRequestUseCase;
         private readonly IFindEvidenceRequestsUseCase _getEvidenceRequestsUseCase;
-        private readonly ISendNotificationUploadConfirmationForResident _sendNotificationUploadConfirmationForResident;
+        private readonly ISendNotificationUploadConfirmationToResidentAndStaff _sendNotificationUploadConfirmationToResidentAndStaff;
 
         public EvidenceRequestsController(
             ICreateEvidenceRequestUseCase creator,
@@ -27,14 +27,14 @@ namespace EvidenceApi.V1.Controllers
             IFindEvidenceRequestByIdUseCase evidenceRequestUseCase,
             IFindEvidenceRequestsUseCase getEvidenceRequestsUseCase,
             ICreateAuditUseCase createAuditUseCase,
-            ISendNotificationUploadConfirmationForResident sendNotificationUploadConfirmationForResident
+            ISendNotificationUploadConfirmationToResidentAndStaff sendNotificationUploadConfirmationToResidentAndStaff
         ) : base(createAuditUseCase)
         {
             _creator = creator;
             _createDocumentSubmission = createDocumentSubmission;
             _evidenceRequestUseCase = evidenceRequestUseCase;
             _getEvidenceRequestsUseCase = getEvidenceRequestsUseCase;
-            _sendNotificationUploadConfirmationForResident = sendNotificationUploadConfirmationForResident;
+            _sendNotificationUploadConfirmationToResidentAndStaff = sendNotificationUploadConfirmationToResidentAndStaff;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace EvidenceApi.V1.Controllers
         {
             try
             {
-                var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request).ConfigureAwait(true);
+                var result = await _createDocumentSubmission.ExecuteAsync(evidenceRequestId, request);
                 return Created(new Uri($"/evidence_requests/{evidenceRequestId}/document_submissions", UriKind.Relative), result);
             }
             catch (BadRequestException ex)
@@ -128,7 +128,7 @@ namespace EvidenceApi.V1.Controllers
         }
 
         /// <summary>
-        /// Sends a notification to the resident after successful upload 
+        /// Sends a notification to the resident and staff after successful upload
         /// </summary>
         /// <response code="200">Ok</response>
         /// <response code="400">GovNotify error</response>
@@ -137,11 +137,11 @@ namespace EvidenceApi.V1.Controllers
         /// <response code="404">Resident cannot be found</response>
         [HttpPost]
         [Route("{evidenceRequestId}/confirmation")]
-        public IActionResult UploadConfirmationForResident([FromRoute][Required] Guid evidenceRequestId)
+        public IActionResult UploadConfirmationToResidentAndStaff([FromRoute][Required] Guid evidenceRequestId)
         {
             try
             {
-                _sendNotificationUploadConfirmationForResident.Execute(evidenceRequestId);
+                _sendNotificationUploadConfirmationToResidentAndStaff.Execute(evidenceRequestId);
                 return Ok();
             }
             catch (NotFoundException ex)

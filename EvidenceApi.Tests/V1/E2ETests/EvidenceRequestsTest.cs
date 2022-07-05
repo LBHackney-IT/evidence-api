@@ -14,12 +14,48 @@ using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Factories;
 using Notify.Exceptions;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
     public class EvidenceRequestsTest : IntegrationTests<Startup>
     {
         private readonly IFixture _fixture = new Fixture();
+        private Claim _createdClaim;
+        private Document _document;
+        private S3UploadPolicy _createdUploadPolicy;
+        private readonly Guid _id = Guid.NewGuid();
+
+        [SetUp]
+        public void SetUp()
+        {
+            _document = _fixture.Build<Document>()
+                .With(x => x.Id, _id)
+                .Create();
+            _createdClaim = _fixture.Build<Claim>()
+                .With(x => x.Document, _document)
+                .Create();
+
+            _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath("/api/v1/claims")
+            ).RespondWith(
+                Response.Create().WithStatusCode(201).WithBody(
+                    JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/documents/{_id}/upload_policies")
+            ).RespondWith(
+                Response.Create().WithStatusCode(200).WithBody(
+                    JsonConvert.SerializeObject(_createdUploadPolicy)
+                )
+            );
+        }
+
         [Test]
         public async Task CanCreateEvidenceRequestWithValidParams()
         {
@@ -40,10 +76,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(201);
 
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync();
             var created = DatabaseContext.EvidenceRequests.First();
             var resident = DatabaseContext.Residents.First();
 
@@ -93,7 +129,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
         }
 
@@ -114,7 +150,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
         }
 
@@ -136,8 +172,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}", UriKind.Relative);
-            var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
-            var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var responseFind = await Client.GetAsync(uri);
+            var jsonFind = await responseFind.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<EvidenceRequestResponse>(jsonFind);
 
             var expectedDocumentType = TestDataHelper.DocumentType("passport-scan");
@@ -151,18 +187,177 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
             var uri = new Uri($"api/v1/evidence_requests/{fakeId}", UriKind.Relative);
-            var responseFind = await Client.GetAsync(uri).ConfigureAwait(true);
+            var responseFind = await Client.GetAsync(uri);
             responseFind.StatusCode.Should().Be(404);
         }
 
+        [Test]
+        public async Task CreateDocumentSubmissionUnsuccessfulWhenNoDocumentTypeProvided()
+        {
+            var entity = _fixture.Build<EvidenceRequest>()
+                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .Create();
+            DatabaseContext.EvidenceRequests.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            string body = "{}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(400);
+        }
+
+
+        [Test]
+        public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateClaim()
+        {
+            // Arrange
+            var entity = _fixture.Build<EvidenceRequest>()
+                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .Create();
+            DatabaseContext.EvidenceRequests.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            DocumentsApiServer.Reset();
+            DocumentsApiServer.Given(
+                Request.Create().WithPath("/api/v1/claims")
+            ).RespondWith(
+                Response.Create().WithStatusCode(404)
+            );
+
+            string body = "{" +
+                          "\"documentType\": \"proof-of-id\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
+
+            // Act
+            var response = await Client.PostAsync(uri, jsonString);
+
+            // Assert
+            response.StatusCode.Should().Be(400);
+        }
+
+
+        [Test]
+        public async Task CanCreateDocumentSubmissionWithValidParams()
+        {
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+            var entity = _fixture.Build<EvidenceRequest>()
+                .With(x => x.DocumentTypes, new List<string> { "proof-of-id" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .With(x => x.Team, "Development Housing Team")
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .Create();
+            entity.ResidentId = resident.Id;
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.EvidenceRequests.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            string body = "{" +
+                          "\"documentType\": \"proof-of-id\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(201);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var created = DatabaseContext.DocumentSubmissions.First();
+
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedValidUntil = JsonConvert.SerializeObject(_createdClaim.ValidUntil);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(_createdClaim.RetentionExpiresAt);
+            string expected = "{" +
+                               $"\"id\":\"{created.Id}\"," +
+                               $"\"createdAt\":{formattedCreatedAt}," +
+                               $"\"claimId\":\"{_createdClaim.Id}\"," +
+                               $"\"acceptedAt\":null," +
+                               $"\"rejectionReason\":null," +
+                               $"\"rejectedAt\":null,\"userUpdatedBy\":null," +
+                               $"\"claimValidUntil\":{formattedValidUntil}," +
+                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
+                               $"\"state\":\"UPLOADED\"," +
+                               "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
+                               "\"staffSelectedDocumentType\":null," +
+                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
+                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +
+                               "}";
+
+            json.Should().Be(expected);
+        }
+
+        [Test]
+        public async Task ReturnNotFoundWhenCannotFindEvidenceRequestWhenCreatingDocumentSubmission()
+        {
+            var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
+            string body = "{" +
+                          "\"documentType\": \"proof-of-id\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/evidence_requests/{fakeId}/document_submissions", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+
+            response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateUploadPolicy()
+        {
+            // Arrange
+            var entity = _fixture.Build<EvidenceRequest>()
+                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
+                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
+                .Without(x => x.Communications)
+                .Without(x => x.DocumentSubmissions)
+                .Create();
+            DatabaseContext.EvidenceRequests.Add(entity);
+            DatabaseContext.SaveChanges();
+
+            DocumentsApiServer.Reset();
+            DocumentsApiServer.Given(
+                Request.Create().WithPath("/api/v1/claims")
+            ).RespondWith(
+                Response.Create().WithStatusCode(201).WithBody(
+                    JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/documents/{_id}/upload_policies")
+            ).RespondWith(
+                Response.Create().WithStatusCode(404)
+            );
+
+            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
+            string body = "{" +
+                          "\"documentType\": \"proof-of-id\"" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await Client.PostAsync(uri, jsonString);
+
+            // Assert
+            response.StatusCode.Should().Be(400);
+        }
         [Test]
         public async Task CanGetEvidenceRequestsWithValidService()
         {
             var expected = BuildEvidenceRequestsListWithSameResident();
             var team = expected[0].Team;
             var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
@@ -177,8 +372,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var team = expected[0].Team;
             var residentId = expected[0].Resident.Id;
             var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
@@ -192,8 +387,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var team = expected[0].Team;
             var residentId = expected[1].Resident.Id;
             var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
 
             response.StatusCode.Should().Be(200);
@@ -205,7 +400,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var team = "";
             var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(400);
         }
@@ -216,13 +411,13 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var team = "";
             var residentId = "";
             var uri = new Uri($"api/v1/evidence_requests?team={team}&residentId={residentId}", UriKind.Relative);
-            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var response = await Client.GetAsync(uri);
 
             response.StatusCode.Should().Be(400);
         }
 
         [Test]
-        public async Task CanSendANotificationUploadConfirmationToResident()
+        public async Task CanSendANotificationUploadConfirmationToResidentAndStaff()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var resident = TestDataHelper.Resident();
@@ -233,39 +428,39 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
 
             response.StatusCode.Should().Be(200);
         }
 
         [Test]
-        public async Task CannotSendANotificationUploadConfirmationToResidentWhenCannotFindEvidenceRequest()
+        public async Task CannotSendANotificationUploadConfirmationToResidentAndStaffWhenCannotFindEvidenceRequest()
         {
             var id = Guid.NewGuid();
             var uri = new Uri($"api/v1/evidence_requests/{id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-            var message = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
+            var message = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(404);
             message.Should().Contain($"Cannot find evidence request with id: {id}");
         }
 
         [Test]
-        public async Task CannotSendANotificationUploadConfirmationToResidentWhenCannotFindResident()
+        public async Task CannotSendANotificationUploadConfirmationToResidentAndStaffWhenCannotFindResident()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.SaveChanges();
             var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
-            var message = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
+            var message = await response.Content.ReadAsStringAsync();
 
             response.StatusCode.Should().Be(404);
             message.Should().Contain($"Cannot find resident with id: {evidenceRequest.ResidentId}");
         }
 
         [Test]
-        public async Task CannotSendANotificationUploadConfirmationToResidentWhenThereIsAGovNotifyError()
+        public async Task CannotSendANotificationUploadConfirmationToResidentAndStaffWhenThereIsAGovNotifyError()
         {
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var resident = TestDataHelper.Resident();
@@ -282,7 +477,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 x.SendEmail("", It.IsAny<string>(), It.IsAny<Dictionary<string, dynamic>>(), null, null)).Throws(new NotifyClientException());
 
             var uri = new Uri($"api/v1/evidence_requests/{evidenceRequest.Id}/confirmation", UriKind.Relative);
-            var response = await Client.PostAsync(uri, null).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, null);
             response.StatusCode.Should().Be(400);
         }
 

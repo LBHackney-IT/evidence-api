@@ -13,13 +13,13 @@ using Notify.Exceptions;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
-    public class SendNotificationUploadConfirmationForResidentTests
+    public class SendNotificationUploadConfirmationToResidentAndStaffTests
     {
-        private SendNotificationUploadConfirmationForResident _classUnderTest;
+        private SendNotificationUploadConfirmationToResidentAndStaff _classUnderTest;
         private Mock<INotifyGateway> _notifyGateway;
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IResidentsGateway> _residentsGateway;
-        private Mock<ILogger<SendNotificationUploadConfirmationForResident>> _logger;
+        private Mock<ILogger<SendNotificationUploadConfirmationToResidentAndStaff>> _logger;
         private Resident _resident;
         private EvidenceRequest _evidenceRequest;
 
@@ -29,8 +29,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             _notifyGateway = new Mock<INotifyGateway>();
             _evidenceGateway = new Mock<IEvidenceGateway>();
             _residentsGateway = new Mock<IResidentsGateway>();
-            _logger = new Mock<ILogger<SendNotificationUploadConfirmationForResident>>();
-            _classUnderTest = new SendNotificationUploadConfirmationForResident(_notifyGateway.Object, _evidenceGateway.Object, _residentsGateway.Object, _logger.Object);
+            _logger = new Mock<ILogger<SendNotificationUploadConfirmationToResidentAndStaff>>();
+            _classUnderTest = new SendNotificationUploadConfirmationToResidentAndStaff(_notifyGateway.Object, _evidenceGateway.Object, _residentsGateway.Object, _logger.Object);
         }
 
         [Test]
@@ -47,6 +47,19 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
+        public void CanSendNotificationUploadConfirmationToStaff()
+        {
+            SetupMocks();
+            Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
+            act.Should().NotThrow();
+            _notifyGateway.Verify(x =>
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, _evidenceRequest, _resident));
+
+            _notifyGateway.Verify(x =>
+                x.SendNotificationDocumentUploaded(DeliveryMethod.Sms, CommunicationReason.DocumentUploaded, _evidenceRequest, _resident));
+        }
+
+        [Test]
         public void CallsGatewaysUsingCorrectIds()
         {
             SetupMocks();
@@ -59,7 +72,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundExceptionWhenEvidenceRequestCannotBefound()
+        public void ThrowsNotFoundExceptionWhenEvidenceRequestCannotBeFound()
         {
             var id = Guid.Empty;
             Action act = () => _classUnderTest.Execute(id);
@@ -67,7 +80,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundExceptionWhenResidentCannotBefound()
+        public void ThrowsNotFoundExceptionWhenResidentCannotBeFound()
         {
             _evidenceRequest = TestDataHelper.EvidenceRequest();
             _evidenceGateway.Setup(x =>
@@ -77,7 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyError()
+        public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyErrorForResident()
         {
             SetupMocks();
             _notifyGateway.Setup(x =>
@@ -86,6 +99,21 @@ namespace EvidenceApi.Tests.V1.UseCase
                     CommunicationReason.DocumentsUploadedResidentConfirmation,
                     _evidenceRequest,
                     _resident))
+                .Throws(new NotifyClientException()).Verifiable();
+            Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
+            act.Should().Throw<NotifyClientException>();
+        }
+
+        [Test]
+        public void ThrowsNotifyClientExceptionWhenThereIsAGovNotifyErrorForStaff()
+        {
+            SetupMocks();
+            _notifyGateway.Setup(x =>
+                    x.SendNotificationDocumentUploaded(
+                        It.IsAny<DeliveryMethod>(),
+                        CommunicationReason.DocumentUploaded,
+                        _evidenceRequest,
+                        _resident))
                 .Throws(new NotifyClientException()).Verifiable();
             Action act = () => _classUnderTest.Execute(_evidenceRequest.Id);
             act.Should().Throw<NotifyClientException>();

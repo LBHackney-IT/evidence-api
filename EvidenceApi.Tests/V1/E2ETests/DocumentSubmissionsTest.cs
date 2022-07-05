@@ -22,28 +22,17 @@ namespace EvidenceApi.Tests.V1.E2ETests
         private readonly IFixture _fixture = new Fixture();
         private Claim _createdClaim;
         private Document _document;
-        private S3UploadPolicy _createdUploadPolicy;
-        private Guid id = Guid.NewGuid();
+        private readonly Guid _id = Guid.NewGuid();
 
         [SetUp]
         public void SetUp()
         {
             _document = _fixture.Build<Document>()
-                .With(x => x.Id, id)
+                .With(x => x.Id, _id)
                 .Create();
             _createdClaim = _fixture.Build<Claim>()
                 .With(x => x.Document, _document)
                 .Create();
-
-            _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
-
-            DocumentsApiServer.Given(
-                Request.Create().WithPath("/api/v1/claims")
-            ).RespondWith(
-                Response.Create().WithStatusCode(201).WithBody(
-                    JsonConvert.SerializeObject(_createdClaim)
-                )
-            );
 
             DocumentsApiServer.Given(
                 Request.Create().WithPath($"/api/v1/claims/{_createdClaim.Id}").UsingGet()
@@ -52,140 +41,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     JsonConvert.SerializeObject(_createdClaim)
                 )
             );
-
-            DocumentsApiServer.Given(
-                Request.Create().WithPath($"/api/v1/documents/{id}")
-            ).RespondWith(
-                Response.Create().WithStatusCode(200)
-            );
-
-            DocumentsApiServer.Given(
-                Request.Create().WithPath($"/api/v1/documents/{id}/upload_policies")
-            ).RespondWith(
-                Response.Create().WithStatusCode(200).WithBody(
-                    JsonConvert.SerializeObject(_createdUploadPolicy)
-                )
-            );
         }
-
-
-        [Test]
-        public async Task CanCreateDocumentSubmissionWithValidParams()
-        {
-            var resident = TestDataHelper.Resident();
-            resident.Id = Guid.NewGuid();
-            var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "proof-of-id" })
-                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .With(x => x.Team, "Development Housing Team")
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Create();
-            entity.ResidentId = resident.Id;
-            DatabaseContext.Residents.Add(resident);
-            DatabaseContext.EvidenceRequests.Add(entity);
-            DatabaseContext.SaveChanges();
-
-            string body = "{" +
-                          "\"documentType\": \"proof-of-id\"" +
-                          "}";
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            response.StatusCode.Should().Be(201);
-
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-
-            var created = DatabaseContext.DocumentSubmissions.First();
-
-            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
-            var formattedValidUntil = JsonConvert.SerializeObject(_createdClaim.ValidUntil);
-            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(_createdClaim.RetentionExpiresAt);
-            string expected = "{" +
-                               $"\"id\":\"{created.Id}\"," +
-                               $"\"createdAt\":{formattedCreatedAt}," +
-                               $"\"claimId\":\"{_createdClaim.Id}\"," +
-                               $"\"acceptedAt\":null," +
-                               $"\"rejectionReason\":null," +
-                               $"\"rejectedAt\":null,\"userUpdatedBy\":null," +
-                               $"\"claimValidUntil\":{formattedValidUntil}," +
-                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
-                               $"\"state\":\"UPLOADED\"," +
-                               "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
-                               "\"staffSelectedDocumentType\":null," +
-                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
-                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +
-                               "}";
-
-            json.Should().Be(expected);
-        }
-
-        [Test]
-        public async Task CreateDocumentSubmissionUnsuccessfulWhenNoDocumentTypeProvided()
-        {
-            var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Create();
-            DatabaseContext.EvidenceRequests.Add(entity);
-            DatabaseContext.SaveChanges();
-
-            string body = "{}";
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-            response.StatusCode.Should().Be(400);
-        }
-
-        [Test]
-        public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateClaim()
-        {
-            // Arrange
-            var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Create();
-            DatabaseContext.EvidenceRequests.Add(entity);
-            DatabaseContext.SaveChanges();
-
-            DocumentsApiServer.Reset();
-            DocumentsApiServer.Given(
-                Request.Create().WithPath("/api/v1/claims")
-            ).RespondWith(
-                Response.Create().WithStatusCode(404)
-            );
-
-            string body = "{" +
-                          "\"documentType\": \"proof-of-id\"" +
-                          "}";
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-
-            // Act
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-
-            // Assert
-            response.StatusCode.Should().Be(400);
-        }
-
-        [Test]
-        public async Task ReturnNotFoundWhenCannotFindEvidenceRequest()
-        {
-            var fakeId = "ed0f2bd2-df90-4f01-b7f1-d30e402386d0";
-            string body = "{" +
-                          "\"documentType\": \"proof-of-id\"" +
-                          "}";
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/evidence_requests/{fakeId}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-
-            response.StatusCode.Should().Be(404);
-        }
-
 
         [Test]
         public async Task CanUpdateDocumentSubmissionStateWithValidParameters()
@@ -378,47 +234,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             response.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
-        }
-
-        [Test]
-        public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateUploadPolicy()
-        {
-            // Arrange
-            var entity = _fixture.Build<EvidenceRequest>()
-                .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
-                .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
-                .Without(x => x.Communications)
-                .Without(x => x.DocumentSubmissions)
-                .Create();
-            DatabaseContext.EvidenceRequests.Add(entity);
-            DatabaseContext.SaveChanges();
-
-            DocumentsApiServer.Reset();
-            DocumentsApiServer.Given(
-                Request.Create().WithPath("/api/v1/claims")
-            ).RespondWith(
-                Response.Create().WithStatusCode(201).WithBody(
-                    JsonConvert.SerializeObject(_createdClaim)
-                )
-            );
-            DocumentsApiServer.Given(
-                Request.Create().WithPath($"/api/v1/documents/{id}/upload_policies")
-            ).RespondWith(
-                Response.Create().WithStatusCode(404)
-            );
-
-            var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-            string body = "{" +
-                         "\"documentType\": \"proof-of-id\"" +
-                         "}";
-
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-
-            // Act
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
-
-            // Assert
-            response.StatusCode.Should().Be(400);
         }
 
         [Test]
