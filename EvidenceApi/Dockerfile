@@ -2,16 +2,14 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 
 WORKDIR /app
 
-COPY .editorconfig ./
-
-WORKDIR /app/EvidenceApi
-
 # Copy csproj and restore as distinct layers
-COPY ./EvidenceApi/*.csproj /app/EvidenceApi
+COPY ./EvidenceApi/*.csproj ./
 RUN dotnet restore
 
+
 # Copy everything else and build
-COPY ./EvidenceApi /app/EvidenceApi
+COPY ./EvidenceApi ./
+COPY ./.editorconfig ./
 RUN dotnet build -c Release -o out
 RUN dotnet publish -c Release -o out
 
