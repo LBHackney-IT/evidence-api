@@ -206,7 +206,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = "{}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
         }
 
@@ -238,7 +238,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
 
             // Act
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
 
             // Assert
             response.StatusCode.Should().Be(400);
@@ -267,10 +267,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var uri = new Uri($"api/v1/evidence_requests/{entity.Id}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(201);
 
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync();
 
             var created = DatabaseContext.DocumentSubmissions.First();
 
@@ -305,7 +305,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var uri = new Uri($"api/v1/evidence_requests/{fakeId}/document_submissions", UriKind.Relative);
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
 
             response.StatusCode.Should().Be(404);
         }
@@ -345,7 +345,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
 
             // Act
-            var response = await Client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            var response = await Client.PostAsync(uri, jsonString);
 
             // Assert
             response.StatusCode.Should().Be(400);
