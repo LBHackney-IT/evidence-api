@@ -178,7 +178,7 @@ namespace EvidenceApi.V1.Gateways
                 return new Dictionary<string, object>
                 {
                     {"resident_name", resident.Name},
-                    {"evidence_item", GetDocumentType(documentSubmission.EvidenceRequest).Title},
+                    {"evidence_item", GetDocumentType(documentSubmission.EvidenceRequest, documentSubmission.DocumentTypeId).Title},
                     {"rejection_reason", documentSubmission.RejectionReason},
                     {"magic_link", MagicLinkFor(documentSubmission.EvidenceRequest)}
                 };
@@ -199,9 +199,9 @@ namespace EvidenceApi.V1.Gateways
             throw new ArgumentOutOfRangeException(nameof(communicationReason), communicationReason, $"Communication Reason {communicationReason.ToString()} not recognised");
         }
 
-        private DocumentType GetDocumentType(EvidenceRequest evidenceRequest)
+        private DocumentType GetDocumentType(EvidenceRequest evidenceRequest, string documentTypeId)
         {
-            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, evidenceRequest.DocumentTypes[0]);
+            return _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentTypeId);
         }
 
         private string MagicLinkFor(EvidenceRequest evidenceRequest) => $"{_options.EvidenceRequestClientUrl}resident/{evidenceRequest.Id}";
