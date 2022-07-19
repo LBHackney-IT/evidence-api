@@ -30,14 +30,14 @@ namespace EvidenceApi.Tests
         public void OneTimeSetUp()
         {
             Options = new Fixture().Create<AppOptions>();
-            Options.DocumentsApiUrl = new System.Uri("http://localhost:3001");
+            Options.DocumentsApiUrl = new System.Uri("http://localhost:3103");
 
             _connection = new NpgsqlConnection(ConnectionString.TestDatabase());
             _connection.Open();
             var npgsqlCommand = _connection.CreateCommand();
             npgsqlCommand.CommandText = "SET deadlock_timeout TO 30";
             npgsqlCommand.ExecuteNonQuery();
-            DocumentsApiServer = WireMockServer.Start(3001);
+            DocumentsApiServer = WireMockServer.Start(3103);
         }
 
         [OneTimeTearDown]
