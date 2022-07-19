@@ -609,7 +609,7 @@
       },
       {
         "id": "immigration-documents-from-home-office",
-        "title": "Immigration documents from Home Office confirming theit status",
+        "title": "Immigration documents from Home Office confirming their status",
         "description": ""
       },
       {
@@ -649,7 +649,7 @@
       },
       {
         "id": "award-letter",
-        "title": "Award letter from DWP/Job Centre /Pension Service",
+        "title": "Award letter from DWP/Job Centre/Pension Service",
         "description": ""
       },
       {
@@ -720,11 +720,6 @@
       {
         "id": "naturalisation-document",
         "title": "Naturalisation document",
-        "description": ""
-      },
-      {
-        "id": "biometric-resident-permit",
-        "title": "Biometric resident permit",
         "description": ""
       },
       {
