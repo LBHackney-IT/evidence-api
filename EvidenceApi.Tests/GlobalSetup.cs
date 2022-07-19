@@ -13,11 +13,11 @@ public class GlobalSetup
     {
         try
         {
-            DotEnv.Config(true, Path.GetFullPath("../../../../.env.example"));
+            DotEnv.Config(true, Path.GetFullPath("../../../../.env"));
         }
         catch
         {
-            Console.Write("Could not find .env.example file");
+            Console.Write("Could not find .env file");
         }
     }
 }
