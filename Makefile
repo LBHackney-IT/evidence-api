@@ -8,23 +8,23 @@ build-test:
 
 .PHONY: serve-local
 serve-local:
-	make build-local && make local
+	make build-local && make start-local
 
 .PHONY: serve-test
 serve-test:
-	make build-test && make test
+	make build-test && make start-test
 
 .PHONY: shell
 shell:
 	docker-compose run evidence-api bash
 
-.PHONY: local
-local:
+.PHONY: start-local
+start-local:
 	docker compose -f EvidenceApi/compose.yml stop
 	docker compose -f EvidenceApi/compose.yml up -d
 
-.PHONY: test
-test:
+.PHONY: start-test
+start-test:
 	docker compose -f EvidenceApi.Tests/compose.yml stop
 	docker compose -f EvidenceApi.Tests/compose.yml run --rm test
 	docker compose -f EvidenceApi.Tests/compose.yml stop
