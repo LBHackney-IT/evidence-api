@@ -577,5 +577,211 @@
         "description": "A hand-written letter or typed-up document."
       }
     ]
+  },
+  {
+    "name": "Housing Management",
+    "id": "10",
+    "documentTypes": [
+      {
+        "id": "current-passport",
+        "title": "Current passport",
+        "description": ""
+      },
+      {
+        "id": "full-photo-drivers-licence",
+        "title": "Full photo driver's licence",
+        "description": ""
+      },
+      {
+        "id": "photo-provisional-driving-licence",
+        "title": "Photo provisional driving licence",
+        "description": ""
+      },
+      {
+        "id": "freedom-pass",
+        "title": "Freedom pass",
+        "description": ""
+      },
+      {
+        "id": "birth-certificate",
+        "title": "Birth certificate",
+        "description": ""
+      },
+      {
+        "id": "immigration-documents-from-home-office",
+        "title": "Immigration documents from Home Office confirming their status",
+        "description": ""
+      },
+      {
+        "id": "valid-resident-permit",
+        "title": "Valid resident's permit (EU nationals)",
+        "description": ""
+      },
+      {
+        "id": "nhs-medical-card",
+        "title": "NHS Medical Card",
+        "description": ""
+      },
+      {
+        "id": "divorce-letter",
+        "title": "Divorce letter from the court",
+        "description": ""
+      },
+      {
+        "id": "identity-card",
+        "title": "Identity card",
+        "description": ""
+      },
+      {
+        "id": "marriage-certificate",
+        "title": "Marriage certificate",
+        "description": ""
+      },
+      {
+        "id": "national-insurance",
+        "title": "National insurance",
+        "description": ""
+      },
+      {
+        "id": "other-proof-of-id",
+        "title": "Other proof of identity (ID)",
+        "description": ""
+      },
+      {
+        "id": "award-letter",
+        "title": "Award letter from DWP/Job Centre/Pension Service",
+        "description": ""
+      },
+      {
+        "id": "dss-documents",
+        "title": "DSS Documents (benefit/pension)",
+        "description": ""
+      },
+      {
+        "id": "wage-slip",
+        "title": "Wage Slip (payslip) showing address",
+        "description": ""
+      },
+      {
+        "id": "p45-p60",
+        "title": "P45/P60 showing address",
+        "description": ""
+      },
+      {
+        "id": "tenancy-agreement",
+        "title": "Tenancy agreement",
+        "description": ""
+      },
+      {
+        "id": "bank-building-society-statement",
+        "title": "Bank/Building Society Statement",
+        "description": ""
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bill",
+        "description": ""
+      },
+      {
+        "id": "letter-from-host-parents",
+        "title": "Letter from Host/Parents",
+        "description": ""
+      },
+      {
+        "id": "letter-from-housing-benefit",
+        "title": "Letter from Housing Benefit",
+        "description": ""
+      },
+      {
+        "id": "letter-from-school",
+        "title": "Letter from School",
+        "description": ""
+      },
+      {
+        "id": "letter-from-hospital",
+        "title": "Letter from Hospital",
+        "description": ""
+      },
+      {
+        "id": "letter-from-solicitors",
+        "title": "Letter from Solicitors",
+        "description": ""
+      },
+      {
+        "id": "letter-from-social-services",
+        "title": "Letter from Social Services",
+        "description": ""
+      },
+      {
+        "id": "other-proof-of-address",
+        "title": "Other proof of address",
+        "description": ""
+      },
+      {
+        "id": "naturalisation-document",
+        "title": "Naturalisation document",
+        "description": ""
+      },
+      {
+        "id": "biometric-resident-permit",
+        "title": "Biometric resident permit",
+        "description": ""
+      },
+      {
+        "id": "refugee-status-document",
+        "title": "Refugee status document",
+        "description": ""
+      },
+      {
+        "id": "other-proof-of-immigration-status",
+        "title": "Other proof of immigration status",
+        "description": ""
+      },
+      {
+        "id": "civil-partnership-certificate",
+        "title": "Civil partnership certificate",
+        "description": ""
+      },
+      {
+        "id": "adoption-certificate",
+        "title": "Adoption certificate",
+        "description": ""
+      },
+      {
+        "id": "life-insurance-document",
+        "title": "Life insurance document",
+        "description": ""
+      },
+      {
+        "id": "pension-document",
+        "title": "Pension document",
+        "description": ""
+      },
+      {
+        "id": "bill-joint-name",
+        "title": "Bill in joint names",
+        "description": ""
+      },
+      {
+        "id": "joint-bank-account-statement",
+        "title": "Joint bank account statement",
+        "description": ""
+      },
+      {
+        "id": "council-tax",
+        "title": "Council tax",
+        "description": ""
+      },
+      {
+        "id": "housing-benefits",
+        "title": "Housing benefits",
+        "description": ""
+      },
+      {
+        "id": "other-proof-of-relationship",
+        "title": "Other proof of relationship",
+        "description": ""
+      }
+    ]
   }
 ]
