@@ -272,5 +272,31 @@
         "description": "A valid letter from the occupant of the property stating that the parent and the child are currently residing with them."
       }
     ]
+  },
+  {
+    "name": "Housing Management",
+    "id": "10",
+    "documentTypes": [
+      {
+        "id": "proof-of-id",
+        "title": "Proof of Identity (ID)",
+        "description": "We will need 2 types of Proof of Identity for the proposed joint tenant. You need to submit two forms of ID. The below are documents you can provide: Current Passport, Full photo Driver's Licence, Photo Provisional driving licence, Freedom Pass, Full Birth Certificate, Immigration documents from Home Office confirming then status, Valid resident's Permit (EU nationals), NHS Medical Card, Divorce Letter from the court, Identity Card, Marriage Certificate, National Insurance, any other form of ID. Please note: For passport data page with photo is required. For driver's license/residence permit/identity card, front and back is required. Any government document must be in goverment offical header"
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of Address",
+        "description": "Please provide a valid document that can be use to proof your address. For co-habiting patners, you require 3 forms of proof of 12 months residency at the property. The below are documents you can provide: Award letter from DWP/Job Centre /Pension Service, DSS Documents (benefit/pension), Wage Slip (payslip) showing address, P45/P60 showing address, Tenancy Agreement, Bank/Building Society Statement, Utility Bill, Letter from Host/Parents, Medical Card (NHS Medical Card), Letter from Housing Benefit, School, Hospital, solicitors, social services, other relevant documents with the current address e.g. hospital letters, discharge papers for ex-armed forces, etc. Please note: For passport data page with photo is required. For driver's license/residence permit/identity card, front and back is required. Any government document must be in goverment offical header. For bank/building society statement, it needs to be within 3 months from the date of the application "
+      },
+      {
+        "id": "proof-of-immigration-status",
+        "title": "Proof of Immigration Status",
+        "description": "Please provide a valid document that can be used to prove the immigration statues of the proposed joint tenant. The below are documents you can provide: Immigration documents from Home Office confirming your status, Valid resident's Permit (EU nationals), Naturalisation Document, Current Passport, Biometric  Resident permit, Birth Certificate, National Insurance Card, Refugee Status Document, Other. Please note: For passport data page with photo is required. For residence permit/identity card, front and back is required. Any government document must be in goverment offical header"
+      },
+      {
+        "id": "proof-of-relationship",
+        "title": "Proof of Relationship",
+        "description": "Please provide a valid document that can be used to prove your identity. Spouses and civil partners must provide a copy of the marriage or civil partnership certificate, but do not need to provide proof of residence. However co-habiting partners must provide three different document showing that they have lived at the address for the 12 months prior to the application. The below are documents you can provide: Marriage certificate (from 29th March 2014 same sex couples are able to marry), Civil partnership certificate, Birth Certificate, Adoption Certificate, Life Insurance Documents, Pension Documents, Bills in Joint names, Joint Bank Account, Council Tax and Housing Benefits, Statements from neighbours, Other. Please note: Any government document must be in goverment offical header"
+      }
+    ]
   }
 ]
