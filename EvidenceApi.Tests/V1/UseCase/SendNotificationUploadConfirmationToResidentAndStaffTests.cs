@@ -54,9 +54,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             act.Should().NotThrow();
             _notifyGateway.Verify(x =>
                 x.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, _evidenceRequest, _resident));
-
-            _notifyGateway.Verify(x =>
-                x.SendNotificationDocumentUploaded(DeliveryMethod.Sms, CommunicationReason.DocumentUploaded, _evidenceRequest, _resident));
         }
 
         [Test]
