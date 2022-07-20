@@ -48,7 +48,6 @@ namespace EvidenceApi.V1.UseCase
                     try
                     {
                         _notifyGateway.SendNotificationUploadConfirmationForResident(dm, CommunicationReason.DocumentsUploadedResidentConfirmation, evidenceRequest, resident);
-                        _notifyGateway.SendNotificationDocumentUploaded(dm, CommunicationReason.DocumentUploaded, evidenceRequest, resident);
                     }
                     catch (NotifyClientException e)
                     {
@@ -57,6 +56,7 @@ namespace EvidenceApi.V1.UseCase
                     }
                 }
             );
+            _notifyGateway.SendNotificationDocumentUploaded(DeliveryMethod.Email, CommunicationReason.DocumentUploaded, evidenceRequest, resident);
         }
     }
 }
