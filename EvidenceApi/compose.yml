@@ -4,6 +4,8 @@ services:
       context: ../
       dockerfile: ./EvidenceApi/Dockerfile
     env_file: ../.env
+    environment:
+      CONNECTION_STRING: Host=db;Port=5432;Database=evidence_api;Username=postgres;Password=mypassword
     ports:
       - "3001:3000"
     depends_on:
