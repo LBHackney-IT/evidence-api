@@ -11,6 +11,9 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+    #For Linux users - must have Docker v20.10+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   migrate:
     extends:
