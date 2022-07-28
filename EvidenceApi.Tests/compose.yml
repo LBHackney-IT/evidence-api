@@ -1,0 +1,23 @@
+services:
+  test:
+    build:
+      context: ../
+      dockerfile: ./EvidenceApi.Tests/Dockerfile
+    environment:
+      CONNECTION_STRING: Host=db;Port=5432;Database=evidence_api;Username=postgres;Password=mypassword
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    extends:
+      file: ../database/compose.yml
+      service: migrate
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    extends:
+      file: ../database/compose.yml
+      service: db

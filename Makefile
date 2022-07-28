@@ -1,22 +1,37 @@
-.PHONY: setup
-setup:
-	docker-compose build
+.PHONY: build-local
+build-local:
+	docker-compose -f EvidenceApi/compose.yml build
 
-.PHONY: build
-build:
-	docker-compose build evidence-api
+.PHONY: build-test
+build-test:
+	docker-compose -f EvidenceApi.Tests/compose.yml build
 
-.PHONY: serve
-serve:
-	docker-compose build evidence-api && docker-compose up evidence-api
+.PHONY: serve-local
+serve-local:
+	make build-local && make start-local
+
+.PHONY: serve-test
+serve-test:
+	make build-test && make start-test
 
 .PHONY: shell
 shell:
 	docker-compose run evidence-api bash
 
-.PHONY: test
-test:
-	docker-compose up test-database & docker-compose build evidence-api-test && docker-compose up evidence-api-test
+.PHONY: start-local
+start-local:
+	docker compose -f EvidenceApi/compose.yml stop
+	docker compose -f EvidenceApi/compose.yml up -d
+
+.PHONY: start-test
+start-test:
+	docker compose -f EvidenceApi.Tests/compose.yml stop
+	docker compose -f EvidenceApi.Tests/compose.yml run --rm test
+	docker compose -f EvidenceApi.Tests/compose.yml stop
+
+.PHONY: stop-local
+stop-local:
+	docker compose -f EvidenceApi/compose.yml stop
 
 .PHONY: lint
 lint:

@@ -4,8 +4,8 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 
 ## Stack
 
--   .NET Core as a web framework.
--   nUnit as a test framework.
+-   .NET Core v3.1 as a web framework.
+-   nUnit v3.11 as a test framework.
 
 ## What does it do?
 
@@ -22,18 +22,18 @@ See the [Architectural Decision Log](/docs/adr).
 
 ## Contributing
 
-### Setup
+### Prerequisites
 
-1. Install [Docker][docker-download].
+1. Install [Docker][docker-download] (>v20.10).
 2. Install [AWS CLI][aws-cli].
 3. Clone this repository.
-4. Open it in your IDE.
+4. Open it in your IDE of your choice.
 
-### Development
+### 1. Set up envars
 
-In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access or see below. Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in [.env.example](.env.example)).
+In order to run the API locally, you will first need access to the environment variables stored in 1Password. Please contact another developer on the Document Evidence Service Team to gain access. Once you have the environment variables, navigate via the terminal to the root of evidence-api repo and run `touch .env`. This will create an `.env` file where you can store them (following the pattern example in [.env.example](.env.example)).
 
-Alternatively, you can populate the values yourself. You will need access to the application's staging environment on AWS. Create a new `.env` file with the values from `.env.example` as above. Then, retrieve the values from the staging environment in AWS following the variables listed in [serverless.yml](EvidenceApi/serverless.yml).
+In the absence of a developer, you can also populate the values yourself. You will need access to the application's staging environment on AWS. Create a new `.env` file with the values from `.env.example`. Then, retrieve the values from the staging environment in AWS following the variables listed in [serverless.yml](EvidenceApi/serverless.yml).
 
 The only values you do not need to copy from AWS are:
 - CONNECTION_STRING -- use the value in `.env.example`
@@ -46,61 +46,51 @@ The only values you do not need to copy from AWS are:
 
 This `.env` file should not be tracked by git, as it has been added to the `.gitignore`, so please do check that this is the case.
 
-To set up the database container, run 
-```sh
-docker-compose up -d dev-database
-``` 
-in the root of the repo to get the database container up and running (the container serves the db for both evidence-api and documents-api services).
+### 2. Set up containers
 
-Once the environment variables have been added for evidence-api and the database is running, update the database by running the migration command 
-```sh
-dotnet ef --project EvidenceApi database update
+Next step, to set up the local Evidence API container, `cd` into the root of the project
+(same place as the Makefile) and run `make serve-local`. This will set up the database container,
+run an automatic migration and stand up the API container. There are other Make recipes in the file; 
+```
+# build the image and start the db, migration and API containers
+$ make serve-local
+
+# build the images
+$ make build-local 
+
+# start the db, migration and API containers
+$ make start-local
 ```
 
-Then run 
-```sh 
-dotnet run --project EvidenceApi
-``` 
-to start the API locally. It will run on `http://localhost:5000`.
+* The API will run on `http://localhost:3001`
+* The database will run on `http://localhost:3002`
 
-### Testing
+### 3. Testing
 
-To run database tests locally the `CONNECTION_STRING` environment variable will need to be populated with: `Host=localhost;Database=testdb;Username=postgres;Password=mypassword"`, which you would have already done when you got the envars from another DES developer, or populated them yourself.
+There are two ways to test the application:
 
-If changes to the database schema are made then the docker image for the database will have to be removed and recreated. The `restart-db` make command will do this for you (but your locally seeded data will be wiped).
+1. Run the tests in the test container
+2. Run them locally
 
-There are two approaches to testing the evidence-api -- for different purposes. Your approach depends on whether you have inserted any data into `evidence-api_dev-datase_1` for manual/UI testing purposes.
-
-> _1. I don't have any data seeded into my local database!_
-
-Then, assuming that you have already followed the steps above to set up the repo and database container, and run the migration, you should have now one image running in Docker called `evidence-api_dev-databse_1`. In order to run the tests, all you need to do is run 
-```sh
-$ dotnet test
+The simplest and most reliable way is running the tests in the container. You can do this by running `make serve-test`,
+which will build the images and run the containers. There are other Make recipes in the file;
 ```
+# build the image and start the db, migration and test containers
+$ make serve-test
 
-> _2. I do have data in my local seeded because I inserted it myself!_
+# build the images
+$ make build-test 
 
-Having locally seeded data in your db will cause tests to fail. In order to save your locally seeded data but run the tests as well, we're going to assume that you have done all the set up steps above already. In order to run the tests the second way, you will need to stop the container called `evidence-api_dev-database_1` by navigating via the UI or by running 
-```sh
-$ docker stop evidence-api_dev-database_1
+# start the db, migration and test containers
+$ make start-test
 ```
+However, you might want to run the tests locally, in order to debug them through your IDE. The codebase is also set up to allow this.
+All you need to do is to make sure that your `CONNECTION_STRING` envar in `.env` is the same as the one in `.env.example`.
 
-**Please note: as long as the attached volume for this container continues to run, you will not lose any manually seeded data when you stop this container.**
+Then, run `make start-local` and make sure to clean any local data that you might have added -- you can do this manually through a database application
+like TablePlus or DataGrip.
 
-The reason why you need to stop it, is because we need to free up that port for a new container. Run 
-```sh
-$ make test
-```
-and a script will run to run all the tests on two new containers called `evidence-api_test-database_1` and `evidence-api_evidence-api-test_1`. These will be totally seaparate from your local dev db.
-
-When all the test have passed, to start up the local db again, run 
-```sh
-$ docker stop evidence-api_test-database_1
-```
-And then start the local development database by starting it via the UI or running:
-```sh
-docker-compose up -d dev-database
-``` 
+Then you can run your tests by running `dotnet test` or through your IDE.
 
 ### Agreed Testing Approach
 
@@ -119,7 +109,7 @@ docker-compose up -d dev-database
 
 To modify the database schema:
 
-_Prerequsite: Make sure you have your database running—something like `docker-compose up -d dev-database`_
+_Prerequsite: Make sure you have your local database running by running `make start-local`_
 
 1. Create or edit the `entity` files corresponding to the models you want to modify
 2. Run `bin/dotnet ef --project EvidenceApi migrations add NameOfMigration`  substituting the name of the migration
@@ -127,7 +117,6 @@ _Prerequsite: Make sure you have your database running—something like `docker-
 4.
     - If the migration looks good, run `bin/dotnet ef --project EvidenceApi database update`  to run the migrations
     - If the migration looks bad, run `bin/dotnet ef --project EvidenceApi migrations remove` to wipe the migration
-5. Run `update-schema-sql` file to update `schema.sql`
 
 ### Notify
 
@@ -160,12 +149,12 @@ Before you commit or push your code, you will need to run:
 
 ```sh
 make lint
-``` 
+```
 
 Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
 ```sh
 dotnet format
-``` 
+```
 to format your code.
 
 To help with making changes to code easier to understand when being reviewed, we've added a PR template.
