@@ -5,6 +5,7 @@ using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
 using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Request;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -54,6 +55,11 @@ namespace EvidenceApi.V1.Gateways
             return _databaseContext.EvidenceRequests.Find(id);
         }
 
+        public EvidenceRequest FindEvidenceRequestWithDocumentSubmissions(Guid id)
+        {
+            return _databaseContext.EvidenceRequests.Where(er => er.Id == id).Include(er => er.DocumentSubmissions).FirstOrDefault();
+        }
+
         public List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request)
         {
             return _databaseContext.EvidenceRequests
@@ -64,14 +70,19 @@ namespace EvidenceApi.V1.Gateways
                 ).ToList();
         }
 
+        public List<EvidenceRequest> GetEvidenceRequestsWithDocumentSubmissions(EvidenceRequestsSearchQuery request)
+        {
+            return _databaseContext.EvidenceRequests
+                .Where(x =>
+                    x.Team.Equals(request.Team) &&
+                    (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
+                    (request.State == null || x.State.Equals(request.State))
+                ).Include(er => er.DocumentSubmissions).ToList();
+        }
+
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
             return _databaseContext.DocumentSubmissions.Find(id);
-        }
-
-        public List<DocumentSubmission> FindDocumentSubmissionsByEvidenceRequestId(Guid id)
-        {
-            return _databaseContext.DocumentSubmissions.Where(x => x.EvidenceRequestId == id).ToList();
         }
 
         public List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id)

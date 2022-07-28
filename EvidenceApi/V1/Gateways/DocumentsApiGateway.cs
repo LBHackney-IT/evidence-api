@@ -5,6 +5,7 @@ using EvidenceApi.V1.Infrastructure;
 using EvidenceApi.V1.Boundary.Request;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EvidenceApi.V1.Domain;
@@ -28,7 +29,6 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<Claim> CreateClaim(ClaimRequest request)
         {
-
             var uri = new Uri("api/v1/claims", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
 
@@ -62,9 +62,13 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<Claim> GetClaimById(string id)
         {
+            var requestLimit = 20;
+            var throttler = new SemaphoreSlim(requestLimit);
             var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+            await throttler.WaitAsync();
             var response = await _client.GetAsync(uri).ConfigureAwait(true);
+            throttler.Release();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");

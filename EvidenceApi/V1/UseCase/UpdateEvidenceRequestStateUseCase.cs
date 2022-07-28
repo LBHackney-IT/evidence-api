@@ -19,15 +19,12 @@ namespace EvidenceApi.V1.UseCase
 
         public EvidenceRequest Execute(Guid id)
         {
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(id);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequestWithDocumentSubmissions(id);
 
             if (evidenceRequest == null)
             {
                 throw new NotFoundException($"Cannot find an evidence request with ID: {id}");
             }
-
-            var documentSubmissions = _evidenceGateway.FindDocumentSubmissionsByEvidenceRequestId(id);
-            evidenceRequest.DocumentSubmissions = documentSubmissions;
 
             if (AllDocumentSubmissionsAreApproved(evidenceRequest))
             {

@@ -35,22 +35,28 @@ namespace EvidenceApi.V1.UseCase
                 Team = request.Team,
                 ResidentId = request.ResidentId
             };
-            var evidenceRequests = _evidenceGateway.GetEvidenceRequests(evidenceRequestSearchQuery);
+            var evidenceRequests = _evidenceGateway.GetEvidenceRequestsWithDocumentSubmissions(evidenceRequestSearchQuery);
 
             var result = new List<DocumentSubmissionResponse>();
 
             foreach (var evidenceReq in evidenceRequests)
             {
-                var documentSubmissions = _evidenceGateway.FindDocumentSubmissionsByEvidenceRequestId(evidenceReq.Id);
+                var documentSubmissions = evidenceReq.DocumentSubmissions;
+                var tasks = new List<Task<Claim>>();
+                foreach (var ds in documentSubmissions)
+                {
+                    tasks.Add(_documentsApiGateway.GetClaimById(ds.ClaimId));
+                }
+                var claims = await Task.WhenAll<Claim>(tasks);
+
+                var claimIndex = 0;
                 foreach (var ds in documentSubmissions)
                 {
                     var documentType = FindDocumentType(evidenceReq.Team, ds.DocumentTypeId);
                     var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
                         ds.StaffSelectedDocumentTypeId);
-                    var claim = await _documentsApiGateway.GetClaimById(ds.ClaimId).ConfigureAwait(true);
-                    {
-                        result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claim));
-                    }
+                    result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claims[claimIndex]));
+                    claimIndex++;
                 }
             }
             return result;

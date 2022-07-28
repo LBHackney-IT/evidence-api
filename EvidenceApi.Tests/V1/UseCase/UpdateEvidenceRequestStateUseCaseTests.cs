@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using FluentAssertions;
@@ -91,8 +90,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                     break;
             }
 
-            _evidenceGateway.Setup(x => x.FindEvidenceRequest(It.IsAny<Guid>())).Returns(_found);
-            _evidenceGateway.Setup(x => x.FindDocumentSubmissionsByEvidenceRequestId(It.IsAny<Guid>())).Returns(_found.DocumentSubmissions.ToList());
+            _evidenceGateway.Setup(x => x.FindEvidenceRequestWithDocumentSubmissions(It.IsAny<Guid>())).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_found);
         }
 
