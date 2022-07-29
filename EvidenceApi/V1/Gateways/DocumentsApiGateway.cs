@@ -76,28 +76,28 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<List<Claim>> GetClaimsByIdsThrottled(List<string> claimIds)
         {
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
 
-        var throttler = new SemaphoreSlim(20);
-        var tasks = claimIds.Select(async claimId =>
-        {
-            await throttler.WaitAsync();
-
-            var uri = new Uri($"api/v1/claims/{claimId}", UriKind.Relative);
-            var response = await _client.GetAsync(uri);
-            if (response.StatusCode != HttpStatusCode.OK)
+            var throttler = new SemaphoreSlim(20);
+            var tasks = claimIds.Select(async claimId =>
             {
-                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
-            }
+                await throttler.WaitAsync();
 
-            throttler.Release();
+                var uri = new Uri($"api/v1/claims/{claimId}", UriKind.Relative);
+                var response = await _client.GetAsync(uri);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+                }
 
-            return await DeserializeResponse<Claim>(response);
-        });
+                throttler.Release();
 
-        var claims = await Task.WhenAll(tasks);
-        return claims.ToList();
-}
+                return await DeserializeResponse<Claim>(response);
+            });
+
+            var claims = await Task.WhenAll(tasks);
+            return claims.ToList();
+        }
 
         public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
         {
