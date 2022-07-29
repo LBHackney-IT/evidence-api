@@ -151,11 +151,20 @@ namespace EvidenceApi.Tests.V1.UseCase
                 _documentSubmission1, _documentSubmission2
             };
 
+            var claimsIds = new List<string>();
+            claimsIds.Add(_claimId1);
+            claimsIds.Add(_claimId2);
+            var claimsList = new List<Claim>();
+
+            claimsList.Add(_fixture.Create<Claim>());
+            claimsList.Add(_fixture.Create<Claim>());
+
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway.Setup(x => x.GetEvidenceRequestsWithDocumentSubmissions(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(evidenceRequestsResult);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
+            _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);
         }
     }
 }
