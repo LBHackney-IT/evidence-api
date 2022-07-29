@@ -155,6 +155,26 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         #endregion
 
+        #region Note to Resident Validations
+
+        [Test]
+        public void IsValidWhenNoteToResidentIsBelow5000Characters()
+        {
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.NoteToResident, _request);
+        }
+
+        [Test]
+        public void IsInvalidWhenNoteToResidentIsAbove5000Characters()
+        {
+            _request.NoteToResident = new string('a', 5001);
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.NoteToResident, _request)
+                .WithErrorMessage( "The length of 'Note To Resident' must be 5000 characters or fewer. You entered 5001 characters.");
+
+            _classUnderTest.Validate(_request).IsValid.Should().BeFalse();
+        }
+
+        #endregion
+
         private void SetupDocumentTypesGatewayMock()
         {
             var documentType = new DocumentType() { Title = "Passport", Id = "passport-scan" };
@@ -174,7 +194,8 @@ namespace EvidenceApi.Tests.V1.UseCase
                     Email = "tom@hackney.gov.uk",
                     PhoneNumber = "+447123456789"
                 },
-                DocumentTypes = new List<string> { "passport-scan" }
+                DocumentTypes = new List<string> { "passport-scan" },
+                NoteToResident = "this is a bespoke note"
             };
         }
     }

@@ -41,6 +41,8 @@ namespace EvidenceApi.V1.UseCase
             RuleFor(x => x.Resident)
                 .NotEmpty()
                 .SetValidator(residentValidator);
+
+            RuleFor(x => x.NoteToResident).MaximumLength(5000);
         }
     }
 }
