@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
@@ -62,19 +64,40 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<Claim> GetClaimById(string id)
         {
-            var requestLimit = 20;
-            var throttler = new SemaphoreSlim(requestLimit);
             var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
-            await throttler.WaitAsync();
             var response = await _client.GetAsync(uri).ConfigureAwait(true);
-            throttler.Release();
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
             }
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
+
+        public async Task<List<Claim>> GetClaimsByIdsThrottled(List<string> claimIds)
+        {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+
+        var throttler = new SemaphoreSlim(20);
+        var tasks = claimIds.Select(async claimId =>
+        {
+            await throttler.WaitAsync();
+
+            var uri = new Uri($"api/v1/claims/{claimId}", UriKind.Relative);
+            var response = await _client.GetAsync(uri);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
+
+            throttler.Release();
+
+            return await DeserializeResponse<Claim>(response);
+        });
+
+        var claims = await Task.WhenAll(tasks);
+        return claims.ToList();
+}
 
         public async Task<S3UploadPolicy> CreateUploadPolicy(Guid id)
         {

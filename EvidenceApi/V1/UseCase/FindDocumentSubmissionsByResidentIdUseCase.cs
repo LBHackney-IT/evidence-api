@@ -42,12 +42,12 @@ namespace EvidenceApi.V1.UseCase
             foreach (var evidenceReq in evidenceRequests)
             {
                 var documentSubmissions = evidenceReq.DocumentSubmissions;
-                var tasks = new List<Task<Claim>>();
+                var claimsIds = new List<string>();
                 foreach (var ds in documentSubmissions)
                 {
-                    tasks.Add(_documentsApiGateway.GetClaimById(ds.ClaimId));
+                    claimsIds.Add(ds.ClaimId);
                 }
-                var claims = await Task.WhenAll<Claim>(tasks);
+                var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
 
                 var claimIndex = 0;
                 foreach (var ds in documentSubmissions)
