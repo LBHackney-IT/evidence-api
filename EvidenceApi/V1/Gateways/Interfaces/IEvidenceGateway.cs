@@ -10,11 +10,12 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         AuditEvent CreateAuditEvent(AuditEvent request);
         EvidenceRequest CreateEvidenceRequest(EvidenceRequest request);
         EvidenceRequest FindEvidenceRequest(Guid id);
+        EvidenceRequest FindEvidenceRequestWithDocumentSubmissions(Guid id);
         Communication CreateCommunication(Communication request);
         DocumentSubmission CreateDocumentSubmission(DocumentSubmission request);
         DocumentSubmission FindDocumentSubmission(Guid id);
         List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request);
-        List<DocumentSubmission> FindDocumentSubmissionsByEvidenceRequestId(Guid id);
+        List<EvidenceRequest> GetEvidenceRequestsWithDocumentSubmissions(EvidenceRequestsSearchQuery request);
         List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id);
         List<EvidenceRequest> GetAll();
         List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request);

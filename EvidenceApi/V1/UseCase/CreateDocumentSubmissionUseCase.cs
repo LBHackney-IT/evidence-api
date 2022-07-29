@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
@@ -35,19 +34,20 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(evidenceRequestId);
+            var evidenceRequest = _evidenceGateway.FindEvidenceRequestWithDocumentSubmissions(evidenceRequestId);
             if (evidenceRequest == null)
             {
                 throw new NotFoundException($"Cannot find evidence request with id: {evidenceRequestId}");
             }
 
-            if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
-                    (d.State == SubmissionState.Approved || d.State == SubmissionState.Uploaded) &&
-                    d.DocumentTypeId == request.DocumentType))
-            {
-                throw new BadRequestException(
-                    $"An active document submission for document type ${request.DocumentType} already exists");
-            }
+            // Commenting out for now as we have partial uploads implemented.
+            // if (evidenceRequest.DocumentSubmissions != null && evidenceRequest.DocumentSubmissions.Any(d =>
+            //         (d.State == SubmissionState.Approved || d.State == SubmissionState.Uploaded) &&
+            //         d.DocumentTypeId == request.DocumentType))
+            // {
+            //     throw new BadRequestException(ThrowsBadRequestIfActiveDocumentSubmissionAlreadyExists
+            //         $"An active document submission for document type ${request.DocumentType} already exists");
+            // }
 
             Claim claim;
             S3UploadPolicy createdS3UploadPolicy;

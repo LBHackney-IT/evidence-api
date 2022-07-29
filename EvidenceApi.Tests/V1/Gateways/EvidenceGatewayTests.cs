@@ -291,40 +291,6 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void FindByResidentIdReturnsDocumentSubmissions()
-        {
-            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            var documentSubmission1 = TestDataHelper.DocumentSubmission();
-            documentSubmission1.EvidenceRequest = evidenceRequest1;
-            var documentSubmission2 = TestDataHelper.DocumentSubmission();
-            documentSubmission2.EvidenceRequest = evidenceRequest1;
-            var documentSubmission3 = TestDataHelper.DocumentSubmission();
-            documentSubmission3.EvidenceRequest = evidenceRequest2;
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
-            DatabaseContext.SaveChanges();
-
-            var expectedDocumentSubmissions = new List<DocumentSubmission>()
-            {
-                documentSubmission1, documentSubmission2
-            };
-
-            var found = _classUnderTest.FindDocumentSubmissionsByEvidenceRequestId(evidenceRequest1.Id);
-
-            found.Should().BeEquivalentTo(expectedDocumentSubmissions);
-        }
-
-        [Test]
-        public void FindByResidentIdReturnsEmptyListWhenDocumentSubmissionsCannotBeFound()
-        {
-            var id = Guid.NewGuid();
-            var found = _classUnderTest.FindDocumentSubmissionsByEvidenceRequestId(id);
-            found.Should().BeEmpty();
-        }
-
-        [Test]
         public void FindEvidenceRequestsByResidentIdReturnsResults()
         {
             // Arrange
@@ -403,6 +369,20 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             // Assert
             found.Should().Equal(expected);
+        }
+
+        [Test]
+        public void CanGetEvidenceRequestsWithDocumentSubmissions()
+        {
+            var request = new EvidenceRequestsSearchQuery()
+            {
+                Team = "development-team-staging",
+                ResidentId = Guid.NewGuid(),
+            };
+            var expected = ExpectedEvidenceRequestsWithDocumentSubmissions(request);
+
+            var result = _classUnderTest.GetEvidenceRequestsWithDocumentSubmissions(request);
+            result.Should().BeEquivalentTo(expected);
         }
 
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
@@ -516,6 +496,46 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
 
             DatabaseContext.SaveChanges();
+        }
+
+        public List<EvidenceRequest> ExpectedEvidenceRequestsWithDocumentSubmissions(EvidenceRequestsSearchQuery request)
+        {
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+
+            var documentsubmission1 = TestDataHelper.DocumentSubmission();
+            var documentsubmission2 = TestDataHelper.DocumentSubmission();
+            var documentsubmission3 = TestDataHelper.DocumentSubmission();
+            var documentsubmission4 = TestDataHelper.DocumentSubmission();
+
+            var resident = TestDataHelper.Resident();
+            resident.Id = (Guid) request.ResidentId;
+
+            evidenceRequest1.Team = request.Team;
+            evidenceRequest2.Team = request.Team;
+
+            evidenceRequest1.ResidentId = resident.Id;
+            evidenceRequest2.ResidentId = resident.Id;
+
+            evidenceRequest1.DocumentSubmissions.Add(documentsubmission1);
+            evidenceRequest1.DocumentSubmissions.Add(documentsubmission2);
+            evidenceRequest2.DocumentSubmissions.Add(documentsubmission3);
+            evidenceRequest2.DocumentSubmissions.Add(documentsubmission4);
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission2);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission3);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission4);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<EvidenceRequest>();
+
+            expected.Add(evidenceRequest1);
+            expected.Add(evidenceRequest2);
+            return expected;
         }
     }
 }
