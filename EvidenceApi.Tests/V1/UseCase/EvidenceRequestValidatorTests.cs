@@ -152,6 +152,20 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .WithErrorMessage("'Resident' must not be empty.");
         }
 
+        [Test]
+        public void IsNoteToResidentUnderCharacterLimit()
+        {
+            _request.NoteToResident = "The image is not clear.";
+            _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.NoteToResident, _request);
+        }
+
+        [Test]
+        public void IsNoteToResidentOverCharacterLimit()
+        {
+            var multiplier = 5001;
+            _request.NoteToResident = new string('A', multiplier);
+            _classUnderTest.ShouldHaveValidationErrorFor(x => x.NoteToResident, _request).WithErrorMessage("Maximum character count is 5000");
+        }
 
         #endregion
 
