@@ -38,9 +38,16 @@ namespace EvidenceApi.V1.UseCase
             RuleForEach(x => x.DeliveryMethods)
                 .IsEnumName(typeof(DeliveryMethod), false);
 
+
+
             RuleFor(x => x.Resident)
                 .NotEmpty()
                 .SetValidator(residentValidator);
+
+
+            RuleFor(x => x.NoteToResident).MaximumLength(5000).WithMessage("Maximum character count is 5000");
+
+
         }
     }
 }
