@@ -157,19 +157,15 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _request.NoteToResident = "The image is not clear.";
             _classUnderTest.ShouldNotHaveValidationErrorFor(x => x.NoteToResident, _request);
-
         }
 
         [Test]
         public void IsNoteToResidentOverCharacterLimit()
-
         {
-            int multiplier = 5001;
+            var multiplier = 5001;
             _request.NoteToResident = new string('A', multiplier);
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.NoteToResident, _request).WithErrorMessage("Maximum character count is 5000");
-
         }
-
 
         #endregion
 
@@ -179,8 +175,6 @@ namespace EvidenceApi.Tests.V1.UseCase
             var documentTypes = new List<DocumentType>() { documentType };
             _mockDocumentGateway.Setup(x => x.GetDocumentTypesByTeamName(team)).Returns(documentTypes);
         }
-
-
 
         private static EvidenceRequestRequest CreateRequest()
         {
