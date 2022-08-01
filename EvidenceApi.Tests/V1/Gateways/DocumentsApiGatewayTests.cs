@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+using System.Linq;
 using System.Net;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
@@ -11,8 +11,6 @@ using EvidenceApi.V1.Boundary.Request;
 using System.Threading.Tasks;
 using Moq;
 using System.Net.Http;
-using System.Text;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Moq.Contrib.HttpClient;
 
@@ -94,6 +92,24 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = await _classUnderTest.GetClaimById(id).ConfigureAwait(true);
 
             result.Should().BeEquivalentTo(expectedClaim);
+        }
+
+        [Test]
+        public async Task CanGetClaimsByIdsThrottled()
+        {
+            const int numberOfClaims = 25;
+            var claims = Enumerable.Repeat(0, numberOfClaims).Select(_ => _fixture.Create<Claim>()).ToList();
+
+            claims.ForEach(claim => _messageHandler.SetupRequest(HttpMethod.Get,
+                    $"{_options.DocumentsApiUrl}api/v1/claims/{claim.Id}",
+                    request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
+                .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(claim), "application/json")
+            );
+
+            var claimIds = claims.Select(claim => claim.Id.ToString()).ToList();
+            var result = await _classUnderTest.GetClaimsByIdsThrottled(claimIds);
+
+            result.Should().BeEquivalentTo(claims);
         }
 
         [Test]
