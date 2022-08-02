@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+using System.Linq;
 using System.Net;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
@@ -11,8 +11,7 @@ using EvidenceApi.V1.Boundary.Request;
 using System.Threading.Tasks;
 using Moq;
 using System.Net.Http;
-using System.Text;
-using Microsoft.AspNetCore.Http;
+using EvidenceApi.V1.Boundary.Response.Exceptions;
 using Newtonsoft.Json;
 using Moq.Contrib.HttpClient;
 
@@ -22,7 +21,7 @@ namespace EvidenceApi.Tests.V1.Gateways
     public class DocumentsApiGatewayTests
     {
         private readonly IFixture _fixture = new Fixture();
-        private Mock<HttpMessageHandler> _messageHandler = new Mock<HttpMessageHandler>();
+        private readonly Mock<HttpMessageHandler> _messageHandler = new Mock<HttpMessageHandler>();
         private DocumentsApiGateway _classUnderTest;
         private AppOptions _options;
 
@@ -97,10 +96,63 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public async Task CanGetClaimsByIds()
+        {
+            const int numberOfClaims = 50;
+            var claims = Enumerable.Repeat(0, numberOfClaims).Select(_ => _fixture.Create<Claim>()).ToList();
+
+            claims.ForEach(claim => _messageHandler.SetupRequest(HttpMethod.Get,
+                    $"{_options.DocumentsApiUrl}api/v1/claims/{claim.Id}",
+                    request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
+                .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(claim), "application/json")
+            );
+
+            var claimIds = claims.Select(claim => claim.Id.ToString()).ToList();
+            var result = await _classUnderTest.GetClaimsByIdsThrottled(claimIds);
+
+            result.Should().BeEquivalentTo(claims);
+        }
+
+        [Test]
+        public void ShouldThrowWhenGettingClaimsByIdsFails()
+        {
+            void AddClaimResponse(Guid claimId, HttpStatusCode status, string body)
+            {
+                _messageHandler.SetupRequest(HttpMethod.Get,
+                        $"{_options.DocumentsApiUrl}api/v1/claims/{claimId}",
+                        request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
+                    .ReturnsResponse(status, body, "application/json");
+            }
+
+            const int numberOfSuccessfulClaims = 5;
+            var successfulClaims = Enumerable.Repeat(0, numberOfSuccessfulClaims)
+                .Select(_ => _fixture.Create<Claim>())
+                .ToList();
+            successfulClaims.ForEach(claim =>
+                AddClaimResponse(claim.Id, HttpStatusCode.OK, JsonConvert.SerializeObject(claim)));
+
+            var failedClaimId = Guid.NewGuid();
+            const HttpStatusCode failedStatus = HttpStatusCode.InternalServerError;
+            AddClaimResponse(failedClaimId, failedStatus, JsonConvert.SerializeObject(new
+            {
+                status = failedStatus,
+                title = "Something went wrong"
+            }));
+
+            var claimIds = successfulClaims
+                .Select(claim => claim.Id.ToString())
+                .Append(failedClaimId.ToString())
+                .ToList();
+
+            var ex = Assert.ThrowsAsync<DocumentsApiException>(() => _classUnderTest.GetClaimsByIdsThrottled(claimIds));
+            ex.Message.Should().Be($"Incorrect status code returned: {failedStatus}");
+        }
+
+        [Test]
         public async Task CanUpdateAClaimWithValidParameters()
         {
             // Arrange
-            Guid id = Guid.NewGuid();
+            var id = Guid.NewGuid();
             var claimUpdateRequest = _fixture.Build<ClaimUpdateRequest>()
                 .With(x => x.ValidUntil, DateTime.UtcNow)
                 .Create();
