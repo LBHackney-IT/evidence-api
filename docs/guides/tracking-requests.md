@@ -117,6 +117,8 @@ ssh -4 -i ./private-key.pem -Nf -M -L ${DOCUMENTS_API_PORT//\"}:${DOCUMENTS_API_
 
 #### Connection to the database from your Postgres client
 
+You only need to connect to the database via your client once per database, per environment. If you choose to change any of the `localhost` ports when SSHing, then you'll need to update the configuration in the client to the port you've passed in the SSH command.
+
 1. Print the database configuration
    1. For Evidence API STAGING:
     ```sh
