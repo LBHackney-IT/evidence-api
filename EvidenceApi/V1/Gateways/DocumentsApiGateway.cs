@@ -78,7 +78,7 @@ namespace EvidenceApi.V1.Gateways
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
 
-            var throttler = new SemaphoreSlim(20);
+            var throttler = new SemaphoreSlim(5);
             var tasks = claimIds.Select(async claimId =>
             {
                 await throttler.WaitAsync();
