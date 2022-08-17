@@ -78,7 +78,7 @@ namespace EvidenceApi.V1.Gateways
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
 
-            var throttler = new SemaphoreSlim(10);
+            var throttler = new SemaphoreSlim(5);
             var tasks = claimIds.Select(async claimId =>
             {
                 await throttler.WaitAsync();
@@ -90,7 +90,6 @@ namespace EvidenceApi.V1.Gateways
                     throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
                 }
 
-                await Task.Delay(200);
                 throttler.Release();
 
                 return await DeserializeResponse<Claim>(response);
