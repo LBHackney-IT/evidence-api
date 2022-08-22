@@ -28,20 +28,29 @@ namespace EvidenceApi.V1.Controllers
         }
 
         /// <summary>
-        /// Returns all recognised document types by team name
+        /// Returns all recognised document types by team name. Optional enabled? flag (bool) that returns documents that are enabled (true)
+        /// or disabled (false) by the service area.
         /// </summary>
         /// <response code="200">OK</response>
         /// <response code="404">Team cannot be found</response>
         [HttpGet]
         [Route("{team}")]
         [ProducesResponseType(typeof(List<DocumentType>), StatusCodes.Status200OK)]
-        public IActionResult GetDocumentTypesByTeamName([FromRoute][Required] string team)
+        public IActionResult GetDocumentTypesByTeamName([FromRoute][Required] string team, [FromQuery] bool? enabled = null)
         {
             var result = _documentTypeGateway.GetDocumentTypesByTeamName(team);
+
+            if (result.Count > 0 && enabled.HasValue)
+            {
+                var resultEnabled = result.FindAll(dt => dt.Enabled == enabled);
+                return Ok(resultEnabled);
+            }
+
             if (result.Count > 0)
             {
                 return Ok(result);
             }
+
             return NotFound($"No document types were found for team with name: {team}");
         }
 
