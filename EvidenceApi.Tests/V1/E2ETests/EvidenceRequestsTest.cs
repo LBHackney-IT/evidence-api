@@ -94,7 +94,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "}," +
                                "\"deliveryMethods\":[\"SMS\"]," +
                                "\"documentTypes\":[" +
-                               "{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}" +
+                               "{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\",\"enabled\":true}" +
                                "]," +
                                "\"team\":\"Development Housing Team\"," +
                                "\"reason\":\"staging-reason\"," +
@@ -287,7 +287,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"claimValidUntil\":{formattedValidUntil}," +
                                $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
                                $"\"state\":\"UPLOADED\"," +
-                               "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\"}," +
+                               "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\",\"enabled\":true}," +
                                "\"staffSelectedDocumentType\":null," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
                                $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +

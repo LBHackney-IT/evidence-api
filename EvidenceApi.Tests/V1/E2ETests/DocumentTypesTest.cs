@@ -20,8 +20,20 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var data = JsonConvert.DeserializeObject<List<DocumentType>>(json);
 
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "proof-of-id", Title = "Proof of ID", Description = "A valid document that can be used to prove identity" });
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "repairs-photo", Title = "Repairs photo", Description = "A photo of the issue that need to be repaired" });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "proof-of-id", Title = "Proof of ID", Description = "A valid document that can be used to prove identity", Enabled = true});
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "repairs-photo", Title = "Repairs photo", Description = "A photo of the issue that need to be repaired", Enabled = true});
+        }
+        [Test]
+        public async Task GetDocumentTypesByTeamNameReturns404()
+        {
+            var fakeTeam = "this is a test";
+            var uri = new Uri($"api/v1/document_types/{fakeTeam}", UriKind.Relative);
+            var response = await Client.GetAsync(uri);
+            response.StatusCode.Should().Be(404);
+
+            var json = await response.Content.ReadAsStringAsync();
+            var expected = $"\"No document types were found for team with name: {fakeTeam}\"";
+            json.Should().Be(expected);
         }
     }
 }
