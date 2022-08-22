@@ -6,7 +6,8 @@
       {
         "id": "proof-of-id",
         "title": "Proof of ID",
-        "description": "A valid document that can be used to prove identity"
+        "description": "A valid document that can be used to prove identity",
+        "enabled": true
       }
     ]
   },
@@ -17,27 +18,32 @@
       {
         "id": "proof-of-id",
         "title": "Proof of ID",
-        "description": "A valid document that can be used to prove identity"
+        "description": "A valid document that can be used to prove identity",
+        "enabled": true
       },
       {
         "id": "repairs-photo",
         "title": "Repairs photo",
-        "description": "A photo of the issue that need to be repaired"
+        "description": "A photo of the issue that need to be repaired",
+        "enabled": true
       },
       {
         "id": "passport-scan",
         "title": "Passport",
-        "description": "A valid passport open at the photo page"
+        "description": "A valid passport open at the photo page",
+        "enabled": true
       },
       {
         "id": "drivers-licence",
         "title": "Drivers licence",
-        "description": "A valid UK full or provisional UK driving license"
+        "description": "A valid UK full or provisional UK driving license",
+        "enabled": true
       },
       {
         "id": "bank-statement",
         "title": "Bank statement",
-        "description": "From the past three months"
+        "description": "From the past three months",
+        "enabled": true
       }
     ]
   },
@@ -48,7 +54,8 @@
       {
         "id": "proof-of-id",
         "title": "Proof of ID",
-        "description": "A valid document that can be used to prove identity"
+        "description": "A valid document that can be used to prove identity",
+        "enabled": true
       }
     ]
   },
@@ -59,12 +66,14 @@
       {
         "id": "proof-of-id",
         "title": "Proof of ID",
-        "description": "A valid document that can be used to prove identity"
+        "description": "A valid document that can be used to prove identity",
+        "enabled": true
       },
       {
         "id": "proof-of-address",
         "title": "Proof of address",
-        "description": "A valid document that can be used to prove address"
+        "description": "A valid document that can be used to prove address",
+        "enabled": true
       }
     ]
   },
@@ -75,7 +84,8 @@
       {
         "id": "repair-request",
         "title": "Repair request",
-        "description": "A request for a repair in a council property"
+        "description": "A request for a repair in a council property",
+        "enabled": true
       }
     ]
   },
@@ -86,17 +96,20 @@
       {
         "id": "proof-of-id",
         "title": "Proof of ID",
-        "description": "A valid document that can be used to prove identity"
+        "description": "A valid document that can be used to prove identity",
+        "enabled": true
       },
       {
         "id": "proof-of-address",
         "title": "Proof of address",
-        "description": "A valid document that can be used to prove address"
+        "description": "A valid document that can be used to prove address",
+        "enabled": true
       },
       {
         "id": "proof-of-nationality",
         "title": "Proof of nationality",
-        "description": "A valid document that can be used to prove nationality"
+        "description": "A valid document that can be used to prove nationality",
+        "enabled": true
       }
     ]
   },
@@ -107,52 +120,62 @@
       {
         "id": "proof-of-id",
         "title": "Proof of ID",
-        "description": "A valid document to provide proof of your identity"
+        "description": "A valid document to provide proof of your identity",
+        "enabled": true
       },
       {
         "id": "proof-of-address",
         "title": "Proof of address",
-        "description": "A valid document to confirm residency"
+        "description": "A valid document to confirm residency",
+        "enabled": true
       },
       {
         "id": "proof-of-income",
         "title": "Proof of income",
-        "description": "Please include salary, benefits and any other income for everyone in your household"
+        "description": "Please include salary, benefits and any other income for everyone in your household",
+        "enabled": true
       },
       {
         "id": "proof-of-savings",
         "title": "Proof of savings",
-        "description": "This includes the total amount in all your current accounts, saving accounts, and any other types of savings"
+        "description": "This includes the total amount in all your current accounts, saving accounts, and any other types of savings",
+        "enabled": true
       },
       {
         "id": "proof-of-pension",
         "title": "Proof of pension",
-        "description": "A valid document to provide proof of your pension"
+        "description": "A valid document to provide proof of your pension",
+        "enabled": true
       },
       {
         "id": "dependant-children",
         "title": "Dependant children",
-        "description": "A valid document to confirm dependants in household"
+        "description": "A valid document to confirm dependants in household",
+        "enabled": true
       },
       {
         "id": "tenancy",
         "title": "Tenancy",
-        "description": "Valid documents to confirm applicant's tenancy or property details"
+        "description": "Valid documents to confirm applicant's tenancy or property details",
+        "enabled": true
       },
       {
         "id": "national-insurance-number",
         "title": "National Insurance number",
-        "description": "Valid document to confirm NINO"
+        "description": "Valid document to confirm NINO",
+        "enabled": true
       },
       {
         "id": "proof-of-medical",
         "title": "Proof of medical",
-        "description": "Valid document to support applicant and household members medical conditions"
+        "description": "Valid document to support applicant and household members medical conditions",
+        "enabled": true
       },
       {
         "id": "miscellaneous",
         "title": "Miscellaneous",
-        "description": "This is for internal use only to upload documents"
+        "description": "This is for internal use only to upload documents",
+        "enabled": true
       }
     ]
   },
@@ -163,87 +186,104 @@
       {
         "id": "passport-scan",
         "title": "Passport",
-        "description": "Data page with photo"
+        "description": "Data page with photo",
+        "enabled": true
       },
       {
         "id": "drivers-licence",
         "title": "UK Drivers licence",
-        "description": "Photo side (front)"
+        "description": "Photo side (front)",
+        "enabled": true
       },
       {
         "id": "eu-identity-card",
         "title": "EU identity card",
-        "description": "Photo page"
+        "description": "Photo page",
+        "enabled": true
       },
       {
         "id": "biometric-card",
         "title": "Biometric card",
-        "description": "Both sides of the card"
+        "description": "Both sides of the card",
+        "enabled": true
       },
       {
         "id": "birth-certificate",
         "title": "Birth certificate",
-        "description": "Photo side (front)"
+        "description": "Photo side (front)",
+        "enabled": true
       },
       {
         "id": "proof-of-tenancy-agreement",
         "title": "Proof of tenancy agreement",
-        "description": "Photo of both sides of valid tenancy agreement for your home including signatures"
+        "description": "Photo of both sides of valid tenancy agreement for your home including signatures",
+        "enabled": true
       },
       {
         "id": "previous-tenancy-agreement",
         "title": "Previous Tenancy Agreement",
-        "description": "If you have completed previous tenancy details on page 5 of the RTB1, please supply and tenancy agreements or relevant confirmation of tenancy."
+        "description": "If you have completed previous tenancy details on page 5 of the RTB1, please supply and tenancy agreements or relevant confirmation of tenancy.",
+        "enabled": true
       },
       {
         "id": "certificate-of-naturalisation",
         "title": "Certificate of naturalisation",
-        "description": "Photo side (front). IMPORTANT: If you are an overseas national you also need to provide us with proof of your entitlement to reside in the UK, ie you must have indefinite leave to remain."
+        "description": "Photo side (front). IMPORTANT: If you are an overseas national you also need to provide us with proof of your entitlement to reside in the UK, ie you must have indefinite leave to remain.",
+        "enabled": true
       },
       {
         "id": "proof-of-rtb",
         "title": "Proof of previous Right to Buy discount",
-        "description": "If you have previously purchased a property under Right to Buy and completed Part D of the RTB1, you need to supply any relevant documentation (add website link to form)"
+        "description": "If you have previously purchased a property under Right to Buy and completed Part D of the RTB1, you need to supply any relevant documentation (add website link to form)",
+        "enabled": true
       },
       {
         "id": "opt-out-rtb",
         "title": "Joint tenant opting out of the Right to Buy",
-        "description": "Upload of completed document (add website link to download)"
+        "description": "Upload of completed document (add website link to download)",
+        "enabled": true
       },
       {
         "id": "marriage-certificate",
         "title": "Marriage certificate",
-        "description": "A valid document that can be used to prove marriage. If you are applying with a family member to whom you are married, supply a copy of the marriage certificate. Photo of whole document must be readable."
+        "description": "A valid document that can be used to prove marriage. If you are applying with a family member to whom you are married, supply a copy of the marriage certificate. Photo of whole document must be readable.",
+        "enabled": true
       },
       {
         "id": "bank-statement",
         "title": "Bank statement",
-        "description": "Valid from the last 3, 6 or 12 months"
+        "description": "Valid from the last 3, 6 or 12 months",
+        "enabled": true
       },
       {
         "id": "utility-bill",
         "title": "Utility bills",
-        "description": "Valid from the last 3, 6 or 12 months. For all utility bills - provide at least THREE of the following: All the documents you provide must show this information or we won’t be able to accept them: Applicants name (matching what’s shown on the RTB application)/Address/Date of the document (not just the dates that a document may cover). We cannot accept hand-written letters, undated documents or junk mail as sufficient evidence of where you live and how long you have lived there. Neither can we accept documents sent to you by Hackney Council or Hackney Homes. Documents must be from more than one organisation or company.  Please remember that one of the documents you provide must have a date from at least twelve months ago and one must be recent."
+        "description": "Valid from the last 3, 6 or 12 months. For all utility bills - provide at least THREE of the following: All the documents you provide must show this information or we won’t be able to accept them: Applicants name (matching what’s shown on the RTB application)/Address/Date of the document (not just the dates that a document may cover). We cannot accept hand-written letters, undated documents or junk mail as sufficient evidence of where you live and how long you have lived there. Neither can we accept documents sent to you by Hackney Council or Hackney Homes. Documents must be from more than one organisation or company.  Please remember that one of the documents you provide must have a date from at least twelve months ago and one must be recent.",
+        "enabled": true
       },
       {
         "id": "council-tax-bill",
         "title": "Council tax bill",
-        "description": "Current financial year"
+        "description": "Current financial year",
+        "enabled": true
       },
       {
         "id": "government-letter",
         "title": "Government letter",
-        "description": "For example, benefit status letters"
+        "description": "For example, benefit status letters",
+        "enabled": true
       },
       {
         "id": "additional-information-booklet",
         "title": "Additional information booklet",
-        "description": "All sections must be completed in full and signed by all applicants. Photo of all pages of the booklet (Add link to form online)"
+        "description": "All sections must be completed in full and signed by all applicants. Photo of all pages of the booklet (Add link to form online)",
+        "enabled": true
       },
       {
         "id": "anti-money-laundering",
         "title": "Anti Money Laundering form",
-        "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet (add link to online form)"
+        "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet (add link to online form)",
+        "enabled": true
       }
     ]
   },
@@ -254,22 +294,26 @@
       {
         "id": "proof-of-address",
         "title": "Proof of Address",
-        "description": "Two valid documents to provide proof of address. It must inculde the name of the Parent who is applying clearly written on the document provided."
+        "description": "Two valid documents to provide proof of address. It must inculde the name of the Parent who is applying clearly written on the document provided.",
+        "enabled": true
       },
       {
         "id": "proof-of-child-dob",
         "title": "Proof of Child's Date of Birth",
-        "description": "A valid document to provide proof of child's identity. Picture of child's full name and date of birth must be in the Evidence."
+        "description": "A valid document to provide proof of child's identity. Picture of child's full name and date of birth must be in the Evidence.",
+        "enabled": true
       },
       {
         "id": "proof-of-arrival",
         "title": "Proof of Arrival",
-        "description": "A valid document to provide arrival details of child in the UK. A picture of an E-ticket with the name of child clearly written with date of arrival must be shown."
+        "description": "A valid document to provide arrival details of child in the UK. A picture of an E-ticket with the name of child clearly written with date of arrival must be shown.",
+        "enabled": true
       },
       {
         "id": "proof-of-residency",
         "title": "Proof of Residency",
-        "description": "A valid letter from the occupant of the property stating that the parent and the child are currently residing with them."
+        "description": "A valid letter from the occupant of the property stating that the parent and the child are currently residing with them.",
+        "enabled": true
       }
     ]
   },
@@ -280,22 +324,26 @@
       {
         "id": "proof-of-id",
         "title": "Proof of Identity (ID)",
-        "description": "We will need 2 types of Proof of Identity for the proposed joint tenant. You need to submit two forms of ID. The below are documents you can provide: Current Passport, Full photo Driver's Licence, Photo Provisional driving licence, Freedom Pass, Full Birth Certificate, Immigration documents from Home Office confirming then status, Valid resident's Permit (EU nationals), NHS Medical Card, Divorce Letter from the court, Identity Card, Marriage Certificate, National Insurance, any other form of ID. Please note: For passport data page with photo is required. For driver's license/residence permit/identity card, front and back is required. Any government document must be in goverment offical header"
+        "description": "We will need 2 types of Proof of Identity for the proposed joint tenant. You need to submit two forms of ID. The below are documents you can provide: Current Passport, Full photo Driver's Licence, Photo Provisional driving licence, Freedom Pass, Full Birth Certificate, Immigration documents from Home Office confirming then status, Valid resident's Permit (EU nationals), NHS Medical Card, Divorce Letter from the court, Identity Card, Marriage Certificate, National Insurance, any other form of ID. Please note: For passport data page with photo is required. For driver's license/residence permit/identity card, front and back is required. Any government document must be in goverment offical header",
+        "enabled": true
       },
       {
         "id": "proof-of-address",
         "title": "Proof of Address",
-        "description": "Please provide a valid document that can be use to proof your address. For co-habiting patners, you require 3 forms of proof of 12 months residency at the property. The below are documents you can provide: Award letter from DWP/Job Centre/Pension Service, DSS Documents (benefit/pension), Wage Slip (payslip) showing address, P45/P60 showing address, Tenancy Agreement, Bank/Building Society Statement, Utility Bill, Letter from Host/Parents, Medical Card (NHS Medical Card), Letter from Housing Benefit, School, Hospital, solicitors, social services, other relevant documents with the current address e.g. hospital letters, discharge papers for ex-armed forces, etc. Please note: For passport data page with photo is required. For driver's license/residence permit/identity card, front and back is required. Any government document must be in goverment offical header. For bank/building society statement, it needs to be within 3 months from the date of the application "
+        "description": "Please provide a valid document that can be use to proof your address. For co-habiting patners, you require 3 forms of proof of 12 months residency at the property. The below are documents you can provide: Award letter from DWP/Job Centre/Pension Service, DSS Documents (benefit/pension), Wage Slip (payslip) showing address, P45/P60 showing address, Tenancy Agreement, Bank/Building Society Statement, Utility Bill, Letter from Host/Parents, Medical Card (NHS Medical Card), Letter from Housing Benefit, School, Hospital, solicitors, social services, other relevant documents with the current address e.g. hospital letters, discharge papers for ex-armed forces, etc. Please note: For passport data page with photo is required. For driver's license/residence permit/identity card, front and back is required. Any government document must be in goverment offical header. For bank/building society statement, it needs to be within 3 months from the date of the application ",
+        "enabled": true
       },
       {
         "id": "proof-of-immigration-status",
         "title": "Proof of Immigration Status",
-        "description": "Please provide a valid document that can be used to prove the immigration status of the proposed joint tenant. The below are documents you can provide: Immigration documents from Home Office confirming your status, Valid resident's Permit (EU nationals), Naturalisation Document, Current Passport, Biometric Resident permit, Birth Certificate, National Insurance Card, Refugee Status Document, any other document proving immigration status. Please note: For passport data page with photo is required. For residence permit/identity card, front and back is required. Any government document must be in goverment offical header"
+        "description": "Please provide a valid document that can be used to prove the immigration status of the proposed joint tenant. The below are documents you can provide: Immigration documents from Home Office confirming your status, Valid resident's Permit (EU nationals), Naturalisation Document, Current Passport, Biometric Resident permit, Birth Certificate, National Insurance Card, Refugee Status Document, any other document proving immigration status. Please note: For passport data page with photo is required. For residence permit/identity card, front and back is required. Any government document must be in goverment offical header",
+        "enabled": true
       },
       {
         "id": "proof-of-relationship",
         "title": "Proof of Relationship",
-        "description": "Please provide a valid document that can be used to prove your identity. Spouses and civil partners must provide a copy of the marriage or civil partnership certificate, but do not need to provide proof of residence. However co-habiting partners must provide three different documents showing that they have lived at the address for the 12 months prior to the application. The below are documents you can provide: Marriage certificate (from 29th March 2014 same sex couples are able to marry), Civil partnership certificate, Birth Certificate, Adoption Certificate, Life Insurance Documents, Pension Documents, Bills in Joint names, Joint Bank Account, Council Tax and Housing Benefits, Statements from neighbours, any other documents proving relationship. Please note: Any government document must be in goverment offical header"
+        "description": "Please provide a valid document that can be used to prove your identity. Spouses and civil partners must provide a copy of the marriage or civil partnership certificate, but do not need to provide proof of residence. However co-habiting partners must provide three different documents showing that they have lived at the address for the 12 months prior to the application. The below are documents you can provide: Marriage certificate (from 29th March 2014 same sex couples are able to marry), Civil partnership certificate, Birth Certificate, Adoption Certificate, Life Insurance Documents, Pension Documents, Bills in Joint names, Joint Bank Account, Council Tax and Housing Benefits, Statements from neighbours, any other documents proving relationship. Please note: Any government document must be in goverment offical header",
+        "enabled": true
       }
     ]
   }
