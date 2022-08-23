@@ -24,7 +24,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             data.Should().ContainEquivalentOf(new DocumentType() { Id = "repairs-photo", Title = "Repairs photo", Description = "A photo of the issue that need to be repaired", Enabled = true });
         }
         [Test]
-        public async Task GetDocumentTypesByTeamNameReturns404()
+        public async Task GetDocumentTypesByTeamNameReturns404WhenTeamDoesNotExist()
         {
             var fakeTeam = "this is a test";
             var uri = new Uri($"api/v1/document_types/{fakeTeam}", UriKind.Relative);
@@ -34,6 +34,15 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync();
             var expected = $"\"No document types were found for team with name: {fakeTeam}\"";
             json.Should().Be(expected);
+        }
+
+        [Test]
+        public async Task GetDocumentTypesByTeamNameReturns400WhenQueryParamIsInvalid()
+        {
+            var fakeTeam = "this is a test";
+            var uri = new Uri($"api/v1/document_types/{fakeTeam}?enabled=blah", UriKind.Relative);
+            var response = await Client.GetAsync(uri);
+            response.StatusCode.Should().Be(400);
         }
     }
 }
