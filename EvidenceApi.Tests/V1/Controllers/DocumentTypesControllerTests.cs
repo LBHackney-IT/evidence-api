@@ -50,6 +50,65 @@ namespace EvidenceApi.Tests.V1.Controllers
         }
 
         [Test]
+        public void ReturnsEnabledDocumentTypesWhenQueryParamTrue()
+        {
+            // Arrange
+            var docTypes = new List<DocumentType>
+            {
+                new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
+                new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
+                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
+            };
+            var teamName = "team";
+
+            _mockDocumentTypeGateway.Setup(s => s.GetDocumentTypesByTeamName(teamName)).Returns(docTypes);
+
+            // Act
+            var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, true) as OkObjectResult;
+
+            var expectation = new List<DocumentType>
+            {
+                new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
+                new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
+            };
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Should().BeOfType<OkObjectResult>();
+            response?.StatusCode.Should().Be(200);
+            response?.Value.Should().BeEquivalentTo(expectation);
+        }
+
+        [Test]
+        public void ReturnsDisabledDocumentTypesWhenQueryParamFalse()
+        {
+            // Arrange
+            var docTypes = new List<DocumentType>
+            {
+                new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
+                new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
+                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
+            };
+            var teamName = "team";
+
+            _mockDocumentTypeGateway.Setup(s => s.GetDocumentTypesByTeamName(teamName)).Returns(docTypes);
+
+            // Act
+            var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, false) as OkObjectResult;
+
+            var expectation = new List<DocumentType>
+            {
+                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
+            };
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Should().BeOfType<OkObjectResult>();
+            response?.StatusCode.Should().Be(200);
+            response?.Value.Should().BeEquivalentTo(expectation);
+        }
+
+        [Test]
         public void ReturnsStaffSelectedDocumentTypes()
         {
             // Arrange
