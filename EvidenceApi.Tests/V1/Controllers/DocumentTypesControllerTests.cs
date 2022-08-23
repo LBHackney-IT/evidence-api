@@ -66,13 +66,13 @@ namespace EvidenceApi.Tests.V1.Controllers
             // Act
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, true) as OkObjectResult;
 
+            // Assert
             var expectation = new List<DocumentType>
             {
                 new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
                 new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
             };
 
-            // Assert
             response.Should().NotBeNull();
             response.Should().BeOfType<OkObjectResult>();
             response?.StatusCode.Should().Be(200);
@@ -96,12 +96,12 @@ namespace EvidenceApi.Tests.V1.Controllers
             // Act
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, false) as OkObjectResult;
 
+            // Assert
             var expectation = new List<DocumentType>
             {
                 new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
             };
 
-            // Assert
             response.Should().NotBeNull();
             response.Should().BeOfType<OkObjectResult>();
             response?.StatusCode.Should().Be(200);
