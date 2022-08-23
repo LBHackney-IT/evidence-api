@@ -176,6 +176,7 @@ namespace EvidenceApi
             services.AddScoped<IFindOrCreateResidentReferenceIdUseCase, FindOrCreateResidentReferenceIdUseCase>();
             services.AddScoped<ICreateAuditUseCase, CreateAuditUseCase>();
             services.AddScoped<ISendNotificationUploadConfirmationToResidentAndStaff, SendNotificationUploadConfirmationToResidentAndStaff>();
+            services.AddScoped<IGetDocumentTypesByTeamNameUseCase, GetDocumentTypesByTeamNameUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

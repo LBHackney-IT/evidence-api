@@ -5,6 +5,7 @@ using EvidenceApi.V1.Gateways.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EvidenceApi.V1.UseCase.Interfaces;
+using EvidenceApi.V1.Boundary.Response.Exceptions;
 
 namespace EvidenceApi.V1.Controllers
 {
@@ -14,44 +15,40 @@ namespace EvidenceApi.V1.Controllers
     [ApiVersion("1.0")]
     public class DocumentTypesController : BaseController
     {
-        private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
+        private readonly IGetDocumentTypesByTeamNameUseCase _getDocumentTypesByTeamNameUse;
 
         public DocumentTypesController(
             ICreateAuditUseCase createAuditUseCase,
-            IDocumentTypeGateway documentTypeGateway,
+            IGetDocumentTypesByTeamNameUseCase getDocumentTypesByTeamNameUseCase,
             IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway
         ) : base(createAuditUseCase)
         {
-            _documentTypeGateway = documentTypeGateway;
+            _getDocumentTypesByTeamNameUse = getDocumentTypesByTeamNameUseCase;
             _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
         }
 
         /// <summary>
-        /// Returns all recognised document types by team name. Optional enabled? flag (bool) that returns documents that are enabled (true)
+        /// Returns all recognised document types by team name. Optional enabled flag (bool) that returns documents that are enabled (true)
         /// or disabled (false) by the service area.
         /// </summary>
         /// <response code="200">OK</response>
+        /// <response code="400">Query parameter is invalid</response>
         /// <response code="404">Team cannot be found</response>
         [HttpGet]
         [Route("{team}")]
         [ProducesResponseType(typeof(List<DocumentType>), StatusCodes.Status200OK)]
         public IActionResult GetDocumentTypesByTeamName([FromRoute][Required] string team, [FromQuery] bool? enabled = null)
         {
-            var result = _documentTypeGateway.GetDocumentTypesByTeamName(team);
-
-            if (result.Count > 0 && enabled.HasValue)
+            try
             {
-                var resultEnabled = result.FindAll(dt => dt.Enabled == enabled);
-                return Ok(resultEnabled);
-            }
-
-            if (result.Count > 0)
-            {
+                var result = _getDocumentTypesByTeamNameUse.Execute(team, enabled);
                 return Ok(result);
             }
-
-            return NotFound($"No document types were found for team with name: {team}");
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         /// <summary>

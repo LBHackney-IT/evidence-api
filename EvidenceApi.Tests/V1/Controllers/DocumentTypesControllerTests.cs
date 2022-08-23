@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Controllers;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
@@ -16,7 +17,7 @@ namespace EvidenceApi.Tests.V1.Controllers
     {
         private DocumentTypesController _classUnderTest;
         private Mock<ICreateAuditUseCase> _mockCreateAuditUseCase;
-        private Mock<IDocumentTypeGateway> _mockDocumentTypeGateway;
+        private Mock<IGetDocumentTypesByTeamNameUseCase> _mockGetDocumentTypesByTeamUseCase;
         private Mock<IStaffSelectedDocumentTypeGateway> _mockStaffSelectedDocumentTypeGateway;
 
 
@@ -24,9 +25,9 @@ namespace EvidenceApi.Tests.V1.Controllers
         public void SetUp()
         {
             _mockCreateAuditUseCase = new Mock<ICreateAuditUseCase>();
-            _mockDocumentTypeGateway = new Mock<IDocumentTypeGateway>();
+            _mockGetDocumentTypesByTeamUseCase = new Mock<IGetDocumentTypesByTeamNameUseCase>();
             _mockStaffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
-            _classUnderTest = new DocumentTypesController(_mockCreateAuditUseCase.Object, _mockDocumentTypeGateway.Object, _mockStaffSelectedDocumentTypeGateway.Object);
+            _classUnderTest = new DocumentTypesController(_mockCreateAuditUseCase.Object, _mockGetDocumentTypesByTeamUseCase.Object, _mockStaffSelectedDocumentTypeGateway.Object);
         }
 
         [Test]
@@ -37,7 +38,7 @@ namespace EvidenceApi.Tests.V1.Controllers
             var docTypes = new List<DocumentType> { docType };
             var teamName = "team";
 
-            _mockDocumentTypeGateway.Setup(s => s.GetDocumentTypesByTeamName(teamName)).Returns(docTypes);
+            _mockGetDocumentTypesByTeamUseCase.Setup(s => s.Execute(teamName, null)).Returns(docTypes);
 
             // Act
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName) as OkObjectResult;
@@ -57,11 +58,11 @@ namespace EvidenceApi.Tests.V1.Controllers
             {
                 new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
                 new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
-                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
+                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = true},
             };
             var teamName = "team";
 
-            _mockDocumentTypeGateway.Setup(s => s.GetDocumentTypesByTeamName(teamName)).Returns(docTypes);
+            _mockGetDocumentTypesByTeamUseCase.Setup(s => s.Execute(teamName, true)).Returns(docTypes);
 
             // Act
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, true) as OkObjectResult;
@@ -71,6 +72,7 @@ namespace EvidenceApi.Tests.V1.Controllers
             {
                 new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
                 new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
+                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = true},
             };
 
             response.Should().NotBeNull();
@@ -85,13 +87,11 @@ namespace EvidenceApi.Tests.V1.Controllers
             // Arrange
             var docTypes = new List<DocumentType>
             {
-                new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
-                new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
                 new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
             };
             var teamName = "team";
 
-            _mockDocumentTypeGateway.Setup(s => s.GetDocumentTypesByTeamName(teamName)).Returns(docTypes);
+            _mockGetDocumentTypesByTeamUseCase.Setup(s => s.Execute(teamName, false)).Returns(docTypes);
 
             // Act
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, false) as OkObjectResult;
@@ -106,6 +106,45 @@ namespace EvidenceApi.Tests.V1.Controllers
             response.Should().BeOfType<OkObjectResult>();
             response?.StatusCode.Should().Be(200);
             response?.Value.Should().BeEquivalentTo(expectation);
+        }
+
+        [Test]
+        public void ReturnsEmptyListWhenNoDocumentTypes()
+        {
+            // Arrange
+            var docTypes = new List<DocumentType>();
+            var teamName = "team";
+
+            _mockGetDocumentTypesByTeamUseCase.Setup(s => s.Execute(teamName, null)).Returns(docTypes);
+
+            // Act
+            var response = _classUnderTest.GetDocumentTypesByTeamName(teamName) as OkObjectResult;
+
+            //Assert
+            var expectation = new List<DocumentType>();
+
+            response.Should().NotBeNull();
+            response.Should().BeOfType<OkObjectResult>();
+            response?.StatusCode.Should().Be(200);
+            response?.Value.Should().BeEquivalentTo(expectation);
+        }
+
+        [Test]
+        public void ThrowsNotFoundWhenTeamDoesNotExist()
+        {
+            // Arrange
+            var nonExistentTeamName = "fake";
+
+            _mockGetDocumentTypesByTeamUseCase.Setup(s => s.Execute(nonExistentTeamName, null))
+                .Throws(new NotFoundException($"No document types were found for team with name: {nonExistentTeamName}"));
+
+            // Act
+            var response = _classUnderTest.GetDocumentTypesByTeamName(nonExistentTeamName) as NotFoundObjectResult;
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Should().BeOfType<NotFoundObjectResult>();
+            response?.StatusCode.Should().Be(404);
         }
 
         [Test]
