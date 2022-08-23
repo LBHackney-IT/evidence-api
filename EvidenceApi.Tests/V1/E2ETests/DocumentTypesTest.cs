@@ -20,8 +20,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var data = JsonConvert.DeserializeObject<List<DocumentType>>(json);
 
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "proof-of-id", Title = "Proof of ID", Description = "A valid document that can be used to prove identity", Enabled = true});
-            data.Should().ContainEquivalentOf(new DocumentType() { Id = "repairs-photo", Title = "Repairs photo", Description = "A photo of the issue that need to be repaired", Enabled = true});
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "proof-of-id", Title = "Proof of ID", Description = "A valid document that can be used to prove identity", Enabled = true });
+            data.Should().ContainEquivalentOf(new DocumentType() { Id = "repairs-photo", Title = "Repairs photo", Description = "A photo of the issue that need to be repaired", Enabled = true });
         }
         [Test]
         public async Task GetDocumentTypesByTeamNameReturns404()
