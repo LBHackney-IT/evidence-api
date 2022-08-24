@@ -31,7 +31,7 @@ namespace EvidenceApi.Tests.V1.Controllers
         }
 
         [Test]
-        public void ReturnsAllDocumentTypes()
+        public void ReturnsAllDocumentTypesWhenExistingTeamAndNoQuery()
         {
             // Arrange
             var docType = new DocumentType { Title = "Passport", Id = "passport" };
@@ -68,17 +68,10 @@ namespace EvidenceApi.Tests.V1.Controllers
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, true) as OkObjectResult;
 
             // Assert
-            var expectation = new List<DocumentType>
-            {
-                new DocumentType { Title = "Proof of Address", Id = "proof-of-address", Enabled = true},
-                new DocumentType { Title = "Proof of Id", Id = "proof-of-id", Enabled = true},
-                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = true},
-            };
-
             response.Should().NotBeNull();
             response.Should().BeOfType<OkObjectResult>();
             response?.StatusCode.Should().Be(200);
-            response?.Value.Should().BeEquivalentTo(expectation);
+            response?.Value.Should().BeEquivalentTo(docTypes);
         }
 
         [Test]
@@ -97,15 +90,10 @@ namespace EvidenceApi.Tests.V1.Controllers
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName, false) as OkObjectResult;
 
             // Assert
-            var expectation = new List<DocumentType>
-            {
-                new DocumentType { Title = "Proof of Status", Id = "proof-of-status", Enabled = false},
-            };
-
             response.Should().NotBeNull();
             response.Should().BeOfType<OkObjectResult>();
             response?.StatusCode.Should().Be(200);
-            response?.Value.Should().BeEquivalentTo(expectation);
+            response?.Value.Should().BeEquivalentTo(docTypes);
         }
 
         [Test]
@@ -121,12 +109,10 @@ namespace EvidenceApi.Tests.V1.Controllers
             var response = _classUnderTest.GetDocumentTypesByTeamName(teamName) as OkObjectResult;
 
             //Assert
-            var expectation = new List<DocumentType>();
-
             response.Should().NotBeNull();
             response.Should().BeOfType<OkObjectResult>();
             response?.StatusCode.Should().Be(200);
-            response?.Value.Should().BeEquivalentTo(expectation);
+            response?.Value.Should().BeEquivalentTo(docTypes);
         }
 
         [Test]
