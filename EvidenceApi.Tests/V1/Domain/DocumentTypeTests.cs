@@ -13,11 +13,13 @@ namespace EvidenceApi.Tests.V1.Domain
         {
             const string title = "Passport";
             const string id = "passport";
+            const bool enabled = true;
 
-            var docType = new DocumentType { Title = title, Id = id };
+            var docType = new DocumentType { Title = title, Id = id, Enabled = enabled};
 
             docType.Id.Should().BeSameAs(id);
             docType.Title.Should().BeSameAs(title);
+            docType.Enabled.Should().BeTrue();
         }
     }
 }
