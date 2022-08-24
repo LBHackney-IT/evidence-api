@@ -39,10 +39,15 @@ namespace EvidenceApi.Tests.V1.E2ETests
         [Test]
         public async Task GetDocumentTypesByTeamNameReturns400WhenQueryParamIsInvalid()
         {
-            var fakeTeam = "this is a test";
-            var uri = new Uri($"api/v1/document_types/{fakeTeam}?enabled=blah", UriKind.Relative);
+            var realTeam = "Development Housing Team";
+            var invalidQuery = "blah";
+            var uri = new Uri($"api/v1/document_types/{realTeam}?enabled={invalidQuery}", UriKind.Relative);
             var response = await Client.GetAsync(uri);
             response.StatusCode.Should().Be(400);
+
+            var json = await response.Content.ReadAsStringAsync();
+            var expected = $"The value '{invalidQuery}' is not valid.";
+            json.Should().Contain(expected);
         }
     }
 }
