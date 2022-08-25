@@ -47,8 +47,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanUpdateDocumentSubmissionStateWithValidParameters()
         {
             // Arrange
+            var teamName = "Development Housing Team";
             var evidenceRequest = TestDataHelper.EvidenceRequest();
-            evidenceRequest.Team = "Development Housing Team";
+            evidenceRequest.Team = teamName;
 
             evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
@@ -85,7 +86,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
 
             var documentType = TestDataHelper.DocumentType("passport-scan");
-            var staffSelectedDocumentType = TestDataHelper.DocumentType("drivers-licence");
+            var staffSelectedDocumentType = TestDataHelper.GetStaffSelectedDocumentTypeByTeamName("drivers-licence", teamName);
             var expected = createdDocumentSubmission.ToResponse(documentType, staffSelectedDocumentType);
             result.Should().BeEquivalentTo(expected);
         }
