@@ -13,13 +13,13 @@ namespace EvidenceApi.Tests.V1.UseCase
     public class GetStaffSelectedDocumentTypesByTeamNameUseCaseTests
     {
         private GetStaffSelectedDocumentTypesByTeamNameUseCase _classUnderTest;
-        private readonly Mock<IDocumentTypeGateway> _documentTypeGateway = new Mock<IDocumentTypeGateway>();
+        private readonly Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
         private readonly string _existingTeamName = "team";
 
         [SetUp]
         public void Setup()
         {
-            _classUnderTest = new GetStaffSelectedDocumentTypesByTeamNameUseCase(_documentTypeGateway.Object);
+            _classUnderTest = new GetStaffSelectedDocumentTypesByTeamNameUseCase(_staffSelectedDocumentTypeGateway.Object);
             SetUpGatewayMock();
         }
 
@@ -27,11 +27,11 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void ThrowsNotFoundExceptionWhenTeamNameDoesNotExist()
         {
             //arrange
-            _documentTypeGateway.Invocations.Clear();
+            _staffSelectedDocumentTypeGateway.Invocations.Clear();
 
             var nonExistentTeamName = "fake";
             var noDocumentTypes = new List<DocumentType>();
-            _documentTypeGateway.Setup(x =>
+            _staffSelectedDocumentTypeGateway.Setup(x =>
                 x.GetDocumentTypesByTeamName(nonExistentTeamName)).Returns(noDocumentTypes);
 
             //act
@@ -97,7 +97,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 new DocumentType { Id = "drivers-licence", Title = "Driver's Licence", Description = "this is a description",  Enabled = true },
                 new DocumentType { Id = "biometric-card", Title = "Biometric Card", Description = "this is a description", Enabled = false },
             };
-            _documentTypeGateway.Setup(x =>
+            _staffSelectedDocumentTypeGateway.Setup(x =>
                 x.GetDocumentTypesByTeamName(_existingTeamName)).Returns(allTeamDocuments);
         }
 

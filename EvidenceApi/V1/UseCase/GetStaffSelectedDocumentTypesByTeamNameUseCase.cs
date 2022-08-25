@@ -8,16 +8,16 @@ namespace EvidenceApi.V1.UseCase
 {
     public class GetStaffSelectedDocumentTypesByTeamNameUseCase : IGetStaffSelectedDocumentTypesByTeamNameUseCase
     {
-        private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
 
-        public GetStaffSelectedDocumentTypesByTeamNameUseCase(IDocumentTypeGateway documentTypeGateway)
+        public GetStaffSelectedDocumentTypesByTeamNameUseCase(IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway)
         {
-            _documentTypeGateway = documentTypeGateway;
+            _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
         }
 
         public List<DocumentType> Execute(string team, bool? enabled)
         {
-            var result = _documentTypeGateway.GetDocumentTypesByTeamName(team);
+            var result = _staffSelectedDocumentTypeGateway.GetDocumentTypesByTeamName(team);
 
             if (result.Count > 0 && enabled.HasValue)
             {
