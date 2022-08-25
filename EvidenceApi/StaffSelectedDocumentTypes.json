@@ -23,13 +23,13 @@
     "documentTypes": [
       {
         "id": "passport-scan",
-        "title": "Passport",
+        "title": "Passport Scan",
         "description": "A valid passport open at the photo page",
         "enabled": true
       },
       {
         "id": "drivers-licence",
-        "title": "Drivers licence",
+        "title": "Driver's licence",
         "description": "A valid UK full or provisional UK driving license",
         "enabled": true
       }
