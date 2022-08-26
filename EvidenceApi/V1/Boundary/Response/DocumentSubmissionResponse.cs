@@ -8,7 +8,7 @@ namespace EvidenceApi.V1.Boundary.Response
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public Guid EvidenceRequestId {get; set; }
+        public Guid EvidenceRequestId { get; set; }
         public string ClaimId { get; set; }
         public DateTime? AcceptedAt { get; set; }
         public string RejectionReason { get; set; }
