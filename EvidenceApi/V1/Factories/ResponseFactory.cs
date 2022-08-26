@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
+using System;
 #nullable enable annotations
 
 namespace EvidenceApi.V1.Factories
@@ -38,6 +39,7 @@ namespace EvidenceApi.V1.Factories
         public static DocumentSubmissionResponse ToResponse(
             this DocumentSubmission domain,
             DocumentType documentType,
+            Guid evidenceRequestId,
             DocumentType? staffSelectedDocumentType = null,
             S3UploadPolicy? s3UploadPolicy = null,
             Claim? claim = null
@@ -54,6 +56,7 @@ namespace EvidenceApi.V1.Factories
                 UserUpdatedBy = domain.UserUpdatedBy,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
+                EvidenceRequestId = evidenceRequestId,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
                 UploadPolicy = s3UploadPolicy
             } : new DocumentSubmissionResponse()
@@ -67,6 +70,7 @@ namespace EvidenceApi.V1.Factories
                 UserUpdatedBy = domain.UserUpdatedBy,
                 State = domain.State.ToString().ToUpper(),
                 DocumentType = documentType,
+                EvidenceRequestId = evidenceRequestId,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
                 UploadPolicy = s3UploadPolicy,
                 Document = claim.Document,

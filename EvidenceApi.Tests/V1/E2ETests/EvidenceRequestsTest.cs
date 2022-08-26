@@ -280,6 +280,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string expected = "{" +
                                $"\"id\":\"{created.Id}\"," +
                                $"\"createdAt\":{formattedCreatedAt}," +
+                               $"\"evidenceRequestId\":\"{created.EvidenceRequestId}\"," +
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"acceptedAt\":null," +
                                $"\"rejectionReason\":null," +
