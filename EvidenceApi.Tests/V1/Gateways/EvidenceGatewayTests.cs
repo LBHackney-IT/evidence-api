@@ -352,15 +352,25 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             evidenceRequest1.Team = team;
             evidenceRequest1.ResidentReferenceId = residentReferenceId;
+            evidenceRequest1.CreatedAt = DateTime.Today;
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
             evidenceRequest2.Team = team;
             evidenceRequest2.ResidentReferenceId = "residentReferenceId";
+            evidenceRequest2.CreatedAt = DateTime.Today.AddDays(1);
+            var evidenceRequest3 = TestDataHelper.EvidenceRequest();
+            evidenceRequest3.Team = team;
+            evidenceRequest3.ResidentReferenceId = residentReferenceId;  
+            evidenceRequest3.CreatedAt = DateTime.Today.AddDays(3);
+          
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
+
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
             {
+                evidenceRequest3,
                 evidenceRequest1
             };
 
@@ -369,6 +379,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             // Assert
             found.Should().Equal(expected);
+            
         }
 
         [Test]
