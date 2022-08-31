@@ -359,9 +359,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             evidenceRequest2.CreatedAt = DateTime.Today.AddDays(1);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
             evidenceRequest3.Team = team;
-            evidenceRequest3.ResidentReferenceId = residentReferenceId;  
+            evidenceRequest3.ResidentReferenceId = residentReferenceId;
             evidenceRequest3.CreatedAt = DateTime.Today.AddDays(3);
-          
+
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
@@ -379,7 +379,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             // Assert
             found.Should().Equal(expected);
-            
+
         }
 
         [Test]
