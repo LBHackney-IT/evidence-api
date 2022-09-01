@@ -101,7 +101,9 @@ namespace EvidenceApi.V1.Gateways
                 .Where(x =>
                     x.Team.Equals(request.Team) &&
                     x.ResidentReferenceId.Equals(request.SearchQuery)
-                ).ToList();
+                )
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
         }
     }
 }
