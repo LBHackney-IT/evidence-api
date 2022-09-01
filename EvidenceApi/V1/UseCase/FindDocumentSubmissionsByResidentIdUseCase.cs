@@ -55,7 +55,7 @@ namespace EvidenceApi.V1.UseCase
                     var documentType = FindDocumentType(evidenceReq.Team, ds.DocumentTypeId);
                     var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
                         ds.StaffSelectedDocumentTypeId);
-                    result.Add(ds.ToResponse(documentType, staffSelectedDocumentType, null, claims[claimIndex]));
+                    result.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
                     claimIndex++;
                 }
             }

@@ -45,7 +45,7 @@ namespace EvidenceApi.V1.UseCase
             try
             {
                 var claim = await _documentsApiGateway.GetClaimById(found.ClaimId).ConfigureAwait(true);
-                return found.ToResponse(documentType, staffSelectedDocumentType, null, claim);
+                return found.ToResponse(documentType, found.EvidenceRequestId, staffSelectedDocumentType, null, claim);
             }
             catch (DocumentsApiException ex)
             {
