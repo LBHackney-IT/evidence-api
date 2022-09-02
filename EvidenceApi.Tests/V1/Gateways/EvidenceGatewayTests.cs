@@ -352,25 +352,18 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             evidenceRequest1.Team = team;
             evidenceRequest1.ResidentReferenceId = residentReferenceId;
-            evidenceRequest1.CreatedAt = DateTime.Today;
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
             evidenceRequest2.Team = team;
             evidenceRequest2.ResidentReferenceId = "residentReferenceId";
-            evidenceRequest2.CreatedAt = DateTime.Today.AddDays(1);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            evidenceRequest3.Team = team;
-            evidenceRequest3.ResidentReferenceId = residentReferenceId;
-            evidenceRequest3.CreatedAt = DateTime.Today.AddDays(3);
 
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
-            DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
 
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
             {
-                evidenceRequest3,
                 evidenceRequest1
             };
 
@@ -387,13 +380,14 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var request = new EvidenceRequestsSearchQuery()
             {
-                Team = "development-team-staging",
+                Team = "development-team-stagingo",
                 ResidentId = Guid.NewGuid(),
             };
             var expected = ExpectedEvidenceRequestsWithDocumentSubmissions(request);
 
             var result = _classUnderTest.GetEvidenceRequestsWithDocumentSubmissions(request);
             result.Should().BeEquivalentTo(expected);
+            result.Should().BeInDescendingOrder(r => r.CreatedAt);
         }
 
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
@@ -513,39 +507,61 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            var evidenceRequest3 = TestDataHelper.EvidenceRequest();
+            
 
             var documentsubmission1 = TestDataHelper.DocumentSubmission();
             var documentsubmission2 = TestDataHelper.DocumentSubmission();
             var documentsubmission3 = TestDataHelper.DocumentSubmission();
             var documentsubmission4 = TestDataHelper.DocumentSubmission();
+            var documentsubmission5 = TestDataHelper.DocumentSubmission();
+            var documentsubmission6 = TestDataHelper.DocumentSubmission();            
 
             var resident = TestDataHelper.Resident();
             resident.Id = (Guid) request.ResidentId;
 
             evidenceRequest1.Team = request.Team;
             evidenceRequest2.Team = request.Team;
+            evidenceRequest3.Team = request.Team;
 
             evidenceRequest1.ResidentId = resident.Id;
             evidenceRequest2.ResidentId = resident.Id;
+            evidenceRequest3.ResidentId = resident.Id;
+
+            evidenceRequest1.CreatedAt = DateTime.Today.AddDays(3);
+            evidenceRequest2.CreatedAt = DateTime.Today.AddDays(1);
+            evidenceRequest3.CreatedAt = DateTime.Today;  
+
+            documentsubmission1.CreatedAt = DateTime.Today.AddDays(3);
+            documentsubmission2.CreatedAt = DateTime.Today.AddDays(1);
+            documentsubmission3.CreatedAt = DateTime.Today;
 
             evidenceRequest1.DocumentSubmissions.Add(documentsubmission1);
             evidenceRequest1.DocumentSubmissions.Add(documentsubmission2);
             evidenceRequest2.DocumentSubmissions.Add(documentsubmission3);
             evidenceRequest2.DocumentSubmissions.Add(documentsubmission4);
+            evidenceRequest3.DocumentSubmissions.Add(documentsubmission5);
+            evidenceRequest3.DocumentSubmissions.Add(documentsubmission6);
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
+
             DatabaseContext.DocumentSubmissions.Add(documentsubmission1);
             DatabaseContext.DocumentSubmissions.Add(documentsubmission2);
             DatabaseContext.DocumentSubmissions.Add(documentsubmission3);
             DatabaseContext.DocumentSubmissions.Add(documentsubmission4);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission5);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission6);            
 
             DatabaseContext.SaveChanges();
 
             var expected = new List<EvidenceRequest>();
 
-            expected.Add(evidenceRequest1);
+            expected.Add(evidenceRequest3);
             expected.Add(evidenceRequest2);
+            expected.Add(evidenceRequest1);
+
             return expected;
         }
     }
