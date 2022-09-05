@@ -72,12 +72,15 @@ namespace EvidenceApi.V1.Gateways
 
         public List<EvidenceRequest> GetEvidenceRequestsWithDocumentSubmissions(EvidenceRequestsSearchQuery request)
         {
-            return _databaseContext.EvidenceRequests
+            var orderdEvidenceRequestsAndOrderedDocSubmissions = _databaseContext.EvidenceRequests
                 .Where(x =>
                     x.Team.Equals(request.Team) &&
                     (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
                     (request.State == null || x.State.Equals(request.State))
-                ).Include(er => er.DocumentSubmissions).ToList();
+                ).Include(er => er.DocumentSubmissions)
+                .OrderByDescending(er => er.CreatedAt).ToList();
+            orderdEvidenceRequestsAndOrderedDocSubmissions.ForEach(er => er.DocumentSubmissions = er.DocumentSubmissions.OrderByDescending(ds => ds.CreatedAt).ToList());
+            return orderdEvidenceRequestsAndOrderedDocSubmissions.ToList();
         }
 
         public DocumentSubmission FindDocumentSubmission(Guid id)
@@ -101,7 +104,8 @@ namespace EvidenceApi.V1.Gateways
                 .Where(x =>
                     x.Team.Equals(request.Team) &&
                     x.ResidentReferenceId.Equals(request.SearchQuery)
-                ).ToList();
+                )
+                .ToList();
         }
     }
 }

@@ -53,10 +53,11 @@ namespace EvidenceApi.Tests.V1.Factories
             var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType, null, s3UploadPolicy);
+            var response = domain.ToResponse(documentType, domain.EvidenceRequestId, null, s3UploadPolicy);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.EvidenceRequestId.Should().Be(domain.EvidenceRequestId);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.AcceptedAt.Should().Be(domain.AcceptedAt);
             response.RejectionReason.Should().Be(domain.RejectionReason);
@@ -75,10 +76,11 @@ namespace EvidenceApi.Tests.V1.Factories
             var domain = TestDataHelper.DocumentSubmission();
             var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
 
-            var response = domain.ToResponse(documentType, null, s3UploadPolicy, claim);
+            var response = domain.ToResponse(documentType, domain.EvidenceRequestId, null, s3UploadPolicy, claim);
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.EvidenceRequestId.Should().Be(domain.EvidenceRequestId);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.AcceptedAt.Should().Be(domain.AcceptedAt);
             response.RejectionReason.Should().Be(domain.RejectionReason);

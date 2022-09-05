@@ -87,7 +87,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentType = TestDataHelper.DocumentType("passport-scan");
             var staffSelectedDocumentType = TestDataHelper.GetStaffSelectedDocumentTypeByTeamName("drivers-licence", teamName);
-            var expected = createdDocumentSubmission.ToResponse(documentType, staffSelectedDocumentType);
+            var expected = createdDocumentSubmission.ToResponse(documentType, createdDocumentSubmission.EvidenceRequestId, staffSelectedDocumentType);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -154,7 +154,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
 
-            var expected = documentSubmission.ToResponse(null, null, null, _createdClaim);
+            var expected = documentSubmission.ToResponse(null, documentSubmission.EvidenceRequestId, null, null, _createdClaim);
 
             responseFind.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
@@ -229,8 +229,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var expected = new List<DocumentSubmissionResponse>()
             {
-                documentSubmission1.ToResponse(documentType,  null, null, _createdClaim),
-                documentSubmission2.ToResponse(documentType,  null, null, _createdClaim)
+                documentSubmission1.ToResponse(documentType, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                documentSubmission2.ToResponse(documentType, documentSubmission2.EvidenceRequestId, null, null, _createdClaim)
             };
 
             response.StatusCode.Should().Be(200);

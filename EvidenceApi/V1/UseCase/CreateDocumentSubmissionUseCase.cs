@@ -68,7 +68,7 @@ namespace EvidenceApi.V1.UseCase
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
             _updateEvidenceRequestStateUseCase.Execute(createdDocumentSubmission.EvidenceRequestId);
 
-            return createdDocumentSubmission.ToResponse(documentType, null, createdS3UploadPolicy, claim);
+            return createdDocumentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, null, createdS3UploadPolicy, claim);
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)

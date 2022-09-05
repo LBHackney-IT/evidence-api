@@ -102,7 +102,7 @@ namespace EvidenceApi.V1.UseCase
             _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
-            return documentSubmission.ToResponse(documentType, staffSelectedDocumentType);
+            return documentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, staffSelectedDocumentType);
         }
 
         private static bool IsApprovalRequest(DocumentSubmission documentSubmission)
