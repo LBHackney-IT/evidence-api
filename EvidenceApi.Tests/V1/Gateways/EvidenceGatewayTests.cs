@@ -376,7 +376,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void CanGetEvidenceRequestsWithDocumentSubmissionsInExpectedOrder()
+        public void CanGetEvidenceRequestsWithDocumentSubmissionsInDescendingOrder()
         {
             var request = new EvidenceRequestsSearchQuery()
             {
@@ -389,7 +389,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEquivalentTo(expected);
             result.Should().BeInDescendingOrder(r => r.CreatedAt);
             result[0].DocumentSubmissions.Should().BeInDescendingOrder(ds => ds.CreatedAt);
-
         }
 
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
