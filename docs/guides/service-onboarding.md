@@ -20,11 +20,12 @@ Add their team configuration to `document-evidence-store-frontend/teams.json`. E
 
 ### Document Types
 
-Add any document types that the service deals with to `EvidenceApi/DocumentTypes.json` and `EvidenceAPi/StaffSelectedDocumentTypes.json`. Ensure to add:
+Add any document types that the service deals with to `EvidenceApi/DocumentTypes.json` and `EvidenceApi/StaffSelectedDocumentTypes.json`. Ensure to add:
 
 -   the team ID that was created in `teams.json`
 -   a human readable title
 -   a description (this will be shown to the **resident**, so please ensure it describes what they need to provide and any important details)
+-   whether the document type is `enabled=true` or `enabled=false`. The purpose of this flag is to give service areas the option to remove any document types they no longer need, but preserve the document type of legacy documents, so the frontend doesn't crash (because it'll try and look for something that no longer exists). Any new document types would be by default `enabled=true`. If a service area no longer needs a specific document, you can change this to `enabled=false`.  
 
 The easiest way to do this is to use Github to edit the file directly and open a Pull Request for a developer to review. If this is your first time doing that, there is a [handy guide here](https://docs.github.com/en/github/managing-files-in-a-repository/editing-files-in-your-repository). Alternatively, you can ask a developer to help you with this instead.
 

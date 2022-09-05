@@ -73,6 +73,16 @@ namespace EvidenceApi.Tests
             return reader.GetData().SelectMany(t => t.DocumentTypes).ToList().Find(dt => dt.Id == id);
         }
 
+        public static DocumentType GetStaffSelectedDocumentTypeByTeamName(string id, string teamName)
+        {
+            var options = AppOptions.FromEnv();
+            var reader = new FileReader<List<Team>>(options.StaffSelectedDocumentTypeConfigPath);
+
+            var teamDocTypes = reader.GetData().Where(t => t.Name == teamName).SelectMany(t => t.DocumentTypes).ToList();
+            var docType = teamDocTypes.Find(dt => dt.Id == id);
+            return docType;
+        }
+
         public static Resident Resident()
         {
             return _fixture.Build<Resident>()
