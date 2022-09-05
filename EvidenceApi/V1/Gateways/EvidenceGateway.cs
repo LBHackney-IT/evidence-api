@@ -79,7 +79,7 @@ namespace EvidenceApi.V1.Gateways
                     (request.State == null || x.State.Equals(request.State))
                 ).Include(er => er.DocumentSubmissions)
                 .OrderByDescending(er => er.CreatedAt).ToList();
-            orderdEvidenceRequestsAndOrderedDocSubmissions.ForEach(er => er.DocumentSubmissions = er.DocumentSubmissions.OrderBy(ds =>ds.CreatedAt).ToList());
+            orderdEvidenceRequestsAndOrderedDocSubmissions.ForEach(er => er.DocumentSubmissions = er.DocumentSubmissions.OrderByDescending(ds => ds.CreatedAt).ToList());
             return orderdEvidenceRequestsAndOrderedDocSubmissions.ToList();
         }
 

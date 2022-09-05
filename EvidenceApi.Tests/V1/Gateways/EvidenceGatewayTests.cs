@@ -376,11 +376,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void CanGetEvidenceRequestsWithDocumentSubmissions()
+        public void CanGetEvidenceRequestsWithDocumentSubmissionsInExpectedOrder()
         {
             var request = new EvidenceRequestsSearchQuery()
             {
-                Team = "development-team-stagingo",
+                Team = "development-team-staging",
                 ResidentId = Guid.NewGuid(),
             };
             var expected = ExpectedEvidenceRequestsWithDocumentSubmissions(request);
@@ -388,6 +388,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = _classUnderTest.GetEvidenceRequestsWithDocumentSubmissions(request);
             result.Should().BeEquivalentTo(expected);
             result.Should().BeInDescendingOrder(r => r.CreatedAt);
+            result[0].DocumentSubmissions.Should().BeInDescendingOrder(ds => ds.CreatedAt);
+
         }
 
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
@@ -508,14 +510,14 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            
+
 
             var documentsubmission1 = TestDataHelper.DocumentSubmission();
             var documentsubmission2 = TestDataHelper.DocumentSubmission();
             var documentsubmission3 = TestDataHelper.DocumentSubmission();
             var documentsubmission4 = TestDataHelper.DocumentSubmission();
             var documentsubmission5 = TestDataHelper.DocumentSubmission();
-            var documentsubmission6 = TestDataHelper.DocumentSubmission();            
+            var documentsubmission6 = TestDataHelper.DocumentSubmission();
 
             var resident = TestDataHelper.Resident();
             resident.Id = (Guid) request.ResidentId;
@@ -530,7 +532,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             evidenceRequest1.CreatedAt = DateTime.Today.AddDays(3);
             evidenceRequest2.CreatedAt = DateTime.Today.AddDays(1);
-            evidenceRequest3.CreatedAt = DateTime.Today;  
+            evidenceRequest3.CreatedAt = DateTime.Today;
 
             documentsubmission1.CreatedAt = DateTime.Today.AddDays(3);
             documentsubmission2.CreatedAt = DateTime.Today.AddDays(1);
@@ -552,7 +554,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.DocumentSubmissions.Add(documentsubmission3);
             DatabaseContext.DocumentSubmissions.Add(documentsubmission4);
             DatabaseContext.DocumentSubmissions.Add(documentsubmission5);
-            DatabaseContext.DocumentSubmissions.Add(documentsubmission6);            
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission6);
 
             DatabaseContext.SaveChanges();
 
