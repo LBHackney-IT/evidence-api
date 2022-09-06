@@ -49,7 +49,7 @@
         "id": "proof-of-address",
         "title": "Proof of address",
         "description": "A valid document that can be used to prove address",
-        "enabled": true
+        "enabled": false
       }
     ]
   },
