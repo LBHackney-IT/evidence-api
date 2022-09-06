@@ -37,7 +37,7 @@
         "id": "utility-bill",
         "title": "Utility bills",
         "description": "Valid from the last 3 months",
-        "enabled": true
+        "enabled": false
       }
     ]
   },
