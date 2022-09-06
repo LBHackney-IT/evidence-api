@@ -44,6 +44,12 @@
         "title": "Bank statement",
         "description": "From the past three months",
         "enabled": true
+      },
+      {
+        "id": "proof-of-address",
+        "title": "Proof of address",
+        "description": "A valid document that can be used to prove address",
+        "enabled": true
       }
     ]
   },

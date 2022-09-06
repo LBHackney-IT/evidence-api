@@ -32,6 +32,12 @@
         "title": "Driver's licence",
         "description": "A valid UK full or provisional UK driving license",
         "enabled": true
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months",
+        "enabled": true
       }
     ]
   },
