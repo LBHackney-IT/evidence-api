@@ -146,7 +146,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void SendsANotification()
+        public async Task SendsANotification()
         {
             Guid id = Guid.NewGuid();
             SetupMocks(id, teamName);
@@ -156,7 +156,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .With(x => x.RejectionReason, "This is the rejection reason")
                 .Without(x => x.ValidUntil)
                 .Create();
-            _classUnderTest.ExecuteAsync(id, request);
+            await _classUnderTest.ExecuteAsync(id, request);
 
             _notifyGateway.Verify(x =>
                 x.SendNotificationEvidenceRejected(DeliveryMethod.Email, CommunicationReason.EvidenceRejected, _found, _resident));
@@ -167,7 +167,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void UpdateClaim()
+        public async Task UpdateClaim()
         {
             // Arrange
             Guid id = Guid.NewGuid();
@@ -182,7 +182,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Create();
 
             // Act
-            _classUnderTest.ExecuteAsync(id, request);
+            await _classUnderTest.ExecuteAsync(id, request);
 
             // Assert
             _documentsApiGateway.Verify(x =>
