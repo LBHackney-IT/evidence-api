@@ -44,5 +44,8 @@ namespace EvidenceApi.V1.Domain
 
         [Column("staff_selected_document_type_id")]
         public string StaffSelectedDocumentTypeId { get; set; }
+
+        [Column("resident_id")]
+        public Guid ResidentId { get; set; }
     }
 }
