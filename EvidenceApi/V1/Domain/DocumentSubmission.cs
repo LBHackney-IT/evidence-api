@@ -46,6 +46,10 @@ namespace EvidenceApi.V1.Domain
         public string StaffSelectedDocumentTypeId { get; set; }
 
         [Column("resident_id")]
-        public Guid ResidentId { get; set; }
+        [ForeignKey("Resident")]
+        public Guid? ResidentId { get; set; }
+
+        [ForeignKey("ResidentId")]
+        public virtual Resident Resident { get; set; }
     }
 }

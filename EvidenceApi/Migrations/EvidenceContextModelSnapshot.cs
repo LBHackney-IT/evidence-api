@@ -125,7 +125,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("rejection_reason")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ResidentId")
+                    b.Property<Guid?>("ResidentId")
                         .HasColumnName("resident_id")
                         .HasColumnType("uuid");
 
@@ -144,6 +144,8 @@ namespace EvidenceApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EvidenceRequestId");
+
+                    b.HasIndex("ResidentId");
 
                     b.ToTable("document_submissions");
                 });
@@ -248,6 +250,10 @@ namespace EvidenceApi.Migrations
                         .HasForeignKey("EvidenceRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("EvidenceApi.V1.Domain.Resident", "Resident")
+                        .WithMany()
+                        .HasForeignKey("ResidentId");
                 });
 #pragma warning restore 612, 618
         }
