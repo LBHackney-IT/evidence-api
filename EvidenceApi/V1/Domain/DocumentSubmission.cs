@@ -51,5 +51,7 @@ namespace EvidenceApi.V1.Domain
 
         [ForeignKey("ResidentId")]
         public virtual Resident Resident { get; set; }
+        [Column("team")]
+        public string Team { get; set; }
     }
 }
