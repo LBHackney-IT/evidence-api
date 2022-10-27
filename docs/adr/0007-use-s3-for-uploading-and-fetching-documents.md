@@ -17,10 +17,14 @@ We did look into streaming documents, but we could not go with that solution bec
 
 ## Decision
 
-We decided to leverage AWS S3's API to create an upload policy and then upload via a link that S3 provided. We made sure that
+We decided to leverage AWS S3's API to create a Presigned URL and then upload via a link that S3 provided. We made sure that
 this link was only available for a short time. We did some threat modelling on this option (due to previous conversations about how S3
 provided a public link) but after talking to the security team at Hackney and presenting our findings, we realised it was potentially safer
 using this link from S3 than a base-64 encoded string. This is because the link can expire, whereas a string will never expire.
+
+For Evidence API, this meant making sure that the creation of a document submission included the S3 Presigned Url in the response so that the frontend
+can upload directly to S3. This [document on Google Drive](https://docs.google.com/document/d/1l3gihtvRaxxO4cVXcSau0fJTsv9PhLJa4p7QPyqhBXY/edit?usp=sharing)
+is pretty good at showing the process for uploading -- find the header called 'How do we upload a document?'
 
 ## Consequences
 
