@@ -8,6 +8,7 @@ We have linked to these records from the [Hackney ADR repository](https://github
 * [4. Build an abstracted resident store](0004-build-an-abstracted-resident-store.md)
 * [5. Use text files for simple configuration](0005-use-text-files-for-simple-configuration.md)
 * [6. Use Palos Altos to perform malware scanning](0006-use-palos-altos-to-perform-malware-scanning.md)
+* [7. Use S3 for uploading and fetching documents](0007-use-s3-for-uploading-and-fetching-documents.md)
 
 This Architecture Decision Log was created using [adr-tools](https://github.com/npryce/adr-tools). Find more information on Architecture Decision Records [in this article](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).
 
