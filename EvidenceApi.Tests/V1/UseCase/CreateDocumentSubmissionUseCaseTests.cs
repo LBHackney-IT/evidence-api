@@ -144,6 +144,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.State.Should().Be(_created.State.ToString().ToUpper());
             result.DocumentType.Should().Be(docType);
             result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
+            result.Team.Should().BeEquivalentTo(_created.Team);
         }
 
         [Test]
