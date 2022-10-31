@@ -96,8 +96,8 @@ namespace EvidenceApi.V1.UseCase
                 DocumentTypeId = request.DocumentType,
                 ClaimId = claim.Id.ToString(),
                 State = SubmissionState.Uploaded,
-                Team = evidenceRequest.Team
-
+                Team = evidenceRequest.Team,
+                ResidentId = evidenceRequest.ResidentId
             };
             return documentSubmission;
         }

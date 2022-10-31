@@ -145,6 +145,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.DocumentType.Should().Be(docType);
             result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
             result.Team.Should().BeEquivalentTo(_created.Team);
+            result.ResidentId.Should().Be(_created.ResidentId);
         }
 
         [Test]

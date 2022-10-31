@@ -283,6 +283,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"evidenceRequestId\":\"{created.EvidenceRequestId}\"," +
                                $"\"claimId\":\"{_createdClaim.Id}\"," +
                                $"\"team\":\"{created.Team}\"," +
+                               $"\"residentId\":\"{created.ResidentId}\"," +
                                $"\"acceptedAt\":null," +
                                $"\"rejectionReason\":null," +
                                $"\"rejectedAt\":null,\"userUpdatedBy\":null," +
