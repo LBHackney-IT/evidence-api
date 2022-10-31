@@ -59,7 +59,8 @@ namespace EvidenceApi.V1.Factories
                 EvidenceRequestId = evidenceRequestId,
                 StaffSelectedDocumentType = staffSelectedDocumentType,
                 UploadPolicy = s3UploadPolicy,
-                Team = domain.Team
+                Team = domain.Team,
+                ResidentId = domain.ResidentId
             } : new DocumentSubmissionResponse()
             {
                 Id = domain.Id,
@@ -77,7 +78,8 @@ namespace EvidenceApi.V1.Factories
                 Document = claim.Document,
                 ClaimValidUntil = claim.ValidUntil,
                 RetentionExpiresAt = claim.RetentionExpiresAt,
-                Team = domain.Team
+                Team = domain.Team,
+                ResidentId = domain.ResidentId
             };
         }
     }
