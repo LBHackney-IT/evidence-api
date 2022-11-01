@@ -37,6 +37,8 @@ namespace EvidenceApi.V1.UseCase
             };
             var evidenceRequests = _evidenceGateway.GetEvidenceRequestsWithDocumentSubmissions(evidenceRequestSearchQuery);
 
+
+
             var result = new List<DocumentSubmissionResponse>();
 
             foreach (var evidenceReq in evidenceRequests)

@@ -107,5 +107,10 @@ namespace EvidenceApi.V1.Gateways
                 )
                 .ToList();
         }
+
+        public List<DocumentSubmission> GetDocumentSubmissionsByResidentId(Guid id)
+        {
+            return _databaseContext.DocumentSubmissions.Where(x => x.ResidentId.Equals(id)).ToList();
+        }
     }
 }

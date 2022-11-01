@@ -391,6 +391,28 @@ namespace EvidenceApi.Tests.V1.Gateways
             result[0].DocumentSubmissions.Should().BeInDescendingOrder(ds => ds.CreatedAt);
         }
 
+        [Test]
+        public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissions()
+        {
+            var residentId = Guid.NewGuid();
+            var documentSubmission1 = TestDataHelper.DocumentSubmission();
+            var documentSubmission2 = TestDataHelper.DocumentSubmission();
+            documentSubmission1.ResidentId = residentId;
+            documentSubmission2.ResidentId = residentId;
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
+
+            var result = _classUnderTest.GetDocumentSubmissionsByResidentId(residentId);
+
+            result.Should().Equal(expected);
+
+
+        }
+
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
