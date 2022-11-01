@@ -394,11 +394,15 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissions()
         {
-            var residentId = Guid.NewGuid();
-            var documentSubmission1 = TestDataHelper.DocumentSubmission();
-            var documentSubmission2 = TestDataHelper.DocumentSubmission();
-            documentSubmission1.ResidentId = residentId;
-            documentSubmission2.ResidentId = residentId;
+
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmission(true);
+            var documentSubmission2 = TestDataHelper.DocumentSubmission(true);
+
+            documentSubmission1.ResidentId = resident.Id;
+            documentSubmission2.ResidentId = resident.Id;
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
@@ -406,10 +410,9 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
 
-            var result = _classUnderTest.GetDocumentSubmissionsByResidentId(residentId);
+            var result = _classUnderTest.GetDocumentSubmissionsByResidentId(resident.Id);
 
             result.Should().Equal(expected);
-
 
         }
 
