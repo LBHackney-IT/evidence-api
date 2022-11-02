@@ -30,21 +30,15 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            EvidenceRequestsSearchQuery evidenceRequestSearchQuery = new EvidenceRequestsSearchQuery()
-            {
-                Team = request.Team,
-                ResidentId = request.ResidentId
-            };
-            var evidenceRequests = _evidenceGateway.GetEvidenceRequestsWithDocumentSubmissions(evidenceRequestSearchQuery);
+            //here we want to call the new method from the evidence gateway, which should return the DocumentSubmission List
+            //we can still use the other methods, but just replace where we populate the team from as it is now in the document table :)
 
-
+            var documentSubmissions =
+                _evidenceGateway.GetDocumentSubmissionsByResidentId(request.ResidentId);
 
             var result = new List<DocumentSubmissionResponse>();
 
-            foreach (var evidenceReq in evidenceRequests)
-            {
-                var documentSubmissions = evidenceReq.DocumentSubmissions;
-                var claimsIds = new List<string>();
+            var claimsIds = new List<string>();
                 foreach (var ds in documentSubmissions)
                 {
                     claimsIds.Add(ds.ClaimId);
@@ -54,13 +48,13 @@ namespace EvidenceApi.V1.UseCase
                 var claimIndex = 0;
                 foreach (var ds in documentSubmissions)
                 {
-                    var documentType = FindDocumentType(evidenceReq.Team, ds.DocumentTypeId);
-                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
+                    var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
+                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
                         ds.StaffSelectedDocumentTypeId);
                     result.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
                     claimIndex++;
                 }
-            }
+
             return result;
         }
 
