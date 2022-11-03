@@ -114,10 +114,16 @@ namespace EvidenceApi.V1.Gateways
             return _databaseContext.DocumentSubmissions.Where(x => x.ResidentId.Equals(id)).ToList();
         }
 
-        public List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, string limit,
-            string offset)
+        public List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, int limit,
+            int page)
         {
-            return new AutoConstructedList<DocumentSubmission>();
+            var offset = (limit * page) - limit;
+            return _databaseContext.DocumentSubmissions
+                .Where(x => x.ResidentId.Equals(id))
+                .Skip(offset)
+                .Take(limit)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
         }
     }
 }

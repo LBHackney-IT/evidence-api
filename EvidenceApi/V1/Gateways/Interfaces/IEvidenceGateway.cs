@@ -20,8 +20,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         List<EvidenceRequest> GetAll();
         List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request);
         List<DocumentSubmission> GetDocumentSubmissionsByResidentId(Guid id);
-
-        List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, string limit,
-            string offset);
+        List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, int limit,
+            int page);
     }
 }
