@@ -11,7 +11,6 @@ using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Boundary.Response;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -55,8 +54,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         public async Task ReturnsTheFoundDocumentSubmissions()
         {
             SetupMocks();
-
-            Console.WriteLine(JsonConvert.SerializeObject(_useCaseRequest));
 
             var result = await _classUnderTest.ExecuteAsync(_useCaseRequest).ConfigureAwait(true);
 

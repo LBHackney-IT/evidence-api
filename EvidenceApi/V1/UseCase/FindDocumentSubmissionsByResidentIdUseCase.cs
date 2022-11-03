@@ -31,7 +31,7 @@ namespace EvidenceApi.V1.UseCase
             ValidateRequest(request);
 
             var documentSubmissions =
-                _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request.PageSize, request.Page);
+                _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.PageSize, request?.Page);
 
             var result = new List<DocumentSubmissionResponse>();
 

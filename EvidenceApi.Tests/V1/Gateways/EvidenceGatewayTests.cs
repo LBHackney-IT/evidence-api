@@ -391,7 +391,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             result[0].DocumentSubmissions.Should().BeInDescendingOrder(ds => ds.CreatedAt);
         }
 
-        [Ignore("Skipping due to potential foreign keys changes needed to be made")]
         [Test]
         public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissions()
         {
@@ -417,7 +416,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, 2, 1);
 
             result.Should().Equal(expected);
-
         }
 
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
