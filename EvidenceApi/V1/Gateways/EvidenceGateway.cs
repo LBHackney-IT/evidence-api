@@ -109,8 +109,8 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit,
-            int? page)
+        public List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
+            int? page = 1)
         {
             var offset = (limit * page) - limit;
             return _databaseContext.DocumentSubmissions

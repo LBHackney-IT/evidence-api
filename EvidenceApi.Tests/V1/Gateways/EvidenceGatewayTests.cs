@@ -392,7 +392,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissions()
+        public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissionsWithDefaultPagination()
         {
             var queryGuid = Guid.NewGuid();
             var resident = TestDataHelper.Resident();
@@ -403,17 +403,15 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             documentSubmission1.ResidentId = queryGuid;
             documentSubmission2.ResidentId = queryGuid;
-            Console.WriteLine("query guid is {0}", queryGuid);
 
-            Console.WriteLine("doc submission one resident id is {0}", documentSubmission1.ResidentId);
-
+            DatabaseContext.Residents.Add(resident);
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
             DatabaseContext.SaveChanges();
 
-            var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
+            var expected = new List<DocumentSubmission>() { documentSubmission2, documentSubmission1 };
 
-            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, 2, 1);
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid);
 
             result.Should().Equal(expected);
         }
