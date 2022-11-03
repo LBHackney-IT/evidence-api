@@ -414,7 +414,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
 
-            var result = _classUnderTest.GetDocumentSubmissionsByResidentId(queryGuid);
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, 2, 1);
 
             result.Should().Equal(expected);
 

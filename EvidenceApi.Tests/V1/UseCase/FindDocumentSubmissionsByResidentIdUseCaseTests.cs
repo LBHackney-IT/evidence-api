@@ -11,6 +11,7 @@ using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Boundary.Response;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -54,6 +55,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         public async Task ReturnsTheFoundDocumentSubmissions()
         {
             SetupMocks();
+
+            Console.WriteLine(JsonConvert.SerializeObject(_useCaseRequest));
 
             var result = await _classUnderTest.ExecuteAsync(_useCaseRequest).ConfigureAwait(true);
 
@@ -138,7 +141,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _useCaseRequest = new DocumentSubmissionSearchQuery()
             {
                 Team = "Housing benefit",
-                ResidentId = residentId
+                ResidentId = residentId,
+                Page = 1,
+                PageSize = 10
             };
 
             var evidenceRequestsResult = new List<EvidenceRequest>()
@@ -161,7 +166,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway.Setup(x => x.GetDocumentSubmissionsByResidentId(It.IsAny<Guid>())).Returns(_found);
+            _evidenceGateway.Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(_found);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
             _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);
