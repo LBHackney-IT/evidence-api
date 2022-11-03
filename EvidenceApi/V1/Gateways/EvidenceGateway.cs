@@ -4,6 +4,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
 using System.Collections.Generic;
+using Amazon.Runtime.Internal;
 using EvidenceApi.V1.Boundary.Request;
 using Microsoft.EntityFrameworkCore;
 
@@ -111,6 +112,12 @@ namespace EvidenceApi.V1.Gateways
         public List<DocumentSubmission> GetDocumentSubmissionsByResidentId(Guid id)
         {
             return _databaseContext.DocumentSubmissions.Where(x => x.ResidentId.Equals(id)).ToList();
+        }
+
+        public List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, string limit,
+            string offset)
+        {
+            return new AutoConstructedList<DocumentSubmission>();
         }
     }
 }
