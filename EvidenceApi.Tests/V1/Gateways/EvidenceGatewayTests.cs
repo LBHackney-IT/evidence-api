@@ -425,6 +425,43 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().Equal(expected);
         }
 
+        [Test]
+        public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments()
+        {
+            var queryGuid = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(queryGuid);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var page = 1;
+            var pageSize = 2;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+
+            DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.Entry(documentSubmission3).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            DatabaseContext.Entry(documentSubmission4).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3 };
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, pageSize, page);
+
+            result.Should().Equal(expected);
+        }
+
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
