@@ -399,22 +399,26 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var queryGuid = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(queryGuid);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
 
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
 
             DatabaseContext.SaveChanges();
 
-            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid);
-            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid);
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
 
+            DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
 
             DatabaseContext.SaveChanges();
 
             Console.WriteLine("Resident id is {0}", resident.Id);
 
-            var expected = new List<DocumentSubmission>() { documentSubmission2, documentSubmission1 };
+            var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
 
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid);
 

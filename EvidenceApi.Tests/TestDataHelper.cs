@@ -37,18 +37,21 @@ namespace EvidenceApi.Tests
             return submission;
         }
 
-        public static DocumentSubmission DocumentSubmissionWithResidentId(Guid residentId)
+        public static DocumentSubmission DocumentSubmissionWithResidentId(Guid residentId, EvidenceRequest evidenceRequest)
         {
             _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
                 .ForEach(b => _fixture.Behaviors.Remove(b));
 
-            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior()); ;
 
             var submission = _fixture.Build<DocumentSubmission>()
                 .With(x => x.ResidentId, residentId)
-                .Without(x => x.Id)
+                .With(x => x.EvidenceRequest, evidenceRequest)
+                .With(x => x.EvidenceRequestId, evidenceRequest.Id)
                 .Without(x => x.CreatedAt)
                 .Create();
+
+
 
             return submission;
         }
