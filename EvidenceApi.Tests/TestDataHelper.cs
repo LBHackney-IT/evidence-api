@@ -37,6 +37,22 @@ namespace EvidenceApi.Tests
             return submission;
         }
 
+        public static DocumentSubmission DocumentSubmissionWithResidentId(Guid residentId)
+        {
+            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var submission = _fixture.Build<DocumentSubmission>()
+                .With(x => x.ResidentId, residentId)
+                .Without(x => x.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+
+            return submission;
+        }
+
         public static Communication Communication()
         {
             return _fixture.Build<Communication>()
@@ -89,6 +105,13 @@ namespace EvidenceApi.Tests
             return _fixture.Build<Resident>()
                 .Without(x => x.Id)
                 .Without(x => x.CreatedAt)
+                .Create();
+        }
+
+        public static Resident ResidentWithId(Guid id)
+        {
+            return _fixture.Build<Resident>()
+                .With(x => x.Id, id)
                 .Create();
         }
     }

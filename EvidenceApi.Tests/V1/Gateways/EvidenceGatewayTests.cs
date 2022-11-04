@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
 using AutoFixture;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using ThirdParty.Json.LitJson;
 
 namespace EvidenceApi.Tests.V1.Gateways
 {
@@ -395,19 +398,21 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissionsWithDefaultPagination()
         {
             var queryGuid = Guid.NewGuid();
-            var resident = TestDataHelper.Resident();
-            resident.Id = queryGuid;
-
-            var documentSubmission1 = TestDataHelper.DocumentSubmission(true);
-            var documentSubmission2 = TestDataHelper.DocumentSubmission(true);
-
-            documentSubmission1.ResidentId = queryGuid;
-            documentSubmission2.ResidentId = queryGuid;
+            var resident = TestDataHelper.ResidentWithId(queryGuid);
 
             DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid);
+
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+
             DatabaseContext.SaveChanges();
+
+            Console.WriteLine("Resident id is {0}", resident.Id);
 
             var expected = new List<DocumentSubmission>() { documentSubmission2, documentSubmission1 };
 
@@ -591,4 +596,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             return expected;
         }
     }
+
+
 }
