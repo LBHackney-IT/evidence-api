@@ -33,7 +33,7 @@ namespace EvidenceApi.V1.UseCase
             var query =
                 _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.PageSize, request?.Page);
 
-            var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>()};
+            var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
             var claimsIds = new List<string>();
             foreach (var ds in query.DocumentSubmissions)
