@@ -225,11 +225,15 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<List<DocumentSubmissionResponse>>(json);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponseObject>(json);
 
-            var expected = new List<DocumentSubmissionResponse>()
+            var expected = new DocumentSubmissionResponseObject()
             {
-                documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                DocumentSubmissions = new List<DocumentSubmissionResponse>()
+                {
+                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                },
+                Total = 1
             };
 
             response.StatusCode.Should().Be(200);

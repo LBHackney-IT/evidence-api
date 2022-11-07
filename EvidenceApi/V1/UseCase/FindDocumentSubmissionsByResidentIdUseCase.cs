@@ -26,29 +26,29 @@ namespace EvidenceApi.V1.UseCase
             _documentsApiGateway = documentsApiGateway;
         }
 
-        public async Task<List<DocumentSubmissionResponse>> ExecuteAsync(DocumentSubmissionSearchQuery request)
+        public async Task<DocumentSubmissionResponseObject> ExecuteAsync(DocumentSubmissionSearchQuery request)
         {
             ValidateRequest(request);
 
-            var documentSubmissions =
+            var query =
                 _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.PageSize, request?.Page);
 
-            var result = new List<DocumentSubmissionResponse>();
+            var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>()};
 
             var claimsIds = new List<string>();
-            foreach (var ds in documentSubmissions)
+            foreach (var ds in query.DocumentSubmissions)
             {
                 claimsIds.Add(ds.ClaimId);
             }
             var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
 
             var claimIndex = 0;
-            foreach (var ds in documentSubmissions)
+            foreach (var ds in query.DocumentSubmissions)
             {
                 var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
                 var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
                     ds.StaffSelectedDocumentTypeId);
-                result.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
+                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
                 claimIndex++;
             }
 

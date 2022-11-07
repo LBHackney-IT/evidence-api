@@ -109,16 +109,23 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public List<DocumentSubmission> GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
             int? page = 1)
         {
             var offset = (limit * page) - limit;
-            return _databaseContext.DocumentSubmissions
+
+            var total = _databaseContext.DocumentSubmissions
+                .Count(x => x.ResidentId.Equals(id));
+
+            var documents = _databaseContext.DocumentSubmissions
                 .Where(x => x.ResidentId.Equals(id))
                 .Skip(offset ?? 0)
                 .Take(limit ?? 10)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
+
+            return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documents, Total = total };
+
         }
     }
 }

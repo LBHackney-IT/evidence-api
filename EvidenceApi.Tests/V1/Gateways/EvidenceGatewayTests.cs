@@ -418,7 +418,8 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid);
 
-            result.Should().Equal(expected);
+            result.Total.Should().Be(2);
+            result.DocumentSubmissions.Should().Equal(expected);
         }
 
         [Test]
@@ -455,7 +456,8 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, pageSize, page);
 
-            result.Should().Equal(expected);
+            result.Total.Should().Be(4);
+            result.DocumentSubmissions.Should().Equal(expected);
         }
 
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
