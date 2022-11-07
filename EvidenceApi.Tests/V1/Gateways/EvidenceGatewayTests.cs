@@ -10,8 +10,6 @@ using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
 using AutoFixture;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using ThirdParty.Json.LitJson;
 
 namespace EvidenceApi.Tests.V1.Gateways
 {
@@ -415,8 +413,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
 
             DatabaseContext.SaveChanges();
-
-            Console.WriteLine("Resident id is {0}", resident.Id);
 
             var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
 
