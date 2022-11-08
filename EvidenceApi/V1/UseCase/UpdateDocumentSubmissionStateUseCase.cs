@@ -99,10 +99,14 @@ namespace EvidenceApi.V1.UseCase
             }
 
             _evidenceGateway.CreateDocumentSubmission(documentSubmission);
-            _updateEvidenceRequestStateUseCase.Execute(documentSubmission.EvidenceRequestId);
+            if (documentSubmission.EvidenceRequestId != null)
+            {
+                _updateEvidenceRequestStateUseCase.Execute((Guid) documentSubmission.EvidenceRequestId);
+            }
+
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
-            return documentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, staffSelectedDocumentType);
+            return documentSubmission.ToResponse(documentType, (Guid) documentSubmission.EvidenceRequestId, staffSelectedDocumentType);
         }
 
         private static bool IsApprovalRequest(DocumentSubmission documentSubmission)
@@ -143,7 +147,12 @@ namespace EvidenceApi.V1.UseCase
         private void NotifyResident(DocumentSubmission documentSubmission, DocumentSubmissionUpdateRequest request)
         {
             documentSubmission.RejectionReason = request.RejectionReason;
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(documentSubmission.EvidenceRequestId);
+
+            EvidenceRequest evidenceRequest = new EvidenceRequest();
+            if (documentSubmission.EvidenceRequestId != null)
+            {
+                evidenceRequest = _evidenceGateway.FindEvidenceRequest((Guid) documentSubmission.EvidenceRequestId);
+            }
 
             if (evidenceRequest == null)
             {
@@ -173,7 +182,13 @@ namespace EvidenceApi.V1.UseCase
         {
             DocumentType staffSelectedDocumentType = null;
             documentSubmission.StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId;
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(documentSubmission.EvidenceRequestId);
+
+            EvidenceRequest evidenceRequest = new EvidenceRequest();
+            if (documentSubmission.EvidenceRequestId != null)
+            {
+                evidenceRequest = _evidenceGateway.FindEvidenceRequest((Guid) documentSubmission.EvidenceRequestId);
+            }
+
             staffSelectedDocumentType = _staffSelectedDocumentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(
                 evidenceRequest.Team, request.StaffSelectedDocumentTypeId);
             return staffSelectedDocumentType;

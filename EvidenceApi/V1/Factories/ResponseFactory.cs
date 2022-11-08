@@ -82,5 +82,27 @@ namespace EvidenceApi.V1.Factories
                 ResidentId = domain.ResidentId
             };
         }
+
+        public static DocumentSubmissionWithoutEvidenceRequestResponse ToResponse(
+            this DocumentSubmission domain,
+            DocumentType staffSelectedDocumentType,
+            S3UploadPolicy? s3UploadPolicy = null,
+            Claim? claim = null)
+        {
+            return new DocumentSubmissionWithoutEvidenceRequestResponse()
+            {
+                Id = domain.Id,
+                CreatedAt = domain.CreatedAt,
+                ClaimId = domain.ClaimId,
+                State = domain.State.ToString().ToUpper(),
+                StaffSelectedDocumentType = staffSelectedDocumentType,
+                ResidentId = domain.ResidentId,
+                Team = domain.Team,
+                UploadPolicy = s3UploadPolicy,
+                Document = claim.Document,
+                ClaimValidUntil = claim.ValidUntil,
+                RetentionExpiresAt = claim.RetentionExpiresAt
+            };
+        }
     }
 }

@@ -34,7 +34,7 @@ namespace EvidenceApi.V1.Domain
 
         [Column("evidence_request_id")]
         [ForeignKey("EvidenceRequest")]
-        public Guid EvidenceRequestId { get; set; }
+        public Guid? EvidenceRequestId { get; set; } = null;
 
         [ForeignKey("EvidenceRequestId")]
         public virtual EvidenceRequest EvidenceRequest { get; set; }
@@ -47,7 +47,7 @@ namespace EvidenceApi.V1.Domain
 
         [Column("resident_id")]
         [ForeignKey("Resident")]
-        public Guid? ResidentId { get; set; }
+        public Guid ResidentId { get; set; }
 
         [ForeignKey("ResidentId")]
         public virtual Resident Resident { get; set; }

@@ -17,17 +17,20 @@ namespace EvidenceApi.V1.Controllers
         private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
         private readonly IFindDocumentSubmissionByIdUseCase _findDocumentSubmissionByIdUseCase;
         private readonly IFindDocumentSubmissionsByResidentIdUseCase _findDocumentSubmissionsByResidentIdUseCase;
+        private readonly ICreateDocumentSubmissionWithoutEvidenceRequestUseCase _createDocumentSubmissionWithoutEvidenceRequestUseCase;
 
         public DocumentSubmissionsController(
             ICreateAuditUseCase createAuditUseCase,
             IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase,
             IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase,
-            IFindDocumentSubmissionsByResidentIdUseCase findDocumentSubmissionsByResidentIdUseCase
+            IFindDocumentSubmissionsByResidentIdUseCase findDocumentSubmissionsByResidentIdUseCase,
+            ICreateDocumentSubmissionWithoutEvidenceRequestUseCase createDocumentSubmissionWithoutEvidenceRequestUseCase
         ) : base(createAuditUseCase)
         {
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
             _findDocumentSubmissionByIdUseCase = findDocumentSubmissionByIdUseCase;
             _findDocumentSubmissionsByResidentIdUseCase = findDocumentSubmissionsByResidentIdUseCase;
+            _createDocumentSubmissionWithoutEvidenceRequestUseCase = createDocumentSubmissionWithoutEvidenceRequestUseCase;
         }
 
         /// <summary>
@@ -91,6 +94,26 @@ namespace EvidenceApi.V1.Controllers
             {
                 var result = await _findDocumentSubmissionsByResidentIdUseCase.ExecuteAsync(request).ConfigureAwait(true);
                 return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new document submission without an evidence request
+        /// </summary>
+        /// <response code="201">Saved</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="401">Request lacks valid API token</response>
+        [HttpPost]
+        public async Task<IActionResult> CreateDocumentSubmissionWithoutEvidenceRequest([FromBody][Required] DocumentSubmissionWithoutEvidenceRequestRequest request)
+        {
+            try
+            {
+                var result = await _createDocumentSubmissionWithoutEvidenceRequestUseCase.ExecuteAsync(request);
+                return Created(new Uri($"/document_submissions", UriKind.Relative), result);
             }
             catch (BadRequestException ex)
             {

@@ -259,7 +259,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _found.EvidenceRequest = _evidenceRequest;
             _found.EvidenceRequestId = _evidenceRequest.Id;
 
-            _evidenceGateway.Setup(x => x.FindEvidenceRequest(_found.EvidenceRequestId)).Returns(_evidenceRequest);
+            _evidenceGateway.Setup(x => x.FindEvidenceRequest((Guid) _found.EvidenceRequestId)).Returns(_evidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(id)).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
@@ -271,7 +271,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _residentsGateway.Setup(x => x.FindResident(It.IsAny<Guid>())).Returns(_resident).Verifiable();
             _evidenceGateway.Setup(x => x.CreateEvidenceRequest(It.IsAny<EvidenceRequest>())).Returns(_evidenceRequest).Verifiable();
 
-            _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_found.EvidenceRequestId));
+            _updateEvidenceRequestStateUseCase.Setup(x => x.Execute((Guid) _found.EvidenceRequestId));
 
             var claim = _fixture.Create<Claim>();
             _documentsApiGateway.Setup(x => x.UpdateClaim(It.IsAny<Guid>(), It.IsAny<ClaimUpdateRequest>()))
