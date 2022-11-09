@@ -11,6 +11,7 @@ using NUnit.Framework;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Boundary.Response;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace EvidenceApi.Tests.V1.UseCase
 {
@@ -28,7 +29,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private DocumentSubmissionSearchQuery _useCaseRequest;
         private DocumentSubmission _documentSubmission1;
         private DocumentSubmission _documentSubmission2;
-        private List<DocumentSubmission> _found;
+        private DocumentSubmissionQueryResponse _injectedResult;
         private Task<Claim> _claim1;
         private Task<Claim> _claim2;
         private string _claimId1 = "70cdff29-84d3-461e-bd16-2032c07c28bd";
@@ -57,8 +58,8 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             var result = await _classUnderTest.ExecuteAsync(_useCaseRequest).ConfigureAwait(true);
 
-            var documentSubmission1 = result[0];
-            var documentSubmission2 = result[1];
+            var documentSubmission1 = result.DocumentSubmissions[0];
+            var documentSubmission2 = result.DocumentSubmissions[1];
 
             documentSubmission1.Id.Should().Be(_documentSubmission1.Id);
             documentSubmission1.ClaimId.Should().BeEquivalentTo(_documentSubmission1.ClaimId);
@@ -84,7 +85,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 Team = team,
                 ResidentId = residentId
             };
-            Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponseObject>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>().WithMessage("Team is null or empty");
         }
 
@@ -98,7 +99,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 Team = team,
                 ResidentId = residentId
             };
-            Func<Task<List<DocumentSubmissionResponse>>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
+            Func<Task<DocumentSubmissionResponseObject>> testDelegate = async () => await _classUnderTest.ExecuteAsync(request).ConfigureAwait(true);
             testDelegate.Should().Throw<BadRequestException>().WithMessage("Resident ID is invalid");
         }
 
@@ -141,15 +142,12 @@ namespace EvidenceApi.Tests.V1.UseCase
                 ResidentId = residentId
             };
 
-            var evidenceRequestsResult = new List<EvidenceRequest>()
-            {
-                _evidenceRequest1, _evidenceRequest2
-            };
-
-            _found = new List<DocumentSubmission>()
+            var foundDocuments = new List<DocumentSubmission>()
             {
                 _documentSubmission1, _documentSubmission2
             };
+
+            _injectedResult = new DocumentSubmissionQueryResponse() { DocumentSubmissions = foundDocuments, Total = 2 };
 
             var claimsIds = new List<string>();
             claimsIds.Add(_claimId1);
@@ -161,7 +159,9 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway.Setup(x => x.GetEvidenceRequestsWithDocumentSubmissions(It.IsAny<EvidenceRequestsSearchQuery>())).Returns(evidenceRequestsResult);
+            _evidenceGateway
+                .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<int?>(),
+                    It.IsAny<int?>())).Returns(_injectedResult);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
             _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);

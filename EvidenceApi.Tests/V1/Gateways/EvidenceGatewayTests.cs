@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
 using AutoFixture;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceApi.Tests.V1.Gateways
 {
@@ -391,6 +392,74 @@ namespace EvidenceApi.Tests.V1.Gateways
             result[0].DocumentSubmissions.Should().BeInDescendingOrder(ds => ds.CreatedAt);
         }
 
+        [Test]
+        public void GetDocumentSubmissionsByResidentIdReturnsAListOfDocumentSubmissionsWithDefaultPagination()
+        {
+            var queryGuid = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(queryGuid);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+
+            DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid);
+
+            result.Total.Should().Be(2);
+            result.DocumentSubmissions.Should().Equal(expected);
+        }
+
+        [Test]
+        public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments()
+        {
+            var queryGuid = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(queryGuid);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var page = 1;
+            var pageSize = 2;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+
+            DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.Entry(documentSubmission3).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            DatabaseContext.Entry(documentSubmission4).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3 };
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, pageSize, page);
+
+            result.Total.Should().Be(4);
+            result.DocumentSubmissions.Should().Equal(expected);
+        }
+
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
@@ -566,4 +635,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             return expected;
         }
     }
+
+
 }
