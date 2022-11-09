@@ -8,6 +8,8 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Validators;
+using System.Linq;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -29,7 +31,11 @@ namespace EvidenceApi.V1.UseCase
 
         public async Task<DocumentSubmissionWithoutEvidenceRequestResponse> ExecuteAsync(DocumentSubmissionWithoutEvidenceRequestRequest request)
         {
-            ValidateRequest(request);
+            var validation = new DocumentSubmissionWithoutEvidenceRequestRequestValidator().Validate(request);
+            if (!validation.IsValid)
+            {
+                throw new BadRequestException(validation.Errors.First().ToString());
+            }
 
             Claim claim;
             S3UploadPolicy createdS3UploadPolicy;
@@ -88,39 +94,6 @@ namespace EvidenceApi.V1.UseCase
                 StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId
             };
             return documentSubmission;
-        }
-
-        private static void ValidateRequest(DocumentSubmissionWithoutEvidenceRequestRequest request)
-        {
-            if (request.ResidentId == null)
-            {
-                throw new BadRequestException("ResidentId is null");
-            }
-
-            if (String.IsNullOrEmpty(request.Team))
-            {
-                throw new BadRequestException("Team is null or empty");
-            }
-
-            if (String.IsNullOrEmpty(request.UserCreatedBy))
-            {
-                throw new BadRequestException("UserCreatedBy is null or empty");
-            }
-
-            if (String.IsNullOrEmpty(request.StaffSelectedDocumentTypeId))
-            {
-                throw new BadRequestException("StaffSelectedDocumentTypeId is null or empty");
-            }
-
-            if (String.IsNullOrEmpty(request.DocumentName))
-            {
-                throw new BadRequestException("DocumentName is null or empty");
-            }
-
-            if (String.IsNullOrEmpty(request.DocumentDescription))
-            {
-                throw new BadRequestException("DocumentDescription is null or empty");
-            }
         }
     }
 }

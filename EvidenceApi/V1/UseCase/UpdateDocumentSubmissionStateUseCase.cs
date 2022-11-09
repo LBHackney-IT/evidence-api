@@ -106,7 +106,7 @@ namespace EvidenceApi.V1.UseCase
 
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
-            return documentSubmission.ToResponse(documentType, (Guid) documentSubmission.EvidenceRequestId, staffSelectedDocumentType);
+            return documentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, staffSelectedDocumentType);
         }
 
         private static bool IsApprovalRequest(DocumentSubmission documentSubmission)

@@ -72,7 +72,7 @@ namespace EvidenceApi.V1.UseCase
                 _updateEvidenceRequestStateUseCase.Execute((Guid) createdDocumentSubmission.EvidenceRequestId);
             }
 
-            return createdDocumentSubmission.ToResponse(documentType, (Guid) documentSubmission.EvidenceRequestId, null, createdS3UploadPolicy, claim);
+            return createdDocumentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, null, createdS3UploadPolicy, claim);
         }
 
         private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)

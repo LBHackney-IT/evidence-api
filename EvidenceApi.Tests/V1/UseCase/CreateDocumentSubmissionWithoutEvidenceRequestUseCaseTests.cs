@@ -37,7 +37,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.Team)
                 .Create();
             Func<Task<DocumentSubmissionWithoutEvidenceRequestResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionWithoutEvidenceRequestRequest);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("Team is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("'Team' must not be empty.");
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.UserCreatedBy)
                 .Create();
             Func<Task<DocumentSubmissionWithoutEvidenceRequestResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionWithoutEvidenceRequestRequest);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("UserCreatedBy is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("'User Created By' must not be empty.");
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.StaffSelectedDocumentTypeId)
                 .Create();
             Func<Task<DocumentSubmissionWithoutEvidenceRequestResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionWithoutEvidenceRequestRequest);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("StaffSelectedDocumentTypeId is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("'Staff Selected Document Type Id' must not be empty.");
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.DocumentName)
                 .Create();
             Func<Task<DocumentSubmissionWithoutEvidenceRequestResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionWithoutEvidenceRequestRequest);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("DocumentName is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("'Document Name' must not be empty.");
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 .Without(x => x.DocumentDescription)
                 .Create();
             Func<Task<DocumentSubmissionWithoutEvidenceRequestResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionWithoutEvidenceRequestRequest);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("DocumentDescription is null or empty");
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("'Document Description' must not be empty.");
         }
 
         [Test]

@@ -107,7 +107,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentType = TestDataHelper.DocumentType("passport-scan");
             var staffSelectedDocumentType = TestDataHelper.GetStaffSelectedDocumentTypeByTeamName("drivers-licence", teamName);
-            var expected = createdDocumentSubmission.ToResponse(documentType, (Guid) createdDocumentSubmission.EvidenceRequestId, staffSelectedDocumentType);
+            var expected = createdDocumentSubmission.ToResponse(documentType, createdDocumentSubmission.EvidenceRequestId, staffSelectedDocumentType);
             result.Should().BeEquivalentTo(expected);
         }
 
@@ -250,7 +250,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             {
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
-                    documentSubmission1.ToResponse(null, (Guid)documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
                 },
                 Total = 1
             };
@@ -334,7 +334,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/document_submissions", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
-            response.Content.ReadAsStringAsync().Result.Should().Be($"\"Team is null or empty\"");
+            response.Content.ReadAsStringAsync().Result.Should().Be($"\"'Team' must not be empty.\"");
         }
 
         [Test]

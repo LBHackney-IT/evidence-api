@@ -39,7 +39,7 @@ namespace EvidenceApi.V1.Factories
         public static DocumentSubmissionResponse ToResponse(
             this DocumentSubmission domain,
             DocumentType documentType,
-            Guid evidenceRequestId,
+            Guid? evidenceRequestId,
             DocumentType? staffSelectedDocumentType = null,
             S3UploadPolicy? s3UploadPolicy = null,
             Claim? claim = null
