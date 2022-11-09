@@ -117,14 +117,14 @@ namespace EvidenceApi.V1.Gateways
             var total = _databaseContext.DocumentSubmissions
                 .Count(x => x.ResidentId.Equals(id));
 
-            var documents = _databaseContext.DocumentSubmissions
+            var documentSubmissions = _databaseContext.DocumentSubmissions
                 .Where(x => x.ResidentId.Equals(id))
                 .Skip(offset ?? 0)
                 .Take(limit ?? 10)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
 
-            return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documents, Total = total };
+            return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
         }
     }

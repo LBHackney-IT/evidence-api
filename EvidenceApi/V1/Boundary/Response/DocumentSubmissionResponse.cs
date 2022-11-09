@@ -30,7 +30,6 @@ namespace EvidenceApi.V1.Boundary.Response
     public class DocumentSubmissionResponseObject
     {
         public List<DocumentSubmissionResponse> DocumentSubmissions { get; set; }
-
         public int Total { get; set; }
 
 

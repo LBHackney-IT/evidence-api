@@ -635,6 +635,4 @@ namespace EvidenceApi.Tests.V1.Gateways
             return expected;
         }
     }
-
-
 }
