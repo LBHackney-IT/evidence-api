@@ -14,6 +14,7 @@ using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Factories;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -201,36 +202,38 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var documentType = TestDataHelper.DocumentType("passport-scan");
 
+            var resident = TestDataHelper.ResidentWithId(Guid.NewGuid());
+
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
             evidenceRequest.Team = "Development Housing Team";
 
-            var documentSubmission1 = TestDataHelper.DocumentSubmission();
-            documentSubmission1.EvidenceRequestId = evidenceRequest.Id;
-            documentSubmission1.DocumentTypeId = "passport-scan";
-            documentSubmission1.ClaimId = _createdClaim.Id.ToString();
-
-            var documentSubmission2 = TestDataHelper.DocumentSubmission();
-            documentSubmission2.EvidenceRequestId = evidenceRequest.Id;
-            documentSubmission2.DocumentTypeId = "passport-scan";
-            documentSubmission2.ClaimId = _createdClaim.Id.ToString();
-
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.Residents.Add(resident);
+
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={evidenceRequest.ResidentId}", UriKind.Relative);
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(resident.Id, evidenceRequest);
+            documentSubmission1.DocumentTypeId = documentType.Id;
+            documentSubmission1.ClaimId = _createdClaim.Id.ToString();
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={documentSubmission1.ResidentId}", UriKind.Relative);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<List<DocumentSubmissionResponse>>(json);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponseObject>(json);
 
-            var expected = new List<DocumentSubmissionResponse>()
+            var expected = new DocumentSubmissionResponseObject()
             {
-                documentSubmission1.ToResponse(documentType, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
-                documentSubmission2.ToResponse(documentType, documentSubmission2.EvidenceRequestId, null, null, _createdClaim)
+                DocumentSubmissions = new List<DocumentSubmissionResponse>()
+                {
+                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                },
+                Total = 1
             };
 
             response.StatusCode.Should().Be(200);

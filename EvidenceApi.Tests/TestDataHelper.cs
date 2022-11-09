@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
@@ -32,6 +33,25 @@ namespace EvidenceApi.Tests
                 .Create();
 
             if (includeEvidenceRequest) submission.EvidenceRequest = EvidenceRequest();
+
+            return submission;
+        }
+
+        public static DocumentSubmission DocumentSubmissionWithResidentId(Guid residentId, EvidenceRequest evidenceRequest)
+        {
+            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior()); ;
+
+            var submission = _fixture.Build<DocumentSubmission>()
+                .With(x => x.ResidentId, residentId)
+                .With(x => x.EvidenceRequest, evidenceRequest)
+                .With(x => x.EvidenceRequestId, evidenceRequest.Id)
+                .Without(x => x.CreatedAt)
+                .Create();
+
+
 
             return submission;
         }
@@ -88,6 +108,13 @@ namespace EvidenceApi.Tests
             return _fixture.Build<Resident>()
                 .Without(x => x.Id)
                 .Without(x => x.CreatedAt)
+                .Create();
+        }
+
+        public static Resident ResidentWithId(Guid id)
+        {
+            return _fixture.Build<Resident>()
+                .With(x => x.Id, id)
                 .Create();
         }
     }

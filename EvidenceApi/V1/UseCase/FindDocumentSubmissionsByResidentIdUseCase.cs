@@ -26,39 +26,32 @@ namespace EvidenceApi.V1.UseCase
             _documentsApiGateway = documentsApiGateway;
         }
 
-        public async Task<List<DocumentSubmissionResponse>> ExecuteAsync(DocumentSubmissionSearchQuery request)
+        public async Task<DocumentSubmissionResponseObject> ExecuteAsync(DocumentSubmissionSearchQuery request)
         {
             ValidateRequest(request);
 
-            EvidenceRequestsSearchQuery evidenceRequestSearchQuery = new EvidenceRequestsSearchQuery()
+            var query =
+                _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.PageSize, request?.Page);
+
+            var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
+
+            var claimsIds = new List<string>();
+            foreach (var ds in query.DocumentSubmissions)
             {
-                Team = request.Team,
-                ResidentId = request.ResidentId
-            };
-            var evidenceRequests = _evidenceGateway.GetEvidenceRequestsWithDocumentSubmissions(evidenceRequestSearchQuery);
-
-            var result = new List<DocumentSubmissionResponse>();
-
-            foreach (var evidenceReq in evidenceRequests)
-            {
-                var documentSubmissions = evidenceReq.DocumentSubmissions;
-                var claimsIds = new List<string>();
-                foreach (var ds in documentSubmissions)
-                {
-                    claimsIds.Add(ds.ClaimId);
-                }
-                var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
-
-                var claimIndex = 0;
-                foreach (var ds in documentSubmissions)
-                {
-                    var documentType = FindDocumentType(evidenceReq.Team, ds.DocumentTypeId);
-                    var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceReq.Team,
-                        ds.StaffSelectedDocumentTypeId);
-                    result.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
-                    claimIndex++;
-                }
+                claimsIds.Add(ds.ClaimId);
             }
+            var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
+
+            var claimIndex = 0;
+            foreach (var ds in query.DocumentSubmissions)
+            {
+                var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
+                var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
+                    ds.StaffSelectedDocumentTypeId);
+                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
+                claimIndex++;
+            }
+
             return result;
         }
 

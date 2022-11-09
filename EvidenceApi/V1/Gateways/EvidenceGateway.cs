@@ -4,6 +4,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
 using System.Collections.Generic;
+using Amazon.Runtime.Internal;
 using EvidenceApi.V1.Boundary.Request;
 using Microsoft.EntityFrameworkCore;
 
@@ -106,6 +107,25 @@ namespace EvidenceApi.V1.Gateways
                     x.ResidentReferenceId.Equals(request.SearchQuery)
                 )
                 .ToList();
+        }
+
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
+            int? page = 1)
+        {
+            var offset = (limit * page) - limit;
+
+            var total = _databaseContext.DocumentSubmissions
+                .Count(x => x.ResidentId.Equals(id));
+
+            var documents = _databaseContext.DocumentSubmissions
+                .Where(x => x.ResidentId.Equals(id))
+                .Skip(offset ?? 0)
+                .Take(limit ?? 10)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+
+            return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documents, Total = total };
+
         }
     }
 }

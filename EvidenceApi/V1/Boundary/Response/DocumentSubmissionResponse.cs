@@ -1,7 +1,9 @@
-using System;
-using EvidenceApi.V1.Domain;
+
 #nullable enable annotations
 
+using System;
+using System.Collections.Generic;
+using EvidenceApi.V1.Domain;
 namespace EvidenceApi.V1.Boundary.Response
 {
     public class DocumentSubmissionResponse
@@ -23,5 +25,14 @@ namespace EvidenceApi.V1.Boundary.Response
         public DocumentType? StaffSelectedDocumentType { get; set; }
         public S3UploadPolicy? UploadPolicy { get; set; }
         public Document? Document { get; set; }
+    }
+
+    public class DocumentSubmissionResponseObject
+    {
+        public List<DocumentSubmissionResponse> DocumentSubmissions { get; set; }
+
+        public int Total { get; set; }
+
+
     }
 }
