@@ -331,13 +331,15 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/document_submissions", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
+            response.Content.ReadAsStringAsync().Result.Should().Be($"\"Team is null or empty\"");
         }
 
         [Test]
         public async Task CannotCreateDocumentSubmissionWithoutEvidenceRequestIfResidentDoesNotExist()
         {
+            var residentId = Guid.NewGuid();
             string body = "{" +
-                          $"\"residentId\": \"{Guid.NewGuid()}\"," +
+                          $"\"residentId\": \"{residentId}\"," +
                           "\"team\": \"Development Housing Team\"," +
                           "\"userCreatedBy\": \"test-user\"," +
                           "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
@@ -348,6 +350,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/document_submissions", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
+            response.Content.ReadAsStringAsync().Result.Should().Be($"\"A resident with ID {residentId} does not exist.\"");
         }
     }
 }
