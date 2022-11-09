@@ -38,7 +38,11 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException($"Cannot find document submission with ID: {id}");
             }
 
-            var evidenceRequest = _evidenceGateway.FindEvidenceRequest(found.EvidenceRequestId);
+            var evidenceRequest = new EvidenceRequest();
+            if (found.EvidenceRequestId != null)
+            {
+                evidenceRequest = _evidenceGateway.FindEvidenceRequest((Guid) found.EvidenceRequestId);
+            }
             var documentType = FindDocumentType(evidenceRequest.Team, found.DocumentTypeId);
             var staffSelectedDocumentType = FindStaffSelectedDocumentType(evidenceRequest.Team,
                 found.StaffSelectedDocumentTypeId);

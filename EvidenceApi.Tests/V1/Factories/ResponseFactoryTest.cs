@@ -5,6 +5,7 @@ using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Factories;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 
 namespace EvidenceApi.Tests.V1.Factories
 {
@@ -57,7 +58,7 @@ namespace EvidenceApi.Tests.V1.Factories
 
             response.Id.Should().Be(domain.Id);
             response.CreatedAt.Should().Be(domain.CreatedAt);
-            response.EvidenceRequestId.Should().Be(domain.EvidenceRequestId);
+            response.EvidenceRequestId.Should().Be((Guid) domain.EvidenceRequestId);
             response.ClaimId.Should().Be(domain.ClaimId);
             response.AcceptedAt.Should().Be(domain.AcceptedAt);
             response.RejectionReason.Should().Be(domain.RejectionReason);
@@ -92,6 +93,29 @@ namespace EvidenceApi.Tests.V1.Factories
             response.RetentionExpiresAt.Should().Be(claim.RetentionExpiresAt);
             response.Document.Should().Be(claim.Document);
             response.UploadPolicy.Should().Be(s3UploadPolicy);
+        }
+
+        [Test]
+        public void CanMapADocumentSubmissionWithoutEvidenceRequestDomainObjectToAResponseObject()
+        {
+            var staffSelectedDocumentType = new DocumentType() { Id = "passport-scan", Title = "Passport" };
+            var claim = _fixture.Build<Claim>().Create();
+            var domain = TestDataHelper.DocumentSubmission();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
+
+            var response = domain.ToResponse(staffSelectedDocumentType, s3UploadPolicy, claim);
+
+            response.Id.Should().Be(domain.Id);
+            response.CreatedAt.Should().Be(domain.CreatedAt);
+            response.ClaimId.Should().Be(domain.ClaimId);
+            response.Team.Should().Be(domain.Team);
+            response.ResidentId.Should().Be(domain.ResidentId);
+            response.ClaimValidUntil.Should().Be(claim.ValidUntil);
+            response.RetentionExpiresAt.Should().Be(claim.RetentionExpiresAt);
+            response.State.Should().Be(domain.State.ToString().ToUpper());
+            response.StaffSelectedDocumentType.Should().Be(staffSelectedDocumentType);
+            response.UploadPolicy.Should().Be(s3UploadPolicy);
+            response.Document.Should().Be(claim.Document);
         }
     }
 }

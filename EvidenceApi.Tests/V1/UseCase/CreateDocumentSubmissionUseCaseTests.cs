@@ -159,9 +159,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             _request = CreateRequestFixture();
             SetupEvidenceGateway(evidenceRequest);
             SetupDocumentsApiGateway(evidenceRequest, claim, s3UploadPolicy);
-            _updateEvidenceRequestStateUseCase.Setup(x => x.Execute(_created.EvidenceRequestId)).Returns(evidenceRequest).Verifiable();
+            _updateEvidenceRequestStateUseCase.Setup(x => x.Execute((Guid) _created.EvidenceRequestId)).Returns(evidenceRequest).Verifiable();
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request);
-            _updateEvidenceRequestStateUseCase.Verify(x => x.Execute(_created.EvidenceRequestId), Times.Once);
+            _updateEvidenceRequestStateUseCase.Verify(x => x.Execute((Guid) _created.EvidenceRequestId), Times.Once);
         }
 
         [TestCase(SubmissionState.Pending)]

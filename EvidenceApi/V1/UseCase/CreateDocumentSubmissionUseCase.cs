@@ -66,7 +66,11 @@ namespace EvidenceApi.V1.UseCase
             var documentSubmission = BuildDocumentSubmission(evidenceRequest, request, claim);
             var createdDocumentSubmission = _evidenceGateway.CreateDocumentSubmission(documentSubmission);
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(evidenceRequest.Team, documentSubmission.DocumentTypeId);
-            _updateEvidenceRequestStateUseCase.Execute(createdDocumentSubmission.EvidenceRequestId);
+
+            if (createdDocumentSubmission.EvidenceRequestId != null)
+            {
+                _updateEvidenceRequestStateUseCase.Execute((Guid) createdDocumentSubmission.EvidenceRequestId);
+            }
 
             return createdDocumentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, null, createdS3UploadPolicy, claim);
         }
@@ -93,6 +97,7 @@ namespace EvidenceApi.V1.UseCase
             var documentSubmission = new DocumentSubmission()
             {
                 EvidenceRequest = evidenceRequest,
+                EvidenceRequestId = evidenceRequest.Id,
                 DocumentTypeId = request.DocumentType,
                 ClaimId = claim.Id.ToString(),
                 State = SubmissionState.Uploaded,

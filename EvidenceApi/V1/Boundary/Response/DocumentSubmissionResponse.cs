@@ -10,7 +10,7 @@ namespace EvidenceApi.V1.Boundary.Response
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public Guid EvidenceRequestId { get; set; }
+        public Guid? EvidenceRequestId { get; set; }
         public string ClaimId { get; set; }
         public string Team { get; set; }
         public Guid? ResidentId { get; set; }

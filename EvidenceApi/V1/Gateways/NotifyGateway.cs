@@ -51,7 +51,7 @@ namespace EvidenceApi.V1.Gateways
             {
                 DeliveryMethod = deliveryMethod,
                 NotifyId = result.id,
-                EvidenceRequestId = documentSubmission.EvidenceRequestId,
+                EvidenceRequestId = (Guid) documentSubmission.EvidenceRequestId,
                 Reason = communicationReason,
                 TemplateId = templateId
             };

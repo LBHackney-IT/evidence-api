@@ -23,6 +23,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         private readonly IFixture _fixture = new Fixture();
         private Claim _createdClaim;
         private Document _document;
+        private S3UploadPolicy _createdUploadPolicy;
         private readonly Guid _id = Guid.NewGuid();
 
         [SetUp]
@@ -35,11 +36,29 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .With(x => x.Document, _document)
                 .Create();
 
+            _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
+
             DocumentsApiServer.Given(
                 Request.Create().WithPath($"/api/v1/claims/{_createdClaim.Id}").UsingGet()
             ).RespondWith(
                 Response.Create().WithStatusCode(200).WithBody(
                     JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath("/api/v1/claims")
+            ).RespondWith(
+                Response.Create().WithStatusCode(201).WithBody(
+                    JsonConvert.SerializeObject(_createdClaim)
+                )
+            );
+
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/documents/{_id}/upload_policies")
+            ).RespondWith(
+                Response.Create().WithStatusCode(200).WithBody(
+                    JsonConvert.SerializeObject(_createdUploadPolicy)
                 )
             );
         }
@@ -155,7 +174,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonFind = await responseFind.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(jsonFind);
 
-            var expected = documentSubmission.ToResponse(null, documentSubmission.EvidenceRequestId, null, null, _createdClaim);
+            var expected = documentSubmission.ToResponse(null, (Guid) documentSubmission.EvidenceRequestId, null, null, _createdClaim);
 
             responseFind.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
@@ -248,6 +267,93 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/document_submissions?team={team}&residentId={fakeResidentId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task CanCreateDocumentSubmissionWithoutEvidenceRequestWithValidParams()
+        {
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            string body = "{" +
+                          $"\"residentId\": \"{resident.Id}\"," +
+                          "\"team\": \"Development Housing Team\"," +
+                          "\"userCreatedBy\": \"test-user\"," +
+                          "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
+                          "\"documentName\": \"some document name\"," +
+                          "\"documentDescription\": \"some document description\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/document_submissions", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(201);
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var created = DatabaseContext.DocumentSubmissions.First();
+
+            var formattedCreatedAt = JsonConvert.SerializeObject(created.CreatedAt);
+            var formattedValidUntil = JsonConvert.SerializeObject(_createdClaim.ValidUntil);
+            var formattedRetentionExpiresAt = JsonConvert.SerializeObject(_createdClaim.RetentionExpiresAt);
+            string expected = "{" +
+                               $"\"id\":\"{created.Id}\"," +
+                               $"\"createdAt\":{formattedCreatedAt}," +
+                               $"\"claimId\":\"{_createdClaim.Id}\"," +
+                               $"\"team\":\"{created.Team}\"," +
+                               $"\"residentId\":\"{created.ResidentId}\"," +
+                               $"\"claimValidUntil\":{formattedValidUntil}," +
+                               $"\"retentionExpiresAt\":{formattedRetentionExpiresAt}," +
+                               $"\"state\":\"APPROVED\"," +
+                               "\"staffSelectedDocumentType\":{\"id\":\"passport-scan\",\"title\":\"Passport Scan\",\"description\":\"A valid passport open at the photo page\",\"enabled\":true}," +
+                               $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
+                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +
+                               "}";
+
+            json.Should().Be(expected);
+        }
+
+        [Test]
+        public async Task CannotCreateDocumentSubmissionWithoutEvidenceRequestWithInvalidParameters()
+        {
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            string body = "{" +
+                          $"\"residentId\": \"{resident.Id}\"," +
+                          "\"team\": \"\"," +
+                          "\"userCreatedBy\": \"test-user\"," +
+                          "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
+                          "\"documentName\": \"some document name\"," +
+                          "\"documentDescription\": \"some document description\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/document_submissions", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(400);
+            response.Content.ReadAsStringAsync().Result.Should().Be($"\"'Team' must not be empty.\"");
+        }
+
+        [Test]
+        public async Task CannotCreateDocumentSubmissionWithoutEvidenceRequestIfResidentDoesNotExist()
+        {
+            var residentId = Guid.NewGuid();
+            string body = "{" +
+                          $"\"residentId\": \"{residentId}\"," +
+                          "\"team\": \"Development Housing Team\"," +
+                          "\"userCreatedBy\": \"test-user\"," +
+                          "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
+                          "\"documentName\": \"some document name\"," +
+                          "\"documentDescription\": \"some document description\"" +
+                          "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/document_submissions", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(400);
+            response.Content.ReadAsStringAsync().Result.Should().Be($"\"A resident with ID {residentId} does not exist.\"");
         }
     }
 }
