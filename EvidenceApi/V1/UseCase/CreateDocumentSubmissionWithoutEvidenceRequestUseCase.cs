@@ -85,10 +85,13 @@ namespace EvidenceApi.V1.UseCase
             Claim claim
         )
         {
+            var currentDateTime = DateTime.UtcNow;
             var documentSubmission = new DocumentSubmission()
             {
+                CreatedAt = currentDateTime,
                 ClaimId = claim.Id.ToString(),
                 State = SubmissionState.Approved,
+                AcceptedAt = currentDateTime,
                 Team = request.Team,
                 ResidentId = request.ResidentId,
                 StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId
