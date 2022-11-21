@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Amazon.Runtime.Internal;
 using EvidenceApi.V1.Boundary.Request;
 using Microsoft.EntityFrameworkCore;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -109,20 +110,34 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state = null, int? limit = 10,
             int? page = 1)
         {
+            List<DocumentSubmission> documentSubmissions;
             var offset = (limit * page) - limit;
 
             var total = _databaseContext.DocumentSubmissions
                 .Count(x => x.ResidentId.Equals(id));
 
-            var documentSubmissions = _databaseContext.DocumentSubmissions
-                .Where(x => x.ResidentId.Equals(id))
-                .Skip(offset ?? 0)
-                .Take(limit ?? 10)
-                .OrderByDescending(x => x.CreatedAt)
-                .ToList();
+            if (state != null)
+            {
+                documentSubmissions = _databaseContext.DocumentSubmissions
+                   .Where(x => x.ResidentId.Equals(id))
+                   .Where(x => x.State.Equals(state))
+                   .Skip(offset ?? 0)
+                   .Take(limit ?? 10)
+                   .OrderByDescending(x => x.CreatedAt)
+                   .ToList();
+            }
+            else
+            {
+                documentSubmissions = _databaseContext.DocumentSubmissions
+                   .Where(x => x.ResidentId.Equals(id))
+                   .Skip(offset ?? 0)
+                   .Take(limit ?? 10)
+                   .OrderByDescending(x => x.CreatedAt)
+                   .ToList();
+            }
 
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
