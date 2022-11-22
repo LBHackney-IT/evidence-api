@@ -423,7 +423,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments() 
+        public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments()
         {
             var queryGuid = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(queryGuid);
@@ -480,7 +480,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
 
             documentSubmission1.State = SubmissionState.Approved;
-            documentSubmission2.State = SubmissionState.Pending;            
+            documentSubmission2.State = SubmissionState.Pending;
             documentSubmission3.State = SubmissionState.Approved;
             documentSubmission4.State = SubmissionState.Approved;
 

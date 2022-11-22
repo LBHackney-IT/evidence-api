@@ -132,7 +132,7 @@ namespace EvidenceApi.V1.Gateways
                 total = _databaseContext.DocumentSubmissions
                     .Where(x => x.ResidentId.Equals(id))
                     .Where(x => x.State.Equals(state))
-                    .Count();                    
+                    .Count();
             }
             else
             {
@@ -144,7 +144,7 @@ namespace EvidenceApi.V1.Gateways
                    .ToList();
 
                 total = _databaseContext.DocumentSubmissions
-                    .Count(x => x.ResidentId.Equals(id));                   
+                    .Count(x => x.ResidentId.Equals(id));
 
             }
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
