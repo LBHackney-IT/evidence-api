@@ -114,10 +114,11 @@ namespace EvidenceApi.V1.Gateways
             int? page = 1)
         {
             List<DocumentSubmission> documentSubmissions;
+            int total;
             var offset = (limit * page) - limit;
 
-            var total = _databaseContext.DocumentSubmissions
-                .Count(x => x.ResidentId.Equals(id));
+            // total = _databaseContext.DocumentSubmissions
+            //     .Count(x => x.ResidentId.Equals(id));
 
             if (state != null)
             {
@@ -137,8 +138,9 @@ namespace EvidenceApi.V1.Gateways
                    .Take(limit ?? 10)
                    .OrderByDescending(x => x.CreatedAt)
                    .ToList();
-            }
 
+            }
+            total = documentSubmissions.Count;
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
         }
