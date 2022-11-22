@@ -117,8 +117,7 @@ namespace EvidenceApi.V1.Gateways
             int total;
             var offset = (limit * page) - limit;
 
-            // total = _databaseContext.DocumentSubmissions
-            //     .Count(x => x.ResidentId.Equals(id));
+
 
             if (state != null)
             {
@@ -129,6 +128,11 @@ namespace EvidenceApi.V1.Gateways
                    .Take(limit ?? 10)
                    .OrderByDescending(x => x.CreatedAt)
                    .ToList();
+
+                total = _databaseContext.DocumentSubmissions
+                    .Where(x => x.ResidentId.Equals(id))
+                    .Where(x => x.State.Equals(state))
+                    .Count();                    
             }
             else
             {
@@ -139,8 +143,10 @@ namespace EvidenceApi.V1.Gateways
                    .OrderByDescending(x => x.CreatedAt)
                    .ToList();
 
+                total = _databaseContext.DocumentSubmissions
+                    .Count(x => x.ResidentId.Equals(id));                   
+
             }
-            total = documentSubmissions.Count;
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
         }

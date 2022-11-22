@@ -56,17 +56,6 @@ namespace EvidenceApi.Tests
             return submission;
         }
 
-        public static DocumentSubmission DocumentSubmissionWitNoER(Guid residentId)
-        {
-            return _fixture.Build<DocumentSubmission>()
-                .With(x => x.ResidentId, residentId)
-                .Without(x => x.EvidenceRequest)
-                .Without(x => x.CreatedAt)
-                .Create();
-        }
-
-
-
         public static Communication Communication()
         {
             return _fixture.Build<Communication>()
