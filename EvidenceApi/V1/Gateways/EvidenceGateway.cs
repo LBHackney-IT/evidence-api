@@ -117,8 +117,6 @@ namespace EvidenceApi.V1.Gateways
             int total;
             var offset = (limit * page) - limit;
 
-
-
             if (state != null)
             {
                 documentSubmissions = _databaseContext.DocumentSubmissions

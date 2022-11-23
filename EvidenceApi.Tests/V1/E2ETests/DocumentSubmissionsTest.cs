@@ -259,6 +259,65 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.Should().BeEquivalentTo(expected);
         }
 
+
+        [Test]
+        public async Task ReturnsDocumentSubmissionsWithValidParametersAndState() //THIS TEST IS NOT WORKING
+        {
+
+            var resident = TestDataHelper.ResidentWithId(Guid.NewGuid());
+            var residentId = resident.Id;
+
+            var evidenceRequestId = Guid.NewGuid();
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.Id = evidenceRequestId;
+            evidenceRequest.Team = "Development Housing Team";
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
+            documentSubmission1.State = SubmissionState.Approved;
+            documentSubmission1.ClaimId = _createdClaim.Id.ToString();
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
+            documentSubmission2.State = SubmissionState.Approved;
+            documentSubmission2.ClaimId = _createdClaim.Id.ToString();
+            var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
+            documentSubmission3.State = SubmissionState.Pending;
+            documentSubmission3.ClaimId = _createdClaim.Id.ToString();
+            var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
+            documentSubmission4.State = SubmissionState.Approved;
+            documentSubmission4.ClaimId = _createdClaim.Id.ToString();
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
+
+            DatabaseContext.SaveChanges();
+
+            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={documentSubmission1.ResidentId}&state=Approved", UriKind.Relative);
+
+            var response = await Client.GetAsync(uri).ConfigureAwait(true);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponseObject>(json);
+
+            var expected = new DocumentSubmissionResponseObject()
+            {
+                DocumentSubmissions = new List<DocumentSubmissionResponse>()
+                {
+                    documentSubmission1.ToResponse(null, documentSubmission4.EvidenceRequestId, null, null, _createdClaim),
+                    documentSubmission1.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim),
+                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                },
+                Total = 3
+            };
+
+            response.StatusCode.Should().Be(200);
+            result.Should().BeEquivalentTo(expected);
+        }
+
         [Test]
         public async Task ReturnBadRequestWhenSearchQueryIsInvalid()
         {
