@@ -21,9 +21,9 @@
     <PackageReference Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
-      <PrivateAssets>all</PrivateAssets>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>

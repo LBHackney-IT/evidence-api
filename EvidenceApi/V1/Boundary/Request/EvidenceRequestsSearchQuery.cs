@@ -8,7 +8,7 @@ namespace EvidenceApi.V1.Boundary.Request
     public class EvidenceRequestsSearchQuery
     {
         public string Team { get; set; }
-        public Guid? ResidentId { get; set; } = null;
-        public EvidenceRequestState? State { get; set; } = null;
+        public Guid? ResidentId { get; set; }
+        public EvidenceRequestState? State { get; set; }
     }
 }

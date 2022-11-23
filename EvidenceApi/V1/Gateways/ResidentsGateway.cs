@@ -46,9 +46,9 @@ namespace EvidenceApi.V1.Gateways
             var searchQueryLowerCase = searchQuery.ToLower();
             return _databaseContext.Residents
                 .Where(r =>
-                    r.Name.ToLower().StartsWith(searchQueryLowerCase) ||
-                    r.Email.ToLower().StartsWith(searchQueryLowerCase) ||
-                    r.PhoneNumber.ToLower().StartsWith(searchQueryLowerCase))
+                    r.Name.ToLower().StartsWith(searchQueryLowerCase, StringComparison.CurrentCulture) ||
+                    r.Email.ToLower().StartsWith(searchQueryLowerCase, StringComparison.CurrentCulture) ||
+                    r.PhoneNumber.ToLower().StartsWith(searchQueryLowerCase, StringComparison.CurrentCulture))
                 .ToList();
         }
 
