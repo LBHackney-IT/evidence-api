@@ -37,6 +37,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             _request.DeliveryMethods = new List<string>() { "FOO" };
 
+            var result = _classUnderTest.Validate(_request);
+
             _classUnderTest.ShouldHaveValidationErrorFor(x => x.DeliveryMethods, _request)
                 .WithErrorMessage("'Delivery Methods' has a range of values which does not include 'FOO'.");
         }
