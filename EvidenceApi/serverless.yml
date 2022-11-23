@@ -2,7 +2,7 @@ service: evidence-api
 variablesResolutionMode: 20210326
 provider:
   name: aws
-  runtime: dotnetcore3.1
+  runtime: dotnet6
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
@@ -17,7 +17,7 @@ provider:
           rateLimit: 100
 
 package:
-  artifact: ./bin/release/netcoreapp3.1/evidence-api.zip
+  artifact: ./bin/release/net6.0/evidence-api.zip
 
 functions:
   EvidenceApi:
