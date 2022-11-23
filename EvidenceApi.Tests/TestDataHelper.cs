@@ -49,10 +49,8 @@ namespace EvidenceApi.Tests
                 .With(x => x.EvidenceRequest, evidenceRequest)
                 .With(x => x.EvidenceRequestId, evidenceRequest.Id)
                 .Without(x => x.CreatedAt)
+                .Without(x => x.Resident)
                 .Create();
-
-
-
             return submission;
         }
 

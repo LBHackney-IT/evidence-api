@@ -261,11 +261,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
 
         [Test]
-        public async Task ReturnsDocumentSubmissionsWithValidParametersAndState() //THIS TEST IS NOT WORKING
+        public async Task ReturnsDocumentSubmissionsWithValidParametersAndState()
         {
-
-            var resident = TestDataHelper.ResidentWithId(Guid.NewGuid());
-            var residentId = resident.Id;
+            var residentId = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(residentId);
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
@@ -297,7 +296,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={documentSubmission1.ResidentId}&state=Approved", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={residentId}&state=Approved", UriKind.Relative);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -307,8 +306,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             {
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
-                    documentSubmission1.ToResponse(null, documentSubmission4.EvidenceRequestId, null, null, _createdClaim),
-                    documentSubmission1.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim),
+                    documentSubmission4.ToResponse(null, documentSubmission4.EvidenceRequestId, null, null, _createdClaim),
+                    documentSubmission2.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim),
                     documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
                 },
                 Total = 3
