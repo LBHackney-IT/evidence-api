@@ -13,7 +13,8 @@ public class GlobalSetup
     {
         try
         {
-            DotEnv.Config(true, Path.GetFullPath("../../../../.env"));
+            DotEnv.Load();
+            //DotEnv.Config(true, Path.GetFullPath("../../../../.env"));
         }
         catch
         {
