@@ -52,8 +52,7 @@ namespace EvidenceApi
                 .AddMvc(c =>
                 {
                     c.Filters.Add<HandleExceptionAttribute>();
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
             var apiVersions = new List<ApiVersion>();
             apiVersions.Add(new ApiVersion(1, 0));
