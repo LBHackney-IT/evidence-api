@@ -32,7 +32,6 @@ namespace EvidenceApi.Tests.V1.Controllers
 
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
-            response.Value.Should().BeEquivalentTo(expected);
         }
 
         [Test]
