@@ -40,6 +40,7 @@ namespace EvidenceApi
             Configuration = configuration;
 
             AWSSDKHandler.RegisterXRayForAllServices();
+
         }
 
         public IConfiguration Configuration { get; }
@@ -211,6 +212,9 @@ namespace EvidenceApi
                         $"{ApiName}-api {apiVersionDescription.GetFormattedApiVersion()}");
                 }
             });
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             app.UseSwagger();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
