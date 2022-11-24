@@ -307,7 +307,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"state\":\"APPROVED\"," +
                                "\"staffSelectedDocumentType\":{\"id\":\"passport-scan\",\"title\":\"Passport Scan\",\"description\":\"A valid passport open at the photo page\",\"enabled\":true}," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
-                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\",\"documentDescription\":\"{_document.DocumentDescription}\"" + "}" +
+                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\",\"description\":\"{_document.Description}\"" + "}" +
                                "}";
 
             json.Should().Be(expected);
