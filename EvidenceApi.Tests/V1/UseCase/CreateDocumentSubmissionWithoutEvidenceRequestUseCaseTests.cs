@@ -61,16 +61,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsBadRequestExceptionWhenDocumentNameIsEmptyOrNull()
-        {
-            var documentSubmissionWithoutEvidenceRequestRequest = _fixture.Build<DocumentSubmissionWithoutEvidenceRequestRequest>()
-                .Without(x => x.DocumentName)
-                .Create();
-            Func<Task<DocumentSubmissionWithoutEvidenceRequestResponse>> testDelegate = async () => await _classUnderTest.ExecuteAsync(documentSubmissionWithoutEvidenceRequestRequest);
-            testDelegate.Should().Throw<BadRequestException>().WithMessage("'Document Name' must not be empty.");
-        }
-
-        [Test]
         public void ThrowsBadRequestExceptionWhenDocumentDescriptionIsEmptyOrNull()
         {
             var documentSubmissionWithoutEvidenceRequestRequest = _fixture.Build<DocumentSubmissionWithoutEvidenceRequestRequest>()

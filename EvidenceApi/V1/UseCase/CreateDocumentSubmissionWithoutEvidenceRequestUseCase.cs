@@ -75,7 +75,8 @@ namespace EvidenceApi.V1.UseCase
                 UserCreatedBy = request.UserCreatedBy,
                 ApiCreatedBy = "evidence_api",
                 RetentionExpiresAt = DateTime.UtcNow.AddMonths(3).Date,
-                ValidUntil = DateTime.UtcNow.AddMonths(3).Date
+                ValidUntil = DateTime.UtcNow.AddMonths(3).Date,
+                DocumentDescription = request.DocumentDescription
             };
             return claimRequest;
         }

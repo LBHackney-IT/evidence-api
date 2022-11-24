@@ -11,7 +11,6 @@ namespace EvidenceApi.V1.Validators
             RuleFor(x => x.Team).NotEmpty();
             RuleFor(x => x.UserCreatedBy).NotEmpty();
             RuleFor(x => x.StaffSelectedDocumentTypeId).NotEmpty();
-            RuleFor(x => x.DocumentName).NotEmpty();
             RuleFor(x => x.DocumentDescription).NotEmpty();
         }
     }

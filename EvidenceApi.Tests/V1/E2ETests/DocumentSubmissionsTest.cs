@@ -282,7 +282,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
                           "\"team\": \"Development Housing Team\"," +
                           "\"userCreatedBy\": \"test-user\"," +
                           "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
-                          "\"documentName\": \"some document name\"," +
                           "\"documentDescription\": \"some document description\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -308,7 +307,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"state\":\"APPROVED\"," +
                                "\"staffSelectedDocumentType\":{\"id\":\"passport-scan\",\"title\":\"Passport Scan\",\"description\":\"A valid passport open at the photo page\",\"enabled\":true}," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
-                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\"" + "}" +
+                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\",\"description\":\"{_document.Description}\"" + "}" +
                                "}";
 
             json.Should().Be(expected);
@@ -327,7 +326,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
                           "\"team\": \"\"," +
                           "\"userCreatedBy\": \"test-user\"," +
                           "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
-                          "\"documentName\": \"some document name\"," +
                           "\"documentDescription\": \"some document description\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -346,7 +344,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
                           "\"team\": \"Development Housing Team\"," +
                           "\"userCreatedBy\": \"test-user\"," +
                           "\"staffSelectedDocumentTypeId\": \"passport-scan\"," +
-                          "\"documentName\": \"some document name\"," +
                           "\"documentDescription\": \"some document description\"" +
                           "}";
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
