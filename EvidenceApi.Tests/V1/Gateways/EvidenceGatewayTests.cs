@@ -503,9 +503,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.DocumentSubmissions.Should().Equal(expected);
         }
 
-
-
-
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();

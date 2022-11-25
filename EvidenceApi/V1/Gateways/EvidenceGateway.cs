@@ -113,38 +113,27 @@ namespace EvidenceApi.V1.Gateways
         public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state = null, int? limit = 10,
             int? page = 1)
         {
+            IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions;
             List<DocumentSubmission> documentSubmissions;
             int total;
             var offset = (limit * page) - limit;
 
             if (state != null)
             {
-                documentSubmissions = _databaseContext.DocumentSubmissions
-                   .Where(x => x.ResidentId.Equals(id))
-                   .Where(x => x.State.Equals(state))
-                   .Skip(offset ?? 0)
-                   .Take(limit ?? 10)
-                   .OrderByDescending(x => x.CreatedAt)
-                   .ToList();
-
-                total = _databaseContext.DocumentSubmissions
-                    .Where(x => x.ResidentId.Equals(id))
-                    .Where(x => x.State.Equals(state))
-                    .Count();
+                query = query.Where(x => x.State.Equals(state));
             }
-            else
-            {
-                documentSubmissions = _databaseContext.DocumentSubmissions
-                   .Where(x => x.ResidentId.Equals(id))
-                   .Skip(offset ?? 0)
-                   .Take(limit ?? 10)
-                   .OrderByDescending(x => x.CreatedAt)
-                   .ToList();
 
-                total = _databaseContext.DocumentSubmissions
-                    .Count(x => x.ResidentId.Equals(id));
+            documentSubmissions = query
+               .Where(x => x.ResidentId.Equals(id))
+               .Skip(offset ?? 0)
+               .Take(limit ?? 10)
+               .OrderByDescending(x => x.CreatedAt)
+               .ToList();
 
-            }
+            total = query
+                .Where(x => x.ResidentId.Equals(id))
+                .Count();
+
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
         }
