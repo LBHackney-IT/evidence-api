@@ -133,14 +133,7 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            //replace method to load env variables
             DotEnv.Load();
-
-            // var success = DotEnv.AutoConfig(5);
-            // if (success)
-            // {
-            //     Console.WriteLine("LOADED ENVIRONMENT FROM .env");
-            // }
 
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);

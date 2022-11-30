@@ -16,8 +16,6 @@ public class GlobalSetup
         try
         {
             DotEnv.Load();
-
-            //DotEnv.Config(true, Path.GetFullPath("../../../../.env"));
         }
         catch
         {
