@@ -292,7 +292,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEmpty();
         }
 
-        [Ignore("Test is failing inconsistently")]
         [Test]
         public void FindEvidenceRequestsByResidentIdReturnsResults()
         {
@@ -323,7 +322,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             found.Should().Equal(expected);
         }
 
-        [Ignore("Test is failing inconsistently")]
         [Test]
         public void GetAllReturnsResults()
         {
@@ -425,7 +423,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.DocumentSubmissions.Should().Equal(expected);
         }
 
-        [Ignore("Test is inconsistently failing.")]
         [Test]
         public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments()
         {
