@@ -312,13 +312,14 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
             {
-                evidenceRequest1, evidenceRequest2
+                evidenceRequest2, evidenceRequest1
             };
 
             // Act
             var found = _classUnderTest.FindEvidenceRequestsByResidentId(resident1.Id);
 
             // Assert
+            found.Should().HaveCount(2);
             found.Should().Equal(expected);
         }
 
