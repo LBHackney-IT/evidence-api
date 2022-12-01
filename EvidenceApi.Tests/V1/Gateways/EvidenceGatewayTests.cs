@@ -333,7 +333,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
             {
-                evidenceRequest2, evidenceRequest1
+                evidenceRequest1, evidenceRequest2
             };
 
             // Act
