@@ -91,7 +91,9 @@ namespace EvidenceApi.V1.Gateways
 
         public List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id)
         {
-            return _databaseContext.EvidenceRequests.Where(x => x.ResidentId.Equals(id)).ToList();
+            return _databaseContext.EvidenceRequests.Where(x => x.ResidentId.Equals(id))
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
         }
 
         public List<EvidenceRequest> GetAll()
