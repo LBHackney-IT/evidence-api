@@ -7,6 +7,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
 using AutoFixture;
@@ -297,8 +298,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             // Arrange
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            Thread.Sleep(50);
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            Thread.Sleep(50);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
+            Thread.Sleep(50);
             var resident1 = TestDataHelper.Resident();
             resident1.Id = Guid.NewGuid();
             var resident2 = TestDataHelper.Resident();
