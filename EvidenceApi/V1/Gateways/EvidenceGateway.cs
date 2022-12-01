@@ -96,8 +96,10 @@ namespace EvidenceApi.V1.Gateways
 
         public List<EvidenceRequest> GetAll()
         {
-            return _databaseContext.EvidenceRequests.ToList();
-            //do we need an order by here?
+            return _databaseContext.EvidenceRequests
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+
         }
 
         public List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request)
