@@ -113,7 +113,7 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, int? limit = 10,
             int? page = 1)
         {
             var offset = (limit * page) - limit;
@@ -122,7 +122,7 @@ namespace EvidenceApi.V1.Gateways
                 .Count(x => x.ResidentId.Equals(id));
 
             var documentSubmissions = _databaseContext.DocumentSubmissions
-                .Where(x => x.ResidentId.Equals(id))
+                .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team))
                 .Skip(offset ?? 0)
                 .Take(limit ?? 10)
                 .OrderByDescending(x => x.CreatedAt)

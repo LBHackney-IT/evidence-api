@@ -160,7 +160,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway
-                .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<int?>(),
+                .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<int?>(),
                     It.IsAny<int?>())).Returns(_injectedResult);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
             _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);

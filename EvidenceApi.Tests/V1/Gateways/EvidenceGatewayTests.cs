@@ -404,6 +404,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var queryGuid = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(queryGuid);
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var team = "testTeam";
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -411,7 +412,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission1.Team = team;
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission2.Team = team;
 
             DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -422,7 +425,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expected = new List<DocumentSubmission>() { documentSubmission1, documentSubmission2 };
 
-            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid);
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team);
 
             result.Total.Should().Be(2);
             result.DocumentSubmissions.Should().Equal(expected);
@@ -437,6 +440,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var page = 1;
             var pageSize = 2;
+            var team = "testTeam";
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -444,8 +448,11 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission1.Team = team;
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission2.Team = team;
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission3.Team = team;
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
 
             DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
@@ -459,9 +466,9 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             DatabaseContext.SaveChanges();
 
-            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3 };
+            var expected = new List<DocumentSubmission>() { documentSubmission3, documentSubmission2 };
 
-            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, pageSize, page);
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team, pageSize, page);
 
             result.Total.Should().Be(4);
             result.DocumentSubmissions.Should().Equal(expected);
