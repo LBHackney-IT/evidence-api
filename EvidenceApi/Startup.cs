@@ -40,7 +40,6 @@ namespace EvidenceApi
             Configuration = configuration;
 
             AWSSDKHandler.RegisterXRayForAllServices();
-
         }
 
         public IConfiguration Configuration { get; }

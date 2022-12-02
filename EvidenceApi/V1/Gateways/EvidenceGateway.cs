@@ -101,7 +101,6 @@ namespace EvidenceApi.V1.Gateways
             return _databaseContext.EvidenceRequests
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
-
         }
 
         public List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request)
