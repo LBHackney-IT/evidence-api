@@ -261,8 +261,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     "Passport",
             };
 
-                var expected = new DocumentSubmissionResponseObject()
-            {
+                var expected = new DocumentSubmissionResponseObject
+                {
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
                     documentSubmission1.ToResponse(expectedDocType, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
