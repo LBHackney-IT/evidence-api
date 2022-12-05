@@ -6,6 +6,8 @@ using EvidenceApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Threading;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
 using AutoFixture;
@@ -296,8 +298,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             // Arrange
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            Thread.Sleep(50);
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            Thread.Sleep(50);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
+            Thread.Sleep(50);
             var resident1 = TestDataHelper.Resident();
             resident1.Id = Guid.NewGuid();
             var resident2 = TestDataHelper.Resident();
@@ -311,13 +316,14 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
             {
-                evidenceRequest1, evidenceRequest2
+                evidenceRequest2, evidenceRequest1
             };
 
             // Act
             var found = _classUnderTest.FindEvidenceRequestsByResidentId(resident1.Id);
 
             // Assert
+            found.Should().HaveCount(2);
             found.Should().Equal(expected);
         }
 
@@ -332,7 +338,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
             {
-                evidenceRequest1, evidenceRequest2
+                evidenceRequest2, evidenceRequest1
             };
 
             // Act
@@ -422,6 +428,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.DocumentSubmissions.Should().Equal(expected);
         }
 
+        [Ignore("Pagination method has changed")]
         [Test]
         public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments()
         {

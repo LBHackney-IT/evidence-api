@@ -18,7 +18,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var expected = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
-                Title = "An error occured while processing your request.",
+                Title = "An error occurred while processing your request.",
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
             };
 

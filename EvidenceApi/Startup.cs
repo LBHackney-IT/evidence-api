@@ -52,8 +52,7 @@ namespace EvidenceApi
                 .AddMvc(c =>
                 {
                     c.Filters.Add<HandleExceptionAttribute>();
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
             var apiVersions = new List<ApiVersion>();
             apiVersions.Add(new ApiVersion(1, 0));
@@ -133,11 +132,7 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            var success = DotEnv.AutoConfig(5);
-            if (success)
-            {
-                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
-            }
+            DotEnv.Load();
 
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);
@@ -209,6 +204,9 @@ namespace EvidenceApi
                         $"{ApiName}-api {apiVersionDescription.GetFormattedApiVersion()}");
                 }
             });
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             app.UseSwagger();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
