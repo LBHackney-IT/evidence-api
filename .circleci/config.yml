@@ -96,6 +96,9 @@ commands:
           name: Install Unzip
           command: apt-get update && apt-get install unzip
       - run:
+          name: Install ssh
+          command: apt-get update && apt-get install -y --no-install-recommends ssh-client && rm -rf /var/lib/apt/lists/*
+      - run:
           name: Install AWS CLI
           command: |
             curl -L -o awscliv2.zip "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
