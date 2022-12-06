@@ -205,7 +205,6 @@ namespace EvidenceApi
                 }
             });
 
-            //allow legacy Postgres behaviour
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             app.UseSwagger();

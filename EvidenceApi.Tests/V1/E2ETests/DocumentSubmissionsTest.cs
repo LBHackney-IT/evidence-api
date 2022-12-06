@@ -223,10 +223,12 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var resident = TestDataHelper.ResidentWithId(Guid.NewGuid());
 
+            var team = "Development Housing Team";
+
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
-            evidenceRequest.Team = "Development Housing Team";
+            evidenceRequest.Team = team;
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -235,6 +237,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(resident.Id, evidenceRequest);
             documentSubmission1.DocumentTypeId = documentType.Id;
+            documentSubmission1.Team = team;
             documentSubmission1.ClaimId = _createdClaim.Id.ToString();
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -246,11 +249,23 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponseObject>(json);
 
-            var expected = new DocumentSubmissionResponseObject()
+            var expectedDocType = new DocumentType()
+            {
+                Description =
+                    "A valid passport open at the photo page",
+                Enabled =
+                    true,
+                Id =
+                    "passport-scan",
+                Title =
+                    "Passport",
+            };
+
+            var expected = new DocumentSubmissionResponseObject
             {
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
-                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+                    documentSubmission1.ToResponse(expectedDocType, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
                 },
                 Total = 1
             };
