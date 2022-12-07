@@ -132,7 +132,7 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            DotEnv.Fluent().WithExceptions().WithEnvFiles(Path.Combine(Directory.GetCurrentDirectory(), "../.env")).Load();
+            DotEnv.Fluent().WithEnvFiles(Path.Combine(Directory.GetCurrentDirectory(), "../.env")).Load();
 
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);
