@@ -95,7 +95,8 @@ namespace EvidenceApi.V1.UseCase
                 AcceptedAt = currentDateTime,
                 Team = request.Team,
                 ResidentId = request.ResidentId,
-                StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId
+                StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId,
+                UserUpdatedBy = request.UserCreatedBy
             };
             return documentSubmission;
         }
