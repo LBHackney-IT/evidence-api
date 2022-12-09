@@ -86,7 +86,12 @@ namespace EvidenceApi.V1.Gateways
 
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
-            return _databaseContext.DocumentSubmissions.Find(id);
+            var documentSubmission = _databaseContext.DocumentSubmissions.Find(id);
+            if (documentSubmission != null && documentSubmission.isHidden == true)
+            {
+                return null;
+            }
+            return documentSubmission;
         }
 
         public List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id)
@@ -122,7 +127,7 @@ namespace EvidenceApi.V1.Gateways
                 .Count(x => x.ResidentId.Equals(id));
 
             var documentSubmissions = _databaseContext.DocumentSubmissions
-                .Where(x => x.ResidentId.Equals(id))
+                .Where(x => x.ResidentId.Equals(id) && x.isHidden.Equals(false))
                 .Skip(offset ?? 0)
                 .Take(limit ?? 10)
                 .OrderByDescending(x => x.CreatedAt)
