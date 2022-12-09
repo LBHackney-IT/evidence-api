@@ -113,10 +113,12 @@ namespace EvidenceApi.V1.Gateways
         public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state = null, int? limit = 10,
             int? page = 1)
         {
-            IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions;
             List<DocumentSubmission> documentSubmissions;
             int total;
             var offset = (limit * page) - limit;
+
+            IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions
+               .Where(x => x.ResidentId.Equals(id));
 
             if (state != null)
             {
@@ -124,15 +126,12 @@ namespace EvidenceApi.V1.Gateways
             }
 
             documentSubmissions = query
-               .Where(x => x.ResidentId.Equals(id))
                .Skip(offset ?? 0)
                .Take(limit ?? 10)
                .OrderByDescending(x => x.CreatedAt)
                .ToList();
 
-            total = query
-                .Where(x => x.ResidentId.Equals(id))
-                .Count();
+            total = query.Count();
 
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
