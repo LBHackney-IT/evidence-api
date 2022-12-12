@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EvidenceApi.Migrations
 {
-    /// <inheritdoc />
     public partial class AddIsHiddenFlagToDocumentSubmission : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<DateTime>(
@@ -77,7 +75,6 @@ namespace EvidenceApi.Migrations
                 oldType: "timestamp without time zone");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
