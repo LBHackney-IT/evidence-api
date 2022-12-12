@@ -148,12 +148,12 @@ Our staging and production environments are hosted by AWS. We would deploy to pr
 Before you commit or push your code, you will need to run:
 
 ```sh
-make lint
+ dotnet tool install dotnet-format --version 5.1.225507
 ```
 
-Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
+Otherwise your PR will automatically fail the CircleCI checks. This will install the formatting tool for the repository. From thereon, you can run:
 ```sh
-dotnet format
+dotnet dotnet-format
 ```
 to format your code.
 
