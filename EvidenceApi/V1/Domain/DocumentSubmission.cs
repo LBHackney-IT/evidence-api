@@ -53,5 +53,7 @@ namespace EvidenceApi.V1.Domain
         public virtual Resident Resident { get; set; }
         [Column("team")]
         public string Team { get; set; }
+        [Column("is_hidden")]
+        public bool isHidden { get; set; } = false;
     }
 }

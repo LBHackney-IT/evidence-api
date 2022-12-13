@@ -6,7 +6,6 @@ using EvidenceApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
@@ -122,6 +121,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.RejectionReason.Should().Be(request.RejectionReason);
             foundRecord.State.Should().Be(request.State);
             foundRecord.DocumentTypeId.Should().Be(request.DocumentTypeId);
+            foundRecord.isHidden.Should().Be(false);
         }
 
         [Test]
@@ -227,6 +227,19 @@ namespace EvidenceApi.Tests.V1.Gateways
             Guid id = Guid.NewGuid();
             var found = _classUnderTest.FindDocumentSubmission(id);
             found.Should().BeNull();
+        }
+
+        [Test]
+        public void FindReturnsNullWhenTheDocumentSubmissionShouldBeHidden()
+        {
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            documentSubmission.isHidden = true;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindDocumentSubmission(documentSubmission.Id);
+
+            found.Should().Be(null);
         }
 
         [Test]
