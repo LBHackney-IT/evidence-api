@@ -68,7 +68,7 @@ namespace EvidenceApi.V1.UseCase
             foreach (var resident in residentsForSearchQuery)
             {
                 //should the resident object have a team property? Otherwise we will return residents created by all teams...
-                //or is this what we want?
+                //or is this what we want?  I think it's what we want.
                 residents.Add(resident.ToResponse());
             };
         }
