@@ -495,8 +495,11 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            Thread.Sleep(50);
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            Thread.Sleep(50);
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            Thread.Sleep(50);
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
 
             documentSubmission1.State = SubmissionState.Approved;
