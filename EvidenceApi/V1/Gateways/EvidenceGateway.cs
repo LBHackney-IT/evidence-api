@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Amazon.Runtime.Internal;
 using EvidenceApi.V1.Boundary.Request;
 using Microsoft.EntityFrameworkCore;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -83,7 +84,6 @@ namespace EvidenceApi.V1.Gateways
             orderdEvidenceRequestsAndOrderedDocSubmissions.ForEach(er => er.DocumentSubmissions = er.DocumentSubmissions.OrderByDescending(ds => ds.CreatedAt).ToList());
             return orderdEvidenceRequestsAndOrderedDocSubmissions.ToList();
         }
-
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
             var documentSubmission = _databaseContext.DocumentSubmissions.Find(id);
@@ -107,7 +107,6 @@ namespace EvidenceApi.V1.Gateways
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }
-
         public List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request)
         {
             return _databaseContext.EvidenceRequests
@@ -118,20 +117,28 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? limit = 10,
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state = null, int? limit = 10,
             int? page = 1)
         {
+            List<DocumentSubmission> documentSubmissions;
+            int total;
             var offset = (limit * page) - limit;
 
-            var total = _databaseContext.DocumentSubmissions
-                .Count(x => x.ResidentId.Equals(id));
+            IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions
+               .Where(x => x.ResidentId.Equals(id));
 
-            var documentSubmissions = _databaseContext.DocumentSubmissions
-                .Where(x => x.ResidentId.Equals(id) && x.isHidden.Equals(false))
-                .Skip(offset ?? 0)
-                .Take(limit ?? 10)
-                .OrderByDescending(x => x.CreatedAt)
-                .ToList();
+            if (state != null)
+            {
+                query = query.Where(x => x.State.Equals(state));
+            }
+
+            documentSubmissions = query
+               .Skip(offset ?? 0)
+               .Take(limit ?? 10)
+               .OrderByDescending(x => x.CreatedAt)
+               .ToList();
+
+            total = query.Count();
 
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 

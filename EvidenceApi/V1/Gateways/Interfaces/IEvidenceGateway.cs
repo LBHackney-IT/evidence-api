@@ -2,6 +2,7 @@ using System;
 using EvidenceApi.V1.Domain;
 using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Request;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.V1.Gateways.Interfaces
 {
@@ -19,7 +20,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id);
         List<EvidenceRequest> GetAll();
         List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request);
-        DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, int? pageSize,
+        DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state, int? pageSize,
             int? page);
     }
 }
