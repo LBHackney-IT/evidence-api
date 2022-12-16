@@ -11,9 +11,11 @@ public class GlobalSetup
     [SuppressMessage("ReSharper", "CA1031")]
     public void SetUp()
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         try
         {
-            DotEnv.Config(true, Path.GetFullPath("../../../../.env"));
+            DotEnv.Load();
         }
         catch
         {

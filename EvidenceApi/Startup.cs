@@ -52,8 +52,7 @@ namespace EvidenceApi
                 .AddMvc(c =>
                 {
                     c.Filters.Add<HandleExceptionAttribute>();
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
             var apiVersions = new List<ApiVersion>();
             apiVersions.Add(new ApiVersion(1, 0));
@@ -133,11 +132,7 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            var success = DotEnv.AutoConfig(5);
-            if (success)
-            {
-                Console.WriteLine("LOADED ENVIRONMENT FROM .env");
-            }
+            DotEnv.Fluent().WithEnvFiles(Path.Combine(Directory.GetCurrentDirectory(), "../.env")).Load();
 
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);
@@ -181,6 +176,7 @@ namespace EvidenceApi
                 .AddScoped<IGetStaffSelectedDocumentTypesByTeamNameUseCase,
                     GetStaffSelectedDocumentTypesByTeamNameUseCase>();
             services.AddScoped<ICreateDocumentSubmissionWithoutEvidenceRequestUseCase, CreateDocumentSubmissionWithoutEvidenceRequestUseCase>();
+            services.AddScoped<ICreateResidentUseCase, CreateResidentUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -209,6 +205,9 @@ namespace EvidenceApi
                         $"{ApiName}-api {apiVersionDescription.GetFormattedApiVersion()}");
                 }
             });
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             app.UseSwagger();
             app.UseRouting();
             app.UseEndpoints(endpoints =>

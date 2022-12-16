@@ -75,7 +75,8 @@ namespace EvidenceApi.V1.UseCase
                 UserCreatedBy = request.UserCreatedBy,
                 ApiCreatedBy = "evidence_api",
                 RetentionExpiresAt = DateTime.UtcNow.AddMonths(3).Date,
-                ValidUntil = DateTime.UtcNow.AddMonths(3).Date
+                ValidUntil = DateTime.UtcNow.AddMonths(3).Date,
+                DocumentDescription = request.DocumentDescription
             };
             return claimRequest;
         }
@@ -85,13 +86,17 @@ namespace EvidenceApi.V1.UseCase
             Claim claim
         )
         {
+            var currentDateTime = DateTime.UtcNow;
             var documentSubmission = new DocumentSubmission()
             {
+                CreatedAt = currentDateTime,
                 ClaimId = claim.Id.ToString(),
                 State = SubmissionState.Approved,
+                AcceptedAt = currentDateTime,
                 Team = request.Team,
                 ResidentId = request.ResidentId,
-                StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId
+                StaffSelectedDocumentTypeId = request.StaffSelectedDocumentTypeId,
+                UserUpdatedBy = request.UserCreatedBy
             };
             return documentSubmission;
         }

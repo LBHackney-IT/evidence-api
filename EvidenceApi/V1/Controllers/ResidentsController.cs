@@ -15,15 +15,18 @@ namespace EvidenceApi.V1.Controllers
     {
         private readonly IFindResidentByIdUseCase _findByIdUseCase;
         private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
+        private readonly ICreateResidentUseCase _createResidentUseCase;
 
         public ResidentsController(
             IFindResidentByIdUseCase findByIdUseCase,
             IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase,
-            ICreateAuditUseCase createAuditUseCase
+            ICreateAuditUseCase createAuditUseCase,
+            ICreateResidentUseCase createResidentUseCase
         ) : base(createAuditUseCase)
         {
             _findByIdUseCase = findByIdUseCase;
             _findResidentsBySearchQueryUseCase = findResidentsBySearchQueryUseCase;
+            _createResidentUseCase = createResidentUseCase;
         }
 
         /// <summary>
@@ -59,6 +62,26 @@ namespace EvidenceApi.V1.Controllers
             var result = _findResidentsBySearchQueryUseCase.Execute(request);
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Create a resident
+        /// </summary>
+        /// <response code="201">Created</response>
+        /// <response code="401">Request lacks valid API token</response>
+        /// <response code="400">Bad request</response>
+        [HttpPost]
+        public IActionResult CreateResident(ResidentRequest request)
+        {
+            try
+            {
+                var result = _createResidentUseCase.Execute(request);
+                return Created(new Uri($"/residents", UriKind.Relative), result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

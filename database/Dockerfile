@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+FROM mcr.microsoft.com/dotnet/sdk:6.0
 
 WORKDIR /app
 
 # Install dotnet-ef globally
 ENV PATH $PATH:/root/.dotnet/tools
-RUN dotnet tool install --global dotnet-ef --version 6.0.5
+RUN dotnet tool install --global dotnet-ef --version 7.0.0
 
 # Copy csproj and restore as distinct layers
 COPY ./EvidenceApi/*.csproj ./

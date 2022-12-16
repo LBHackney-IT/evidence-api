@@ -10,7 +10,7 @@ executors:
       - image: circleci/python:3.7
   docker-dotnet:
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      - image: mcr.microsoft.com/dotnet/sdk:6.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -46,7 +46,7 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            curl -sL https://deb.nodesource.com/setup_14.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
@@ -71,7 +71,7 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_12.x | bash -
+            curl -sL https://deb.nodesource.com/setup_14.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install SwaggerHub CLI
@@ -96,6 +96,9 @@ commands:
           name: Install Unzip
           command: apt-get update && apt-get install unzip
       - run:
+          name: Install ssh
+          command: apt-get update && apt-get install -y --no-install-recommends ssh-client && rm -rf /var/lib/apt/lists/*
+      - run:
           name: Install AWS CLI
           command: |
             curl -L -o awscliv2.zip "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
@@ -108,7 +111,7 @@ commands:
             dpkg -i session-manager-plugin.deb
       - run:
           name: Install dotnet ef core
-          command: dotnet tool install dotnet-ef --version 6.0.5 --tool-path ./dotnet-ef-local/
+          command: dotnet tool install dotnet-ef --version 7.0.0 --tool-path ./dotnet-ef-local/
       - run:
           name: SSH into RDS and migrate database
           command: |

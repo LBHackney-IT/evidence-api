@@ -4,8 +4,8 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 
 ## Stack
 
--   .NET Core v3.1 as a web framework.
--   nUnit v3.11 as a test framework.
+-   .NET 6.0 as a web framework.
+-   nUnit v3.12 as a test framework.
 
 ## What does it do?
 
@@ -50,13 +50,13 @@ This `.env` file should not be tracked by git, as it has been added to the `.git
 
 Next step, to set up the local Evidence API container, `cd` into the root of the project
 (same place as the Makefile) and run `make serve-local`. This will set up the database container,
-run an automatic migration and stand up the API container. There are other Make recipes in the file; 
+run an automatic migration and stand up the API container. There are other Make recipes in the file;
 ```
 # build the image and start the db, migration and API containers
 $ make serve-local
 
 # build the images
-$ make build-local 
+$ make build-local
 
 # start the db, migration and API containers
 $ make start-local
@@ -79,7 +79,7 @@ which will build the images and run the containers. There are other Make recipes
 $ make serve-test
 
 # build the images
-$ make build-test 
+$ make build-test
 
 # start the db, migration and test containers
 $ make start-test
@@ -148,12 +148,12 @@ Our staging and production environments are hosted by AWS. We would deploy to pr
 Before you commit or push your code, you will need to run:
 
 ```sh
-make lint
+ dotnet tool install dotnet-format --version 5.1.225507
 ```
 
-Otherwise your PR will automatically fail the CircleCI checks. This Make recipe will install the `dotnet format` tool for you, so from then on, you can just run:
+Otherwise your PR will automatically fail the CircleCI checks. This will install the formatting tool for the repository. From thereon, you can run:
 ```sh
-dotnet format
+dotnet dotnet-format
 ```
 to format your code.
 

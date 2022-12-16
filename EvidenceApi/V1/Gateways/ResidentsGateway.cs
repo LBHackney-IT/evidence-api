@@ -52,7 +52,7 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        private Resident FindResident(Resident request)
+        public Resident FindResident(Resident request)
         {
             return _databaseContext.Residents
                 .FirstOrDefault(r =>
@@ -60,6 +60,12 @@ namespace EvidenceApi.V1.Gateways
                     r.Email == request.Email &&
                     r.PhoneNumber == request.PhoneNumber);
         }
-    }
 
+        public Resident CreateResident(Resident request)
+        {
+            _databaseContext.Residents.Add(request);
+            _databaseContext.SaveChanges();
+            return request;
+        }
+    }
 }

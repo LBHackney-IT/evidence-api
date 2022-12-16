@@ -30,6 +30,7 @@ namespace EvidenceApi.Tests
                 .Without(x => x.Id)
                 .Without(x => x.CreatedAt)
                 .Without(x => x.EvidenceRequest)
+                .With(x => x.isHidden, false)
                 .Create();
 
             if (includeEvidenceRequest) submission.EvidenceRequest = EvidenceRequest();
@@ -48,6 +49,7 @@ namespace EvidenceApi.Tests
                 .With(x => x.ResidentId, residentId)
                 .With(x => x.EvidenceRequest, evidenceRequest)
                 .With(x => x.EvidenceRequestId, evidenceRequest.Id)
+                .With(x => x.isHidden, false)
                 .Without(x => x.CreatedAt)
                 .Without(x => x.Resident)
                 .Create();
