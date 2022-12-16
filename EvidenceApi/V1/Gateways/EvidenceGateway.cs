@@ -84,22 +84,29 @@ namespace EvidenceApi.V1.Gateways
             orderdEvidenceRequestsAndOrderedDocSubmissions.ForEach(er => er.DocumentSubmissions = er.DocumentSubmissions.OrderByDescending(ds => ds.CreatedAt).ToList());
             return orderdEvidenceRequestsAndOrderedDocSubmissions.ToList();
         }
-
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
-            return _databaseContext.DocumentSubmissions.Find(id);
+            var documentSubmission = _databaseContext.DocumentSubmissions.Find(id);
+            if (documentSubmission != null && documentSubmission.isHidden == true)
+            {
+                return null;
+            }
+            return documentSubmission;
         }
 
         public List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id)
         {
-            return _databaseContext.EvidenceRequests.Where(x => x.ResidentId.Equals(id)).ToList();
+            return _databaseContext.EvidenceRequests.Where(x => x.ResidentId.Equals(id))
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
         }
 
         public List<EvidenceRequest> GetAll()
         {
-            return _databaseContext.EvidenceRequests.ToList();
+            return _databaseContext.EvidenceRequests
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
         }
-
         public List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request)
         {
             return _databaseContext.EvidenceRequests
