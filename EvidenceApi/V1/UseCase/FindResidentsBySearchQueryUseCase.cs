@@ -25,7 +25,10 @@ namespace EvidenceApi.V1.UseCase
             FindByResidentDetails(request, residents);
             FindResidentsWithNoAttachedRequests(request, residents);
             FindByResidentReferenceId(request, residents);
-            return residents;
+
+            var uniqueResidents = residents.GroupBy(x => x.Id).Select(y => y.First());
+
+            return uniqueResidents.ToList();
         }
 
         private void FindByResidentDetails(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
@@ -67,8 +70,6 @@ namespace EvidenceApi.V1.UseCase
 
             foreach (var resident in residentsForSearchQuery)
             {
-                //should the resident object have a team property? Otherwise we will return residents created by all teams...
-                //or is this what we want?  I think it's what we want.
                 residents.Add(resident.ToResponse());
             };
         }
