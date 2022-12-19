@@ -67,7 +67,6 @@ namespace EvidenceApi.V1.UseCase
         {
             var residentsForSearchQuery = _residentsGateway.FindResidents(request.SearchQuery);
 
-
             foreach (var resident in residentsForSearchQuery)
             {
                 residents.Add(resident.ToResponse());
