@@ -22,12 +22,16 @@ namespace EvidenceApi.V1.UseCase
         public List<ResidentResponse> Execute(ResidentSearchQuery request)
         {
             var residents = new List<ResidentResponse>();
-            findByResidentDetails(request, residents);
-            findByResidentReferenceId(request, residents);
-            return residents;
+            FindByResidentDetails(request, residents);
+            FindResidentsWithNoAttachedRequests(request, residents);
+            FindByResidentReferenceId(request, residents);
+
+            var uniqueResidents = residents.GroupBy(x => x.Id).Select(y => y.First());
+
+            return uniqueResidents.ToList();
         }
 
-        private void findByResidentDetails(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
+        private void FindByResidentDetails(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
         {
             var residentsForSearchQuery = _residentsGateway.FindResidents(request.SearchQuery);
 
@@ -47,7 +51,7 @@ namespace EvidenceApi.V1.UseCase
             }
         }
 
-        private void findByResidentReferenceId(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
+        private void FindByResidentReferenceId(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
         {
             var evidenceRequestsForTeamAndSearchQuery = _evidenceGateway.GetEvidenceRequests(request);
             if (evidenceRequestsForTeamAndSearchQuery.Count > 0)
@@ -56,6 +60,17 @@ namespace EvidenceApi.V1.UseCase
                 var residentForTeamAndSearchQuery = _residentsGateway.FindResident(evidenceRequest.ResidentId);
                 residents.Add(residentForTeamAndSearchQuery.ToResponse(evidenceRequest.ResidentReferenceId));
             }
+        }
+
+        private void FindResidentsWithNoAttachedRequests(ResidentSearchQuery request,
+            ICollection<ResidentResponse> residents)
+        {
+            var residentsForSearchQuery = _residentsGateway.FindResidents(request.SearchQuery);
+
+            foreach (var resident in residentsForSearchQuery)
+            {
+                residents.Add(resident.ToResponse());
+            };
         }
     }
 }
