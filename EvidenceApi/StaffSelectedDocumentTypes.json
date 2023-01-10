@@ -934,5 +934,23 @@
         "enabled": true
       }
     ]
-  }
+  },
+  {
+    "name": "Hackney Parking Services",
+    "id": "11",
+    "documentTypes": [
+      {
+        "id": "vehicle-photos",
+        "title": "Photograps",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "other-council-letter",
+        "title": "Council letter",
+        "description": "",
+        "enabled": true
+      }
+    ]
+  }  
 ]
