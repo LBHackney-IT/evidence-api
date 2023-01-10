@@ -359,7 +359,7 @@
     "documentTypes": [
       {
         "id": "vehicle-photos",
-        "title": "Photograps",
+        "title": "Photograph",
         "description": "Photographs of the front, rear and both sides of the vehicle.",
         "enabled": true
       },
