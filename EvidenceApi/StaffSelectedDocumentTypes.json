@@ -941,13 +941,13 @@
     "documentTypes": [
       {
         "id": "vehicle-photos",
-        "title": "Photograph",
+        "title": "Photograps of vehicle",
         "description": "",
         "enabled": true
       },
       {
         "id": "other-council-letter",
-        "title": "Council letter",
+        "title": "Letter from another council",
         "description": "",
         "enabled": true
       }
