@@ -941,7 +941,7 @@
     "documentTypes": [
       {
         "id": "vehicle-photos",
-        "title": "Photograps",
+        "title": "Photograph",
         "description": "",
         "enabled": true
       },
