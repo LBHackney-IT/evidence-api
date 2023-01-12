@@ -45,7 +45,7 @@ Ankh.NoLoad
 
 #Other
 .svn
-node_modules/
+EvidenceApi/node_modules
 
 # Include DLLs if they're in the NuGet packages directory
 !/packages/*/lib/*.dll
