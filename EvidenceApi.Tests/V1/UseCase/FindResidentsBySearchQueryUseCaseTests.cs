@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using AutoFixture;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
@@ -60,7 +62,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var result = _classUnderTest.Execute(request);
 
             // Assert
-            result.Count.Should().Be(1);
+            result.Count.Should().Be(2);
             var resultResident = result.Find(r => r.Name == "TestResident");
             resultResident.Should().NotBeNull();
             resultResident.Id.Should().Be(resident1.Id);

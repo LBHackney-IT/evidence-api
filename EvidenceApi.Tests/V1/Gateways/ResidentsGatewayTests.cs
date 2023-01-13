@@ -257,5 +257,25 @@ namespace EvidenceApi.Tests.V1.Gateways
             var resultResident2 = result.Find(r => r.Email == "TestEmail@hackney.gov.uk");
             resultResident2.Should().NotBeNull();
         }
+
+        [Test]
+        public void CreateResidentCreatesAResident()
+        {
+            var request = _fixture.Create<Resident>();
+
+            _classUnderTest.CreateResident(request);
+
+            var query = DatabaseContext.Residents.Where(x => x.Name == request.Name);
+
+            query.Count()
+                .Should()
+                .Be(1);
+
+            var foundRecord = query.First();
+            foundRecord.Id.Should().NotBeEmpty();
+            foundRecord.Email.Should().Be(request.Email);
+            foundRecord.PhoneNumber.Should().Be(request.PhoneNumber);
+            foundRecord.Name.Should().Be(request.Name);
+        }
     }
 }

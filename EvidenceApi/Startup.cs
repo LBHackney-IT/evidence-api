@@ -132,7 +132,7 @@ namespace EvidenceApi
                     c.IncludeXmlComments(xmlPath);
             });
 
-            DotEnv.Load();
+            DotEnv.Fluent().WithEnvFiles(Path.Combine(Directory.GetCurrentDirectory(), "../.env")).Load();
 
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);
@@ -176,6 +176,7 @@ namespace EvidenceApi
                 .AddScoped<IGetStaffSelectedDocumentTypesByTeamNameUseCase,
                     GetStaffSelectedDocumentTypesByTeamNameUseCase>();
             services.AddScoped<ICreateDocumentSubmissionWithoutEvidenceRequestUseCase, CreateDocumentSubmissionWithoutEvidenceRequestUseCase>();
+            services.AddScoped<ICreateResidentUseCase, CreateResidentUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,7 +6,6 @@ using EvidenceApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
@@ -122,6 +121,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.RejectionReason.Should().Be(request.RejectionReason);
             foundRecord.State.Should().Be(request.State);
             foundRecord.DocumentTypeId.Should().Be(request.DocumentTypeId);
+            foundRecord.isHidden.Should().Be(false);
         }
 
         [Test]
@@ -227,6 +227,19 @@ namespace EvidenceApi.Tests.V1.Gateways
             Guid id = Guid.NewGuid();
             var found = _classUnderTest.FindDocumentSubmission(id);
             found.Should().BeNull();
+        }
+
+        [Test]
+        public void FindReturnsNullWhenTheDocumentSubmissionShouldBeHidden()
+        {
+            var documentSubmission = TestDataHelper.DocumentSubmission(true);
+            documentSubmission.isHidden = true;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindDocumentSubmission(documentSubmission.Id);
+
+            found.Should().Be(null);
         }
 
         [Test]
@@ -468,9 +481,59 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expected = new List<DocumentSubmission>() { documentSubmission3, documentSubmission2 };
 
+<<<<<<< HEAD
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team, pageSize, page);
+=======
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, null, pageSize, page);
+>>>>>>> d5d1014cec9eee4fd38b073cf9004e9434688790
 
             result.Total.Should().Be(4);
+            result.DocumentSubmissions.Should().Equal(expected);
+        }
+
+        [Test]
+        public void GetDocumentSubmissionsByResidentIAndStatedReturnsAListOfPaginatedDocuments()
+        {
+            var queryGuid = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(queryGuid);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var page = 1;
+            var pageSize = 5;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            Thread.Sleep(50);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            Thread.Sleep(50);
+            var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            Thread.Sleep(50);
+            var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+
+            documentSubmission1.State = SubmissionState.Approved;
+            documentSubmission2.State = SubmissionState.Pending;
+            documentSubmission3.State = SubmissionState.Approved;
+            documentSubmission4.State = SubmissionState.Approved;
+
+            DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.Entry(documentSubmission3).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            DatabaseContext.Entry(documentSubmission4).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3, documentSubmission1 };
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, SubmissionState.Approved, pageSize, page);
+
+            result.Total.Should().Be(3);
             result.DocumentSubmissions.Should().Equal(expected);
         }
 

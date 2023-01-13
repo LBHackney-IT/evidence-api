@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Amazon.Runtime.Internal;
 using EvidenceApi.V1.Boundary.Request;
 using Microsoft.EntityFrameworkCore;
+using EvidenceApi.V1.Domain.Enums;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -83,10 +84,14 @@ namespace EvidenceApi.V1.Gateways
             orderdEvidenceRequestsAndOrderedDocSubmissions.ForEach(er => er.DocumentSubmissions = er.DocumentSubmissions.OrderByDescending(ds => ds.CreatedAt).ToList());
             return orderdEvidenceRequestsAndOrderedDocSubmissions.ToList();
         }
-
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
-            return _databaseContext.DocumentSubmissions.Find(id);
+            var documentSubmission = _databaseContext.DocumentSubmissions.Find(id);
+            if (documentSubmission != null && documentSubmission.isHidden == true)
+            {
+                return null;
+            }
+            return documentSubmission;
         }
 
         public List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id)
@@ -102,7 +107,6 @@ namespace EvidenceApi.V1.Gateways
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }
-
         public List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request)
         {
             return _databaseContext.EvidenceRequests
@@ -113,20 +117,26 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, int? limit = 10,
-            int? page = 1)
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, SubmissionState? state = null,  int? limit = 10, int? page = 1)
         {
+            List<DocumentSubmission> documentSubmissions;
+            int total;
             var offset = (limit * page) - limit;
 
-            var total = _databaseContext.DocumentSubmissions
-                .Count(x => x.ResidentId.Equals(id));
+            IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions
+               .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team));
 
-            var documentSubmissions = _databaseContext.DocumentSubmissions
-                .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team))
-                .Skip(offset ?? 0)
-                .Take(limit ?? 10)
-                .OrderByDescending(x => x.CreatedAt)
-                .ToList();
+            if (state != null)
+            {
+                query = query.Where(x => x.State.Equals(state));
+            }
+            documentSubmissions = query
+               .Skip(offset ?? 0)
+               .Take(limit ?? 10)
+               .OrderByDescending(x => x.CreatedAt)
+               .ToList();
+
+            total = query.Count();
 
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
