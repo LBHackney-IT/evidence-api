@@ -280,11 +280,12 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var residentId = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(residentId);
+            var team = "Development Housing Team";
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
-            evidenceRequest.Team = "Development Housing Team";
+            evidenceRequest.Team = team;
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -293,15 +294,19 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission1.State = SubmissionState.Approved;
+            documentSubmission1.Team = team;
             documentSubmission1.ClaimId = _createdClaim.Id.ToString();
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission2.State = SubmissionState.Approved;
+            documentSubmission2.Team = team;
             documentSubmission2.ClaimId = _createdClaim.Id.ToString();
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission3.State = SubmissionState.Pending;
+            documentSubmission3.Team = team;
             documentSubmission3.ClaimId = _createdClaim.Id.ToString();
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission4.State = SubmissionState.Approved;
+            documentSubmission4.Team = team;
             documentSubmission4.ClaimId = _createdClaim.Id.ToString();
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);

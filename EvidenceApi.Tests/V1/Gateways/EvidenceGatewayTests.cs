@@ -470,10 +470,13 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            Thread.Sleep(1000);
             DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            Thread.Sleep(1000);
             DatabaseContext.Entry(documentSubmission3).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            Thread.Sleep(1000);
             DatabaseContext.Entry(documentSubmission4).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
 
