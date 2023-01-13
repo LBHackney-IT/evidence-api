@@ -117,7 +117,7 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, SubmissionState? state = null,  int? limit = 10, int? page = 1)
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, SubmissionState? state = null, int? limit = 10, int? page = 1)
         {
             List<DocumentSubmission> documentSubmissions;
             int total;
