@@ -49,11 +49,8 @@ namespace EvidenceApi.Tests
                 .With(x => x.ResidentId, residentId)
                 .With(x => x.EvidenceRequest, evidenceRequest)
                 .With(x => x.EvidenceRequestId, evidenceRequest.Id)
-<<<<<<< HEAD
                 .With(x => x.Team)
-=======
                 .With(x => x.isHidden, false)
->>>>>>> d5d1014cec9eee4fd38b073cf9004e9434688790
                 .Without(x => x.CreatedAt)
                 .Without(x => x.Resident)
                 .Create();

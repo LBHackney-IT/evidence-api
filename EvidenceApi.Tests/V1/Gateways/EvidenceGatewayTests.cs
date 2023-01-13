@@ -444,7 +444,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.DocumentSubmissions.Should().Equal(expected);
         }
 
-        [Ignore("Pagination method has changed")]
         [Test]
         public void GetDocumentSubmissionsByResidentIdReturnsAListOfPaginatedDocuments()
         {
@@ -481,12 +480,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expected = new List<DocumentSubmission>() { documentSubmission3, documentSubmission2 };
 
-<<<<<<< HEAD
-            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team, pageSize, page);
-=======
-            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, null, pageSize, page);
->>>>>>> d5d1014cec9eee4fd38b073cf9004e9434688790
-
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team, null, pageSize, page);
             result.Total.Should().Be(4);
             result.DocumentSubmissions.Should().Equal(expected);
         }
@@ -497,6 +491,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var queryGuid = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(queryGuid);
             var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var team = "testTeam";
             var page = 1;
             var pageSize = 5;
 
@@ -506,17 +501,22 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission1.Team = team;
             Thread.Sleep(50);
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission2.Team = team;
             Thread.Sleep(50);
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission3.Team = team;
             Thread.Sleep(50);
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission4.Team = team;
 
             documentSubmission1.State = SubmissionState.Approved;
             documentSubmission2.State = SubmissionState.Pending;
             documentSubmission3.State = SubmissionState.Approved;
             documentSubmission4.State = SubmissionState.Approved;
+
 
             DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -531,7 +531,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3, documentSubmission1 };
 
-            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, SubmissionState.Approved, pageSize, page);
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team, SubmissionState.Approved, pageSize, page);
 
             result.Total.Should().Be(3);
             result.DocumentSubmissions.Should().Equal(expected);
