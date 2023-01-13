@@ -311,11 +311,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             // Arrange
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
+            Thread.Sleep(1000);
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
+            Thread.Sleep(1000);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
+            Thread.Sleep(1000);
             var resident1 = TestDataHelper.Resident();
             resident1.Id = Guid.NewGuid();
             var resident2 = TestDataHelper.Resident();
@@ -466,6 +466,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission3.Team = team;
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission4.Team = team;
 
             DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -502,13 +503,13 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission1.Team = team;
-            Thread.Sleep(50);
+            Thread.Sleep(1000);
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission2.Team = team;
-            Thread.Sleep(50);
+            Thread.Sleep(1000);
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission3.Team = team;
-            Thread.Sleep(50);
+            Thread.Sleep(1000);
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission4.Team = team;
 
