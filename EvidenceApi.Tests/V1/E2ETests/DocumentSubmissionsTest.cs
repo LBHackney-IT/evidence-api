@@ -14,7 +14,6 @@ using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Factories;
-using System.Threading;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
