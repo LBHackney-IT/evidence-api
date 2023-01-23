@@ -265,6 +265,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var residentId = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(residentId);
+            var currentDate = new DateTime();
+
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
@@ -278,18 +280,19 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission1.State = SubmissionState.Approved;
+            documentSubmission1.CreatedAt = currentDate.AddDays(1);
             documentSubmission1.ClaimId = _createdClaim.Id.ToString();
-            Thread.Sleep(50);
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission2.State = SubmissionState.Approved;
+            documentSubmission2.CreatedAt = currentDate.AddDays(2);
             documentSubmission2.ClaimId = _createdClaim.Id.ToString();
-            Thread.Sleep(50);
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission3.State = SubmissionState.Pending;
+            documentSubmission3.CreatedAt = currentDate.AddDays(3);
             documentSubmission3.ClaimId = _createdClaim.Id.ToString();
-            Thread.Sleep(50);
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission4.State = SubmissionState.Approved;
+            documentSubmission3.CreatedAt = currentDate.AddDays(4);
             documentSubmission4.ClaimId = _createdClaim.Id.ToString();
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -310,11 +313,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
                     documentSubmission4.ToResponse(null, documentSubmission4.EvidenceRequestId, null, null, _createdClaim),
-                    documentSubmission2.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim)                
+                    documentSubmission2.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim)
                     },
                 Total = 3
             };
-
             response.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
         }
