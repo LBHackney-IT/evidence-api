@@ -311,11 +311,8 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             // Arrange
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
             var resident1 = TestDataHelper.Resident();
             resident1.Id = Guid.NewGuid();
             var resident2 = TestDataHelper.Resident();
@@ -324,7 +321,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             evidenceRequest2.ResidentId = resident1.Id;
             evidenceRequest3.ResidentId = resident2.Id;
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            Thread.Sleep(100);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            Thread.Sleep(100);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest3);
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
@@ -347,6 +346,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            Thread.Sleep(100);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
             DatabaseContext.SaveChanges();
             var expected = new List<EvidenceRequest>()
