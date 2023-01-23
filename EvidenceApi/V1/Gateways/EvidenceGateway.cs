@@ -133,9 +133,9 @@ namespace EvidenceApi.V1.Gateways
             }
 
             documentSubmissions = query
+               .OrderByDescending(x => x.CreatedAt)
                .Skip(offset ?? 0)
                .Take(limit ?? 10)
-               .OrderByDescending(x => x.CreatedAt)
                .ToList();
 
             total = query.Count();
