@@ -487,7 +487,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var resident = TestDataHelper.ResidentWithId(queryGuid);
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var page = 1;
-            var pageSize = 5;
+            var pageSize = 2;
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -518,7 +518,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             DatabaseContext.SaveChanges();
 
-            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3, documentSubmission1 };
+            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3 };
 
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, SubmissionState.Approved, pageSize, page);
 
