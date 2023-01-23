@@ -6,7 +6,7 @@ using EvidenceApi.V1.Infrastructure.Interfaces;
 namespace EvidenceApi.V1.Domain;
 
 [Table("residents_team_group_id")]
-public class ResidentsTeamGroupId: IEntity
+public class ResidentsTeamGroupId : IEntity
 {
     [Required]
     [Column("id")]
