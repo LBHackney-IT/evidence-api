@@ -14,7 +14,7 @@ using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Factories;
-using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace EvidenceApi.Tests.V1.E2ETests
 {
@@ -265,6 +265,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
         {
             var residentId = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(residentId);
+            var currentDate = new DateTime();
+
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
@@ -278,15 +280,19 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission1.State = SubmissionState.Approved;
+            documentSubmission1.CreatedAt = currentDate.AddDays(1);
             documentSubmission1.ClaimId = _createdClaim.Id.ToString();
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission2.State = SubmissionState.Approved;
+            documentSubmission2.CreatedAt = currentDate.AddDays(2);
             documentSubmission2.ClaimId = _createdClaim.Id.ToString();
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission3.State = SubmissionState.Pending;
+            documentSubmission3.CreatedAt = currentDate.AddDays(3);
             documentSubmission3.ClaimId = _createdClaim.Id.ToString();
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
             documentSubmission4.State = SubmissionState.Approved;
+            documentSubmission3.CreatedAt = currentDate.AddDays(4);
             documentSubmission4.ClaimId = _createdClaim.Id.ToString();
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -296,7 +302,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={residentId}&state=Approved", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={residentId}&state=Approved&pageSize=2", UriKind.Relative);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -307,12 +313,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
                     documentSubmission4.ToResponse(null, documentSubmission4.EvidenceRequestId, null, null, _createdClaim),
-                    documentSubmission2.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim),
-                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
-                },
+                    documentSubmission2.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim)
+                    },
                 Total = 3
             };
-
             response.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
         }

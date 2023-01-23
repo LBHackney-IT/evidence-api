@@ -487,7 +487,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var resident = TestDataHelper.ResidentWithId(queryGuid);
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var page = 1;
-            var pageSize = 5;
+            var pageSize = 2;
+            var currentDate = new DateTime();
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -495,17 +496,21 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
-            Thread.Sleep(50);
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
-            Thread.Sleep(50);
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
-            Thread.Sleep(50);
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
 
             documentSubmission1.State = SubmissionState.Approved;
             documentSubmission2.State = SubmissionState.Pending;
             documentSubmission3.State = SubmissionState.Approved;
             documentSubmission4.State = SubmissionState.Approved;
+
+            documentSubmission1.CreatedAt = currentDate.AddDays(1);
+            documentSubmission2.CreatedAt = currentDate.AddDays(2);
+            documentSubmission3.CreatedAt = currentDate.AddDays(3);
+            documentSubmission4.CreatedAt = currentDate.AddDays(4);
+
+
 
             DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
@@ -518,7 +523,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             DatabaseContext.SaveChanges();
 
-            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3, documentSubmission1 };
+            var expected = new List<DocumentSubmission>() { documentSubmission4, documentSubmission3 };
 
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, SubmissionState.Approved, pageSize, page);
 
