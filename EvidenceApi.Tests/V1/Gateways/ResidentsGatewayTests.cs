@@ -285,17 +285,17 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var expectedId = request.Id;
 
-             _classUnderTest.AddResidentGroupId(request);
+            _classUnderTest.AddResidentGroupId(request);
 
-             var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == expectedId);
+            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == expectedId);
 
-             query.Count()
-                 .Should()
-                 .Be(1);
+            query.Count()
+                .Should()
+                .Be(1);
 
-             var foundRecord = query.First();
-             foundRecord.Id.Should().NotBeEmpty();
-             foundRecord.Resident.Should().Be(request);
+            var foundRecord = query.First();
+            foundRecord.Id.Should().NotBeEmpty();
+            foundRecord.Resident.Should().Be(request);
 
         }
     }
