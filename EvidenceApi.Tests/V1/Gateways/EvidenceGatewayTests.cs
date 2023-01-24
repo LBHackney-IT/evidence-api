@@ -6,7 +6,6 @@ using EvidenceApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Threading;
 using EvidenceApi.V1.Domain.Enums;
 using EvidenceApi.V1.Boundary.Request;
 using AutoFixture;
@@ -310,18 +309,18 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void FindEvidenceRequestsByResidentIdReturnsResults()
         {
             // Arrange
+            var currentDate = new DateTime();
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
             var evidenceRequest3 = TestDataHelper.EvidenceRequest();
-            Thread.Sleep(50);
             var resident1 = TestDataHelper.Resident();
             resident1.Id = Guid.NewGuid();
             var resident2 = TestDataHelper.Resident();
             resident2.Id = Guid.NewGuid();
             evidenceRequest1.ResidentId = resident1.Id;
+            evidenceRequest1.CreatedAt = currentDate.AddDays(1);
             evidenceRequest2.ResidentId = resident1.Id;
+            evidenceRequest2.CreatedAt = currentDate.AddDays(2);
             evidenceRequest3.ResidentId = resident2.Id;
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
@@ -344,8 +343,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void GetAllReturnsResults()
         {
             // Arrange
+            var currentDate = new DateTime();
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.CreatedAt = currentDate.AddDays(1);
             var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.CreatedAt = currentDate.AddDays(2);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
             DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
             DatabaseContext.SaveChanges();
