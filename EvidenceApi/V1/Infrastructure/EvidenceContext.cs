@@ -19,6 +19,8 @@ namespace EvidenceApi.V1.Infrastructure
         public DbSet<Communication> Communications { get; set; }
         public DbSet<DocumentSubmission> DocumentSubmissions { get; set; }
 
+        public DbSet<ResidentsTeamGroupId> ResidentsTeamGroupId { get; set; }
+
         public override int SaveChanges()
         {
             var entries = ChangeTracker
