@@ -42,6 +42,9 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException("A resident with these details already exists.");
             }
             var createdResident = _residentsGateway.CreateResident(resident);
+
+            _residentsGateway.AddResidentGroupId(createdResident);
+
             return createdResident.ToResponse();
         }
     }

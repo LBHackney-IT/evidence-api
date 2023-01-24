@@ -283,11 +283,19 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var request = _fixture.Create<Resident>();
 
-            var expected = request.Id;
+            var expectedId = request.Id;
 
-            var result = _classUnderTest.AddResidentGroupId(request);
+             _classUnderTest.AddResidentGroupId(request);
 
-            result.ResidentId.Should().Be(expected);
+             var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == expectedId);
+
+             query.Count()
+                 .Should()
+                 .Be(1);
+
+             var foundRecord = query.First();
+             foundRecord.Id.Should().NotBeEmpty();
+             foundRecord.Resident.Should().Be(request);
 
         }
     }
