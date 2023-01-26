@@ -277,5 +277,26 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.PhoneNumber.Should().Be(request.PhoneNumber);
             foundRecord.Name.Should().Be(request.Name);
         }
+
+        [Test]
+        public void AddResidentGroupIdAddsNewEntry()
+        {
+            var request = _fixture.Create<Resident>();
+
+            var expectedId = request.Id;
+
+            _classUnderTest.AddResidentGroupId(request);
+
+            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == expectedId);
+
+            query.Count()
+                .Should()
+                .Be(1);
+
+            var foundRecord = query.First();
+            foundRecord.Id.Should().NotBeEmpty();
+            foundRecord.Resident.Should().Be(request);
+
+        }
     }
 }
