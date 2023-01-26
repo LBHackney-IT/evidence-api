@@ -559,7 +559,8 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var testBackfillObject = new GroupResidentIdClaimIdBackfillObject()
             {
-                ResidentId = residentId, GroupId = groupId
+                ResidentId = residentId,
+                GroupId = groupId
             };
 
             var resultObject =
