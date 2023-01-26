@@ -83,7 +83,7 @@ namespace EvidenceApi.V1.Gateways
         {
             var result = new List<GroupResidentIdClaimIdBackfillObject>();
 
-            var totalResidents = _databaseContext.ResidentsTeamGroupId.ToList();
+            var totalResidents = _databaseContext.ResidentsTeamGroupId.OrderByDescending(x => x.CreatedAt).ToList();
 
             foreach (var record in totalResidents)
             {

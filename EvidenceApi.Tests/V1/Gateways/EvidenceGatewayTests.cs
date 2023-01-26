@@ -551,7 +551,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             documentSubmission1.CreatedAt = currentDate.AddDays(1);
             documentSubmission2.CreatedAt = currentDate.AddDays(2);
 
-
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
             DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
 
