@@ -311,12 +311,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var residentThree = _fixture.Create<Resident>();
             var groupIdThree = Guid.NewGuid();
 
-            var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne };
-            entryOne.CreatedAt = currentDate.AddDays(1);
-            var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo };
-            entryTwo.CreatedAt = currentDate.AddDays(2);
-            var entryThree = new ResidentsTeamGroupId() { Resident = residentThree, GroupId = groupIdThree };
-            entryThree.CreatedAt = currentDate.AddDays(3);
+            var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne, CreatedAt = currentDate.AddHours(1)};
+            var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo, CreatedAt = currentDate.AddHours(2)};
+            var entryThree = new ResidentsTeamGroupId() { Resident = residentThree, GroupId = groupIdThree, CreatedAt = currentDate.AddHours(3)};
 
             DatabaseContext.ResidentsTeamGroupId.Add(entryOne);
             DatabaseContext.ResidentsTeamGroupId.Add(entryTwo);
