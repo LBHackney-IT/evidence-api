@@ -305,17 +305,17 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var currentDate = new DateTime();
             var residentOne = _fixture.Create<Resident>();
-            var guidOne = Guid.NewGuid();
+            var groupIdOne = Guid.NewGuid();
             var residentTwo = _fixture.Create<Resident>();
-            var guidTwo = Guid.NewGuid();
+            var groupIdTwo = Guid.NewGuid();
             var residentThree = _fixture.Create<Resident>();
-            var guidThree = Guid.NewGuid();
+            var groupIdThree = Guid.NewGuid();
 
-            var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = guidOne };
+            var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne };
             entryOne.CreatedAt = currentDate.AddDays(1);
-            var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = guidTwo };
+            var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo };
             entryTwo.CreatedAt = currentDate.AddDays(2);
-            var entryThree = new ResidentsTeamGroupId() { Resident = residentThree, GroupId = guidThree };
+            var entryThree = new ResidentsTeamGroupId() { Resident = residentThree, GroupId = groupIdThree };
             entryThree.CreatedAt = currentDate.AddDays(3);
 
             DatabaseContext.ResidentsTeamGroupId.Add(entryOne);
@@ -326,9 +326,9 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = _classUnderTest.GetAllResidentIdsAndGroupIds();
 
             result.Should().HaveCount(3);
-            result[2].GroupId.Should().Be(guidOne);
-            result[1].GroupId.Should().Be(guidTwo);
-            result[0].GroupId.Should().Be(guidThree);
+            result[0].GroupId.Should().Be(groupIdOne);
+            result[1].GroupId.Should().Be(groupIdTwo);
+            result[2].GroupId.Should().Be(groupIdThree);
         }
     }
 }
