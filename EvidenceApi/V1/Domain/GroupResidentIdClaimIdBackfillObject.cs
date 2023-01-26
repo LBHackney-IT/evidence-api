@@ -7,5 +7,5 @@ public class GroupResidentIdClaimIdBackfillObject
 {
     public Guid? ResidentId { get; set; }
     public Guid? GroupId { get; set; }
-    public List<Guid?> ClaimId { get; set; }
+    public List<string> ClaimIds { get; set; }
 }

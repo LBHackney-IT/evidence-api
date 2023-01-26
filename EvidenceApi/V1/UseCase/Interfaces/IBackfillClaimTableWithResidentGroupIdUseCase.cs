@@ -3,7 +3,7 @@ using EvidenceApi.V1.Domain;
 
 namespace EvidenceApi.V1.UseCase.Interfaces;
 
-public interface IGetAllGroupIdsByResidentIdsUseCase
+public interface IBackfillClaimTableWithResidentGroupIdUseCase
 {
     List<GroupResidentIdClaimIdBackfillObject> Execute();
 }

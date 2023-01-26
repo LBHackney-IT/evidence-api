@@ -143,5 +143,32 @@ namespace EvidenceApi.V1.Gateways
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
         }
+
+        public List<GroupResidentIdClaimIdBackfillObject> GetClaimIdsForResidentsWithGroupIds(
+            List<GroupResidentIdClaimIdBackfillObject> groupResidentIdClaimIdBackfillObjects)
+        {
+
+            foreach (var backfillObject in groupResidentIdClaimIdBackfillObjects)
+            {
+                //get a list of all document submissions by resident id
+                var records =
+                    _databaseContext.DocumentSubmissions.Where(x => x.ResidentId.Equals(backfillObject.ResidentId))
+                        .ToList();
+
+                var claimIds = new List<string>();
+
+                //get the claim ids from each record
+                foreach (var record in records)
+                {
+                    claimIds.Add(record.ClaimId);
+                }
+
+                //add to existing object
+                backfillObject.ClaimIds = claimIds;
+            }
+
+            //return object
+            return groupResidentIdClaimIdBackfillObjects;
+        }
     }
 }

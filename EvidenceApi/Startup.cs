@@ -177,7 +177,7 @@ namespace EvidenceApi
                     GetStaffSelectedDocumentTypesByTeamNameUseCase>();
             services.AddScoped<ICreateDocumentSubmissionWithoutEvidenceRequestUseCase, CreateDocumentSubmissionWithoutEvidenceRequestUseCase>();
             services.AddScoped<ICreateResidentUseCase, CreateResidentUseCase>();
-            services.AddScoped<IGetAllGroupIdsByResidentIdsUseCase, GetAllGroupIdsByResidentIdsUseCase>();
+            services.AddScoped<IBackfillClaimTableWithResidentGroupIdUseCase, BackfillClaimTableWithResidentGroupIdUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

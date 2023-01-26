@@ -533,6 +533,48 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.DocumentSubmissions.Should().Equal(expected);
         }
 
+        [Test]
+        public void GetClaimIdsForResidentsWithGroupIdsReturnsFilledObject()
+        {
+            var residentId = Guid.NewGuid();
+            var groupId = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(residentId);
+            var currentDate = new DateTime();
+
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
+
+            documentSubmission1.CreatedAt = currentDate.AddDays(1);
+            documentSubmission2.CreatedAt = currentDate.AddDays(2);
+
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+
+            DatabaseContext.SaveChanges();
+
+            var testBackfillObject = new GroupResidentIdClaimIdBackfillObject()
+            {
+                ResidentId = residentId, GroupId = groupId
+            };
+
+            var resultObject =
+                _classUnderTest.GetClaimIdsForResidentsWithGroupIds(
+                    new List<GroupResidentIdClaimIdBackfillObject>() { testBackfillObject });
+
+            testBackfillObject.ClaimIds = new List<string>()
+            {
+                documentSubmission2.ClaimId, documentSubmission1.ClaimId
+            };
+
+            resultObject.Should().Equal(testBackfillObject);
+
+        }
+
         public List<EvidenceRequest> ExpectedEvidenceRequestsWithResidentIdAndState(EvidenceRequestsSearchQuery request)
         {
             var evidenceRequest1 = TestDataHelper.EvidenceRequest();
