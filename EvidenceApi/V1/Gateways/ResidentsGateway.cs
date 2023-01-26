@@ -89,9 +89,10 @@ namespace EvidenceApi.V1.Gateways
             {
                 GroupResidentIdClaimIdBackfillObject recordObject = new GroupResidentIdClaimIdBackfillObject()
                 {
-                    GroupId = record.GroupId, ResidentId = record.ResidentId
+                    GroupId = record.GroupId,
+                    ResidentId = record.ResidentId
                 };
-                    result.Add(recordObject);
+                result.Add(recordObject);
             }
 
             return result;

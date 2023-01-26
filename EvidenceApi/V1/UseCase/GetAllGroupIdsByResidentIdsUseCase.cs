@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.V1.UseCase;
 
-public class GetAllGroupIdsByResidentIdsUseCase: IGetAllGroupIdsByResidentIdsUseCase
+public class GetAllGroupIdsByResidentIdsUseCase : IGetAllGroupIdsByResidentIdsUseCase
 {
     private readonly IResidentsGateway _residentsGateway;
     private readonly ILogger<GetAllGroupIdsByResidentIdsUseCase> _logger;
