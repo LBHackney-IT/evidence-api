@@ -77,5 +77,24 @@ namespace EvidenceApi.V1.Gateways
             _databaseContext.SaveChanges();
 
         }
+
+        public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIds()
+
+        {
+            var result = new List<GroupResidentIdClaimIdBackfillObject>();
+
+            var totalResidents = _databaseContext.ResidentsTeamGroupId.ToList();
+
+            foreach (var record in totalResidents)
+            {
+                GroupResidentIdClaimIdBackfillObject recordObject = new GroupResidentIdClaimIdBackfillObject()
+                {
+                    GroupId = record.GroupId, ResidentId = record.ResidentId
+                };
+                    result.Add(recordObject);
+            }
+
+            return result;
+        }
     }
 }

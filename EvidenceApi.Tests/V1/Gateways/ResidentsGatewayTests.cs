@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoFixture;
 using EvidenceApi.V1.Domain;
@@ -297,6 +298,37 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.Id.Should().NotBeEmpty();
             foundRecord.Resident.Should().Be(request);
 
+        }
+
+        [Test]
+        public void GetAllResidentsAndGroupIds()
+        {
+            var currentDate = new DateTime();
+            var residentOne = _fixture.Create<Resident>();
+            var guidOne = Guid.NewGuid();
+            var residentTwo = _fixture.Create<Resident>();
+            var guidTwo = Guid.NewGuid();
+            var residentThree = _fixture.Create<Resident>();
+            var guidThree = Guid.NewGuid();
+
+            var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = guidOne };
+            entryOne.CreatedAt = currentDate.AddDays(1);
+            var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = guidTwo };
+            entryTwo.CreatedAt = currentDate.AddDays(2);
+            var entryThree = new ResidentsTeamGroupId() { Resident = residentThree, GroupId = guidThree };
+            entryThree.CreatedAt = currentDate.AddDays(3);
+
+            DatabaseContext.ResidentsTeamGroupId.Add(entryOne);
+            DatabaseContext.ResidentsTeamGroupId.Add(entryTwo);
+            DatabaseContext.ResidentsTeamGroupId.Add(entryThree);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.GetAllResidentIdsAndGroupIds();
+
+            result.Should().HaveCount(3);
+            result[2].GroupId.Should().Be(guidOne);
+            result[1].GroupId.Should().Be(guidTwo);
+            result[0].GroupId.Should().Be(guidThree);
         }
     }
 }
