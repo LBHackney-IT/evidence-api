@@ -8,7 +8,7 @@ namespace EvidenceApi.V1.Controllers;
 [Produces("application/json")]
 [ApiVersion("1.0")]
 
-public class ClaimsBackfillController: BaseController
+public class ClaimsBackfillController : BaseController
 {
     public ClaimsBackfillController(ICreateAuditUseCase createAuditUseCase) : base(createAuditUseCase)
     {
