@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EvidenceApi.V1.Domain;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 
 namespace EvidenceApi.V1.Gateways
@@ -62,6 +63,30 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
+        public async Task<string> BackfillClaimsWithGroupIds(List<GroupResidentIdClaimIdBackfillObject> backfillObjects)
+        {
+            foreach (var backfillObject in backfillObjects)
+            {
+                //create body
+               var jsonString = SerializeBackfillRequest(backfillObject);
+
+               //foreach claim id, call the endpoint and update with the groupid
+                foreach (var claimId in backfillObject.ClaimIds)
+                {
+                    var uri = new Uri($"api/v1/claims/{claimId}", UriKind.Relative);
+                    _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPatchClaimsToken);
+
+                    var response = await _client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        var errorBody = await DeserializeResponse<string>(response).ConfigureAwait(true);
+                        throw new DocumentsApiException(errorBody);
+                    }
+                }
+            }
+            return "Backfill completed successfully";
+        }
+
         public async Task<Claim> GetClaimById(string id)
         {
             var uri = new Uri($"api/v1/claims/{id}", UriKind.Relative);
@@ -109,6 +134,13 @@ namespace EvidenceApi.V1.Gateways
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
             }
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
+        }
+
+        private static StringContent SerializeBackfillRequest(GroupResidentIdClaimIdBackfillObject request)
+        {
+            var updateRequest = new ClaimUpdateRequest() { GroupId = request.GroupId };
+            var body = JsonConvert.SerializeObject(updateRequest);
+            return new StringContent(body, Encoding.UTF8, "application/json");
         }
 
         private static StringContent SerializeClaimRequest(ClaimRequest request)
