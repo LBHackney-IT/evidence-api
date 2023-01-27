@@ -68,9 +68,9 @@ namespace EvidenceApi.V1.Gateways
             foreach (var backfillObject in backfillObjects)
             {
                 //create body
-               var jsonString = SerializeBackfillRequest(backfillObject);
+                var jsonString = SerializeBackfillRequest(backfillObject);
 
-               //foreach claim id, call the endpoint and update with the groupid
+                //foreach claim id, call the endpoint and update with the groupid
                 foreach (var claimId in backfillObject.ClaimIds)
                 {
                     var uri = new Uri($"api/v1/claims/{claimId}", UriKind.Relative);
