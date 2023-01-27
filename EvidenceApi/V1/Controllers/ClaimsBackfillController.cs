@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,20 +11,23 @@ namespace EvidenceApi.V1.Controllers;
 
 public class ClaimsBackfillController : BaseController
 {
-    public ClaimsBackfillController(ICreateAuditUseCase createAuditUseCase) : base(createAuditUseCase)
+    private readonly IBackfillClaimTableWithResidentGroupIdUseCase _backfillClaimTableWithResidentGroupIdUseCase;
+    public ClaimsBackfillController(ICreateAuditUseCase createAuditUseCase, IBackfillClaimTableWithResidentGroupIdUseCase backfillClaimTableWithResidentGroupIdUseCase) : base(createAuditUseCase)
     {
+        _backfillClaimTableWithResidentGroupIdUseCase = backfillClaimTableWithResidentGroupIdUseCase;
     }
 
     [HttpGet]
-    public IActionResult BackfillClaimsWithGroupId()
+    public async Task<IActionResult> BackfillClaimsWithGroupId()
     {
         try
         {
-            return Ok("Not yet implemented");
+            var result = await _backfillClaimTableWithResidentGroupIdUseCase.ExecuteAsync();
+            return Ok(result);
         }
         catch
         {
-            return BadRequest("bad request");
+            return BadRequest("error backfilling table - need to add error handling");
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
@@ -10,19 +11,25 @@ public class BackfillClaimTableWithResidentGroupIdUseCase : IBackfillClaimTableW
 {
     private readonly IResidentsGateway _residentsGateway;
     private readonly IEvidenceGateway _evidenceGateway;
+    private readonly IDocumentsApiGateway _documentsApiGateway;
     private readonly ILogger<BackfillClaimTableWithResidentGroupIdUseCase> _logger;
 
-    public BackfillClaimTableWithResidentGroupIdUseCase(IResidentsGateway residentsGateway, IEvidenceGateway evidenceGateway, ILogger<BackfillClaimTableWithResidentGroupIdUseCase> logger)
+    public BackfillClaimTableWithResidentGroupIdUseCase(IResidentsGateway residentsGateway, IEvidenceGateway evidenceGateway, IDocumentsApiGateway documentsApiGateway, ILogger<BackfillClaimTableWithResidentGroupIdUseCase> logger)
     {
         _residentsGateway = residentsGateway;
         _evidenceGateway = evidenceGateway;
+        _documentsApiGateway = documentsApiGateway;
         _logger = logger;
     }
 
-    public List<GroupResidentIdClaimIdBackfillObject> Execute()
+    public async Task<string> ExecuteAsync()
     {
         var initialObject = _residentsGateway.GetAllResidentIdsAndGroupIds();
-        return _evidenceGateway.GetClaimIdsForResidentsWithGroupIds(initialObject);
-        //one more step - insert into claims table using patch endpoint
+
+        var filledObject = _evidenceGateway.GetClaimIdsForResidentsWithGroupIds(initialObject);
+
+        var result = await _documentsApiGateway.BackfillClaimsWithGroupIds(filledObject);
+
+        return result;
     }
 }
