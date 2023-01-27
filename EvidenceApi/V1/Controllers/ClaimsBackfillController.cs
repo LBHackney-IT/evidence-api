@@ -27,7 +27,7 @@ public class ClaimsBackfillController : BaseController
         }
         catch
         {
-            return BadRequest("error backfilling table - need to add error handling");
+            return BadRequest("error backfilling table");
         }
     }
 

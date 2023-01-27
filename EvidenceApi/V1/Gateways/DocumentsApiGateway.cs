@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using EvidenceApi.V1.Domain;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 
 namespace EvidenceApi.V1.Gateways
@@ -63,16 +64,18 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<Claim>(response).ConfigureAwait(true);
         }
 
-        public async Task<string> BackfillClaimsWithGroupIds(List<GroupResidentIdClaimIdBackfillObject> backfillObjects)
+        public async Task<List<ClaimBackfillResponse>> BackfillClaimsWithGroupIds(List<GroupResidentIdClaimIdBackfillObject> backfillObjects)
         {
+            var result = new List<ClaimBackfillResponse>();
+
             foreach (var backfillObject in backfillObjects)
             {
-                //create body
+
                 var jsonString = SerializeBackfillRequest(backfillObject);
 
-                //foreach claim id, call the endpoint and update with the groupid
                 foreach (var claimId in backfillObject.ClaimIds)
                 {
+
                     var uri = new Uri($"api/v1/claims/{claimId}", UriKind.Relative);
                     _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPatchClaimsToken);
 
@@ -82,9 +85,19 @@ namespace EvidenceApi.V1.Gateways
                         var errorBody = await DeserializeResponse<string>(response).ConfigureAwait(true);
                         throw new DocumentsApiException(errorBody);
                     }
+
+                    var patchResponse = await DeserializeResponse<Claim>(response);
+
+                    var newPatchRecord = new ClaimBackfillResponse()
+                    {
+                        ClaimId = patchResponse.Id,
+                        GroupId = patchResponse?.GroupId,
+                    };
+                    result.Add(newPatchRecord);
                 }
             }
-            return "Backfill completed successfully";
+            //return the updated claim ids and group ids
+            return result;
         }
 
         public async Task<Claim> GetClaimById(string id)

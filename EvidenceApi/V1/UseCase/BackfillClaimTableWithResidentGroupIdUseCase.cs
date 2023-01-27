@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.UseCase.Interfaces;
@@ -22,7 +23,7 @@ public class BackfillClaimTableWithResidentGroupIdUseCase : IBackfillClaimTableW
         _logger = logger;
     }
 
-    public async Task<string> ExecuteAsync()
+    public async Task<List<ClaimBackfillResponse>> ExecuteAsync()
     {
         var initialObject = _residentsGateway.GetAllResidentIdsAndGroupIds();
 
