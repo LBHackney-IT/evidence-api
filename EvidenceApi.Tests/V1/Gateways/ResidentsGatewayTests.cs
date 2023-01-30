@@ -301,7 +301,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsAndGroupIds()
+        public void GetAllResidentIdsAndGroupIdsByFirstCharacter()
         {
             var currentDate = new DateTime();
             var residentOne = _fixture.Create<Resident>();
@@ -310,6 +310,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             var groupIdTwo = Guid.NewGuid();
             var residentThree = _fixture.Create<Resident>();
             var groupIdThree = Guid.NewGuid();
+
+            var guidCharacter = groupIdOne.ToString().First();
 
             var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne, CreatedAt = currentDate.AddHours(1) };
             var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo, CreatedAt = currentDate.AddHours(2) };
@@ -320,12 +322,10 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.ResidentsTeamGroupId.Add(entryThree);
             DatabaseContext.SaveChanges();
 
-            var result = _classUnderTest.GetAllResidentIdsAndGroupIds();
+            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacter.ToString());
 
-            result.Should().HaveCount(3);
-            result[2].GroupId.Should().Be(groupIdOne);
-            result[1].GroupId.Should().Be(groupIdTwo);
-            result[0].GroupId.Should().Be(groupIdThree);
+            result.Should().HaveCount(1);
+            result[0].GroupId.Should().Be(groupIdOne);
         }
     }
 }

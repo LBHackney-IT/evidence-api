@@ -78,12 +78,14 @@ namespace EvidenceApi.V1.Gateways
 
         }
 
-        public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIds()
+        public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(string groupIdCharacter)
 
         {
             var result = new List<GroupResidentIdClaimIdBackfillObject>();
 
-            var totalResidents = _databaseContext.ResidentsTeamGroupId.OrderByDescending(x => x.CreatedAt).ToList();
+            var totalResidents = _databaseContext.ResidentsTeamGroupId.
+                Where(x => x.GroupId.ToString().StartsWith(groupIdCharacter)).
+                OrderByDescending(x => x.CreatedAt).ToList();
 
             foreach (var record in totalResidents)
             {

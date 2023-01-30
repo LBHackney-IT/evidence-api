@@ -19,11 +19,11 @@ public class ClaimsBackfillController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> BackfillClaimsWithGroupId()
+    public async Task<IActionResult> BackfillClaimsWithGroupId([FromQuery] string guidCharacter)
     {
         try
         {
-            var result = await _backfillClaimTableWithResidentGroupIdUseCase.ExecuteAsync();
+            var result = await _backfillClaimTableWithResidentGroupIdUseCase.ExecuteAsync(guidCharacter);
             return Ok(result);
         }
         catch (Exception ex)

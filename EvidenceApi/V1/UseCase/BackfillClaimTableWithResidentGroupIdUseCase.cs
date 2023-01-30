@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Boundary.Response;
@@ -23,9 +24,9 @@ public class BackfillClaimTableWithResidentGroupIdUseCase : IBackfillClaimTableW
         _logger = logger;
     }
 
-    public async Task<List<ClaimBackfillResponse>> ExecuteAsync()
+    public async Task<List<ClaimBackfillResponse>> ExecuteAsync(string groupIdCharacter)
     {
-        var initialObject = _residentsGateway.GetAllResidentIdsAndGroupIds();
+        var initialObject = _residentsGateway.GetAllResidentIdsAndGroupIdsByFirstCharacter(groupIdCharacter);
 
         var filledObject = _evidenceGateway.GetClaimIdsForResidentsWithGroupIds(initialObject);
 
