@@ -207,7 +207,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             _messageHandler.SetupRequest(HttpMethod.Patch, $"{_options.DocumentsApiUrl}api/v1/claims/{claimId}", request =>
                {
-                  return request.Headers.Authorization.ToString() == _options.DocumentsApiPatchClaimsToken;
+                   return request.Headers.Authorization.ToString() == _options.DocumentsApiPatchClaimsToken;
                })
                 .ReturnsResponse(HttpStatusCode.OK, _claimResponseFixture, "application/json");
 
