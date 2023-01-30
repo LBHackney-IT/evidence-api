@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using EvidenceApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +26,9 @@ public class ClaimsBackfillController : BaseController
             var result = await _backfillClaimTableWithResidentGroupIdUseCase.ExecuteAsync();
             return Ok(result);
         }
-        catch
+        catch (Exception ex)
         {
-            return BadRequest("error backfilling table");
+            return BadRequest($"Error backfilling table - {ex}");
         }
     }
 
