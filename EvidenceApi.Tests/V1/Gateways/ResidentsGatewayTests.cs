@@ -322,7 +322,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.ResidentsTeamGroupId.Add(entryThree);
             DatabaseContext.SaveChanges();
 
-            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacter.ToString());
+            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacter);
 
             result.Should().HaveCount(1);
             result[0].GroupId.Should().Be(groupIdOne);

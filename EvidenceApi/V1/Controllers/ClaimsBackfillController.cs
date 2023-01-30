@@ -19,7 +19,7 @@ public class ClaimsBackfillController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> BackfillClaimsWithGroupId([FromQuery] string guidCharacter)
+    public async Task<IActionResult> BackfillClaimsWithGroupId([FromQuery] char guidCharacter)
     {
         try
         {

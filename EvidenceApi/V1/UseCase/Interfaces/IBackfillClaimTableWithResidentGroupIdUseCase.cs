@@ -7,5 +7,5 @@ namespace EvidenceApi.V1.UseCase.Interfaces;
 
 public interface IBackfillClaimTableWithResidentGroupIdUseCase
 {
-    Task<List<ClaimBackfillResponse>> ExecuteAsync(string guidCharacter);
+    Task<List<ClaimBackfillResponse>> ExecuteAsync(char guidCharacter);
 }
