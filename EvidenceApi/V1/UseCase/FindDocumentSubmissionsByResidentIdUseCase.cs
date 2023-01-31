@@ -30,11 +30,16 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
+            //can remove this and replace with a call to the new table, to get the groupId by residentId && team - but how will this work for the pagination?
+
+            //var groupId = new Gateway? get groupId
             var query =
                 _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
+            //create result
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
+            //we can use the groupId to do a query on the table to get all the claims
             var claimsIds = new List<string>();
             foreach (var ds in query.DocumentSubmissions)
             {
@@ -42,6 +47,7 @@ namespace EvidenceApi.V1.UseCase
             }
             var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
 
+            //build the object as before?
             var claimIndex = 0;
             foreach (var ds in query.DocumentSubmissions)
             {
