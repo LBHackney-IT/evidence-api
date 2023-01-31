@@ -12,6 +12,7 @@ namespace EvidenceApi.V1.Domain
         public string ApiCreatedBy { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
+        public Guid? GroupId { get; set; }
     }
 
     public class Document
