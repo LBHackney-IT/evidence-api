@@ -32,17 +32,7 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            Guid groupId;
-
-            //get groupId -- this is temporary error handling, to stop the e2e tests failing. groupId should never be empty
-            try
-            {
-                groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
-            }
-            catch
-            {
-                groupId = Guid.Empty;
-            }
+            var groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
 
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
