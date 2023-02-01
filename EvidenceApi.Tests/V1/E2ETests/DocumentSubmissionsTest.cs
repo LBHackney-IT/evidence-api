@@ -26,9 +26,11 @@ namespace EvidenceApi.Tests.V1.E2ETests
         private readonly Guid _id = Guid.NewGuid();
         private readonly Guid _groupId = Guid.NewGuid();
 
+
         [SetUp]
         public void SetUp()
         {
+            DatabaseContext.ChangeTracker.Clear();
 
             _document = _fixture.Build<Document>()
                 .With(x => x.Id, _id)
@@ -230,7 +232,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var resident = TestDataHelper.ResidentWithId(Guid.NewGuid());
 
-
             var residentTeamGroupId = new ResidentsTeamGroupId() { Resident = resident, GroupId = _groupId, Team = "Development Housing Team" };
 
             var evidenceRequestId = Guid.NewGuid();
@@ -250,8 +251,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
             DatabaseContext.SaveChanges();
-
-
 
             var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={documentSubmission1.ResidentId}", UriKind.Relative);
 
