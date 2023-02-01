@@ -175,6 +175,11 @@ namespace EvidenceApi.Tests.V1.UseCase
             claimsList.Add(_fixture.Create<Claim>());
             claimsList.Add(_fixture.Create<Claim>());
 
+            var paginatedClaimsResponse = new PaginatedClaimResponse()
+            {
+                Claims = new List<Claim>() { _claim1.Result, _claim2.Result }
+            };
+
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _residentsGateway.Setup(x => x.GetGroupIdByResidentIdAndTeam(It.IsAny<DocumentSubmissionSearchQuery>()))
                 .Returns(_residentsTeamGroupId.GroupId);
@@ -182,10 +187,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway
                 .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<SubmissionState?>(), It.IsAny<int?>(),
                     It.IsAny<int?>())).Returns(_injectedResult);
-            _documentsApiGateway.Setup(x => x.GetClaimsByGroupId(It.IsAny<Guid>())).ReturnsAsync(new List<Claim>()
-            {
-                _claim1.Result, _claim2.Result
-            });
+            _documentsApiGateway.Setup(x => x.GetClaimsByGroupId(It.IsAny<Guid>())).ReturnsAsync(paginatedClaimsResponse);
             _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);
         }
     }

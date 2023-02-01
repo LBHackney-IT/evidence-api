@@ -128,14 +128,16 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var claimsList = new List<Claim>() { claimOne, claimTwo, claimThree };
 
+            var paginatedClaimsResponse = new PaginatedClaimResponse() { Claims = claimsList };
+
             _messageHandler.SetupRequest(HttpMethod.Get,
                     $"{_options.DocumentsApiUrl}api/v1/claims?groupId={groupId}",
                     request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
-                .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(claimsList), "application/json");
+                .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(paginatedClaimsResponse), "application/json");
 
             var result = await _classUnderTest.GetClaimsByGroupId(groupId);
 
-            result.Should().BeEquivalentTo(claimsList);
+            result.Claims.Should().BeEquivalentTo(claimsList);
 
 
         }

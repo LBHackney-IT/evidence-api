@@ -21,6 +21,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
     {
         private readonly IFixture _fixture = new Fixture();
         private Claim _createdClaim;
+        private PaginatedClaimResponse _paginatedClaimResponse;
         private Document _document;
         private S3UploadPolicy _createdUploadPolicy;
         private readonly Guid _id = Guid.NewGuid();
@@ -43,6 +44,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
 
+            _paginatedClaimResponse = new PaginatedClaimResponse() { Claims = new List<Claim>() { _createdClaim } };
+
             DocumentsApiServer.Given(
                 Request.Create().WithPath($"/api/v1/claims/{_createdClaim.Id}").UsingGet()
             ).RespondWith(
@@ -52,8 +55,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             );
 
             DocumentsApiServer.Given(Request.Create().WithParam("groupId", _groupId.ToString()).UsingGet())
-                .RespondWith(Response.Create().WithStatusCode(200).WithBody(JsonConvert.SerializeObject(new List<Claim>() {
-                _createdClaim})));
+                .RespondWith(Response.Create().WithStatusCode(200).WithBody(JsonConvert.SerializeObject(_paginatedClaimResponse)));
 
             DocumentsApiServer.Given(
                 Request.Create().WithPath("/api/v1/claims")

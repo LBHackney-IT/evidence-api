@@ -39,13 +39,8 @@ namespace EvidenceApi.V1.UseCase
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
-            var claimsIds = new List<string>();
-            foreach (var ds in query.DocumentSubmissions)
-            {
-                claimsIds.Add(ds.ClaimId);
-            }
-
-            var claims = await _documentsApiGateway.GetClaimsByGroupId(groupId);
+            //do we need to paginate claims using the same method?? //returns pointers to the pagination state
+            var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(groupId);
 
             var claimIndex = 0;
             foreach (var ds in query.DocumentSubmissions)
@@ -53,7 +48,7 @@ namespace EvidenceApi.V1.UseCase
                 var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
                 var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
                     ds.StaffSelectedDocumentTypeId);
-                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
+                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claimsResponse.Claims[claimIndex]));
                 claimIndex++;
             }
 
