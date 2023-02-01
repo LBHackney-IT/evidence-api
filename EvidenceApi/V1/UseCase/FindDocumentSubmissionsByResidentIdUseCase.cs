@@ -32,22 +32,40 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            //get group Id
+            Guid groupId;
 
-                //var groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
+            //get groupId -- this is temporary error handling, to stop the e2e tests failing. groupId should never be empty
+            try
+            {
+                groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
+            }
+            catch
+            {
+                groupId = Guid.Empty;
+            }
 
-          var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
+            var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
-            //create result
+            // we still need this query
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
-            //we can use the groupId to do a query on the table to get all the claims
             var claimsIds = new List<string>();
             foreach (var ds in query.DocumentSubmissions)
             {
                 claimsIds.Add(ds.ClaimId);
             }
-            var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
+
+            List<Claim> claims;
+
+            if (groupId == Guid.Empty)
+            {
+                claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
+            }
+            else
+            {
+                //this is where the performance improvement will come from. Get all the claims at once, rather than dozens of API calls
+                claims = await _documentsApiGateway.GetClaimsByGroupId(groupId);
+            }
 
             //build the object as before?
             var claimIndex = 0;

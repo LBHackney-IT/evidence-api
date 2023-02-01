@@ -15,5 +15,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Task<List<Claim>> GetClaimsByIdsThrottled(List<string> claimIds);
         Task<S3UploadPolicy> CreateUploadPolicy(Guid id);
         Task<List<ClaimBackfillResponse>> BackfillClaimsWithGroupIds(List<GroupResidentIdClaimIdBackfillObject> backfillObjects);
+        Task<List<Claim>> GetClaimsByGroupId(Guid groupId);
     }
 }

@@ -149,6 +149,18 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
         }
 
+        public async Task<List<Claim>> GetClaimsByGroupId(Guid groupId)
+        {
+            var uri = new Uri($"api/v1/claims?groupId={groupId}", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+            var response = await _client.GetAsync(uri).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
+            return await DeserializeResponse<List<Claim>>(response).ConfigureAwait(true);
+        }
+
         private static StringContent SerializeBackfillRequest(GroupResidentIdClaimIdBackfillObject request)
         {
             var updateRequest = new ClaimUpdateRequest() { GroupId = request.GroupId };
