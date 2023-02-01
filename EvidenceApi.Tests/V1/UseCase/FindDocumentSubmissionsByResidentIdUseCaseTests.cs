@@ -21,6 +21,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IEvidenceGateway> _evidenceGateway;
         private Mock<IDocumentTypeGateway> _documentTypesGateway;
         private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway;
+        private Mock<IResidentsGateway> _residentsGateway;
         private Mock<IDocumentsApiGateway> _documentsApiGateway;
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _documentType;
@@ -43,11 +44,13 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentTypesGateway = new Mock<IDocumentTypeGateway>();
             _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
             _documentsApiGateway = new Mock<IDocumentsApiGateway>();
+            _residentsGateway = new Mock<IResidentsGateway>();
             _classUnderTest = new FindDocumentSubmissionsByResidentIdUseCase(
                 _evidenceGateway.Object,
                 _documentTypesGateway.Object,
                 _staffSelectedDocumentTypeGateway.Object,
-                _documentsApiGateway.Object
+                _documentsApiGateway.Object,
+                _residentsGateway.Object
             );
         }
 

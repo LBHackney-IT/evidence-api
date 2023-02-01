@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Infrastructure;
@@ -76,6 +77,14 @@ namespace EvidenceApi.V1.Gateways
             _databaseContext.ResidentsTeamGroupId.Add(newEntry);
             _databaseContext.SaveChanges();
 
+        }
+
+        public Guid GetGroupIdByResidentIdAndTeam(DocumentSubmissionSearchQuery query)
+        {
+            var queryResponse = _databaseContext.ResidentsTeamGroupId
+                .FirstOrDefault(x => x.ResidentId == query.ResidentId && x.Team == query.Team);
+
+            return queryResponse.GroupId;
         }
 
         public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(char groupIdCharacter)

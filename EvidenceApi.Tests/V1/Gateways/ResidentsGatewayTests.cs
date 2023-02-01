@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AutoFixture;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using FluentAssertions;
@@ -298,6 +299,25 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.Id.Should().NotBeEmpty();
             foundRecord.Resident.Should().Be(request);
 
+        }
+
+        [Test]
+        public void GetGroupIdByResidentIdAndTeamReturnsGroupId()
+        {
+            var request = _fixture.Create<DocumentSubmissionSearchQuery>();
+            var resident = _fixture.Create<Resident>();
+            var groupId = Guid.NewGuid();
+
+            request.ResidentId = resident.Id;
+
+            var testEntry = new ResidentsTeamGroupId() { Resident = resident, GroupId = groupId, Team = request.Team};
+
+            DatabaseContext.ResidentsTeamGroupId.Add(testEntry);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.GetGroupIdByResidentIdAndTeam(request);
+
+            result.Should().Be(groupId);
         }
 
         [Test]

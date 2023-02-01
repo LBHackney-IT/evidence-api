@@ -17,24 +17,26 @@ namespace EvidenceApi.V1.UseCase
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly IStaffSelectedDocumentTypeGateway _staffSelectedDocumentTypeGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
+        private readonly IResidentsGateway _residentsGateway;
 
-        public FindDocumentSubmissionsByResidentIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway, IDocumentsApiGateway documentsApiGateway)
+        public FindDocumentSubmissionsByResidentIdUseCase(IEvidenceGateway evidenceGateway, IDocumentTypeGateway documentTypeGateway, IStaffSelectedDocumentTypeGateway staffSelectedDocumentTypeGateway, IDocumentsApiGateway documentsApiGateway, IResidentsGateway residentsGateway)
         {
             _evidenceGateway = evidenceGateway;
             _documentTypeGateway = documentTypeGateway;
             _staffSelectedDocumentTypeGateway = staffSelectedDocumentTypeGateway;
             _documentsApiGateway = documentsApiGateway;
+            _residentsGateway = residentsGateway;
         }
 
         public async Task<DocumentSubmissionResponseObject> ExecuteAsync(DocumentSubmissionSearchQuery request)
         {
             ValidateRequest(request);
 
-            //can remove this and replace with a call to the new table, to get the groupId by residentId && team - but how will this work for the pagination?
+            //get group Id
 
-            //var groupId = new Gateway? get groupId
-            var query =
-                _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
+                //var groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
+
+          var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
             //create result
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
