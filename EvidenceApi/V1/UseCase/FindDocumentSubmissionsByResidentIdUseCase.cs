@@ -34,9 +34,9 @@ namespace EvidenceApi.V1.UseCase
 
             var groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
 
+            //for pagination reasons, this method is still needed
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
-            // we still need this query
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
             var claimsIds = new List<string>();
@@ -45,19 +45,8 @@ namespace EvidenceApi.V1.UseCase
                 claimsIds.Add(ds.ClaimId);
             }
 
-            List<Claim> claims;
+            var claims = await _documentsApiGateway.GetClaimsByGroupId(groupId);
 
-            if (groupId == Guid.Empty)
-            {
-                claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
-            }
-            else
-            {
-                //this is where the performance improvement will come from. Get all the claims at once, rather than dozens of API calls
-                claims = await _documentsApiGateway.GetClaimsByGroupId(groupId);
-            }
-
-            //build the object as before?
             var claimIndex = 0;
             foreach (var ds in query.DocumentSubmissions)
             {

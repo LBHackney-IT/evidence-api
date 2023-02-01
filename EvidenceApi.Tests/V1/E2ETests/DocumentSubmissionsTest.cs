@@ -266,6 +266,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var resident = TestDataHelper.ResidentWithId(residentId);
             var currentDate = new DateTime();
 
+            var residentTeamGroupId = new ResidentsTeamGroupId() { GroupId = Guid.NewGuid(), Resident = resident };
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
@@ -274,6 +275,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
 
             DatabaseContext.SaveChanges();
 

@@ -27,12 +27,14 @@ namespace EvidenceApi.Tests.V1.UseCase
         private DocumentType _documentType;
         private EvidenceRequest _evidenceRequest1;
         private EvidenceRequest _evidenceRequest2;
+        private ResidentsTeamGroupId _residentsTeamGroupId;
         private DocumentSubmissionSearchQuery _useCaseRequest;
         private DocumentSubmission _documentSubmission1;
         private DocumentSubmission _documentSubmission2;
         private DocumentSubmissionQueryResponse _injectedResult;
         private Task<Claim> _claim1;
         private Task<Claim> _claim2;
+        private Guid _groupId = Guid.NewGuid();
         private string _claimId1 = "70cdff29-84d3-461e-bd16-2032c07c28bd";
         private string _claimId2 = "010f4156-92aa-4082-891b-3b238e46940a";
 
@@ -109,6 +111,17 @@ namespace EvidenceApi.Tests.V1.UseCase
         private void SetupMocks()
         {
             var residentId = Guid.NewGuid();
+            var groupId = Guid.NewGuid();
+
+            _residentsTeamGroupId = new ResidentsTeamGroupId()
+            {
+                Resident = new Resident()
+                {
+                    Id = residentId
+                },
+                GroupId = groupId
+            };
+
             _evidenceRequest1 = TestDataHelper.EvidenceRequest();
             _evidenceRequest1.Id = Guid.NewGuid();
             _evidenceRequest1.Team = "Housing benefit";
@@ -135,9 +148,11 @@ namespace EvidenceApi.Tests.V1.UseCase
             _documentType = _fixture.Create<DocumentType>();
 
             _claim1 = _fixture.Create<Task<Claim>>();
+            _claim1.Result.GroupId = groupId;
 
             _claim2 = _fixture.Create<Task<Claim>>();
             _claim2.Result.Document = null;
+            _claim2.Result.GroupId = groupId;
 
             _useCaseRequest = new DocumentSubmissionSearchQuery()
             {
@@ -161,12 +176,16 @@ namespace EvidenceApi.Tests.V1.UseCase
             claimsList.Add(_fixture.Create<Claim>());
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
+            _residentsGateway.Setup(x => x.GetGroupIdByResidentIdAndTeam(It.IsAny<DocumentSubmissionSearchQuery>()))
+                .Returns(_residentsTeamGroupId.GroupId);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway
                 .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<SubmissionState?>(), It.IsAny<int?>(),
                     It.IsAny<int?>())).Returns(_injectedResult);
-            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId1)).Returns(_claim1);
-            _documentsApiGateway.Setup(x => x.GetClaimById(_claimId2)).Returns(_claim2);
+            _documentsApiGateway.Setup(x => x.GetClaimsByGroupId(It.IsAny<Guid>())).ReturnsAsync(new List<Claim>()
+            {
+                _claim1.Result, _claim2.Result
+            });
             _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);
         }
     }
