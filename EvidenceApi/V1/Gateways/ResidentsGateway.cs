@@ -84,7 +84,7 @@ namespace EvidenceApi.V1.Gateways
             var queryResponse = _databaseContext.ResidentsTeamGroupId
                 .FirstOrDefault(x => x.ResidentId == query.ResidentId && x.Team == query.Team);
 
-           return queryResponse?.GroupId ?? Guid.Empty;
+            return queryResponse?.GroupId ?? Guid.Empty;
         }
 
         public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(char groupIdCharacter)

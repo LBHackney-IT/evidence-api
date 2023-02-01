@@ -310,7 +310,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             request.ResidentId = resident.Id;
 
-            var testEntry = new ResidentsTeamGroupId() { Resident = resident, GroupId = groupId, Team = request.Team};
+            var testEntry = new ResidentsTeamGroupId() { Resident = resident, GroupId = groupId, Team = request.Team };
 
             DatabaseContext.ResidentsTeamGroupId.Add(testEntry);
             DatabaseContext.SaveChanges();

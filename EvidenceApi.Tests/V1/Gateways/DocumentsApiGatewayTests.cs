@@ -116,6 +116,31 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public async Task CanGetClaimsByGroupId()
+        {
+            var groupId = Guid.NewGuid();
+            var claimOne = _fixture.Create<Claim>();
+            var claimTwo = _fixture.Create<Claim>();
+            var claimThree = _fixture.Create<Claim>();
+            claimOne.GroupId = groupId;
+            claimTwo.GroupId = groupId;
+            claimThree.GroupId = groupId;
+
+            var claimsList = new List<Claim>() { claimOne, claimTwo, claimThree };
+
+            _messageHandler.SetupRequest(HttpMethod.Get,
+                    $"{_options.DocumentsApiUrl}api/v1/claims?groupId={groupId}",
+                    request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
+                .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(claimsList), "application/json");
+
+            var result = await _classUnderTest.GetClaimsByGroupId(groupId);
+
+            result.Should().BeEquivalentTo(claimsList);
+
+
+        }
+
+        [Test]
         public void ShouldThrowWhenGettingClaimsByIdsFails()
         {
             void AddClaimResponse(Guid claimId, HttpStatusCode status, string body)
