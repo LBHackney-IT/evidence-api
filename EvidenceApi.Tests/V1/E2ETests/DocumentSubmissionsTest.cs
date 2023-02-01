@@ -24,16 +24,20 @@ namespace EvidenceApi.Tests.V1.E2ETests
         private Document _document;
         private S3UploadPolicy _createdUploadPolicy;
         private readonly Guid _id = Guid.NewGuid();
+        private readonly Guid _groupId = Guid.NewGuid();
 
         [SetUp]
         public void SetUp()
         {
+
             _document = _fixture.Build<Document>()
                 .With(x => x.Id, _id)
                 .Create();
             _createdClaim = _fixture.Build<Claim>()
                 .With(x => x.Document, _document)
                 .Create();
+
+            _createdClaim.GroupId = _groupId;
 
             _createdUploadPolicy = _fixture.Create<S3UploadPolicy>();
 
@@ -44,6 +48,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     JsonConvert.SerializeObject(_createdClaim)
                 )
             );
+
+            DocumentsApiServer.Given(Request.Create().WithParam("groupId", _groupId.ToString()).UsingGet())
+                .RespondWith(Response.Create().WithStatusCode(200).WithBody(JsonConvert.SerializeObject(new List<Claim>() {
+                _createdClaim})));
 
             DocumentsApiServer.Given(
                 Request.Create().WithPath("/api/v1/claims")
@@ -222,6 +230,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var resident = TestDataHelper.ResidentWithId(Guid.NewGuid());
 
+
+            var residentTeamGroupId = new ResidentsTeamGroupId() { Resident = resident, GroupId = _groupId, Team = "Development Housing Team" };
+
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
@@ -229,6 +240,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
 
             DatabaseContext.SaveChanges();
 
@@ -238,6 +250,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
             DatabaseContext.SaveChanges();
+
+
 
             var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={documentSubmission1.ResidentId}", UriKind.Relative);
 
@@ -266,7 +280,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var resident = TestDataHelper.ResidentWithId(residentId);
             var currentDate = new DateTime();
 
-            var residentTeamGroupId = new ResidentsTeamGroupId() { GroupId = Guid.NewGuid(), Resident = resident };
+            var residentTeamGroupId = new ResidentsTeamGroupId() { GroupId = _groupId, Resident = resident, Team = "Development Housing Team" };
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
