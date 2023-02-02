@@ -34,13 +34,15 @@ namespace EvidenceApi.V1.UseCase
 
             var groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
 
-            //for pagination reasons, this method is still needed
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
-            //do we need to paginate claims using the same method?? //returns pointers to the pagination state
-            var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(groupId);
+            //need to calculate pagination from query response
+
+            var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
+
+            var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
 
             var claimIndex = 0;
             foreach (var ds in query.DocumentSubmissions)

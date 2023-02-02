@@ -126,6 +126,8 @@ namespace EvidenceApi.Tests.V1.Gateways
             claimTwo.GroupId = groupId;
             claimThree.GroupId = groupId;
 
+            var request = new PaginatedClaimRequest() { GroupId = groupId };
+
             var claimsList = new List<Claim>() { claimOne, claimTwo, claimThree };
 
             var paginatedClaimsResponse = new PaginatedClaimResponse() { Claims = claimsList };
@@ -135,7 +137,7 @@ namespace EvidenceApi.Tests.V1.Gateways
                     request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
                 .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(paginatedClaimsResponse), "application/json");
 
-            var result = await _classUnderTest.GetClaimsByGroupId(groupId);
+            var result = await _classUnderTest.GetClaimsByGroupId(request);
 
             result.Claims.Should().BeEquivalentTo(claimsList);
 

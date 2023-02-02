@@ -187,7 +187,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _evidenceGateway
                 .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<SubmissionState?>(), It.IsAny<int?>(),
                     It.IsAny<int?>())).Returns(_injectedResult);
-            _documentsApiGateway.Setup(x => x.GetClaimsByGroupId(It.IsAny<Guid>())).ReturnsAsync(paginatedClaimsResponse);
+            _documentsApiGateway.Setup(x => x.GetClaimsByGroupId(It.IsAny<PaginatedClaimRequest>())).ReturnsAsync(paginatedClaimsResponse);
             _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);
         }
     }
