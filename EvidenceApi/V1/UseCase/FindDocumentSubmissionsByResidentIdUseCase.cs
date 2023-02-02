@@ -8,6 +8,7 @@ using EvidenceApi.V1.UseCase.Interfaces;
 using EvidenceApi.V1.Domain;
 using System.Threading.Tasks;
 using System;
+using System.Text;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -38,23 +39,25 @@ namespace EvidenceApi.V1.UseCase
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
-            //need to calculate pagination from query response
-
             var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
 
             var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
 
-            var claimIndex = 0;
             foreach (var ds in query.DocumentSubmissions)
             {
+                var claim = FindClaim(claimsResponse.Claims, ds);
                 var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
                 var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
                     ds.StaffSelectedDocumentTypeId);
-                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claimsResponse.Claims[claimIndex]));
-                claimIndex++;
+                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claim));
             }
 
             return result;
+        }
+
+        private Claim FindClaim(List<Claim> claims, DocumentSubmission documentSubmission)
+        {
+            return claims.Find(x => x.Id.ToString() == documentSubmission.ClaimId);
         }
 
         private DocumentType FindDocumentType(string teamName, string documentTypeId)
