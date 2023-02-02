@@ -150,12 +150,7 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<PaginatedClaimResponse> GetClaimsByGroupId(PaginatedClaimRequest request)
         {
-            var builtQuery = $"groupId={request.GroupId}" +
-                             (request.Limit != null ? $"&limit={request.Limit}" : string.Empty) +
-                             (request.Before != null ? $"&before={request.Before}" : string.Empty) +
-                             (request.After != null ? $"&after={request.After}" : string.Empty);
-
-            var uri = new Uri($"api/v1/claims?{builtQuery}" + request.After, UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={request.GroupId}&limit=5000" + request.After, UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
             var response = await _client.GetAsync(uri).ConfigureAwait(true);
             if (response.StatusCode != HttpStatusCode.OK)
