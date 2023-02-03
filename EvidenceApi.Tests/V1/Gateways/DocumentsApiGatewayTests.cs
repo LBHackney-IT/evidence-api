@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using AutoFixture;
@@ -11,6 +12,7 @@ using EvidenceApi.V1.Boundary.Request;
 using System.Threading.Tasks;
 using Moq;
 using System.Net.Http;
+using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using Newtonsoft.Json;
 using Moq.Contrib.HttpClient;
@@ -175,6 +177,45 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEquivalentTo(expectedClaim);
         }
 
+        [Test]
+        public async Task CanUpdateClaimWithGroupId()
+        {
+            var claimId = Guid.NewGuid();
+            var groupId = new Guid("3da21f64-5717-4562-b3fc-2c963f66afb3");
+            var claimUpdateRequest = _fixture.Build<ClaimUpdateRequest>()
+                .With(x => x.GroupId, groupId)
+                .Create();
+
+            var mockBackfillObjectList = new List<GroupResidentIdClaimIdBackfillObject>()
+            {
+                new GroupResidentIdClaimIdBackfillObject()
+                {
+                    ClaimIds = new List<string>()
+                    {
+                        claimId.ToString()
+                    },
+                    GroupId = groupId
+                }
+            };
+
+            var expectedClaim = JsonConvert.DeserializeObject<Claim>(_claimResponseFixture);
+
+            var expectedClaimBackfillResponse = new List<ClaimBackfillResponse>()
+            {
+                new ClaimBackfillResponse() { GroupId = expectedClaim.GroupId, ClaimId = expectedClaim.Id }
+            };
+
+            _messageHandler.SetupRequest(HttpMethod.Patch, $"{_options.DocumentsApiUrl}api/v1/claims/{claimId}", request =>
+               {
+                   return request.Headers.Authorization.ToString() == _options.DocumentsApiPatchClaimsToken;
+               })
+                .ReturnsResponse(HttpStatusCode.OK, _claimResponseFixture, "application/json");
+
+            var result = await _classUnderTest.BackfillClaimsWithGroupIds(mockBackfillObjectList);
+
+            result.Should().BeEquivalentTo(expectedClaimBackfillResponse);
+        }
+
         private string _claimResponseFixture = @"{
             ""serviceCreatedBy"": ""711"",
             ""apiCreatedBy"": ""evidence-api"",
@@ -183,6 +224,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             ""validUntil"": ""2021-01-14T14:32:15.377Z"",
             ""id"": ""3fa85f64-5717-4562-b3fc-2c963f66afa6"",
             ""createdAt"": ""2021-01-14T14:32:15.377Z"",
+            ""groupId"": ""3da21f64-5717-4562-b3fc-2c963f66afb3"",
             ""document"": {
                 ""id"": ""3fa85f64-5717-4562-b3fc-2c963f66afa6"",
                 ""createdAt"": ""2021-01-14T14:32:15.377Z"",

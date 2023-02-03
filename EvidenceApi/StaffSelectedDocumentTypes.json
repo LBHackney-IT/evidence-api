@@ -4,15 +4,15 @@
     "id": "1",
     "documentTypes": [
       {
-        "id": "passport-scan",
-        "title": "Passport",
-        "description": "A valid passport open at the photo page",
-        "enabled": true
-      },
-      {
         "id": "drivers-licence",
         "title": "Drivers licence",
         "description": "A valid UK full or provisional UK driving license",
+        "enabled": true
+      },
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page",
         "enabled": true
       }
     ]
@@ -22,15 +22,15 @@
     "id": "2",
     "documentTypes": [
       {
-        "id": "passport-scan",
-        "title": "Passport Scan",
-        "description": "A valid passport open at the photo page",
-        "enabled": true
-      },
-      {
         "id": "drivers-licence",
         "title": "Driver's licence",
         "description": "A valid UK full or provisional UK driving license",
+        "enabled": true
+      },
+      {
+        "id": "passport-scan",
+        "title": "Passport Scan",
+        "description": "A valid passport open at the photo page",
         "enabled": true
       },
       {
@@ -46,15 +46,15 @@
     "id": "3",
     "documentTypes": [
       {
-        "id": "passport-scan",
-        "title": "Passport",
-        "description": "A valid passport open at the photo page",
-        "enabled": true
-      },
-      {
         "id": "drivers-licence",
         "title": "Drivers licence",
         "description": "A valid UK full or provisional UK driving license",
+        "enabled": true
+      },
+      {
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page",
         "enabled": true
       }
     ]
@@ -64,9 +64,9 @@
     "id": "123",
     "documentTypes": [
       {
-        "id": "passport-scan",
-        "title": "Passport",
-        "description": "A valid passport open at the photo page",
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year",
         "enabled": true
       },
       {
@@ -76,15 +76,15 @@
         "enabled": true
       },
       {
-        "id": "utility-bill",
-        "title": "Utility bills",
-        "description": "Valid from the last 3 months",
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "A valid passport open at the photo page",
         "enabled": true
       },
       {
-        "id": "council-tax-bill",
-        "title": "Council tax bill",
-        "description": "Current financial year",
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months",
         "enabled": true
       }
     ]
@@ -94,15 +94,15 @@
     "id": "5",
     "documentTypes": [
       {
-        "id": "photo",
-        "title": "Photo",
-        "description": "A clear photo of the repair",
-        "enabled": true
-      },
-      {
         "id": "contractor-invoice",
         "title": "Contractor invoice",
         "description": "A contractor invoice detailing what the issues is, with tax reference number (in relation to leaseholders, who've had a contractor out, but they've given advice on what the issue is, if communal etc, so that LBH. can take appropriate action)",
+        "enabled": true
+      },
+      {
+        "id": "photo",
+        "title": "Photo",
+        "description": "A clear photo of the repair",
         "enabled": true
       }
     ]
@@ -112,21 +112,9 @@
     "id": "6",
     "documentTypes": [
       {
-        "id": "passport",
-        "title": "Passport",
-        "description": "Data page with photo",
-        "enabled": true
-      },
-      {
-        "id": "drivers-licence",
-        "title": "UK driving licence",
-        "description": "Photo side (front)",
-        "enabled": true
-      },
-      {
-        "id": "eu-identity-card",
-        "title": "EU identity card",
-        "description": "Photo page",
+        "id": "bank-statement",
+        "title": "Bank statement",
+        "description": "Valid from the last 3 months",
         "enabled": true
       },
       {
@@ -142,15 +130,9 @@
         "enabled": true
       },
       {
-        "id": "bank-statement",
-        "title": "Bank statement",
-        "description": "Valid from the last 3 months",
-        "enabled": true
-      },
-      {
-        "id": "utility-bill",
-        "title": "Utility bills",
-        "description": "Valid from the last 3 months",
+        "id": "certificate-of-naturalisation",
+        "title": "Certificate of naturalisation",
+        "description": "",
         "enabled": true
       },
       {
@@ -160,23 +142,17 @@
         "enabled": true
       },
       {
+        "id": "eu-identity-card",
+        "title": "EU identity card",
+        "description": "Photo page",
+        "enabled": true
+      },
+      {
         "id": "government-letter",
         "title": "Government letter",
         "description": "For example, benefit status letters",
         "enabled": true
       },
-      {
-        "id": "certificate-of-naturalisation",
-        "title": "Certificate of naturalisation",
-        "description": "",
-        "enabled": true
-      }
-    ]
-  },
-  {
-    "name": "Housing Register",
-    "id": "7",
-    "documentTypes": [
       {
         "id": "passport",
         "title": "Passport",
@@ -190,62 +166,32 @@
         "enabled": true
       },
       {
-        "id": "eu-identity-card",
-        "title": "EU identity card",
-        "description": "Photo page",
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months",
         "enabled": true
-      },
+      }
+    ]
+  },
+  {
+    "name": "Housing Register",
+    "id": "7",
+    "documentTypes": [
       {
-        "id": "resident-permit",
-        "title": "Resident permit",
-        "description": "Both sides of the card",
-        "enabled": true
-      },
-      {
-        "id": "biometric-card",
-        "title": "Biometric card",
-        "description": "Both sides of the card",
-        "enabled": true
-      },
-      {
-        "id": "birth-certificate",
-        "title": "Full birth certificate",
+        "id": "academy-check",
+        "title": "Academy check",
         "description": "",
         "enabled": true
       },
       {
-        "id": "certificate-of-naturalisation",
-        "title": "Certificate of naturalisation",
+        "id": "appeal",
+        "title": "Appeal",
         "description": "",
         "enabled": true
       },
       {
-        "id": "nhs-medical-card",
-        "title": "NHS medical card",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "immigration-document",
-        "title": "Immigration document",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "marriage-certificate",
-        "title": "Marriage Certificate/Civil Partnership certificate",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "divorce-papers",
-        "title": "Divorce papers from the court",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "settled-status",
-        "title": "Settled or pre-settled status document",
+        "id": "award-letter-dwp",
+        "title": "Award letter from the DWP/Jobcentre plus",
         "description": "",
         "enabled": true
       },
@@ -256,74 +202,26 @@
         "enabled": true
       },
       {
-        "id": "utility-bills",
-        "title": "Utility bills",
-        "description": "Valid from the last 3 months",
+        "id": "biometric-card",
+        "title": "Biometric card",
+        "description": "Both sides of the card",
         "enabled": true
       },
       {
-        "id": "council-tax-bill",
-        "title": "Council tax bill",
-        "description": "Current financial year",
-        "enabled": true
-      },
-      {
-        "id": "mortgage-deed",
-        "title": "Mortgage deed",
+        "id": "call-credit-check",
+        "title": "Call Credit check (360 check)",
         "description": "",
         "enabled": true
       },
       {
-        "id": "tenancy-agreement",
-        "title": "Tenancy agreement",
+        "id": "certificate-of-naturalisation",
+        "title": "Certificate of naturalisation",
         "description": "",
         "enabled": true
       },
       {
-        "id": "details-of-host",
-        "title": "Details of host",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "payslip",
-        "title": "Payslip",
-        "description": "Valid from the last 3 months",
-        "enabled": true
-      },
-      {
-        "id": "company-accounts",
-        "title": "Company accounts",
-        "description": "Show last 12 months",
-        "enabled": true
-      },
-      {
-        "id": "self-assessment",
-        "title": "Self assessment",
-        "description": "Show last 12 months",
-        "enabled": true
-      },
-      {
-        "id": "tax-credit-award-letter",
-        "title": "Tax Credit award letter",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "state-pension-statement",
-        "title": "State pension statement",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "private-pension-statement",
-        "title": "Private pension statement",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "occupation-pension-statement",
-        "title": "Occupation pension statement",
+        "id": "premium-bonds-certificate",
+        "title": "Certificate of premium bonds",
         "description": "",
         "enabled": true
       },
@@ -334,14 +232,116 @@
         "enabled": true
       },
       {
+        "id": "company-accounts",
+        "title": "Company accounts",
+        "description": "Show last 12 months",
+        "enabled": true
+      },
+      {
+        "id": "complaint",
+        "title": "Complaint",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "correspondence",
+        "title": "Correspondence",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year",
+        "enabled": true
+      },
+      {
+        "id": "custody-adoption-court-residence",
+        "title": "Custody papers, adoption papers or court residence order",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "decision-letter",
+        "title": "Decision letter",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "details-of-host",
+        "title": "Details of host",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "divorce-papers",
+        "title": "Divorce papers from the court",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "eu-identity-card",
+        "title": "EU identity card",
+        "description": "Photo page",
+        "enabled": true
+      },
+      {
+        "id": "email-incoming",
+        "title": "Email incoming",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "email-outgoing",
+        "title": "Email outgoing",
+        "description": "",
+        "enabled": true
+      },
+      {
         "id": "evidence-of-child-school",
         "title": "Evidence of child school",
         "description": "For example a headed letter with child's name and address",
         "enabled": true
       },
       {
-        "id": "custody-adoption-court-residence",
-        "title": "Custody papers, adoption papers or court residence order",
+        "id": "experian-check",
+        "title": "Experian check",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "birth-certificate",
+        "title": "Full birth certificate",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "hospital-letter",
+        "title": "Hospital letter",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "isa",
+        "title": "ISAs",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "immigration-document",
+        "title": "Immigration document",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "land-registry",
+        "title": "Land Registry",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "letter-from-gp",
+        "title": "Letter from GP",
         "description": "",
         "enabled": true
       },
@@ -358,56 +358,8 @@
         "enabled": true
       },
       {
-        "id": "national-insurance-card",
-        "title": "National Insurance Card",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "award-letter-dwp",
-        "title": "Award letter from the DWP/Jobcentre plus",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "p60-p45-payslip",
-        "title": "P60, P45, pay slip",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "letter-from-gp",
-        "title": "Letter from GP",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "hospital-letter",
-        "title": "Hospital letter",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "rehousing-report",
-        "title": "OT rehousing report",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "other-medical-information",
-        "title": "Other medical information",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "medical-history-report",
-        "title": "Medical history report",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "nowmedical-outcome-report",
-        "title": "NowMedical outcome report",
+        "id": "marriage-certificate",
+        "title": "Marriage Certificate/Civil Partnership certificate",
         "description": "",
         "enabled": true
       },
@@ -418,80 +370,26 @@
         "enabled": true
       },
       {
-        "id": "email-incoming",
-        "title": "Email incoming",
+        "id": "medical-history-report",
+        "title": "Medical history report",
         "description": "",
         "enabled": true
       },
       {
-        "id": "email-outgoing",
-        "title": "Email outgoing",
+        "id": "mortgage-deed",
+        "title": "Mortgage deed",
         "description": "",
         "enabled": true
       },
       {
-        "id": "experian-check",
-        "title": "Experian check",
+        "id": "nhs-medical-card",
+        "title": "NHS medical card",
         "description": "",
         "enabled": true
       },
       {
-        "id": "land-registry",
-        "title": "Land Registry",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "academy-check",
-        "title": "Academy check",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "call-credit-check",
-        "title": "Call Credit check (360 check)",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "decision-letter",
-        "title": "Decision letter",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "other",
-        "title": "Other",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "solicitors",
-        "title": "Solicitors",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "complaint",
-        "title": "Complaint",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "appeal",
-        "title": "Appeal",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "correspondence",
-        "title": "Correspondence",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "premium-bonds-certificate",
-        "title": "Certificate of premium bonds",
+        "id": "national-insurance-card",
+        "title": "National Insurance Card",
         "description": "",
         "enabled": true
       },
@@ -502,8 +400,92 @@
         "enabled": true
       },
       {
-        "id": "isa",
-        "title": "ISAs",
+        "id": "nowmedical-outcome-report",
+        "title": "NowMedical outcome report",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "rehousing-report",
+        "title": "OT rehousing report",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "occupation-pension-statement",
+        "title": "Occupation pension statement",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "other",
+        "title": "Other",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "other-medical-information",
+        "title": "Other medical information",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "p60-p45-payslip",
+        "title": "P60, P45, pay slip",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "passport",
+        "title": "Passport",
+        "description": "Data page with photo",
+        "enabled": true
+      },
+      {
+        "id": "payslip",
+        "title": "Payslip",
+        "description": "Valid from the last 3 months",
+        "enabled": true
+      },
+      {
+        "id": "private-pension-statement",
+        "title": "Private pension statement",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "resident-permit",
+        "title": "Resident permit",
+        "description": "Both sides of the card",
+        "enabled": true
+      },
+      {
+        "id": "self-assessment",
+        "title": "Self assessment",
+        "description": "Show last 12 months",
+        "enabled": true
+      },
+      {
+        "id": "settled-status",
+        "title": "Settled or pre-settled status document",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "shares-unit-trusts",
+        "title": "Shares and unit trusts",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "solicitors",
+        "title": "Solicitors",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "state-pension-statement",
+        "title": "State pension statement",
         "description": "",
         "enabled": true
       },
@@ -514,9 +496,27 @@
         "enabled": true
       },
       {
-        "id": "shares-unit-trusts",
-        "title": "Shares and unit trusts",
+        "id": "tax-credit-award-letter",
+        "title": "Tax Credit award letter",
         "description": "",
+        "enabled": true
+      },
+      {
+        "id": "tenancy-agreement",
+        "title": "Tenancy agreement",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "drivers-licence",
+        "title": "UK driving licence",
+        "description": "Photo side (front)",
+        "enabled": true
+      },
+      {
+        "id": "utility-bills",
+        "title": "Utility bills",
+        "description": "Valid from the last 3 months",
         "enabled": true
       }
     ]
@@ -526,21 +526,15 @@
     "id": "8",
     "documentTypes": [
       {
-        "id": "passport-scan",
-        "title": "Passport",
-        "description": "Data page with photo",
+        "id": "anti-money-laundering",
+        "title": "Anti Money Laundering form",
+        "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet",
         "enabled": true
       },
       {
-        "id": "drivers-licence",
-        "title": "UK Drivers licence",
-        "description": "Photo side (front)",
-        "enabled": true
-      },
-      {
-        "id": "eu-identity-card",
-        "title": "EU identity card",
-        "description": "Photo page",
+        "id": "bank-statement",
+        "title": "Bank statement",
+        "description": "Valid from the last 3, 6 or 12 months",
         "enabled": true
       },
       {
@@ -556,27 +550,27 @@
         "enabled": true
       },
       {
-        "id": "proof-of-tenancy-agreement",
-        "title": "Proof of tenancy agreement",
-        "description": "Photo of both sides of valid tenancy agreement for the resident's home including signatures",
-        "enabled": true
-      },
-      {
-        "id": "previous-tenancy-agreement",
-        "title": "Previous Tenancy Agreement",
-        "description": "If you have completed previous tenancy details on page 5 of the RTB1, please supply and tenancy agreements or relevant confirmation of tenancy.",
-        "enabled": true
-      },
-      {
         "id": "certificate-of-naturalisation",
         "title": "Certificate of naturalisation",
         "description": "Photo side (front). IMPORTANT: If the resident is an overseas national they also need to provide us with proof of their entitlement to reside in the UK, ie they must have indefinite leave to remain.",
         "enabled": true
       },
       {
-        "id": "proof-of-rtb",
-        "title": "Proof of previous Right to Buy discount",
-        "description": "If they have previously purchased a property under Right to Buy and completed Part D of the RTB1, resident to supply any relevant documentation. (website link to form)",
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year",
+        "enabled": true
+      },
+      {
+        "id": "eu-identity-card",
+        "title": "EU identity card",
+        "description": "Photo page",
+        "enabled": true
+      },
+      {
+        "id": "government-letter",
+        "title": "Government letter",
+        "description": "For example, benefit status letters",
         "enabled": true
       },
       {
@@ -592,27 +586,9 @@
         "enabled": true
       },
       {
-        "id": "bank-statement",
-        "title": "Bank statement",
-        "description": "Valid from the last 3, 6 or 12 months",
-        "enabled": true
-      },
-      {
-        "id": "utility-bill",
-        "title": "Utility bills",
-        "description": "Valid from the last 3, 6 or 12 months. For all utility bills - provide at least THREE of the following: All the documents you provide must show this information or we won’t be able to accept them: Applicants name (matching what’s shown on the RTB application)/Address/Date of the document (not just the dates that a document may cover). We cannot accept hand-written letters, undated documents or junk mail as sufficient evidence of where you live and how long you have lived there. Neither can we accept documents sent to you by Hackney Council or Hackney Homes. Documents must be from more than one organisation or company.  Please remember that one of the documents you provide must have a date from at least twelve months ago and one must be recent.",
-        "enabled": true
-      },
-      {
-        "id": "council-tax-bill",
-        "title": "Council tax bill",
-        "description": "Current financial year",
-        "enabled": true
-      },
-      {
-        "id": "government-letter",
-        "title": "Government letter",
-        "description": "For example, benefit status letters",
+        "id": "passport-scan",
+        "title": "Passport",
+        "description": "Data page with photo",
         "enabled": true
       },
       {
@@ -622,9 +598,33 @@
         "enabled": true
       },
       {
-        "id": "anti-money-laundering",
-        "title": "Anti Money Laundering form",
-        "description": "All sections and additional information must be provided and signed by all applicants, photo of all pages of the booklet",
+        "id": "previous-tenancy-agreement",
+        "title": "Previous Tenancy Agreement",
+        "description": "If you have completed previous tenancy details on page 5 of the RTB1, please supply and tenancy agreements or relevant confirmation of tenancy.",
+        "enabled": true
+      },
+      {
+        "id": "proof-of-rtb",
+        "title": "Proof of previous Right to Buy discount",
+        "description": "If they have previously purchased a property under Right to Buy and completed Part D of the RTB1, resident to supply any relevant documentation. (website link to form)",
+        "enabled": true
+      },
+      {
+        "id": "proof-of-tenancy-agreement",
+        "title": "Proof of tenancy agreement",
+        "description": "Photo of both sides of valid tenancy agreement for the resident's home including signatures",
+        "enabled": true
+      },
+      {
+        "id": "drivers-licence",
+        "title": "UK Drivers licence",
+        "description": "Photo side (front)",
+        "enabled": true
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bills",
+        "description": "Valid from the last 3, 6 or 12 months. For all utility bills - provide at least THREE of the following: All the documents you provide must show this information or we wonu2019t be able to accept them: Applicants name (matching whatu2019s shown on the RTB application)/Address/Date of the document (not just the dates that a document may cover). We cannot accept hand-written letters, undated documents or junk mail as sufficient evidence of where you live and how long you have lived there. Neither can we accept documents sent to you by Hackney Council or Hackney Homes. Documents must be from more than one organisation or company.  Please remember that one of the documents you provide must have a date from at least twelve months ago and one must be recent.",
         "enabled": true
       }
     ]
@@ -633,30 +633,6 @@
     "name": "Admission and Pupil Benefits",
     "id": "9",
     "documentTypes": [
-      {
-        "id": "council-tax-bill",
-        "title": "Council tax bill",
-        "description": "Current financial year. Document with address clearly stated.",
-        "enabled": true
-      },
-      {
-        "id": "utility-bill",
-        "title": "Utility bill",
-        "description": "No less than 3 months old.  Document with address clearly stated.",
-        "enabled": true
-      },
-      {
-        "id": "tenancy-agreement",
-        "title": "Tenancy agreement",
-        "description": "Document with address clearly stated.",
-        "enabled": true
-      },
-      {
-        "id": "mortgage-statement",
-        "title": "Mortgage statement",
-        "description": "Document with address clearly stated.",
-        "enabled": true
-      },
       {
         "id": "bank-statement",
         "title": "Bank statement",
@@ -667,6 +643,24 @@
         "id": "birth-certificate",
         "title": "Birth certificate",
         "description": "Data page with either photo or government official header.",
+        "enabled": true
+      },
+      {
+        "id": "council-tax-bill",
+        "title": "Council tax bill",
+        "description": "Current financial year. Document with address clearly stated.",
+        "enabled": true
+      },
+      {
+        "id": "letter-signature",
+        "title": "Letter with signature",
+        "description": "A hand-written letter or typed-up document.",
+        "enabled": true
+      },
+      {
+        "id": "mortgage-statement",
+        "title": "Mortgage statement",
+        "description": "Document with address clearly stated.",
         "enabled": true
       },
       {
@@ -682,9 +676,15 @@
         "enabled": true
       },
       {
-        "id": "letter-signature",
-        "title": "Letter with signature",
-        "description": "A hand-written letter or typed-up document.",
+        "id": "tenancy-agreement",
+        "title": "Tenancy agreement",
+        "description": "Document with address clearly stated.",
+        "enabled": true
+      },
+      {
+        "id": "utility-bill",
+        "title": "Utility bill",
+        "description": "No less than 3 months old.  Document with address clearly stated.",
         "enabled": true
       }
     ]
@@ -694,80 +694,8 @@
     "id": "10",
     "documentTypes": [
       {
-        "id": "current-passport",
-        "title": "Current passport",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "full-photo-drivers-licence",
-        "title": "Full photo driver's licence",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "photo-provisional-driving-licence",
-        "title": "Photo provisional driving licence",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "freedom-pass",
-        "title": "Freedom pass",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "birth-certificate",
-        "title": "Birth certificate",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "immigration-documents-from-home-office",
-        "title": "Immigration documents from Home Office confirming their status",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "valid-resident-permit",
-        "title": "Valid resident's permit (EU nationals)",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "nhs-medical-card",
-        "title": "NHS Medical Card",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "divorce-letter",
-        "title": "Divorce letter from the court",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "identity-card",
-        "title": "Identity card",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "marriage-certificate",
-        "title": "Marriage certificate",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "national-insurance",
-        "title": "National insurance",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "other-proof-of-id",
-        "title": "Other proof of identity (ID)",
+        "id": "adoption-certificate",
+        "title": "Adoption certificate",
         "description": "",
         "enabled": true
       },
@@ -778,38 +706,98 @@
         "enabled": true
       },
       {
-        "id": "dss-documents",
-        "title": "DSS Documents (benefit/pension)",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "wage-slip",
-        "title": "Wage Slip (payslip) showing address",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "p45-p60",
-        "title": "P45/P60 showing address",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "tenancy-agreement",
-        "title": "Tenancy agreement",
-        "description": "",
-        "enabled": true
-      },
-      {
         "id": "bank-building-society-statement",
         "title": "Bank/Building Society Statement",
         "description": "",
         "enabled": true
       },
       {
-        "id": "utility-bill",
-        "title": "Utility bill",
+        "id": "bill-joint-name",
+        "title": "Bill in joint names",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "biometric-resident-permit",
+        "title": "Biometric resident permit",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "birth-certificate",
+        "title": "Birth certificate",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "civil-partnership-certificate",
+        "title": "Civil partnership certificate",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "council-tax",
+        "title": "Council tax",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "current-passport",
+        "title": "Current passport",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "dss-documents",
+        "title": "DSS Documents (benefit/pension)",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "divorce-letter",
+        "title": "Divorce letter from the court",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "freedom-pass",
+        "title": "Freedom pass",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "full-photo-drivers-licence",
+        "title": "Full photo driver's licence",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "housing-benefits",
+        "title": "Housing benefits",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "identity-card",
+        "title": "Identity card",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "immigration-documents-from-home-office",
+        "title": "Immigration documents from Home Office confirming their status",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "joint-bank-account-statement",
+        "title": "Joint bank account statement",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "letter-from-hospital",
+        "title": "Letter from Hospital",
         "description": "",
         "enabled": true
       },
@@ -832,8 +820,8 @@
         "enabled": true
       },
       {
-        "id": "letter-from-hospital",
-        "title": "Letter from Hospital",
+        "id": "letter-from-social-services",
+        "title": "Letter from Social Services",
         "description": "",
         "enabled": true
       },
@@ -844,14 +832,26 @@
         "enabled": true
       },
       {
-        "id": "letter-from-social-services",
-        "title": "Letter from Social Services",
+        "id": "life-insurance-document",
+        "title": "Life insurance document",
         "description": "",
         "enabled": true
       },
       {
-        "id": "other-proof-of-address",
-        "title": "Other proof of address",
+        "id": "marriage-certificate",
+        "title": "Marriage certificate",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "nhs-medical-card",
+        "title": "NHS Medical Card",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "national-insurance",
+        "title": "National insurance",
         "description": "",
         "enabled": true
       },
@@ -862,14 +862,14 @@
         "enabled": true
       },
       {
-        "id": "biometric-resident-permit",
-        "title": "Biometric resident permit",
+        "id": "other-proof-of-address",
+        "title": "Other proof of address",
         "description": "",
         "enabled": true
       },
       {
-        "id": "refugee-status-document",
-        "title": "Refugee status document",
+        "id": "other-proof-of-id",
+        "title": "Other proof of identity (ID)",
         "description": "",
         "enabled": true
       },
@@ -880,20 +880,14 @@
         "enabled": true
       },
       {
-        "id": "civil-partnership-certificate",
-        "title": "Civil partnership certificate",
+        "id": "other-proof-of-relationship",
+        "title": "Other proof of relationship",
         "description": "",
         "enabled": true
       },
       {
-        "id": "adoption-certificate",
-        "title": "Adoption certificate",
-        "description": "",
-        "enabled": true
-      },
-      {
-        "id": "life-insurance-document",
-        "title": "Life insurance document",
+        "id": "p45-p60",
+        "title": "P45/P60 showing address",
         "description": "",
         "enabled": true
       },
@@ -904,32 +898,38 @@
         "enabled": true
       },
       {
-        "id": "bill-joint-name",
-        "title": "Bill in joint names",
+        "id": "photo-provisional-driving-licence",
+        "title": "Photo provisional driving licence",
         "description": "",
         "enabled": true
       },
       {
-        "id": "joint-bank-account-statement",
-        "title": "Joint bank account statement",
+        "id": "refugee-status-document",
+        "title": "Refugee status document",
         "description": "",
         "enabled": true
       },
       {
-        "id": "council-tax",
-        "title": "Council tax",
+        "id": "tenancy-agreement",
+        "title": "Tenancy agreement",
         "description": "",
         "enabled": true
       },
       {
-        "id": "housing-benefits",
-        "title": "Housing benefits",
+        "id": "utility-bill",
+        "title": "Utility bill",
         "description": "",
         "enabled": true
       },
       {
-        "id": "other-proof-of-relationship",
-        "title": "Other proof of relationship",
+        "id": "valid-resident-permit",
+        "title": "Valid resident's permit (EU nationals)",
+        "description": "",
+        "enabled": true
+      },
+      {
+        "id": "wage-slip",
+        "title": "Wage Slip (payslip) showing address",
         "description": "",
         "enabled": true
       }
@@ -940,17 +940,17 @@
     "id": "11",
     "documentTypes": [
       {
-        "id": "vehicle-photos",
-        "title": "Photographs of vehicle",
-        "description": "",
-        "enabled": true
-      },
-      {
         "id": "other-council-letter",
         "title": "Letter from another council",
         "description": "",
         "enabled": true
+      },
+      {
+        "id": "vehicle-photos",
+        "title": "Photographs of vehicle",
+        "description": "",
+        "enabled": true
       }
     ]
-  }  
+  }
 ]

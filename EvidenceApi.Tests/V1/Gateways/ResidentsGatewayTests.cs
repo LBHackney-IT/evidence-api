@@ -349,5 +349,33 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = _classUnderTest.FindGroupIdByResidentIdAndTeam(residentId, team);
             result.Should().BeNull();
         }
+
+        [Test]
+        public void GetAllResidentIdsAndGroupIdsByFirstCharacter()
+        {
+            var currentDate = new DateTime();
+            var residentOne = _fixture.Create<Resident>();
+            var groupIdOne = Guid.NewGuid();
+            var residentTwo = _fixture.Create<Resident>();
+            var groupIdTwo = Guid.NewGuid();
+            var residentThree = _fixture.Create<Resident>();
+            var groupIdThree = Guid.NewGuid();
+
+            var guidCharacter = groupIdOne.ToString().First();
+
+            var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne, CreatedAt = currentDate.AddHours(1) };
+            var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo, CreatedAt = currentDate.AddHours(2) };
+            var entryThree = new ResidentsTeamGroupId() { Resident = residentThree, GroupId = groupIdThree, CreatedAt = currentDate.AddHours(3) };
+
+            DatabaseContext.ResidentsTeamGroupId.Add(entryOne);
+            DatabaseContext.ResidentsTeamGroupId.Add(entryTwo);
+            DatabaseContext.ResidentsTeamGroupId.Add(entryThree);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacter);
+
+            result.Should().HaveCount(1);
+            result[0].GroupId.Should().Be(groupIdOne);
+        }
     }
 }

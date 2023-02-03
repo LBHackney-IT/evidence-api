@@ -137,6 +137,8 @@ namespace EvidenceApi
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             // Database Context
             services.AddDbContext<EvidenceContext>(
                 opt => opt.UseNpgsql(options.DatabaseConnectionString));
@@ -177,6 +179,7 @@ namespace EvidenceApi
                     GetStaffSelectedDocumentTypesByTeamNameUseCase>();
             services.AddScoped<ICreateDocumentSubmissionWithoutEvidenceRequestUseCase, CreateDocumentSubmissionWithoutEvidenceRequestUseCase>();
             services.AddScoped<ICreateResidentUseCase, CreateResidentUseCase>();
+            services.AddScoped<IBackfillClaimTableWithResidentGroupIdUseCase, BackfillClaimTableWithResidentGroupIdUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -205,8 +208,6 @@ namespace EvidenceApi
                         $"{ApiName}-api {apiVersionDescription.GetFormattedApiVersion()}");
                 }
             });
-
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             app.UseSwagger();
             app.UseRouting();
