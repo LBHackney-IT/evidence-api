@@ -11,6 +11,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Resident FindResident(Resident request);
         List<Resident> FindResidents(string searchQuery);
         Resident CreateResident(Resident request);
-        void AddResidentGroupId(Resident request);
+        Guid AddResidentGroupId(Guid residentId, string team);
+        Guid? FindGroupIdByResidentIdAndTeam(Guid residentId, string team);
     }
 }

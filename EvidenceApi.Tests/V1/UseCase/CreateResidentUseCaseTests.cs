@@ -48,7 +48,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             {
                 Name = "Test",
                 Email = "",
-                PhoneNumber = ""
+                PhoneNumber = "",
+                Team = "some team"
             };
 
             Func<ResidentResponse> testDelegate = () => _classUnderTest.Execute(request);
@@ -62,7 +63,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             {
                 Name = "",
                 Email = "resident@email",
-                PhoneNumber = "070000"
+                PhoneNumber = "070000",
+                Team = "some team"
             };
 
             Func<ResidentResponse> testDelegate = () => _classUnderTest.Execute(request);
@@ -80,14 +82,28 @@ namespace EvidenceApi.Tests.V1.UseCase
             testDelegate.Should().Throw<BadRequestException>().WithMessage("A resident with these details already exists.");
         }
 
+        [Test]
+        public void ThrowsBadRequestWhenTeamIsNullOrEmpty()
+        {
+            SetupMocks();
+            _residentRequest.Team = "";
+            _residentsGateway.Setup(x => x.FindResident(It.IsAny<Resident>())).Returns(_resident).Verifiable();
+
+            Func<ResidentResponse> testDelegate = () => _classUnderTest.Execute(_residentRequest);
+
+            testDelegate.Should().Throw<BadRequestException>().WithMessage("'Team' cannot be null or empty.");
+        }
+
         private void SetupMocks()
         {
             _resident = TestDataHelper.Resident();
+            var team = "some team";
             _residentRequest = new ResidentRequest
             {
                 Email = _resident.Email,
                 Name = _resident.Name,
-                PhoneNumber = _resident.PhoneNumber
+                PhoneNumber = _resident.PhoneNumber,
+                Team = team
             };
             _residentsGateway.Setup(x => x.CreateResident(It.IsAny<Resident>())).Returns(_resident).Verifiable();
         }
