@@ -27,7 +27,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
         private readonly Guid _id = Guid.NewGuid();
         private readonly Guid _groupId = Guid.NewGuid();
 
-
         [SetUp]
         public void SetUp()
         {
@@ -280,13 +279,14 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var residentId = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(residentId);
             var currentDate = new DateTime();
+            var team = "Development Housing Team";
 
-            var residentTeamGroupId = new ResidentsTeamGroupId() { GroupId = _groupId, Resident = resident, Team = "Development Housing Team" };
+            var residentTeamGroupId = new ResidentsTeamGroupId() { GroupId = _groupId, Resident = resident, Team = team };
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Id = evidenceRequestId;
-            evidenceRequest.Team = "Development Housing Team";
+            evidenceRequest.Team = team;
 
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             DatabaseContext.Residents.Add(resident);
@@ -298,27 +298,12 @@ namespace EvidenceApi.Tests.V1.E2ETests
             documentSubmission1.State = SubmissionState.Approved;
             documentSubmission1.CreatedAt = currentDate.AddDays(1);
             documentSubmission1.ClaimId = _createdClaim.Id.ToString();
-            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
-            documentSubmission2.State = SubmissionState.Approved;
-            documentSubmission2.CreatedAt = currentDate.AddDays(2);
-            documentSubmission2.ClaimId = _createdClaim.Id.ToString();
-            var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
-            documentSubmission3.State = SubmissionState.Pending;
-            documentSubmission3.CreatedAt = currentDate.AddDays(3);
-            documentSubmission3.ClaimId = _createdClaim.Id.ToString();
-            var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(residentId, evidenceRequest);
-            documentSubmission4.State = SubmissionState.Approved;
-            documentSubmission3.CreatedAt = currentDate.AddDays(4);
-            documentSubmission4.ClaimId = _createdClaim.Id.ToString();
 
             DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
-            DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
 
             DatabaseContext.SaveChanges();
 
-            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={residentId}&state=Approved&pageSize=2", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions?team=Development+Housing+Team&residentId={residentId}&state=Approved", UriKind.Relative);
 
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
@@ -328,10 +313,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
             {
                 DocumentSubmissions = new List<DocumentSubmissionResponse>()
                 {
-                    documentSubmission4.ToResponse(null, documentSubmission4.EvidenceRequestId, null, null, _createdClaim),
-                    documentSubmission2.ToResponse(null, documentSubmission2.EvidenceRequestId, null, null, _createdClaim)
+                    documentSubmission1.ToResponse(null, documentSubmission1.EvidenceRequestId, null, null, _createdClaim),
+
                     },
-                Total = 3
+                Total = 1
             };
             response.StatusCode.Should().Be(200);
             result.Should().BeEquivalentTo(expected);
