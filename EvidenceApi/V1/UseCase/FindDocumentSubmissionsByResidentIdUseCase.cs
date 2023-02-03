@@ -9,6 +9,7 @@ using EvidenceApi.V1.Domain;
 using System.Threading.Tasks;
 using System;
 using System.Text;
+using System.Text.Json;
 
 namespace EvidenceApi.V1.UseCase
 {

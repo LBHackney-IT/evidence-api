@@ -14,6 +14,7 @@ using EvidenceApi.V1.Domain;
 using System.Net.Http.Headers;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -150,7 +151,7 @@ namespace EvidenceApi.V1.Gateways
 
         public async Task<PaginatedClaimResponse> GetClaimsByGroupId(PaginatedClaimRequest request)
         {
-            var uri = new Uri($"api/v1/claims?groupId={request.GroupId}&limit=5000" + request.After, UriKind.Relative);
+            var uri = new Uri($"api/v1/claims?groupId={request.GroupId}&limit=5000", UriKind.Relative);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
             var response = await _client.GetAsync(uri).ConfigureAwait(true);
             if (response.StatusCode != HttpStatusCode.OK)
