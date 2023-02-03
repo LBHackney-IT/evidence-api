@@ -54,7 +54,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 )
             );
 
-            DocumentsApiServer.Given(Request.Create().WithParam("groupId", _groupId.ToString()).UsingGet())
+            DocumentsApiServer.Given(Request.Create().WithParam("groupId", _groupId.ToString()).WithParam("limit", "5000").UsingGet())
                 .RespondWith(Response.Create().WithStatusCode(200).WithBody(JsonConvert.SerializeObject(_paginatedClaimResponse)));
 
             DocumentsApiServer.Given(

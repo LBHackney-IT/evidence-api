@@ -133,7 +133,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var paginatedClaimsResponse = new PaginatedClaimResponse() { Claims = claimsList };
 
             _messageHandler.SetupRequest(HttpMethod.Get,
-                    $"{_options.DocumentsApiUrl}api/v1/claims?groupId={groupId}",
+                    $"{_options.DocumentsApiUrl}api/v1/claims?groupId={groupId}&limit=5000",
                     request => request.Headers.Authorization.ToString() == _options.DocumentsApiGetClaimsToken)
                 .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(paginatedClaimsResponse), "application/json");
 
