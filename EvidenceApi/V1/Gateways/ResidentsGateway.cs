@@ -81,8 +81,8 @@ namespace EvidenceApi.V1.Gateways
         public Guid? FindGroupIdByResidentIdAndTeam(Guid residentId, string team)
         {
             var entity = _databaseContext.ResidentsTeamGroupId
-                .FirstOrDefault(residentTeamGroupId => 
-                    residentTeamGroupId.ResidentId == residentId && 
+                .FirstOrDefault(residentTeamGroupId =>
+                    residentTeamGroupId.ResidentId == residentId &&
                     residentTeamGroupId.Team == team);
             if (entity == null)
             {

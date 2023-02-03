@@ -62,7 +62,7 @@ namespace EvidenceApi.V1.UseCase
             }
             try
             {
-                var claimRequest = BuildClaimRequest(evidenceRequest, (Guid)groupId);
+                var claimRequest = BuildClaimRequest(evidenceRequest, (Guid) groupId);
                 claim = await _documentsApiGateway.CreateClaim(claimRequest);
                 createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id);
             }
