@@ -190,7 +190,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _residentsGateway
                 .Setup(x =>
                     x.FindGroupIdByResidentIdAndTeam(It.IsAny<Guid>(), It.IsAny<string>())
-                ).Returns(() => null);
+                ).Returns(() => Guid.Empty);
 
             var result = await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
             _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
