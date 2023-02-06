@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AutoFixture;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using FluentAssertions;
@@ -347,7 +348,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.SaveChanges();
 
             var result = _classUnderTest.FindGroupIdByResidentIdAndTeam(residentId, team);
-            result.Should().BeNull();
+            result.Should().Be(Guid.Empty);
         }
 
         [Test]
@@ -355,11 +356,11 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var currentDate = new DateTime();
             var residentOne = _fixture.Create<Resident>();
-            var groupIdOne = Guid.NewGuid();
+            var groupIdOne = new Guid("38703a76-3af6-48f5-aa1b-188679400136");
             var residentTwo = _fixture.Create<Resident>();
-            var groupIdTwo = Guid.NewGuid();
+            var groupIdTwo = new Guid("48703a76-3af6-48f5-aa1b-188679400136");
             var residentThree = _fixture.Create<Resident>();
-            var groupIdThree = Guid.NewGuid();
+            var groupIdThree = new Guid("58703a76-3af6-48f5-aa1b-188679400136");
 
             var guidCharacter = groupIdOne.ToString().First();
 
