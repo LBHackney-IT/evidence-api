@@ -16,17 +16,20 @@ namespace EvidenceApi.V1.UseCase
         private readonly IEvidenceGateway _evidenceGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
         private readonly IDocumentTypeGateway _documentTypeGateway;
+        private readonly IResidentsGateway _residentsGateway;
         private readonly IUpdateEvidenceRequestStateUseCase _updateEvidenceRequestStateUseCase;
 
         public CreateDocumentSubmissionUseCase(
             IEvidenceGateway evidenceGateway,
             IDocumentsApiGateway documentsApiGateway,
             IDocumentTypeGateway documentTypeGateway,
+            IResidentsGateway residentsGateway,
             IUpdateEvidenceRequestStateUseCase updateEvidenceRequestStateUseCase)
         {
             _evidenceGateway = evidenceGateway;
             _documentsApiGateway = documentsApiGateway;
             _documentTypeGateway = documentTypeGateway;
+            _residentsGateway = residentsGateway;
             _updateEvidenceRequestStateUseCase = updateEvidenceRequestStateUseCase;
         }
 
@@ -52,9 +55,14 @@ namespace EvidenceApi.V1.UseCase
             Claim claim;
             S3UploadPolicy createdS3UploadPolicy;
 
+            var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(evidenceRequest.ResidentId, evidenceRequest.Team);
+            if (groupId == null)
+            {
+                groupId = _residentsGateway.AddResidentGroupId(evidenceRequest.ResidentId, evidenceRequest.Team);
+            }
             try
             {
-                var claimRequest = BuildClaimRequest(evidenceRequest);
+                var claimRequest = BuildClaimRequest(evidenceRequest, (Guid) groupId);
                 claim = await _documentsApiGateway.CreateClaim(claimRequest);
                 createdS3UploadPolicy = await _documentsApiGateway.CreateUploadPolicy(claim.Document.Id);
             }
@@ -75,7 +83,7 @@ namespace EvidenceApi.V1.UseCase
             return createdDocumentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId, null, createdS3UploadPolicy, claim);
         }
 
-        private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest)
+        private static ClaimRequest BuildClaimRequest(EvidenceRequest evidenceRequest, Guid groupId)
         {
             var claimRequest = new ClaimRequest()
             {
@@ -83,7 +91,8 @@ namespace EvidenceApi.V1.UseCase
                 UserCreatedBy = evidenceRequest.UserRequestedBy,
                 ApiCreatedBy = "evidence_api",
                 RetentionExpiresAt = DateTime.UtcNow.AddMonths(3).Date,
-                ValidUntil = DateTime.UtcNow.AddMonths(3).Date
+                ValidUntil = DateTime.UtcNow.AddMonths(3).Date,
+                GroupId = groupId
             };
             return claimRequest;
         }

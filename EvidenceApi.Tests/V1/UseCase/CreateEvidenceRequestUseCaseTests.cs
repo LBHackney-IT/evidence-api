@@ -124,6 +124,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
         private void SetupMocks()
         {
+            var team = "some team";
             _resident = _fixture.Create<Resident>();
             _documentType = _fixture.Create<DocumentType>();
             _created = TestDataHelper.EvidenceRequest();
@@ -133,7 +134,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             {
                 Email = _resident.Email,
                 Name = _resident.Name,
-                PhoneNumber = _resident.PhoneNumber
+                PhoneNumber = _resident.PhoneNumber,
+                Team = team
             };
             var noteToResident = "This is a note to resident";
 
