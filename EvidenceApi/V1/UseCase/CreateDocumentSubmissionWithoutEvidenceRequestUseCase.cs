@@ -44,7 +44,7 @@ namespace EvidenceApi.V1.UseCase
             S3UploadPolicy createdS3UploadPolicy;
 
             var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
-            if (groupId == null)
+            if (groupId == null || groupId == Guid.Empty)
             {
                 try
                 {
