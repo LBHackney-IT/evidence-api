@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Infrastructure;
 
 namespace EvidenceApi.V1.Gateways
@@ -59,6 +60,22 @@ namespace EvidenceApi.V1.Gateways
                     r.Name == request.Name &&
                     r.Email == request.Email &&
                     r.PhoneNumber == request.PhoneNumber);
+        }
+
+
+        public Resident FindResidentByGroupId(ResidentSearchQuery request)
+        {
+            var resident = new Resident();
+            ResidentsTeamGroupId resGroupId = _databaseContext.ResidentsTeamGroupId
+                .FirstOrDefault(q =>
+                    q.Team == request.Team &&
+                    q.GroupId == request.GroupId);
+            if (resGroupId != null)
+            {
+                resident = _databaseContext.Residents
+                        .FirstOrDefault(r => r.Id == resGroupId.ResidentId);
+            }
+            return resident;
         }
 
         public Resident CreateResident(Resident request)
