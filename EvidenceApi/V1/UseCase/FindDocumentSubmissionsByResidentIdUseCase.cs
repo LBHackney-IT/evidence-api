@@ -39,7 +39,7 @@ namespace EvidenceApi.V1.UseCase
             if (groupId == null)
             {
                 //this should never happen - when the backfill is triggered, all residents will have an associated groupId
-               throw new BadRequestException($"Group Id is null for resident id {request.ResidentId}");
+                throw new BadRequestException($"Group Id is null for resident id {request.ResidentId}");
             }
 
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
