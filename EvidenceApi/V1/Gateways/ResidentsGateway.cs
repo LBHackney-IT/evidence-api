@@ -92,14 +92,6 @@ namespace EvidenceApi.V1.Gateways
             return entity.GroupId;
         }
 
-        public Guid GetGroupIdByResidentIdAndTeam(DocumentSubmissionSearchQuery query)
-        {
-            var queryResponse = _databaseContext.ResidentsTeamGroupId
-                .FirstOrDefault(x => x.ResidentId == query.ResidentId && x.Team == query.Team);
-
-            return queryResponse?.GroupId ?? Guid.Empty;
-        }
-
         public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(char groupIdCharacter)
 
         {
