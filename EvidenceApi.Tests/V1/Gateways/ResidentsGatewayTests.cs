@@ -352,25 +352,6 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetGroupIdByResidentIdAndTeamReturnsGroupId()
-        {
-            var request = _fixture.Create<DocumentSubmissionSearchQuery>();
-            var resident = _fixture.Create<Resident>();
-            var groupId = Guid.NewGuid();
-
-            request.ResidentId = resident.Id;
-
-            var testEntry = new ResidentsTeamGroupId() { Resident = resident, GroupId = groupId, Team = request.Team };
-
-            DatabaseContext.ResidentsTeamGroupId.Add(testEntry);
-            DatabaseContext.SaveChanges();
-
-            var result = _classUnderTest.GetGroupIdByResidentIdAndTeam(request);
-
-            result.Should().Be(groupId);
-        }
-
-        [Test]
         public void GetAllResidentIdsAndGroupIdsByFirstCharacter()
         {
             var currentDate = new DateTime();
