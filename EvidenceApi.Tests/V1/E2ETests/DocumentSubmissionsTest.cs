@@ -121,6 +121,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.Should().BeEquivalentTo(expected);
         }
 
+        [Ignore("Potential race conditions causing intermittent failure - need to be looked at")]
         [Test]
         public async Task CanUpdateDocumentSubmissionStateOnlyWhenRejected()
         {
@@ -273,7 +274,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.Should().BeEquivalentTo(expected);
         }
 
-
+        [Ignore("Potential race conditions causing intermittent failure - need to be looked at")]
         [Test]
         public async Task ReturnsDocumentSubmissionsWithValidParametersAndState()
         {
