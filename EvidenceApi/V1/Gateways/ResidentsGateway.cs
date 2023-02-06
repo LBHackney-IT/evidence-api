@@ -69,14 +69,27 @@ namespace EvidenceApi.V1.Gateways
             return request;
         }
 
-        public void AddResidentGroupId(Resident request)
+        public Guid AddResidentGroupId(Guid residentId, string team)
         {
             var groupId = Guid.NewGuid();
-            var newEntry = new ResidentsTeamGroupId() { Resident = request, GroupId = groupId };
+            var newEntry = new ResidentsTeamGroupId() { ResidentId = residentId, GroupId = groupId, Team = team };
 
             _databaseContext.ResidentsTeamGroupId.Add(newEntry);
             _databaseContext.SaveChanges();
+            return groupId;
+        }
 
+        public Guid? FindGroupIdByResidentIdAndTeam(Guid residentId, string team)
+        {
+            var entity = _databaseContext.ResidentsTeamGroupId
+                .FirstOrDefault(residentTeamGroupId =>
+                    residentTeamGroupId.ResidentId == residentId &&
+                    residentTeamGroupId.Team == team);
+            if (entity == null)
+            {
+                return null;
+            }
+            return entity.GroupId;
         }
 
         public Guid GetGroupIdByResidentIdAndTeam(DocumentSubmissionSearchQuery query)

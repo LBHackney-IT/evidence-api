@@ -34,7 +34,13 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            var groupId = _residentsGateway.GetGroupIdByResidentIdAndTeam(request);
+            var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
+
+            if (groupId == null)
+            {
+                //this should never happen - when the backfill is triggered, all residents will have an associated groupId
+               throw new BadRequestException($"Group Id is null for resident id {request.ResidentId}");
+            }
 
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 

@@ -181,7 +181,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             };
 
             _documentTypesGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
-            _residentsGateway.Setup(x => x.GetGroupIdByResidentIdAndTeam(It.IsAny<DocumentSubmissionSearchQuery>()))
+            _residentsGateway.Setup(x => x.FindGroupIdByResidentIdAndTeam(It.IsAny<Guid>(), It.IsAny<string>()))
                 .Returns(_residentsTeamGroupId.GroupId);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
             _evidenceGateway

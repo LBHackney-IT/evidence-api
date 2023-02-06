@@ -10,5 +10,6 @@ namespace EvidenceApi.V1.Boundary.Request
         public string DocumentDescription { get; set; }
         public DateTime RetentionExpiresAt { get; set; }
         public DateTime ValidUntil { get; set; }
+        public Guid GroupId { get; set; }
     }
 }

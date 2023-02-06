@@ -283,13 +283,17 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void AddResidentGroupIdAddsNewEntry()
         {
-            var request = _fixture.Create<Resident>();
+            var residentId = Guid.NewGuid();
+            var team = "some team";
+            // Add resident for FK constraint
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
 
-            var expectedId = request.Id;
+            _classUnderTest.AddResidentGroupId(residentId, team);
 
-            _classUnderTest.AddResidentGroupId(request);
-
-            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == expectedId);
+            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == residentId && x.Team == team);
 
             query.Count()
                 .Should()
@@ -297,8 +301,54 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var foundRecord = query.First();
             foundRecord.Id.Should().NotBeEmpty();
-            foundRecord.Resident.Should().Be(request);
+            foundRecord.Resident.Id.Should().Be(residentId);
+            foundRecord.Team.Should().Be(team);
+        }
 
+        [Test]
+        public void FindsGroupIdByResidentIdAndTeamWhenGroupIdExists()
+        {
+            var residentId = Guid.NewGuid();
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            var team = "some team";
+            var groupId = Guid.NewGuid();
+            DatabaseContext.Residents.Add(resident);
+
+            var residentTeamGroupId = _fixture.Create<ResidentsTeamGroupId>();
+            residentTeamGroupId.ResidentId = residentId;
+            residentTeamGroupId.Team = team;
+            residentTeamGroupId.GroupId = groupId;
+            residentTeamGroupId.Resident = resident;
+
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.FindGroupIdByResidentIdAndTeam(residentId, team);
+            result.Should().Be(groupId);
+        }
+
+        [Test]
+        public void FindGroupIdByResidentIdAndTeamReturnsNullWhenNoRecordFound()
+        {
+            var residentId = Guid.NewGuid();
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            var team = "some team";
+            DatabaseContext.Residents.Add(resident);
+
+            var residentTeamGroupId = _fixture.Build<ResidentsTeamGroupId>()
+                .Without(x => x.GroupId)
+                .Create();
+            residentTeamGroupId.ResidentId = residentId;
+            residentTeamGroupId.Team = team;
+            residentTeamGroupId.Resident = resident;
+
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.FindGroupIdByResidentIdAndTeam(residentId, team);
+            result.Should().Be(Guid.Empty);
         }
 
         [Test]

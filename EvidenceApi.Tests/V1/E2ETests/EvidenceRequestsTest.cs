@@ -215,12 +215,15 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateClaim()
         {
             // Arrange
+            var resident = _fixture.Create<Resident>();
             var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
+            entity.ResidentId = resident.Id;
+            DatabaseContext.Residents.Add(resident);
             DatabaseContext.EvidenceRequests.Add(entity);
             DatabaseContext.SaveChanges();
 
@@ -317,13 +320,16 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CreateDocumentSubmissionUnsuccessfulWhenCannotCreateUploadPolicy()
         {
             // Arrange
+            var resident = _fixture.Create<Resident>();
             var entity = _fixture.Build<EvidenceRequest>()
                 .With(x => x.DocumentTypes, new List<string> { "passport-scan" })
                 .With(x => x.DeliveryMethods, new List<DeliveryMethod> { DeliveryMethod.Email })
                 .Without(x => x.Communications)
                 .Without(x => x.DocumentSubmissions)
                 .Create();
+            entity.ResidentId = resident.Id;
             DatabaseContext.EvidenceRequests.Add(entity);
+            DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
 
             DocumentsApiServer.Reset();
