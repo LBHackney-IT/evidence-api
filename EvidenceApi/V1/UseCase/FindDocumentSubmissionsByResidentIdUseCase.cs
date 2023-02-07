@@ -34,7 +34,7 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
+            //var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
 
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
@@ -69,7 +69,6 @@ namespace EvidenceApi.V1.UseCase
             //         ds.StaffSelectedDocumentTypeId);
             //     result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claim));
             // }
-
 
             return result;
         }
