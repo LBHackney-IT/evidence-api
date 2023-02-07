@@ -34,30 +34,41 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
-
-            if (groupId == null)
-            {
-                //this should never happen - when the backfill is triggered, all residents will have an associated groupId
-                throw new BadRequestException($"Group Id is null for resident id {request.ResidentId}");
-            }
+            //var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
 
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
-            var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
-
-            var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
-
+            var claimsIds = new List<string>();
             foreach (var ds in query.DocumentSubmissions)
             {
-                var claim = FindClaim(claimsResponse.Claims, ds);
+                claimsIds.Add(ds.ClaimId);
+            }
+            var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
+
+            var claimIndex = 0;
+            foreach (var ds in query.DocumentSubmissions)
+            {
                 var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
                 var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
                     ds.StaffSelectedDocumentTypeId);
-                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claim));
+                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
+                claimIndex++;
             }
+
+            // var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
+            //
+            // var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
+            //
+            // foreach (var ds in query.DocumentSubmissions)
+            // {
+            //     var claim = FindClaim(claimsResponse.Claims, ds);
+            //     var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
+            //     var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
+            //         ds.StaffSelectedDocumentTypeId);
+            //     result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claim));
+            // }
 
             return result;
         }
