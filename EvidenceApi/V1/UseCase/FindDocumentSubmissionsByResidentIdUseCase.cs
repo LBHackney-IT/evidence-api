@@ -34,9 +34,9 @@ namespace EvidenceApi.V1.UseCase
         {
             ValidateRequest(request);
 
-            //var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
+            var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request.Team, request?.State, request?.PageSize, request?.Page);
 
-            var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request?.State, request?.PageSize, request?.Page);
+            //var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 

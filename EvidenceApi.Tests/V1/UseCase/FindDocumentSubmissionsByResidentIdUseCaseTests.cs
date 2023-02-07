@@ -184,8 +184,8 @@ namespace EvidenceApi.Tests.V1.UseCase
             _residentsGateway.Setup(x => x.FindGroupIdByResidentIdAndTeam(It.IsAny<Guid>(), It.IsAny<string>()))
                 .Returns(_residentsTeamGroupId.GroupId);
             _staffSelectedDocumentTypeGateway.Setup(x => x.GetDocumentTypeByTeamNameAndDocumentTypeId(It.IsAny<string>(), It.IsAny<string>())).Returns(_documentType);
-            _evidenceGateway
-                .Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<SubmissionState?>(), It.IsAny<int?>(),
+            _evidenceGateway.Setup(x => x.GetPaginatedDocumentSubmissionsByResidentId(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<SubmissionState?>(), It.IsAny<int?>(),
+
                     It.IsAny<int?>())).Returns(_injectedResult);
             _documentsApiGateway.Setup(x => x.GetClaimsByGroupId(It.IsAny<PaginatedClaimRequest>())).ReturnsAsync(paginatedClaimsResponse);
             _documentsApiGateway.Setup(x => x.GetClaimsByIdsThrottled(claimsIds)).ReturnsAsync(claimsList);
