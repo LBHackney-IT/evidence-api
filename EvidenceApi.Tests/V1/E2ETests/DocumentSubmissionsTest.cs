@@ -237,7 +237,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             var team = "Development Housing Team";
 
-            var residentTeamGroupId = new ResidentsTeamGroupId() { Resident = resident, GroupId = _groupId, Team = team};
+            var residentTeamGroupId = new ResidentsTeamGroupId() { Resident = resident, GroupId = _groupId, Team = team };
 
             var evidenceRequestId = Guid.NewGuid();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
