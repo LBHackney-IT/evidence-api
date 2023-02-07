@@ -66,14 +66,14 @@ namespace EvidenceApi.V1.Gateways
         public Resident FindResidentByGroupId(ResidentSearchQuery request)
         {
             var resident = new Resident();
-            ResidentsTeamGroupId resGroupId = _databaseContext.ResidentsTeamGroupId
+            var residentTeamGroupId = _databaseContext.ResidentsTeamGroupId
                 .FirstOrDefault(q =>
                     q.Team == request.Team &&
                     q.GroupId == request.GroupId);
-            if (resGroupId != null)
+            if (residentTeamGroupId != null)
             {
                 resident = _databaseContext.Residents
-                        .FirstOrDefault(r => r.Id == resGroupId.ResidentId);
+                        .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId);
             }
             return resident;
         }
