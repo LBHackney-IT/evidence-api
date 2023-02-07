@@ -67,7 +67,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = "{" +
                           "\"name\": \"Test Resident\"," +
                           "\"email\": \"resident@email\"," +
-                          "\"phoneNumber\": \"0700000\"" +
+                          "\"phoneNumber\": \"0700000\"," +
+                          "\"team\": \"some team\"" +
                           "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -82,7 +83,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = "{" +
                           "\"name\": \"Test Resident\"," +
                           "\"email\": \"\"," +
-                          "\"phoneNumber\": \"\"" +
+                          "\"phoneNumber\": \"\"," +
+                          "\"team\": \"some team\"" +
                           "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -98,7 +100,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = "{" +
                           "\"name\": \"\"," +
                           "\"email\": \"resident@email\"," +
-                          "\"phoneNumber\": \"0700000\"" +
+                          "\"phoneNumber\": \"0700000\"," +
+                          "\"team\": \"some team\"" +
                           "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
@@ -122,7 +125,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
             string body = "{" +
                           "\"name\": \"Test Resident\"," +
                           "\"email\": \"resident@email\"," +
-                          "\"phoneNumber\": \"0700000\"" +
+                          "\"phoneNumber\": \"0700000\"," +
+                          "\"team\": \"some team\"" +
                           "}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");

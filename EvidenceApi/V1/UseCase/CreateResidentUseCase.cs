@@ -7,6 +7,7 @@ using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -29,6 +30,11 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException(validation.Errors.First().ToString());
             }
 
+            if (String.IsNullOrEmpty(request.Team))
+            {
+                throw new BadRequestException("'Team' cannot be null or empty.");
+            }
+
             var resident = new Resident()
             {
                 Email = request.Email,
@@ -42,6 +48,9 @@ namespace EvidenceApi.V1.UseCase
                 throw new BadRequestException("A resident with these details already exists.");
             }
             var createdResident = _residentsGateway.CreateResident(resident);
+
+            _residentsGateway.AddResidentGroupId(createdResident.Id, request.Team);
+
             return createdResident.ToResponse();
         }
     }

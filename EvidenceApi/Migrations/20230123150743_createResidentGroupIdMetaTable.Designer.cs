@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EvidenceApi.Migrations
 {
     [DbContext(typeof(EvidenceContext))]
-    partial class EvidenceContextModelSnapshot : ModelSnapshot
+    [Migration("20230123150743_createResidentGroupIdMetaTable")]
+    partial class createResidentGroupIdMetaTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("HttpMethod")
@@ -63,7 +66,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<int>("DeliveryMethod")
@@ -101,7 +104,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime?>("AcceptedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("accepted_at");
 
                     b.Property<string>("ClaimId")
@@ -109,7 +112,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("claim_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("DocumentTypeId")
@@ -121,7 +124,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("evidence_request_id");
 
                     b.Property<DateTime?>("RejectedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("rejected_at");
 
                     b.Property<string>("RejectionReason")
@@ -169,7 +172,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<List<string>>("DocumentTypes")
@@ -225,7 +228,7 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("Email")
@@ -253,10 +256,10 @@ namespace EvidenceApi.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("GroupId")
+                    b.Property<Guid?>("GroupId")
                         .HasColumnType("uuid")
                         .HasColumnName("group_id");
 

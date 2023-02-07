@@ -131,15 +131,37 @@ namespace EvidenceApi.V1.Gateways
                 query = query.Where(x => x.State.Equals(state));
             }
             documentSubmissions = query
+               .OrderByDescending(x => x.CreatedAt)
                .Skip(offset ?? 0)
                .Take(limit ?? 10)
-               .OrderByDescending(x => x.CreatedAt)
                .ToList();
 
             total = query.Count();
 
             return new DocumentSubmissionQueryResponse() { DocumentSubmissions = documentSubmissions, Total = total };
 
+        }
+
+        public List<GroupResidentIdClaimIdBackfillObject> GetClaimIdsForResidentsWithGroupIds(
+            List<GroupResidentIdClaimIdBackfillObject> groupResidentIdClaimIdBackfillObjects)
+        {
+
+            foreach (var backfillObject in groupResidentIdClaimIdBackfillObjects)
+            {
+                var records =
+                    _databaseContext.DocumentSubmissions.Where(x => x.ResidentId.Equals(backfillObject.ResidentId))
+                        .ToList();
+
+                var claimIds = new List<string>();
+
+                foreach (var record in records)
+                {
+                    claimIds.Add(record.ClaimId);
+                }
+                backfillObject.ClaimIds = claimIds;
+            }
+
+            return groupResidentIdClaimIdBackfillObjects;
         }
     }
 }

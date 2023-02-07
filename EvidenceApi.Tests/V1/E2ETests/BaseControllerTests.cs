@@ -57,7 +57,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 ""resident"": {
                     ""name"": ""Test"",
                     ""email"": ""test@test.com,"",
-                    ""phoneNumber"": ""+447123456789""
+                    ""phoneNumber"": ""+447123456789"",
+                    ""team"": ""null""
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""proof-of-id""],

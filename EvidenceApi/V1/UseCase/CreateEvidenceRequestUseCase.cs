@@ -52,6 +52,7 @@ namespace EvidenceApi.V1.UseCase
             }
 
             var resident = _residentsGateway.FindOrCreateResident(BuildResident(request.Resident));
+            _residentsGateway.AddResidentGroupId(resident.Id, request.Team);
             var documentTypes = request.DocumentTypes.ConvertAll<DocumentType>(dt => _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(request.Team, dt));
 
             var residentReferenceId = _findOrCreateResidentReferenceIdUseCase.Execute(resident);
