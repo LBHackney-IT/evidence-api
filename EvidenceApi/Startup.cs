@@ -137,6 +137,8 @@ namespace EvidenceApi
             var options = AppOptions.FromEnv();
             services.AddSingleton(x => options);
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             // Database Context
             services.AddDbContext<EvidenceContext>(
                 opt => opt.UseNpgsql(options.DatabaseConnectionString));
@@ -206,8 +208,6 @@ namespace EvidenceApi
                         $"{ApiName}-api {apiVersionDescription.GetFormattedApiVersion()}");
                 }
             });
-
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             app.UseSwagger();
             app.UseRouting();

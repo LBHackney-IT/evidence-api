@@ -117,21 +117,19 @@ namespace EvidenceApi.V1.Gateways
                 .ToList();
         }
 
-        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state = null, int? limit = 10,
-            int? page = 1)
+        public DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, SubmissionState? state = null, int? limit = 10, int? page = 1)
         {
             List<DocumentSubmission> documentSubmissions;
             int total;
             var offset = (limit * page) - limit;
 
             IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions
-               .Where(x => x.ResidentId.Equals(id));
+               .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team));
 
             if (state != null)
             {
                 query = query.Where(x => x.State.Equals(state));
             }
-
             documentSubmissions = query
                .OrderByDescending(x => x.CreatedAt)
                .Skip(offset ?? 0)

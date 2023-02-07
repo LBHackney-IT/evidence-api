@@ -20,10 +20,10 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id);
         List<EvidenceRequest> GetAll();
         List<EvidenceRequest> GetEvidenceRequests(ResidentSearchQuery request);
-        DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, SubmissionState? state, int? pageSize,
-            int? page);
-
+        DocumentSubmissionQueryResponse GetPaginatedDocumentSubmissionsByResidentId(Guid id, string team, SubmissionState? state,
+            int? pageSize, int? page);
         List<GroupResidentIdClaimIdBackfillObject> GetClaimIdsForResidentsWithGroupIds(
             List<GroupResidentIdClaimIdBackfillObject> groupResidentIdClaimIdBackfillObject);
+
     }
 }
