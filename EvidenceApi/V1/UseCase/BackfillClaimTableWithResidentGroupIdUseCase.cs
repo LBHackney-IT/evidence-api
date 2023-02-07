@@ -24,9 +24,9 @@ public class BackfillClaimTableWithResidentGroupIdUseCase : IBackfillClaimTableW
         _logger = logger;
     }
 
-    public async Task<List<ClaimBackfillResponse>> ExecuteAsync(char groupIdCharacter)
+    public async Task<List<ClaimBackfillResponse>> ExecuteAsync(string groupIdFirstTwoCharacters)
     {
-        var initialObject = _residentsGateway.GetAllResidentIdsAndGroupIdsByFirstCharacter(groupIdCharacter);
+        var initialObject = _residentsGateway.GetAllResidentIdsAndGroupIdsByFirstCharacter(groupIdFirstTwoCharacters);
 
         var filledObject = _evidenceGateway.GetClaimIdsForResidentsWithGroupIds(initialObject);
 
