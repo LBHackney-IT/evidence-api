@@ -12,6 +12,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         List<Resident> FindResidents(string searchQuery);
         Resident CreateResident(Resident request);
         void AddResidentGroupId(Resident request);
-        List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(char groupIdCharacter);
+        List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(string groupIdFirstTwoCharacters);
     }
 }

@@ -311,7 +311,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var residentThree = _fixture.Create<Resident>();
             var groupIdThree = Guid.NewGuid();
 
-            var guidCharacter = groupIdOne.ToString().First();
+            var guidCharacters = groupIdOne.ToString().Substring(0, 2);
 
             var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne, CreatedAt = currentDate.AddHours(1) };
             var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo, CreatedAt = currentDate.AddHours(2) };
@@ -322,7 +322,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.ResidentsTeamGroupId.Add(entryThree);
             DatabaseContext.SaveChanges();
 
-            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacter);
+            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacters);
 
             result.Should().HaveCount(1);
             result[0].GroupId.Should().Be(groupIdOne);
