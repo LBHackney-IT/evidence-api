@@ -40,6 +40,12 @@ namespace EvidenceApi.V1.UseCase
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
+            if (groupId == null || groupId == Guid.Empty)
+            {
+                Console.WriteLine($"No group id found for resident {request.ResidentId}");
+                return result;
+            }
+
             var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
 
             var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
