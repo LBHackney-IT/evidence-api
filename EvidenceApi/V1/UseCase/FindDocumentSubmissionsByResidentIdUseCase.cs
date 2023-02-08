@@ -36,39 +36,22 @@ namespace EvidenceApi.V1.UseCase
 
             var query = _evidenceGateway.GetPaginatedDocumentSubmissionsByResidentId(request.ResidentId, request.Team, request?.State, request?.PageSize, request?.Page);
 
-            //var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
+            var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
 
             var result = new DocumentSubmissionResponseObject { Total = query.Total, DocumentSubmissions = new List<DocumentSubmissionResponse>() };
 
-            var claimsIds = new List<string>();
-            foreach (var ds in query.DocumentSubmissions)
-            {
-                claimsIds.Add(ds.ClaimId);
-            }
-            var claims = await _documentsApiGateway.GetClaimsByIdsThrottled(claimsIds);
+            var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
 
-            var claimIndex = 0;
+            var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
+
             foreach (var ds in query.DocumentSubmissions)
             {
+                var claim = FindClaim(claimsResponse.Claims, ds);
                 var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
                 var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
                     ds.StaffSelectedDocumentTypeId);
-                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claims[claimIndex]));
-                claimIndex++;
+                result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claim));
             }
-
-            // var claimsRequest = new PaginatedClaimRequest() { GroupId = groupId };
-            //
-            // var claimsResponse = await _documentsApiGateway.GetClaimsByGroupId(claimsRequest);
-            //
-            // foreach (var ds in query.DocumentSubmissions)
-            // {
-            //     var claim = FindClaim(claimsResponse.Claims, ds);
-            //     var documentType = FindDocumentType(ds.Team, ds.DocumentTypeId);
-            //     var staffSelectedDocumentType = FindStaffSelectedDocumentType(ds.Team,
-            //         ds.StaffSelectedDocumentTypeId);
-            //     result.DocumentSubmissions.Add(ds.ToResponse(documentType, ds.EvidenceRequestId, staffSelectedDocumentType, null, claim));
-            // }
 
             return result;
         }
