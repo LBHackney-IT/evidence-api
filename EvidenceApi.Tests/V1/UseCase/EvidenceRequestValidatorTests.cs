@@ -189,7 +189,8 @@ namespace EvidenceApi.Tests.V1.UseCase
                 {
                     Name = "Tom",
                     Email = "tom@hackney.gov.uk",
-                    PhoneNumber = "+447123456789"
+                    PhoneNumber = "+447123456789",
+                    Team = "some team"
                 },
                 DocumentTypes = new List<string> { "passport-scan" }
             };

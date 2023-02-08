@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AutoFixture;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using FluentAssertions;
@@ -325,13 +326,17 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void AddResidentGroupIdAddsNewEntry()
         {
-            var request = _fixture.Create<Resident>();
+            var residentId = Guid.NewGuid();
+            var team = "some team";
+            // Add resident for FK constraint
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
 
-            var expectedId = request.Id;
+            _classUnderTest.AddResidentGroupId(residentId, team);
 
-            _classUnderTest.AddResidentGroupId(request);
-
-            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == expectedId);
+            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == residentId && x.Team == team);
 
             query.Count()
                 .Should()
@@ -339,8 +344,54 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var foundRecord = query.First();
             foundRecord.Id.Should().NotBeEmpty();
-            foundRecord.Resident.Should().Be(request);
+            foundRecord.Resident.Id.Should().Be(residentId);
+            foundRecord.Team.Should().Be(team);
+        }
 
+        [Test]
+        public void FindsGroupIdByResidentIdAndTeamWhenGroupIdExists()
+        {
+            var residentId = Guid.NewGuid();
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            var team = "some team";
+            var groupId = Guid.NewGuid();
+            DatabaseContext.Residents.Add(resident);
+
+            var residentTeamGroupId = _fixture.Create<ResidentsTeamGroupId>();
+            residentTeamGroupId.ResidentId = residentId;
+            residentTeamGroupId.Team = team;
+            residentTeamGroupId.GroupId = groupId;
+            residentTeamGroupId.Resident = resident;
+
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.FindGroupIdByResidentIdAndTeam(residentId, team);
+            result.Should().Be(groupId);
+        }
+
+        [Test]
+        public void FindGroupIdByResidentIdAndTeamReturnsNullWhenNoRecordFound()
+        {
+            var residentId = Guid.NewGuid();
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            var team = "some team";
+            DatabaseContext.Residents.Add(resident);
+
+            var residentTeamGroupId = _fixture.Build<ResidentsTeamGroupId>()
+                .Without(x => x.GroupId)
+                .Create();
+            residentTeamGroupId.ResidentId = residentId;
+            residentTeamGroupId.Team = team;
+            residentTeamGroupId.Resident = resident;
+
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+            var result = _classUnderTest.FindGroupIdByResidentIdAndTeam(residentId, team);
+            result.Should().Be(Guid.Empty);
         }
 
         [Test]
@@ -348,13 +399,13 @@ namespace EvidenceApi.Tests.V1.Gateways
         {
             var currentDate = new DateTime();
             var residentOne = _fixture.Create<Resident>();
-            var groupIdOne = Guid.NewGuid();
+            var groupIdOne = new Guid("38703a76-3af6-48f5-aa1b-188679400136");
             var residentTwo = _fixture.Create<Resident>();
-            var groupIdTwo = Guid.NewGuid();
+            var groupIdTwo = new Guid("48703a76-3af6-48f5-aa1b-188679400136");
             var residentThree = _fixture.Create<Resident>();
-            var groupIdThree = Guid.NewGuid();
+            var groupIdThree = new Guid("58703a76-3af6-48f5-aa1b-188679400136");
 
-            var guidCharacter = groupIdOne.ToString().First();
+            var guidCharacters = groupIdOne.ToString().Substring(0, 2);
 
             var entryOne = new ResidentsTeamGroupId() { Resident = residentOne, GroupId = groupIdOne, CreatedAt = currentDate.AddHours(1) };
             var entryTwo = new ResidentsTeamGroupId() { Resident = residentTwo, GroupId = groupIdTwo, CreatedAt = currentDate.AddHours(2) };
@@ -365,7 +416,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.ResidentsTeamGroupId.Add(entryThree);
             DatabaseContext.SaveChanges();
 
-            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacter);
+            var result = _classUnderTest.GetAllResidentIdsAndGroupIdsByFirstCharacter(guidCharacters);
 
             result.Should().HaveCount(1);
             result[0].GroupId.Should().Be(groupIdOne);

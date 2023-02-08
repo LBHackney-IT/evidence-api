@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Boundary.Request;
 
@@ -14,7 +15,9 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Resident FindResidentByGroupId(ResidentSearchQuery request);
         List<Resident> FindResidents(string searchQuery);
         Resident CreateResident(Resident request);
-        void AddResidentGroupId(Resident request);
-        List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(char groupIdCharacter);
+        List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(string groupIdFirstTwoCharacters);
+        Guid AddResidentGroupId(Guid residentId, string team);
+        Guid? FindGroupIdByResidentIdAndTeam(Guid residentId, string team);
+
     }
 }

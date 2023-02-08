@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using EvidenceApi.V1.Domain;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace EvidenceApi.V1.Gateways
 {
@@ -147,6 +147,18 @@ namespace EvidenceApi.V1.Gateways
                 throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
             }
             return await DeserializeResponse<S3UploadPolicy>(response).ConfigureAwait(true);
+        }
+
+        public async Task<PaginatedClaimResponse> GetClaimsByGroupId(PaginatedClaimRequest request)
+        {
+            var uri = new Uri($"api/v1/claims?groupId={request.GroupId}&limit=5000", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiGetClaimsToken);
+            var response = await _client.GetAsync(uri).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
+            return await DeserializeResponse<PaginatedClaimResponse>(response).ConfigureAwait(true);
         }
 
         private static StringContent SerializeBackfillRequest(GroupResidentIdClaimIdBackfillObject request)

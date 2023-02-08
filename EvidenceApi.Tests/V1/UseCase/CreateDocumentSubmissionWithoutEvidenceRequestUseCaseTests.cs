@@ -19,6 +19,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private Mock<IEvidenceGateway> _evidenceGateway = new Mock<IEvidenceGateway>();
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Mock<IStaffSelectedDocumentTypeGateway> _staffSelectedDocumentTypeGateway = new Mock<IStaffSelectedDocumentTypeGateway>();
+        private Mock<IResidentsGateway> _residentsGateway = new Mock<IResidentsGateway>();
         private readonly IFixture _fixture = new Fixture();
         private DocumentType _staffSelectedDocumentType;
         private DocumentSubmission _created;
@@ -27,7 +28,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         [SetUp]
         public void SetUp()
         {
-            _classUnderTest = new CreateDocumentSubmissionWithoutEvidenceRequestUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _staffSelectedDocumentTypeGateway.Object);
+            _classUnderTest = new CreateDocumentSubmissionWithoutEvidenceRequestUseCase(_evidenceGateway.Object, _documentsApiGateway.Object, _staffSelectedDocumentTypeGateway.Object, _residentsGateway.Object);
         }
 
         [Test]
@@ -149,6 +150,50 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.UploadPolicy.Should().BeEquivalentTo(s3UploadPolicy);
             result.Team.Should().BeEquivalentTo(_created.Team);
             result.ResidentId.Should().Be(_created.ResidentId);
+        }
+
+        [Test]
+        public async Task AddsGroupIdToResidentsTeamGroupIdWhenNotNull()
+        {
+            _staffSelectedDocumentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
+
+            var claim = _fixture.Create<Claim>();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
+
+            SetupDocumentsApiGateway(_request, claim, s3UploadPolicy);
+            var staffSelectedDocumentType = SetupStaffSelectedDocumentTypeGateway(_request.StaffSelectedDocumentTypeId);
+            SetupEvidenceGateway();
+            _residentsGateway
+                .Setup(x =>
+                    x.FindGroupIdByResidentIdAndTeam(It.IsAny<Guid>(), It.IsAny<string>())
+                ).Returns(Guid.NewGuid());
+
+            var result = await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
+            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public async Task AddsGroupIdToResidentsTeamGroupIdWhenNull()
+        {
+            _staffSelectedDocumentType = _fixture.Create<DocumentType>();
+            _created = DocumentSubmissionFixture();
+            _request = CreateRequestFixture();
+
+            var claim = _fixture.Create<Claim>();
+            var s3UploadPolicy = _fixture.Create<S3UploadPolicy>();
+
+            SetupDocumentsApiGateway(_request, claim, s3UploadPolicy);
+            var staffSelectedDocumentType = SetupStaffSelectedDocumentTypeGateway(_request.StaffSelectedDocumentTypeId);
+            SetupEvidenceGateway();
+            _residentsGateway
+                .Setup(x =>
+                    x.FindGroupIdByResidentIdAndTeam(It.IsAny<Guid>(), It.IsAny<string>())
+                ).Returns(() => Guid.Empty);
+
+            var result = await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
+            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
         }
 
         private DocumentSubmissionWithoutEvidenceRequestRequest CreateRequestFixture()

@@ -23,7 +23,7 @@ public class ResidentsTeamGroupId : IEntity
     public string Team { get; set; }
 
     [Column("group_id")]
-    public Guid? GroupId { get; set; } = null;
+    public Guid GroupId { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }

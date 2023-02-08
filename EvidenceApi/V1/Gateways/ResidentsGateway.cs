@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways.Interfaces;
 using EvidenceApi.V1.Boundary.Request;
@@ -85,23 +86,36 @@ namespace EvidenceApi.V1.Gateways
             return request;
         }
 
-        public void AddResidentGroupId(Resident request)
+        public Guid AddResidentGroupId(Guid residentId, string team)
         {
             var groupId = Guid.NewGuid();
-            var newEntry = new ResidentsTeamGroupId() { Resident = request, GroupId = groupId };
+            var newEntry = new ResidentsTeamGroupId() { ResidentId = residentId, GroupId = groupId, Team = team };
 
             _databaseContext.ResidentsTeamGroupId.Add(newEntry);
             _databaseContext.SaveChanges();
-
+            return groupId;
         }
 
-        public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(char groupIdCharacter)
+        public Guid? FindGroupIdByResidentIdAndTeam(Guid residentId, string team)
+        {
+            var entity = _databaseContext.ResidentsTeamGroupId
+                .FirstOrDefault(residentTeamGroupId =>
+                    residentTeamGroupId.ResidentId == residentId &&
+                    residentTeamGroupId.Team == team);
+            if (entity == null)
+            {
+                return null;
+            }
+            return entity.GroupId;
+        }
+
+        public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(string groupIdCharacters)
 
         {
             var result = new List<GroupResidentIdClaimIdBackfillObject>();
 
             var totalResidents = _databaseContext.ResidentsTeamGroupId.
-                Where(x => x.GroupId.ToString().StartsWith(groupIdCharacter.ToString())).
+                Where(x => x.GroupId.ToString().Substring(0, groupIdCharacters.Length) == groupIdCharacters).
                 OrderByDescending(x => x.CreatedAt).ToList();
 
             foreach (var record in totalResidents)
