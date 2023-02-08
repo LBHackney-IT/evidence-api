@@ -80,7 +80,7 @@ namespace EvidenceApi.V1.UseCase
             var found = _residentsGateway.FindResidentByGroupId(request);
             if (found != null)
             {
-                found.ToResponse();
+                residents.Add(found.ToResponse());
             }
         }
 
