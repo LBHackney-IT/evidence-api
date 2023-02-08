@@ -6,7 +6,6 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
-using EvidenceApi.V1.Boundary.Request;
 
 
 namespace EvidenceApi.Tests.V1.Gateways

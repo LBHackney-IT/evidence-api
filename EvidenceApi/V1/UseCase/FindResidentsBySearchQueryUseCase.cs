@@ -35,7 +35,6 @@ namespace EvidenceApi.V1.UseCase
         private void FindByResidentDetails(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
         {
             var residentsForSearchQuery = _residentsGateway.FindResidents(request.SearchQuery);
-
             foreach (var resident in residentsForSearchQuery)
             {
                 var evidenceRequestsForResident = _evidenceGateway.FindEvidenceRequestsByResidentId(resident.Id);
