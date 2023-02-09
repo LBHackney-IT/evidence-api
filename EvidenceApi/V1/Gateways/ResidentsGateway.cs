@@ -62,6 +62,22 @@ namespace EvidenceApi.V1.Gateways
                     r.PhoneNumber == request.PhoneNumber);
         }
 
+
+        public Resident FindResidentByGroupId(ResidentSearchQuery request)
+        {
+            Resident resident;
+            var residentTeamGroupId = _databaseContext.ResidentsTeamGroupId
+                .FirstOrDefault(r =>
+                    r.GroupId == request.GroupId);
+            if (residentTeamGroupId == null)
+            {
+                return null;
+            }
+            resident = _databaseContext.Residents
+                    .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId);
+            return resident;
+        }
+
         public Resident CreateResident(Resident request)
         {
             _databaseContext.Residents.Add(request);

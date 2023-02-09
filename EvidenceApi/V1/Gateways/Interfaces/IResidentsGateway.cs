@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Domain;
 
+
 namespace EvidenceApi.V1.Gateways.Interfaces
 {
     public interface IResidentsGateway
@@ -10,6 +11,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Resident FindOrCreateResident(Resident request);
         Resident FindResident(Guid id);
         Resident FindResident(Resident request);
+        Resident FindResidentByGroupId(ResidentSearchQuery request);
         List<Resident> FindResidents(string searchQuery);
         Resident CreateResident(Resident request);
         List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(string groupIdFirstTwoCharacters);

@@ -7,6 +7,7 @@ using EvidenceApi.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 
+
 namespace EvidenceApi.Tests.V1.Gateways
 {
     [TestFixture]
@@ -259,6 +260,47 @@ namespace EvidenceApi.Tests.V1.Gateways
             var resultResident2 = result.Find(r => r.Email == "TestEmail@hackney.gov.uk");
             resultResident2.Should().NotBeNull();
         }
+
+        [Test]
+        public void FindResidentsByGroupId()
+        {
+            // Arrange
+            var team = "A Team";
+            var groupId = new Guid("935f283d-cd81-468d-a96f-cad90d41e60d");
+            var resident = _fixture.Build<Resident>()
+                .Create();
+            var residentGroupId1 = _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.GroupId, groupId)
+                .With(x => x.Team, team)
+                .With(x => x.ResidentId, resident.Id)
+                .Without(x => x.Resident)
+                .Create();
+            var residentGroupId2 = _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.GroupId, groupId)
+                .With(x => x.Team, "Another Team")
+                .With(x => x.ResidentId, resident.Id)
+                .Without(x => x.Resident)
+                .Create();
+
+            DatabaseContext.ResidentsTeamGroupId.Add(residentGroupId1);
+            DatabaseContext.ResidentsTeamGroupId.Add(residentGroupId2);
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            var expected = new Resident();
+            expected.Id = resident.Id;
+            expected.Name = resident.Name;
+
+            var request = new ResidentSearchQuery { Team = team, GroupId = groupId };
+
+            // Act
+            var found = _classUnderTest.FindResidentByGroupId(request);
+
+            // Assert
+            found.Id.Should().Be(expected.Id);
+            found.Name.Should().Be(expected.Name);
+        }
+
 
         [Test]
         public void CreateResidentCreatesAResident()
