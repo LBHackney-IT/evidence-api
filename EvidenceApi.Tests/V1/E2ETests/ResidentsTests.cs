@@ -33,7 +33,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task SearchResidentsBySearchQueryReturns200()
+        public async Task SearchResidentsByTeamAndSearchQueryReturns200()
         {
             // Arrange
             var resident = TestDataHelper.Resident();
@@ -79,7 +79,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             // Act
-            var uri = new Uri($"api/v1/residents/search/?team={team}&searchQuery=name=&groupId={residentGroupId.GroupId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/residents/search/?&searchQuery=name=&groupId={residentGroupId.GroupId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             // Assert
@@ -93,7 +93,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task SearchResidentsBySearchQueryReturnsEmptyListWhenNoResidentsFound()
+        public async Task SearchResidentsByTeamAndSearchQueryReturnsEmptyListWhenNoResidentsFound()
         {
             // Arrange
             var resident = TestDataHelper.Resident();
@@ -139,7 +139,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             // Act
-            var uri = new Uri($"api/v1/residents/search/?team={team}&searchQuery=name=&groupId={anotherGuid}", UriKind.Relative);
+            var uri = new Uri($"api/v1/residents/search/?&searchQuery=name=&groupId={anotherGuid}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             // Assert
