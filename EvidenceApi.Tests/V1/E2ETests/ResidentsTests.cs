@@ -92,7 +92,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .Should().BeEquivalentTo(resident, opts => opts.Excluding(x => x.CreatedAt));
         }
 
-       [Test]
+        [Test]
         public async Task SearchResidentsBySearchQueryReturnsEmptyListWhenNoResidentsFound()
         {
             // Arrange
