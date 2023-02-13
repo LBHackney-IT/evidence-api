@@ -79,7 +79,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             // Act
-            var uri = new Uri($"api/v1/residents/search/?&groupId={residentGroupId.GroupId}", UriKind.Relative);
+            var uri = new Uri($"api/v1/residents/search/?groupId={residentGroupId.GroupId}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             // Assert
@@ -139,7 +139,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             // Act
-            var uri = new Uri($"api/v1/residents/search/?&groupId={anotherGuid}", UriKind.Relative);
+            var uri = new Uri($"api/v1/residents/search/?groupId={anotherGuid}", UriKind.Relative);
             var response = await Client.GetAsync(uri).ConfigureAwait(true);
 
             // Assert
