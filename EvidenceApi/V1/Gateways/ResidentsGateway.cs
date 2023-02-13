@@ -44,7 +44,7 @@ namespace EvidenceApi.V1.Gateways
              * If we notice it is performing poorly then we could instead use raw SQL queries with named parameters.
              * See - https://docs.microsoft.com/en-us/ef/core/querying/raw-sql
              */
-            var searchQueryLowerCase = searchQuery.ToLower();
+            var searchQueryLowerCase = searchQuery?.ToLower();
             return _databaseContext.Residents
                 .Where(r =>
                     r.Name.ToLower().StartsWith(searchQueryLowerCase) ||
