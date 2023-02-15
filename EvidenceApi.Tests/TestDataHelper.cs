@@ -118,5 +118,14 @@ namespace EvidenceApi.Tests
                 .With(x => x.Id, id)
                 .Create();
         }
+        public static ResidentsTeamGroupId ResidentsTeamGroupId(Guid residentId, string team)
+        {
+            return _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.Team, team)
+                .With(x => x.ResidentId, residentId)
+                .Without(x => x.Resident)
+                .Create();
+        }
+
     }
 }

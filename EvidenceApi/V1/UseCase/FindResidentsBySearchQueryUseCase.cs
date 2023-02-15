@@ -24,6 +24,7 @@ namespace EvidenceApi.V1.UseCase
             var residents = new List<ResidentResponse>();
             FindByResidentDetails(request, residents);
             FindResidentsWithNoAttachedRequests(request, residents);
+            FindResidentByGroupId(request, residents);
             FindByResidentReferenceId(request, residents);
 
             var uniqueResidents = residents.GroupBy(x => x.Id).Select(y => y.First());
@@ -34,7 +35,6 @@ namespace EvidenceApi.V1.UseCase
         private void FindByResidentDetails(ResidentSearchQuery request, ICollection<ResidentResponse> residents)
         {
             var residentsForSearchQuery = _residentsGateway.FindResidents(request.SearchQuery);
-
             foreach (var resident in residentsForSearchQuery)
             {
                 var evidenceRequestsForResident = _evidenceGateway.FindEvidenceRequestsByResidentId(resident.Id);
@@ -72,5 +72,16 @@ namespace EvidenceApi.V1.UseCase
                 residents.Add(resident.ToResponse());
             };
         }
+
+        private void FindResidentByGroupId(ResidentSearchQuery request,
+            ICollection<ResidentResponse> residents)
+        {
+            var found = _residentsGateway.FindResidentByGroupId(request);
+            if (found != null)
+            {
+                residents.Add(found.ToResponse());
+            }
+        }
+
     }
 }

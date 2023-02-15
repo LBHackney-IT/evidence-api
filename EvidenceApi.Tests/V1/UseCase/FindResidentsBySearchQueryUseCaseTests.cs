@@ -103,5 +103,52 @@ namespace EvidenceApi.Tests.V1.UseCase
             resultResident.Should().NotBeNull();
             resultResident.Id.Should().Be(resident1.Id);
         }
+        [Test]
+        public void ReturnsTheResidentByGroupIdAndTeam()
+        {
+            // Arrange
+            var team = "A Team";
+            var groupId = new Guid("ea146069-0ca3-498b-bb27-5253c153c780");
+            var residentReferenceId = "12345";
+            var request = new ResidentSearchQuery { Team = team, GroupId = groupId };
+
+            var resident1 = _fixture.Build<Resident>()
+                .With(x => x.Name, "TestResident")
+                .Create();
+            var residentTeam1 = _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.Team, team)
+                .With(x => x.ResidentId, resident1.Id)
+                .With(x => x.GroupId, groupId)
+                .Create();
+            var residentTeam2 = _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.Team, "A Different Team")
+                .With(x => x.ResidentId, resident1.Id)
+                .With(x => x.GroupId, groupId)
+                .Create();
+
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.Team = team;
+            evidenceRequest1.ResidentReferenceId = residentReferenceId;
+            evidenceRequest1.ResidentId = resident1.Id;
+
+            _residentsGateway
+                .Setup(x => x.FindResidents(request.SearchQuery))
+                .Returns(new List<Resident>());
+            _evidenceGateway
+                .Setup(x => x.GetEvidenceRequests(request))
+                .Returns(new List<EvidenceRequest> { evidenceRequest1 });
+            _residentsGateway
+                .Setup(x => x.FindResident(resident1.Id))
+                .Returns(resident1);
+            // Act
+            var result = _classUnderTest.Execute(request);
+
+            // Assert
+            result.Count.Should().Be(1);
+            var resultResident = result.Find(r => r.Name == "TestResident");
+            resultResident.Should().NotBeNull();
+            resultResident.Id.Should().Be(resident1.Id);
+        }
+
     }
 }
