@@ -58,7 +58,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""name"": ""Test"",
                     ""email"": ""test@test.com,"",
                     ""phoneNumber"": ""+447123456789"",
-                    ""team"": ""null""
+                    ""team"": ""null"",
+                    ""groupId"": ""null""
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""proof-of-id""],
