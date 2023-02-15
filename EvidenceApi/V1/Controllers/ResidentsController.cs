@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
@@ -16,17 +17,20 @@ namespace EvidenceApi.V1.Controllers
         private readonly IFindResidentByIdUseCase _findByIdUseCase;
         private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
         private readonly ICreateResidentUseCase _createResidentUseCase;
+        private readonly IAmendResidentGroupIdUseCase _amendResidentGroupIdUseCase;
 
         public ResidentsController(
             IFindResidentByIdUseCase findByIdUseCase,
             IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase,
             ICreateAuditUseCase createAuditUseCase,
-            ICreateResidentUseCase createResidentUseCase
+            ICreateResidentUseCase createResidentUseCase,
+            IAmendResidentGroupIdUseCase amendResidentGroupIdUseCase
         ) : base(createAuditUseCase)
         {
             _findByIdUseCase = findByIdUseCase;
             _findResidentsBySearchQueryUseCase = findResidentsBySearchQueryUseCase;
             _createResidentUseCase = createResidentUseCase;
+            _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
         }
 
         /// <summary>
@@ -81,6 +85,25 @@ namespace EvidenceApi.V1.Controllers
             catch (BadRequestException ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("update-group-id")]
+        public async Task<IActionResult> AmendResidentGroupId([FromBody] ResidentGroupIdRequest request)
+        {
+            try
+            {
+                var result = await _amendResidentGroupIdUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
     }
