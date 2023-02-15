@@ -49,7 +49,7 @@ namespace EvidenceApi.V1.UseCase
             }
             var createdResident = _residentsGateway.CreateResident(resident);
 
-            _residentsGateway.AddResidentGroupId(createdResident.Id, request.Team);
+            _residentsGateway.AddResidentGroupId(createdResident.Id, request.Team, request.GroupId);
 
             return createdResident.ToResponse();
         }
