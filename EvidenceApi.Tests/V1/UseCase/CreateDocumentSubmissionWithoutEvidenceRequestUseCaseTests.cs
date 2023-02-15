@@ -171,7 +171,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 ).Returns(Guid.NewGuid());
 
             var result = await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
-            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>(), null), Times.Never);
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                 ).Returns(() => Guid.Empty);
 
             var result = await _classUnderTest.ExecuteAsync(_request).ConfigureAwait(true);
-            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>(), null), Times.Once);
         }
 
         private DocumentSubmissionWithoutEvidenceRequestRequest CreateRequestFixture()

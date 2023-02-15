@@ -230,7 +230,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>(), null), Times.Never);
         }
 
         [Test]
@@ -253,7 +253,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var docType = SetupDocumentTypeGateway(_request.DocumentType);
 
             var result = await _classUnderTest.ExecuteAsync(evidenceRequest.Id, _request).ConfigureAwait(true);
-            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+            _residentsGateway.Verify(x => x.AddResidentGroupId(It.IsAny<Guid>(), It.IsAny<string>(), null), Times.Once);
         }
 
         private DocumentSubmissionRequest CreateRequestFixture()
