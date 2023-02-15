@@ -58,7 +58,7 @@ namespace EvidenceApi.V1.UseCase
             var groupId = _residentsGateway.FindGroupIdByResidentIdAndTeam(evidenceRequest.ResidentId, evidenceRequest.Team);
             if (groupId == null)
             {
-                groupId = _residentsGateway.AddResidentGroupId(evidenceRequest.ResidentId, evidenceRequest.Team);
+                groupId = _residentsGateway.AddResidentGroupId(evidenceRequest.ResidentId, evidenceRequest.Team, null);
             }
             try
             {
