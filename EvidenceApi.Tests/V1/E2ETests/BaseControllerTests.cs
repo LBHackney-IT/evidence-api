@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -59,7 +60,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                     ""email"": ""test@test.com,"",
                     ""phoneNumber"": ""+447123456789"",
                     ""team"": ""null"",
-                    ""groupId"": ""null""
+                    ""groupId"": null
                 },
                 ""deliveryMethods"": [""SMS""],
                 ""documentTypes"": [""proof-of-id""],
