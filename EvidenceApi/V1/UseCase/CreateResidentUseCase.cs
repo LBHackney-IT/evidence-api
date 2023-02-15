@@ -8,6 +8,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
+using System.Text.Json;
 
 namespace EvidenceApi.V1.UseCase
 {
