@@ -226,7 +226,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.StatusCode.Should().Be(400);
         }
 
-       [Test]
+        [Test]
         public async Task CanFindDocumentSubmissionsWithValidParameters()
         {
             var documentType = TestDataHelper.DocumentType("passport-scan");
