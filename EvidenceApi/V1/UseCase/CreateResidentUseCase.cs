@@ -8,6 +8,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
+using System.Text.Json;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -49,7 +50,7 @@ namespace EvidenceApi.V1.UseCase
             }
             var createdResident = _residentsGateway.CreateResident(resident);
 
-            _residentsGateway.AddResidentGroupId(createdResident.Id, request.Team);
+            _residentsGateway.AddResidentGroupId(createdResident.Id, request.Team, request.GroupId);
 
             return createdResident.ToResponse();
         }

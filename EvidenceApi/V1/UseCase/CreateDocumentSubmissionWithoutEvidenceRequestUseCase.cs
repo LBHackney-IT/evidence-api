@@ -48,7 +48,7 @@ namespace EvidenceApi.V1.UseCase
             {
                 try
                 {
-                    groupId = _residentsGateway.AddResidentGroupId(request.ResidentId, request.Team);
+                    groupId = _residentsGateway.AddResidentGroupId(request.ResidentId, request.Team, null);
                 }
                 catch (Exception)
                 {

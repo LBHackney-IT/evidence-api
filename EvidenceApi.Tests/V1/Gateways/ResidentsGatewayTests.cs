@@ -333,7 +333,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
 
-            _classUnderTest.AddResidentGroupId(residentId, team);
+            _classUnderTest.AddResidentGroupId(residentId, team, null);
 
             var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == residentId && x.Team == team);
 
@@ -345,6 +345,33 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.Id.Should().NotBeEmpty();
             foundRecord.Resident.Id.Should().Be(residentId);
             foundRecord.Team.Should().Be(team);
+        }
+
+        [Test]
+        public void AddResidentGroupIdAddsNewEntryWithGroupIdProvided()
+        {
+            var residentId = Guid.NewGuid();
+            var providedGroupId = Guid.NewGuid();
+            var team = "some team";
+            // Add resident for FK constraint
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            _classUnderTest.AddResidentGroupId(residentId, team, providedGroupId);
+
+            var query = DatabaseContext.ResidentsTeamGroupId.Where(x => x.ResidentId == residentId && x.Team == team);
+
+            query.Count()
+                .Should()
+                .Be(1);
+
+            var foundRecord = query.First();
+            foundRecord.Id.Should().NotBeEmpty();
+            foundRecord.Resident.Id.Should().Be(residentId);
+            foundRecord.Team.Should().Be(team);
+            foundRecord.GroupId.Should().Be(providedGroupId);
         }
 
         [Test]
