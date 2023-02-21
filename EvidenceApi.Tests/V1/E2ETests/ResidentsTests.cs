@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System.Net.Http;
 using AutoFixture;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 using EvidenceApi.V1.Boundary.Response;
 using EvidenceApi.V1.Domain;
 
@@ -14,6 +16,17 @@ namespace EvidenceApi.Tests.V1.E2ETests
 {
     public class ResidentsTest : IntegrationTests<Startup>
     {
+        [SetUp]
+        public void SetUp()
+        {
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/claims/update").UsingPost()
+            ).RespondWith(
+                Response.Create().WithStatusCode(200).WithBody(
+                    JsonConvert.SerializeObject(new List<Claim>())
+                )
+            );
+        }
         private readonly IFixture _fixture = new Fixture();
         [Test]
         public async Task GetResidentReturns200()
@@ -225,6 +238,83 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(400);
             response.Content.ReadAsStringAsync().Result.Should().Be("\"A resident with these details already exists.\"");
+        }
+
+        [Test]
+        public async Task AmendResidentGroupIdReturns200()
+        {
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = Guid.NewGuid();
+            var resident = TestDataHelper.Resident();
+            resident.Id = Guid.NewGuid();
+            var team = "Development Housing Team";
+            var residentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(resident.Id, team);
+            residentTeamGroupId.GroupId = oldGroupId;
+
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+
+            string body = "{" +
+                          $"\"residentId\": \"{resident.Id}\"," +
+                          $"\"team\": \"{team}\"," +
+                          $"\"groupId\": \"{newGroupId}\"" +
+                          "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(200);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var data = JsonConvert.DeserializeObject<ResidentsTeamGroupId>(json);
+
+            data.GroupId.Should().Be(newGroupId);
+        }
+
+        [Test]
+        public async Task AmendResidentGroupIdReturns400WhenTeamIsNull()
+        {
+            string body = "{" +
+                $"\"residentId\": \"{Guid.NewGuid()}\"," +
+                $"\"groupId\": \"{Guid.NewGuid()}\"" +
+                "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task AmendResidentGroupIdReturns400WhenIssuesWithDocumentsApi()
+        {
+            DocumentsApiServer.Given(
+                Request.Create().WithPath($"/api/v1/claims/update").UsingPost()
+            ).RespondWith(
+                Response.Create().WithStatusCode(400)
+            );
+            string body = "{" +
+                $"\"residentId\": \"{Guid.NewGuid()}\"," +
+                $"\"groupId\": \"{Guid.NewGuid()}\"" +
+                "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task AmendResidentGroupIdReturns404WhenNoRecordsFoundForResidentIdAndTeam()
+        {
+            string body = "{" +
+                $"\"residentId\": \"{Guid.NewGuid()}\"," +
+                "\"team\": \"some team\"," +
+                $"\"groupId\": \"{Guid.NewGuid()}\"" +
+                "}";
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(404);
         }
     }
 }

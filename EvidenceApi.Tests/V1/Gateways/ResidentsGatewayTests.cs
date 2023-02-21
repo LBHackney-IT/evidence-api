@@ -420,5 +420,43 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().HaveCount(1);
             result[0].GroupId.Should().Be(groupIdOne);
         }
+
+        [Test]
+        public void CanFindResidentTeamGroupIdByResidentIdAndTeam()
+        {
+            var residentId = new Guid("682a799b-36c3-47c5-85dc-2d65df0cdad7");
+            var resident = _fixture.Create<Resident>();
+            resident.Id = residentId;
+            var team = "some team";
+            var residentTeamGroupId = _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.Resident, resident)
+                .Create();
+            residentTeamGroupId.ResidentId = resident.Id;
+            residentTeamGroupId.Team = team;
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindResidentTeamGroupIdByResidentIdAndTeam(residentId, team);
+            found.Should().Be(residentTeamGroupId);
+        }
+
+        [Test]
+        public void FindResidentTeamGroupIdByResidentIdAndTeamReturnsNull()
+        {
+            var resident = _fixture.Create<Resident>();
+            var team = "some team";
+            var residentTeamGroupId = _fixture.Build<ResidentsTeamGroupId>()
+                .With(x => x.Resident, resident)
+                .Create();
+            residentTeamGroupId.ResidentId = resident.Id;
+            residentTeamGroupId.Team = team;
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.ResidentsTeamGroupId.Add(residentTeamGroupId);
+            DatabaseContext.SaveChanges();
+
+            var found = _classUnderTest.FindResidentTeamGroupIdByResidentIdAndTeam(Guid.NewGuid(), team);
+            found.Should().Be(null);
+        }
     }
 }

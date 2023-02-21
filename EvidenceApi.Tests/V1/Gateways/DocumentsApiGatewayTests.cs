@@ -245,6 +245,40 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Should().BeEquivalentTo(expectedClaimBackfillResponse);
         }
 
+        [Test]
+        public async Task CanUpdateClaimsGroupId()
+        {
+            // Arrange
+            var oldGroupId = Guid.NewGuid();
+            var newGroupId = Guid.NewGuid();
+            var claimsUpdateRequest = new ClaimsUpdateRequest() { OldGroupId = oldGroupId, NewGroupId = newGroupId };
+
+            var claim1 = _fixture.Build<Claim>()
+                .With(x => x.GroupId, newGroupId)
+                .Create();
+            var claim2 = _fixture.Build<Claim>()
+                .With(x => x.GroupId, newGroupId)
+                .Create();
+
+            var expectedClaims = new List<Claim>() { claim1, claim2 };
+
+            _messageHandler.SetupRequest(HttpMethod.Post, $"{_options.DocumentsApiUrl}api/v1/claims/update", async request =>
+                {
+                    var json = await request.Content.ReadAsStringAsync().ConfigureAwait(true);
+                    var body = JsonConvert.DeserializeObject<ClaimsUpdateRequest>(json);
+                    return body.OldGroupId == claimsUpdateRequest.OldGroupId &&
+                        body.NewGroupId == claimsUpdateRequest.NewGroupId &&
+                           request.Headers.Authorization.ToString() == _options.DocumentsApiPostClaimsToken;
+                })
+                .ReturnsResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(expectedClaims), "application/json");
+
+            // Act
+            var result = await _classUnderTest.UpdateClaimsGroupId(claimsUpdateRequest).ConfigureAwait(true);
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedClaims);
+        }
+
         private string _claimResponseFixture = @"{
             ""serviceCreatedBy"": ""711"",
             ""apiCreatedBy"": ""evidence-api"",
