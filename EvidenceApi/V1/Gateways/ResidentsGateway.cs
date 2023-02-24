@@ -108,6 +108,26 @@ namespace EvidenceApi.V1.Gateways
             return entity.GroupId;
         }
 
+        public ResidentsTeamGroupId FindResidentTeamGroupIdByResidentIdAndTeam(Guid residentId, string team)
+        {
+            var entity = _databaseContext.ResidentsTeamGroupId
+                .FirstOrDefault(r =>
+                    r.ResidentId == residentId &&
+                     r.Team == team);
+            return entity;
+        }
+
+        public ResidentsTeamGroupId UpdateResidentGroupId(Guid residentId, string team, Guid groupId)
+        {
+            var entity = _databaseContext.ResidentsTeamGroupId.
+                FirstOrDefault(r =>
+                    r.ResidentId == residentId &&
+                    r.Team == team);
+            entity.GroupId = groupId;
+            _databaseContext.SaveChanges();
+            return entity;
+        }
+
         public List<GroupResidentIdClaimIdBackfillObject> GetAllResidentIdsAndGroupIdsByFirstCharacter(string groupIdCharacters)
 
         {

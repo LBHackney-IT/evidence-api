@@ -161,6 +161,20 @@ namespace EvidenceApi.V1.Gateways
             return await DeserializeResponse<PaginatedClaimResponse>(response).ConfigureAwait(true);
         }
 
+        public async Task<List<Claim>> UpdateClaimsGroupId(ClaimsUpdateRequest request)
+        {
+            var uri = new Uri("api/v1/claims/update", UriKind.Relative);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_options.DocumentsApiPostClaimsToken);
+            var jsonString = SerializeClaimsUpdateRequest(request);
+            var response = await _client.PostAsync(uri, jsonString).ConfigureAwait(true);
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new DocumentsApiException($"Incorrect status code returned: {response.StatusCode}");
+            }
+
+            return await DeserializeResponse<List<Claim>>(response).ConfigureAwait(true);
+        }
+
         private static StringContent SerializeBackfillRequest(GroupResidentIdClaimIdBackfillObject request)
         {
             var updateRequest = new ClaimUpdateRequest() { GroupId = request.GroupId };
@@ -184,6 +198,12 @@ namespace EvidenceApi.V1.Gateways
         {
             var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             return JsonConvert.DeserializeObject<T>(jsonString);
+        }
+
+        private static StringContent SerializeClaimsUpdateRequest(ClaimsUpdateRequest request)
+        {
+            var body = JsonConvert.SerializeObject(request);
+            return new StringContent(body, Encoding.UTF8, "application/json");
         }
     }
 }
