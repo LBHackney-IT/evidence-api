@@ -23,7 +23,6 @@ namespace EvidenceApi.V1.UseCase
         {
             var residents = new List<ResidentResponse>();
             FindByResidentDetails(request, residents);
-            FindResidentsWithNoAttachedRequests(request, residents);
             FindResidentByGroupId(request, residents);
             FindByResidentReferenceId(request, residents);
 
@@ -38,16 +37,15 @@ namespace EvidenceApi.V1.UseCase
             foreach (var resident in residentsForSearchQuery)
             {
                 var evidenceRequestsForResident = _evidenceGateway.FindEvidenceRequestsByResidentId(resident.Id);
+                var residentReferenceId = "";
                 foreach (var evidenceRequest in evidenceRequestsForResident)
                 {
                     if (evidenceRequest.Team.Equals(request.Team))
                     {
-                        residents.Add(resident.ToResponse(evidenceRequest.ResidentReferenceId));
-                        // if any of the evidence requests were created by Team from the query then this resident should be returned
-                        // and we can then break out of the loop early.
-                        break;
+                        residentReferenceId = evidenceRequest.ResidentReferenceId;
                     }
                 }
+                residents.Add(resident.ToResponse(residentReferenceId));
             }
         }
 
@@ -62,16 +60,6 @@ namespace EvidenceApi.V1.UseCase
             }
         }
 
-        private void FindResidentsWithNoAttachedRequests(ResidentSearchQuery request,
-            ICollection<ResidentResponse> residents)
-        {
-            var residentsForSearchQuery = _residentsGateway.FindResidents(request.SearchQuery);
-
-            foreach (var resident in residentsForSearchQuery)
-            {
-                residents.Add(resident.ToResponse());
-            };
-        }
 
         private void FindResidentByGroupId(ResidentSearchQuery request,
             ICollection<ResidentResponse> residents)

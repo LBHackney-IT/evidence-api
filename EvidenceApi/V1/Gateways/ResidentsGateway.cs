@@ -74,6 +74,7 @@ namespace EvidenceApi.V1.Gateways
                 return null;
             }
             resident = _databaseContext.Residents
+                    .Where(r => r.IsHidden == false)
                     .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId);
             return resident;
         }

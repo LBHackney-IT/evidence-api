@@ -38,11 +38,12 @@ namespace EvidenceApi.V1.UseCase
             {
                 Name = request.NewResident.Name,
                 Email = request.NewResident.Email,
-                PhoneNumber = request.NewResident.PhoneNumber
+                PhoneNumber = request.NewResident.PhoneNumber,
+                Team = request.Team,
+                GroupId = request.GroupId
             };
             var resident = _createResidentUseCase.Execute(residentRequest);
 
-            var residentTeamGroupId = _residentsGateway.AddResidentGroupId(resident.Id, request.Team, request.GroupId);
             _evidenceGateway.UpdateResidentIdForDocumentSubmission(resident.Id, request.ResidentsToDelete);
 
             foreach (Guid residentId in request.ResidentsToDelete)
@@ -67,7 +68,7 @@ namespace EvidenceApi.V1.UseCase
                 _residentsGateway.HideResident(residentId);
             }
 
-            return resident.ToResponse(residentTeamGroupId);
+            return resident.ToResponse(request.GroupId);
         }
     }
 }
