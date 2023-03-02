@@ -124,17 +124,18 @@ namespace EvidenceApi.V1.Gateways
             var offset = (limit * page) - limit;
 
             IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions
-               .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team));
+               .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team) && !x.isHidden);
 
             if (state != null)
             {
                 query = query.Where(x => x.State.Equals(state));
             }
+
             documentSubmissions = query
-               .OrderByDescending(x => x.CreatedAt)
-               .Skip(offset ?? 0)
-               .Take(limit ?? 10)
-               .ToList();
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip(offset ?? 0)
+                .Take(limit ?? 10)
+                .ToList();
 
             total = query.Count();
 

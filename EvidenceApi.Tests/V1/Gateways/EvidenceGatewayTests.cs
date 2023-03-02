@@ -560,6 +560,57 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void GetDocumentSubmissionsByResidentIdDoesNotReturnHiddenDocuments()
+        {
+            var queryGuid = Guid.NewGuid();
+            var resident = TestDataHelper.ResidentWithId(queryGuid);
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var team = "testTeam";
+            var page = 1;
+            var pageSize = 2;
+            var currentDate = new DateTime();
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.Residents.Add(resident);
+
+            DatabaseContext.SaveChanges();
+
+            var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission1.Team = team;
+            documentSubmission1.isHidden = true;
+            var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission2.Team = team;
+            var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission3.Team = team;
+            var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
+            documentSubmission4.isHidden = true;
+            documentSubmission4.Team = team;
+
+            documentSubmission1.CreatedAt = currentDate.AddDays(1);
+            documentSubmission2.CreatedAt = currentDate.AddDays(2);
+            documentSubmission3.CreatedAt = currentDate.AddDays(3);
+            documentSubmission4.CreatedAt = currentDate.AddDays(4);
+
+            DatabaseContext.Entry(documentSubmission1).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission1);
+            DatabaseContext.Entry(documentSubmission2).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission2);
+            DatabaseContext.Entry(documentSubmission3).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission3);
+            DatabaseContext.Entry(documentSubmission4).State = EntityState.Modified;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission4);
+
+            DatabaseContext.SaveChanges();
+
+            var expected = new List<DocumentSubmission>() { documentSubmission3, documentSubmission2 };
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(queryGuid, team, null, pageSize, page);
+
+            result.Total.Should().Be(2);
+            result.DocumentSubmissions.Should().Equal(expected);
+        }
+
+        [Test]
         public void GetClaimIdsForResidentsWithGroupIdsReturnsFilledObject()
         {
             var residentId = Guid.NewGuid();
