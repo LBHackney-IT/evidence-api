@@ -562,7 +562,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void GetDocumentSubmissionsByResidentIdDoesNotReturnHiddenDocuments()
         {
-         var queryGuid = Guid.NewGuid();
+            var queryGuid = Guid.NewGuid();
             var resident = TestDataHelper.ResidentWithId(queryGuid);
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             var team = "testTeam";
