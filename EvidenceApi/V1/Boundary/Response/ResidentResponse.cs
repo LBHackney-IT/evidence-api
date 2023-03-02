@@ -9,5 +9,7 @@ namespace EvidenceApi.V1.Boundary.Response
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+
+        public Boolean IsHidden { get; set; } = false;
     }
 }

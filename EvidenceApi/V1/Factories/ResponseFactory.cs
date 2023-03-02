@@ -104,5 +104,14 @@ namespace EvidenceApi.V1.Factories
                 RetentionExpiresAt = claim.RetentionExpiresAt
             };
         }
+
+        public static MergeAndLinkResidentsResponse ToResponse(this ResidentResponse resident, Guid groupId)
+        {
+            return new MergeAndLinkResidentsResponse()
+            {
+                Resident = resident,
+                GroupId = groupId
+            };
+        }
     }
 }

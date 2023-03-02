@@ -90,7 +90,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                $"\"referenceId\":\"{created.ResidentReferenceId}\"," +
                                "\"name\":\"Frodo Baggins\"," +
                                "\"email\":\"frodo@bagend.com,\"," +
-                               "\"phoneNumber\":\"+447123456789\"" +
+                               "\"phoneNumber\":\"+447123456789\"," +
+                               "\"isHidden\":false" +
                                "}," +
                                "\"deliveryMethods\":[\"SMS\"]," +
                                "\"documentTypes\":[" +

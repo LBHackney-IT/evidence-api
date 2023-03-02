@@ -268,6 +268,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             var team = "A Team";
             var groupId = new Guid("935f283d-cd81-468d-a96f-cad90d41e60d");
             var resident = _fixture.Build<Resident>()
+                .With(x => x.IsHidden, false)
                 .Create();
             var residentGroupId1 = _fixture.Build<ResidentsTeamGroupId>()
                 .With(x => x.GroupId, groupId)
@@ -287,9 +288,15 @@ namespace EvidenceApi.Tests.V1.Gateways
             DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
 
-            var expected = new Resident();
-            expected.Id = resident.Id;
-            expected.Name = resident.Name;
+            var expected = new Resident()
+            {
+                Id = resident.Id,
+                CreatedAt = resident.CreatedAt,
+                Email = resident.Email,
+                IsHidden = false,
+                Name = resident.Name
+            };
+
 
             var request = new ResidentSearchQuery { Team = team, GroupId = groupId };
 

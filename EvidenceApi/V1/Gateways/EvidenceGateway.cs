@@ -164,5 +164,10 @@ namespace EvidenceApi.V1.Gateways
 
             return groupResidentIdClaimIdBackfillObjects;
         }
+
+        public void UpdateResidentIdForDocumentSubmission(Guid newResidentId, Guid[] residentIds)
+        {
+            _databaseContext.DocumentSubmissions.Where(x => residentIds.Contains(x.ResidentId)).ExecuteUpdate(s => s.SetProperty(b => b.ResidentId, newResidentId));
+        }
     }
 }

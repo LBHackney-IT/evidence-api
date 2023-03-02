@@ -108,6 +108,7 @@ namespace EvidenceApi.Tests
         {
             return _fixture.Build<Resident>()
                 .Without(x => x.Id)
+                .With(x => x.IsHidden, false)
                 .Without(x => x.CreatedAt)
                 .Create();
         }
@@ -116,6 +117,7 @@ namespace EvidenceApi.Tests
         {
             return _fixture.Build<Resident>()
                 .With(x => x.Id, id)
+                .With(x => x.IsHidden, false)
                 .Create();
         }
         public static ResidentsTeamGroupId ResidentsTeamGroupId(Guid residentId, string team)

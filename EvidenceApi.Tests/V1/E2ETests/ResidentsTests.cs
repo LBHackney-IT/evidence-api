@@ -163,8 +163,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             data.Count.Should().Be(0);
         }
 
-
-
         [Test]
         public async Task CreateResidentReturns201()
         {
