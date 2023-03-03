@@ -12,7 +12,7 @@ using System.Text.Json;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class CreateMergedResidentUseCase : ICreateResidentUseCase
+    public class CreateMergedResidentUseCase : ICreateMergedResidentUseCase
     {
         private readonly IResidentsGateway _residentsGateway;
         private readonly ILogger<CreateResidentUseCase> _logger;
