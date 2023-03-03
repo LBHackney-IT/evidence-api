@@ -15,7 +15,7 @@ using System.Collections.Generic;
 namespace EvidenceApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class AmendResidentGroupIdUseCaseTests
+    public class AmendClaimsGroupIdUseCaseTests
     {
         private AmendClaimsGroupIdUseCase _classUnderTest;
         private Mock<IResidentsGateway> _residentsGateway = new Mock<IResidentsGateway>();
