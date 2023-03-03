@@ -4,8 +4,8 @@ using EvidenceApi.V1.Domain;
 
 namespace EvidenceApi.V1.UseCase.Interfaces
 {
-    public interface IAmendResidentGroupIdUseCase
+    public interface IAmendClaimsGroupIdUseCase
     {
-        Task<ResidentsTeamGroupId> Execute(ResidentGroupIdRequest request);
+        Task<bool> Execute(ResidentGroupIdRequest request);
     }
 }

@@ -8,20 +8,20 @@ using Microsoft.Extensions.Logging;
 
 namespace EvidenceApi.V1.UseCase
 {
-    public class AmendResidentGroupIdUseCase : IAmendResidentGroupIdUseCase
+    public class AmendClaimsGroupIdUseCase : IAmendClaimsGroupIdUseCase
     {
         private readonly IResidentsGateway _residentsGateway;
         private readonly IDocumentsApiGateway _documentsApiGateway;
-        private readonly ILogger<AmendResidentGroupIdUseCase> _logger;
+        private readonly ILogger<AmendClaimsGroupIdUseCase> _logger;
 
-        public AmendResidentGroupIdUseCase(IResidentsGateway residentsGateway, IDocumentsApiGateway documentsApiGateway, ILogger<AmendResidentGroupIdUseCase> logger)
+        public AmendClaimsGroupIdUseCase(IResidentsGateway residentsGateway, IDocumentsApiGateway documentsApiGateway, ILogger<AmendClaimsGroupIdUseCase> logger)
         {
             _residentsGateway = residentsGateway;
             _documentsApiGateway = documentsApiGateway;
             _logger = logger;
         }
 
-        public async Task<ResidentsTeamGroupId> Execute(ResidentGroupIdRequest request)
+        public async Task<bool> Execute(ResidentGroupIdRequest request)
         {
             if (request.Team == null)
             {
@@ -33,7 +33,6 @@ namespace EvidenceApi.V1.UseCase
                 throw new NotFoundException("No record found for that residentId and team");
             }
             var oldGroupId = residentTeamGroupId.GroupId;
-            var updatedResidentTeamGroupId = _residentsGateway.UpdateResidentGroupId(request.ResidentId, request.Team, request.GroupId);
             try
             {
                 var claimsUpdateRequest = new ClaimsUpdateRequest() { OldGroupId = oldGroupId, NewGroupId = request.GroupId };
@@ -43,7 +42,7 @@ namespace EvidenceApi.V1.UseCase
             {
                 throw new BadRequestException($"Issue with DocumentsApi so cannot update claims: {ex.Message}");
             }
-            return updatedResidentTeamGroupId;
+            return true;
         }
     }
 }

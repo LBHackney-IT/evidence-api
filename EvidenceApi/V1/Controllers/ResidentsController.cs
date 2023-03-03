@@ -17,7 +17,7 @@ namespace EvidenceApi.V1.Controllers
         private readonly IFindResidentByIdUseCase _findByIdUseCase;
         private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
         private readonly ICreateResidentUseCase _createResidentUseCase;
-        private readonly IAmendResidentGroupIdUseCase _amendResidentGroupIdUseCase;
+        private readonly IAmendClaimsGroupIdUseCase _amendResidentGroupIdUseCase;
         private readonly IMergeAndLinkResidentsUseCase _mergeAndLinkResidentsUseCase;
 
         public ResidentsController(
@@ -25,7 +25,7 @@ namespace EvidenceApi.V1.Controllers
             IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase,
             ICreateAuditUseCase createAuditUseCase,
             ICreateResidentUseCase createResidentUseCase,
-            IAmendResidentGroupIdUseCase amendResidentGroupIdUseCase,
+            IAmendClaimsGroupIdUseCase amendResidentGroupIdUseCase,
             IMergeAndLinkResidentsUseCase mergeAndLinkResidentsUseCase
         ) : base(createAuditUseCase)
         {

@@ -180,7 +180,7 @@ namespace EvidenceApi
             services.AddScoped<ICreateDocumentSubmissionWithoutEvidenceRequestUseCase, CreateDocumentSubmissionWithoutEvidenceRequestUseCase>();
             services.AddScoped<ICreateResidentUseCase, CreateResidentUseCase>();
             services.AddScoped<IBackfillClaimTableWithResidentGroupIdUseCase, BackfillClaimTableWithResidentGroupIdUseCase>();
-            services.AddScoped<IAmendResidentGroupIdUseCase, AmendResidentGroupIdUseCase>();
+            services.AddScoped<IAmendClaimsGroupIdUseCase, AmendClaimsGroupIdUseCase>();
             services.AddScoped<IMergeAndLinkResidentsUseCase, MergeAndLinkResidentsUseCase>();
         }
 

@@ -16,18 +16,18 @@ namespace EvidenceApi.V1.UseCase
         // 3. add entry groupId in ResidentsTeamGroupId, GroupId in claims table (doc api), add residentId in document_submissions table for each deleted resident - done
         // 4. add entry in ResidentsTeamGroupId table for each pair of (resident, team) apart of the team that sent the request - done
 
-        public ICreateResidentUseCase _createResidentUseCase;
+        public ICreateMergedResidentUseCase _createMergedResidentUseCase;
         public IResidentsGateway _residentsGateway;
         public IEvidenceGateway _evidenceGateway;
-        public IAmendResidentGroupIdUseCase _amendResidentGroupIdUseCase;
+        public IAmendClaimsGroupIdUseCase _amendResidentGroupIdUseCase;
 
         public MergeAndLinkResidentsUseCase(
-            ICreateResidentUseCase createResidentUseCase,
+            ICreateMergedResidentUseCase CreateMergedResidentUseCase,
             IResidentsGateway residentGateway,
             IEvidenceGateway evidenceGateway,
-            IAmendResidentGroupIdUseCase amendResidentGroupIdUseCase)
+            IAmendClaimsGroupIdUseCase amendResidentGroupIdUseCase)
         {
-            _createResidentUseCase = createResidentUseCase;
+            _createMergedResidentUseCase = CreateMergedResidentUseCase;
             _residentsGateway = residentGateway;
             _evidenceGateway = evidenceGateway;
             _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
@@ -42,7 +42,7 @@ namespace EvidenceApi.V1.UseCase
                 Team = request.Team,
                 GroupId = request.GroupId
             };
-            var resident = _createResidentUseCase.Execute(residentRequest);
+            var resident = _createMergedResidentUseCase.Execute(residentRequest);
 
             _evidenceGateway.UpdateResidentIdForDocumentSubmission(resident.Id, request.ResidentsToDelete);
 
@@ -64,10 +64,8 @@ namespace EvidenceApi.V1.UseCase
                         _residentsGateway.AddResidentGroupId(resident.Id, request.Team, request.GroupId);
                     }
                 }
-
                 _residentsGateway.HideResident(residentId);
             }
-
             return resident.ToResponse(request.GroupId);
         }
     }
