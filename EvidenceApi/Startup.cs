@@ -179,6 +179,7 @@ namespace EvidenceApi
                     GetStaffSelectedDocumentTypesByTeamNameUseCase>();
             services.AddScoped<ICreateDocumentSubmissionWithoutEvidenceRequestUseCase, CreateDocumentSubmissionWithoutEvidenceRequestUseCase>();
             services.AddScoped<ICreateResidentUseCase, CreateResidentUseCase>();
+            services.AddScoped<ICreateMergedResidentUseCase, CreateMergedResidentUseCase>();
             services.AddScoped<IBackfillClaimTableWithResidentGroupIdUseCase, BackfillClaimTableWithResidentGroupIdUseCase>();
             services.AddScoped<IAmendClaimsGroupIdUseCase, AmendClaimsGroupIdUseCase>();
             services.AddScoped<IMergeAndLinkResidentsUseCase, MergeAndLinkResidentsUseCase>();

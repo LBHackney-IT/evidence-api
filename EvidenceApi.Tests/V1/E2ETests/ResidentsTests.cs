@@ -239,7 +239,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task AmendResidentGroupIdReturns200()
+        public async Task AmendClaimsGroupIdReturns200()
         {
             var oldGroupId = Guid.NewGuid();
             var newGroupId = Guid.NewGuid();
@@ -264,9 +264,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(200);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var data = JsonConvert.DeserializeObject<ResidentsTeamGroupId>(json);
-            data.GroupId.Should().Be(newGroupId);
         }
 
         [Test]
