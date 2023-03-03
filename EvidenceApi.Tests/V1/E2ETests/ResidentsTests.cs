@@ -266,7 +266,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(200);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var data = JsonConvert.DeserializeObject<ResidentsTeamGroupId>(json);
-
             data.GroupId.Should().Be(newGroupId);
         }
 
@@ -313,6 +312,44 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(404);
+        }
+
+        [Test]
+        public async Task MergeResidentReturns200WhenRequestIsCorrect()
+        {
+            var team = "Housing Register";
+            var firstResident = TestDataHelper.Resident();
+            firstResident.Id = Guid.NewGuid();
+            var firstResidentGroupId = TestDataHelper.ResidentsTeamGroupId(firstResident.Id, team);
+            DatabaseContext.Add(firstResident);
+            DatabaseContext.Add(firstResidentGroupId);
+            var secondResident = TestDataHelper.Resident();
+            secondResident.Id = Guid.NewGuid();
+            var secondResidentGroupId = TestDataHelper.ResidentsTeamGroupId(secondResident.Id, team);
+            DatabaseContext.Add(secondResident);
+            DatabaseContext.Add(secondResidentGroupId);
+            var finalResident = TestDataHelper.Resident();
+            var newGroupId = Guid.NewGuid();
+            DatabaseContext.SaveChanges();
+
+            string body = "{" +
+                          $"\"team\": \"{team}\"," +
+                          $"\"groupId\": \"{newGroupId}\"," +
+                          $"\"newResident\": {{\"name\":  \"{finalResident.Name}\"," +
+                          $"\"email\": \"{finalResident.Email}\"," +
+                          $"\"phone\": \"{finalResident.PhoneNumber}\"," +
+                          $"\"team\": \"{team}\"," +
+                          $"\"groupId\": \"{newGroupId}\"" +
+                          "}," +
+                          $"\"residentsToDelete\":[\"{firstResident.Id}\",  \"{secondResident.Id}\"]}}"
+                          ;
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri("api/v1/residents/merge-and-link", UriKind.Relative);
+            var response = await Client.PostAsync(uri, jsonString);
+            response.StatusCode.Should().Be(200);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var data = JsonConvert.DeserializeObject<MergeAndLinkResidentsResponse>(json);
+            data.Resident.Name.Should().Be(finalResident.Name);
         }
     }
 }
