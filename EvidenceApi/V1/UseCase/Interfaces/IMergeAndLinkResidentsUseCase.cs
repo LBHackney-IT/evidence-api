@@ -6,6 +6,6 @@ namespace EvidenceApi.V1.UseCase.Interfaces
 {
     public interface IMergeAndLinkResidentsUseCase
     {
-        Task<MergeAndLinkResidentsResponse> Execute(MergeAndLinkResidentsRequest request);
+        Task<MergeAndLinkResidentsResponse> ExecuteAsync(MergeAndLinkResidentsRequest request);
     }
 }

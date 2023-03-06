@@ -32,7 +32,7 @@ namespace EvidenceApi.V1.UseCase
             _evidenceGateway = evidenceGateway;
             _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
         }
-        public async Task<MergeAndLinkResidentsResponse> Execute(MergeAndLinkResidentsRequest request)
+        public async Task<MergeAndLinkResidentsResponse> ExecuteAsync(MergeAndLinkResidentsRequest request)
         {
             var residentRequest = new ResidentRequest()
             {

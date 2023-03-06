@@ -116,7 +116,7 @@ namespace EvidenceApi.V1.Controllers
         {
             try
             {
-                var result = await _mergeAndLinkResidentsUseCase.Execute(request);
+                var result = await _mergeAndLinkResidentsUseCase.ExecuteAsync(request);
                 return Ok(result);
             }
             catch (BadRequestException ex)

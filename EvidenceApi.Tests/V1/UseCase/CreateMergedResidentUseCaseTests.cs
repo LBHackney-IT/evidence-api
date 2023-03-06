@@ -85,7 +85,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         private void SetupMocks()
         {
             _resident = TestDataHelper.Resident();
-            var team = "some team";
+            var team = "Fake team";
             _residentRequest = new ResidentRequest
             {
                 Email = _resident.Email,
