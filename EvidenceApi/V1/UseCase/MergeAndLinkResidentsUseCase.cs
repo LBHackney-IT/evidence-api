@@ -19,7 +19,7 @@ namespace EvidenceApi.V1.UseCase
         public ICreateMergedResidentUseCase _createMergedResidentUseCase;
         public IResidentsGateway _residentsGateway;
         public IEvidenceGateway _evidenceGateway;
-        public IAmendClaimsGroupIdUseCase _amendResidentGroupIdUseCase;
+        public IAmendClaimsGroupIdUseCase _amendClaimsGroupIdUseCase;
 
         public MergeAndLinkResidentsUseCase(
             ICreateMergedResidentUseCase CreateMergedResidentUseCase,
@@ -30,7 +30,7 @@ namespace EvidenceApi.V1.UseCase
             _createMergedResidentUseCase = CreateMergedResidentUseCase;
             _residentsGateway = residentGateway;
             _evidenceGateway = evidenceGateway;
-            _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
+            _amendClaimsGroupIdUseCase = amendResidentGroupIdUseCase;
         }
         public async Task<MergeAndLinkResidentsResponse> ExecuteAsync(MergeAndLinkResidentsRequest request)
         {
@@ -54,7 +54,7 @@ namespace EvidenceApi.V1.UseCase
                     Team = request.Team,
                     GroupId = request.GroupId
                 };
-                await _amendResidentGroupIdUseCase.Execute(residentGroupIdRequest);
+                await _amendClaimsGroupIdUseCase.Execute(residentGroupIdRequest);
 
                 var residentTeamGroupIds = _residentsGateway.FindResidentTeamGroupIdsByResidentId(residentId);
                 foreach (ResidentsTeamGroupId residentsTeamGroupId in residentTeamGroupIds)

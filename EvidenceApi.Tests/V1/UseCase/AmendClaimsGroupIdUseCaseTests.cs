@@ -82,7 +82,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             var oldGroupId = Guid.NewGuid();
             var newGroupId = Guid.NewGuid();
             var residentId = Guid.NewGuid();
-            var team = "some team";
+            var team = "Fake team";
             var residentGroupIdRequest = _fixture.Build<ResidentGroupIdRequest>()
                 .With(x => x.ResidentId, residentId)
                 .With(x => x.Team, team)

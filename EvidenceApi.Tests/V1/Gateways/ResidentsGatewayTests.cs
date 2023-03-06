@@ -492,5 +492,20 @@ namespace EvidenceApi.Tests.V1.Gateways
             var found = _classUnderTest.FindResidentTeamGroupIdByResidentIdAndTeam(Guid.NewGuid(), team);
             found.Should().Be(null);
         }
+        [Test]
+        public void HideResidentHidesAResident()
+        {
+            var resident = _fixture.Create<Resident>();
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            _classUnderTest.HideResident(resident.Id);
+
+            var query = DatabaseContext.Residents.Where(x => x.Id == resident.Id && !x.IsHidden);
+
+            query.Count()
+                .Should()
+                .Be(0);
+        }
     }
 }
