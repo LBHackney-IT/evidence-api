@@ -26,7 +26,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         private ResidentsTeamGroupId _secondResidentTeamGroupId;
         private Mock<IDocumentsApiGateway> _documentsApiGateway = new Mock<IDocumentsApiGateway>();
         private Resident _finalResident;
-
+        private Resident _firstResidentToBeMerged;
+        private Resident _secondResidentToBeMerged;
 
         [SetUp]
         public void SetUp()
@@ -42,16 +43,22 @@ namespace EvidenceApi.Tests.V1.UseCase
         [Test]
         public async Task CanMergeResidentsAndReturnNewResident()
         {
+
+            //what gateways do I need?
+
             _finalResident = TestDataHelper.ResidentWithId(Guid.NewGuid());
             var newGroupId = Guid.NewGuid();
             var team = "Fake team";
-            var firstResidentToBeMerged = Guid.NewGuid();
-            var secondResidentToBeMerged = Guid.NewGuid();
-            _firstResidentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(firstResidentToBeMerged, team);
-            _secondResidentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(secondResidentToBeMerged, team);
-            _residentsGateway.Setup(x => x.AddResidentGroupId(firstResidentToBeMerged, team, It.IsAny<Guid>())).Returns(_firstResidentTeamGroupId.GroupId).Verifiable();
-            _residentsGateway.Setup(x => x.AddResidentGroupId(secondResidentToBeMerged, team, It.IsAny<Guid>())).Returns(_secondResidentTeamGroupId.GroupId).Verifiable();
+            _firstResidentToBeMerged = TestDataHelper.ResidentWithId(Guid.NewGuid());
+            _secondResidentToBeMerged = TestDataHelper.ResidentWithId(Guid.NewGuid());
+            _firstResidentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(_firstResidentToBeMerged.Id, team);
+            _secondResidentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(_secondResidentToBeMerged.Id, team);
+            _residentsGateway.Setup(x => x.AddResidentGroupId(_firstResidentToBeMerged.Id, team, It.IsAny<Guid>())).Returns(_firstResidentTeamGroupId.GroupId).Verifiable();
+            _residentsGateway.Setup(x => x.AddResidentGroupId(_secondResidentToBeMerged.Id, team, It.IsAny<Guid>())).Returns(_secondResidentTeamGroupId.GroupId).Verifiable();
+            _residentsGateway.Setup(x => x.CreateResident(It.IsAny<Resident>())).Returns(_firstResidentToBeMerged).Verifiable();
+            _residentsGateway.Setup(x => x.CreateResident(It.IsAny<Resident>())).Returns(_secondResidentToBeMerged).Verifiable();
             _residentsGateway.Setup(x => x.CreateResident(It.IsAny<Resident>())).Returns(_finalResident).Verifiable();
+
             _mergeAndLinkResidentRequest = new MergeAndLinkResidentsRequest
             {
                 Team = team,
@@ -62,7 +69,7 @@ namespace EvidenceApi.Tests.V1.UseCase
                     Name = _finalResident.Name,
                     PhoneNumber = _finalResident.PhoneNumber
                 },
-                ResidentsToDelete = new[] { firstResidentToBeMerged, secondResidentToBeMerged }
+                ResidentsToDelete = new[] {_firstResidentToBeMerged.Id, _secondResidentToBeMerged.Id }
             };
             var result = await _classUnderTest.ExecuteAsync(_mergeAndLinkResidentRequest).ConfigureAwait(true);
             result.Resident.Name.Should().Be(_mergeAndLinkResidentRequest.NewResident.Name);
