@@ -43,7 +43,6 @@ namespace EvidenceApi.V1.UseCase
                 GroupId = request.GroupId
             };
             var resident = _createMergedResidentUseCase.Execute(residentRequest);
-
             _evidenceGateway.UpdateResidentIdForDocumentSubmission(resident.Id, request.ResidentsToDelete);
 
             foreach (Guid residentId in request.ResidentsToDelete)
@@ -57,6 +56,7 @@ namespace EvidenceApi.V1.UseCase
                 await _amendClaimsGroupIdUseCase.Execute(residentGroupIdRequest);
 
                 var residentTeamGroupIds = _residentsGateway.FindResidentTeamGroupIdsByResidentId(residentId);
+
                 foreach (ResidentsTeamGroupId residentsTeamGroupId in residentTeamGroupIds)
                 {
                     if (residentsTeamGroupId.Team != request.Team)
