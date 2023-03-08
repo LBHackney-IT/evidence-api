@@ -66,15 +66,17 @@ namespace EvidenceApi.V1.Gateways
         public Resident FindResidentByGroupId(ResidentSearchQuery request)
         {
             Resident resident;
+
             var residentTeamGroupId = _databaseContext.ResidentsTeamGroupId
                 .FirstOrDefault(r =>
                     r.GroupId == request.GroupId);
+
             if (residentTeamGroupId == null)
             {
                 return null;
             }
             resident = _databaseContext.Residents
-                    .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId);
+                .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId && !r.IsHidden);
             return resident;
         }
 
@@ -117,6 +119,14 @@ namespace EvidenceApi.V1.Gateways
             return entity;
         }
 
+        public List<ResidentsTeamGroupId> FindResidentTeamGroupIdsByResidentId(Guid residentId)
+        {
+            var entities = _databaseContext.ResidentsTeamGroupId
+                .Where(r =>
+                    r.ResidentId == residentId).ToList();
+            return entities;
+        }
+
         public ResidentsTeamGroupId UpdateResidentGroupId(Guid residentId, string team, Guid groupId)
         {
             var entity = _databaseContext.ResidentsTeamGroupId.
@@ -148,6 +158,14 @@ namespace EvidenceApi.V1.Gateways
             }
 
             return result;
+        }
+
+        public Resident HideResident(Guid residentId)
+        {
+            var resident = FindResident(residentId);
+            resident.IsHidden = true;
+            _databaseContext.SaveChanges();
+            return resident;
         }
     }
 }

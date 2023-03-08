@@ -826,5 +826,37 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             return expected;
         }
+        [Test]
+        public void UpdateResidentIdForDocumentSubmissionUpdatesDocumentSubmissionsCorrectly()
+        {
+            var newResident = TestDataHelper.Resident();
+            var originalResident = TestDataHelper.Resident();
+            var team = "Fake team";
+            DatabaseContext.Residents.Add(newResident);
+            DatabaseContext.Residents.Add(originalResident);
+            DatabaseContext.SaveChanges();
+
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var documentsubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(originalResident.Id, evidenceRequest);
+            documentsubmission1.Team = team;
+            var documentsubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(originalResident.Id, evidenceRequest);
+            documentsubmission2.Team = team;
+            var documentsubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(originalResident.Id, evidenceRequest);
+            documentsubmission3.Team = team;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission2);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission3);
+
+            DatabaseContext.SaveChanges();
+
+            _classUnderTest.UpdateResidentIdForDocumentSubmission(newResident.Id, new[] { originalResident.Id });
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(newResident.Id, team);
+            result.Total.Should().Be(3);
+
+        }
+
     }
 }
