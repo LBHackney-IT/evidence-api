@@ -70,7 +70,7 @@ namespace EvidenceApi.V1.Gateways
                 .Where(r =>
                     r.GroupId == request.GroupId).Select(w => w.ResidentId).ToArray();
 
-            if (residentTeamGroupIds.Length==0)
+            if (residentTeamGroupIds.Length == 0)
             {
                 return null;
             }
