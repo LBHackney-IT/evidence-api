@@ -401,7 +401,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.SaveChanges();
 
             string body = "{" +
-                          $"\"team\": \"{null}\"," +
+                          $"\"team\": null," +
                           $"\"groupId\": \"{newGroupId}\"," +
                           $"\"newResident\": {{\"name\":  \"{finalResident.Name}\"," +
                           $"\"email\": \"{finalResident.Email}\"," +
@@ -414,7 +414,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var uri = new Uri("api/v1/residents/merge-and-link", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
-            response.StatusCode.Should().Be(404);
+            response.StatusCode.Should().Be(400);
         }
     }
 }
