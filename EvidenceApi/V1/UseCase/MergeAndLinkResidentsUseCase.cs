@@ -61,7 +61,7 @@ namespace EvidenceApi.V1.UseCase
                 {
                     if (residentsTeamGroupId.Team != request.Team)
                     {
-                        _residentsGateway.AddResidentGroupId(resident.Id, request.Team, request.GroupId);
+                        _residentsGateway.AddResidentGroupId(resident.Id, residentsTeamGroupId.Team, residentsTeamGroupId.GroupId);
                     }
                 }
                 _residentsGateway.HideResident(residentId);
