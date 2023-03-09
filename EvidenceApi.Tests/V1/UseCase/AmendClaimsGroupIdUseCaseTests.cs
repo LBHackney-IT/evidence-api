@@ -40,7 +40,7 @@ namespace EvidenceApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ThrowsNotFoundWhenCannotFindResidentTeamGroupIdByResidentIdAndTeam()
+        public void ReturnFalseWhenCannotFindResidentTeamGroupIdByResidentIdAndTeam()
         {
             _residentsGateway
                 .Setup(x =>
@@ -50,9 +50,9 @@ namespace EvidenceApi.Tests.V1.UseCase
             var residentTeamGroupId = _fixture.Build<ResidentGroupIdRequest>()
                 .Create();
 
-            Func<Task<bool>> testDelegate = async () => await _classUnderTest.Execute(residentTeamGroupId);
+            var result = _classUnderTest.Execute(residentTeamGroupId);
 
-            testDelegate.Should().Throw<NotFoundException>().WithMessage("No record found for that residentId and team");
+            result.Result.Should().Be(false);
         }
 
         [Test]
