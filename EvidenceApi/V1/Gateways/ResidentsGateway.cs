@@ -59,7 +59,8 @@ namespace EvidenceApi.V1.Gateways
                 .FirstOrDefault(r =>
                     r.Name == request.Name &&
                     r.Email == request.Email &&
-                    r.PhoneNumber == request.PhoneNumber);
+                    r.PhoneNumber == request.PhoneNumber &&
+                    !r.IsHidden);
         }
 
 
