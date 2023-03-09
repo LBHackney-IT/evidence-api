@@ -30,7 +30,7 @@ namespace EvidenceApi.V1.UseCase
             var residentTeamGroupId = _residentsGateway.FindResidentTeamGroupIdByResidentIdAndTeam(request.ResidentId, request.Team);
             if (residentTeamGroupId == null)
             {
-                throw new NotFoundException("No record found for that residentId and team");
+                return false;
             }
             var oldGroupId = residentTeamGroupId.GroupId;
             try
