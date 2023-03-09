@@ -298,7 +298,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task AmendClaimsGroupIdReturns404WhenNoRecordsFoundForResidentIdAndTeam()
+        public async Task AmendClaimsGroupIdReturns200WhenNoRecordsFoundForResidentIdAndTeam()
         {
             string body = "{" +
                 $"\"residentId\": \"{Guid.NewGuid()}\"," +
@@ -308,7 +308,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
             var uri = new Uri("api/v1/residents/update-group-id", UriKind.Relative);
             var response = await Client.PostAsync(uri, jsonString);
-            response.StatusCode.Should().Be(404);
+            response.StatusCode.Should().Be(200);
         }
 
         [Test]
