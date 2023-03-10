@@ -59,24 +59,23 @@ namespace EvidenceApi.V1.Gateways
                 .FirstOrDefault(r =>
                     r.Name == request.Name &&
                     r.Email == request.Email &&
-                    r.PhoneNumber == request.PhoneNumber);
+                    r.PhoneNumber == request.PhoneNumber &&
+                    !r.IsHidden);
         }
 
 
         public Resident FindResidentByGroupId(ResidentSearchQuery request)
         {
-            Resident resident;
+            var residentTeamGroupIds = _databaseContext.ResidentsTeamGroupId
+                .Where(r =>
+                    r.GroupId == request.GroupId).Select(w => w.ResidentId).ToArray();
 
-            var residentTeamGroupId = _databaseContext.ResidentsTeamGroupId
-                .FirstOrDefault(r =>
-                    r.GroupId == request.GroupId);
-
-            if (residentTeamGroupId == null)
+            if (residentTeamGroupIds.Length == 0)
             {
                 return null;
             }
-            resident = _databaseContext.Residents
-                .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId && !r.IsHidden);
+            var resident = _databaseContext.Residents
+                .FirstOrDefault(r => residentTeamGroupIds.Contains(r.Id) && !r.IsHidden);
             return resident;
         }
 

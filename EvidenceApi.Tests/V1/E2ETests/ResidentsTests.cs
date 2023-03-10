@@ -220,6 +220,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                 .With(x => x.Name, "Test Resident")
                 .With(x => x.Email, "resident@email")
                 .With(x => x.PhoneNumber, "0700000")
+                .With(x => x.IsHidden, false)
                 .Create();
             DatabaseContext.Residents.Add(resident);
             DatabaseContext.SaveChanges();
