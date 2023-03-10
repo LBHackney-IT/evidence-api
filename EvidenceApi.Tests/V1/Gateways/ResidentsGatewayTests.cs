@@ -122,12 +122,15 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Arrange
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.Name, "Test Resident")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident2 = _fixture.Build<Resident>()
                 .With(x => x.Name, "Other Resident")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident3 = _fixture.Build<Resident>()
                 .With(x => x.Name, "Test Resident2")
+                .With(x => x.IsHidden, false)
                 .Create();
             DatabaseContext.Residents.Add(resident1);
             DatabaseContext.Residents.Add(resident2);
@@ -151,12 +154,15 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Arrange
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.Name, "test Resident")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident2 = _fixture.Build<Resident>()
                 .With(x => x.Name, "other Resident")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident3 = _fixture.Build<Resident>()
                 .With(x => x.Name, "test Resident2")
+                .With(x => x.IsHidden, false)
                 .Create();
             DatabaseContext.Residents.Add(resident1);
             DatabaseContext.Residents.Add(resident2);
@@ -180,12 +186,15 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Arrange
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.Email, "TestEmail@hackney.gov.uk")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident2 = _fixture.Build<Resident>()
                 .With(x => x.Email, "OtherEmail@hackney.gov.uk")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident3 = _fixture.Build<Resident>()
                 .With(x => x.Email, "TestEmail2@hackney.gov.uk")
+                .With(x => x.IsHidden, false)
                 .Create();
             DatabaseContext.Residents.Add(resident1);
             DatabaseContext.Residents.Add(resident2);
@@ -209,12 +218,15 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Arrange
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.PhoneNumber, "123")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident2 = _fixture.Build<Resident>()
                 .With(x => x.PhoneNumber, "567")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident3 = _fixture.Build<Resident>()
                 .With(x => x.PhoneNumber, "1234")
+                .With(x => x.IsHidden, false)
                 .Create();
             DatabaseContext.Residents.Add(resident1);
             DatabaseContext.Residents.Add(resident2);
@@ -238,12 +250,15 @@ namespace EvidenceApi.Tests.V1.Gateways
             // Arrange
             var resident1 = _fixture.Build<Resident>()
                 .With(x => x.Name, "Test Resident")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident2 = _fixture.Build<Resident>()
                 .With(x => x.PhoneNumber, "567")
+                .With(x => x.IsHidden, false)
                 .Create();
             var resident3 = _fixture.Build<Resident>()
                 .With(x => x.Email, "TestEmail@hackney.gov.uk")
+                .With(x => x.IsHidden, false)
                 .Create();
             DatabaseContext.Residents.Add(resident1);
             DatabaseContext.Residents.Add(resident2);
