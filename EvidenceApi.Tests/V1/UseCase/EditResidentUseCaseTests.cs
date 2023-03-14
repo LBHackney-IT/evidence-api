@@ -29,12 +29,6 @@ namespace EvidenceApi.Tests.V1.UseCase
         public void CanEditNameEmailPhoneNumberForResident(EditResidentRequest editResidentRequest)
         {
             SetupMocks();
-            // var editResidentRequest = new EditResidentRequest()
-            // {
-            //     Name = "test name",
-            //     Email = "test@email",
-            //     PhoneNumber = "0799999"
-            // };
             var expectedResident = new Resident()
             {
                 Name = editResidentRequest.Name,
