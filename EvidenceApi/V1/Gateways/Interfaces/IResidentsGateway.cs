@@ -19,5 +19,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Guid? FindGroupIdByResidentIdAndTeam(Guid residentId, string team);
         ResidentsTeamGroupId FindResidentTeamGroupIdByResidentIdAndTeam(Guid residentId, string team);
         ResidentsTeamGroupId UpdateResidentGroupId(Guid residentId, string team, Guid groupId);
+        List<ResidentsTeamGroupId> FindResidentTeamGroupIdsByResidentId(Guid residentId);
+        Resident HideResident(Guid residentId);
     }
 }

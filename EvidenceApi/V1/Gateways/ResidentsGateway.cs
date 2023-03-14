@@ -59,22 +59,23 @@ namespace EvidenceApi.V1.Gateways
                 .FirstOrDefault(r =>
                     r.Name == request.Name &&
                     r.Email == request.Email &&
-                    r.PhoneNumber == request.PhoneNumber);
+                    r.PhoneNumber == request.PhoneNumber &&
+                    !r.IsHidden);
         }
 
 
         public Resident FindResidentByGroupId(ResidentSearchQuery request)
         {
-            Resident resident;
-            var residentTeamGroupId = _databaseContext.ResidentsTeamGroupId
-                .FirstOrDefault(r =>
-                    r.GroupId == request.GroupId);
-            if (residentTeamGroupId == null)
+            var residentTeamGroupIds = _databaseContext.ResidentsTeamGroupId
+                .Where(r =>
+                    r.GroupId == request.GroupId).Select(w => w.ResidentId).ToArray();
+
+            if (residentTeamGroupIds.Length == 0)
             {
                 return null;
             }
-            resident = _databaseContext.Residents
-                    .FirstOrDefault(r => r.Id == residentTeamGroupId.ResidentId);
+            var resident = _databaseContext.Residents
+                .FirstOrDefault(r => residentTeamGroupIds.Contains(r.Id) && !r.IsHidden);
             return resident;
         }
 
@@ -120,6 +121,14 @@ namespace EvidenceApi.V1.Gateways
             return entity;
         }
 
+        public List<ResidentsTeamGroupId> FindResidentTeamGroupIdsByResidentId(Guid residentId)
+        {
+            var entities = _databaseContext.ResidentsTeamGroupId
+                .Where(r =>
+                    r.ResidentId == residentId).ToList();
+            return entities;
+        }
+
         public ResidentsTeamGroupId UpdateResidentGroupId(Guid residentId, string team, Guid groupId)
         {
             var entity = _databaseContext.ResidentsTeamGroupId.
@@ -151,6 +160,14 @@ namespace EvidenceApi.V1.Gateways
             }
 
             return result;
+        }
+
+        public Resident HideResident(Guid residentId)
+        {
+            var resident = FindResident(residentId);
+            resident.IsHidden = true;
+            _databaseContext.SaveChanges();
+            return resident;
         }
     }
 }

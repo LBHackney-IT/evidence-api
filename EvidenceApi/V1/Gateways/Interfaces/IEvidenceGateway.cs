@@ -25,5 +25,6 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         List<GroupResidentIdClaimIdBackfillObject> GetClaimIdsForResidentsWithGroupIds(
             List<GroupResidentIdClaimIdBackfillObject> groupResidentIdClaimIdBackfillObject);
 
+        void UpdateResidentIdForDocumentSubmission(Guid newResidentId, Guid[] residentIds);
     }
 }

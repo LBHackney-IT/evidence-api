@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
 using EvidenceApi.V1.Boundary.Request;
 using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.UseCase.Interfaces;
@@ -18,7 +17,8 @@ namespace EvidenceApi.V1.Controllers
         private readonly IFindResidentByIdUseCase _findByIdUseCase;
         private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
         private readonly ICreateResidentUseCase _createResidentUseCase;
-        private readonly IAmendResidentGroupIdUseCase _amendResidentGroupIdUseCase;
+        private readonly IAmendClaimsGroupIdUseCase _amendResidentGroupIdUseCase;
+        private readonly IMergeAndLinkResidentsUseCase _mergeAndLinkResidentsUseCase;
         private readonly IEditResidentUseCase _editResidentUseCase;
 
         public ResidentsController(
@@ -26,7 +26,8 @@ namespace EvidenceApi.V1.Controllers
             IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase,
             ICreateAuditUseCase createAuditUseCase,
             ICreateResidentUseCase createResidentUseCase,
-            IAmendResidentGroupIdUseCase amendResidentGroupIdUseCase,
+            IAmendClaimsGroupIdUseCase amendResidentGroupIdUseCase,
+            IMergeAndLinkResidentsUseCase mergeAndLinkResidentsUseCase,
             IEditResidentUseCase editResidentUseCase
         ) : base(createAuditUseCase)
         {
@@ -34,6 +35,7 @@ namespace EvidenceApi.V1.Controllers
             _findResidentsBySearchQueryUseCase = findResidentsBySearchQueryUseCase;
             _createResidentUseCase = createResidentUseCase;
             _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
+            _mergeAndLinkResidentsUseCase = mergeAndLinkResidentsUseCase;
             _editResidentUseCase = editResidentUseCase;
         }
 
@@ -99,6 +101,25 @@ namespace EvidenceApi.V1.Controllers
             try
             {
                 var result = await _amendResidentGroupIdUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("merge-and-link")]
+        public async Task<IActionResult> MergeAndLinkResidents([FromBody] MergeAndLinkResidentsRequest request)
+        {
+            try
+            {
+                var result = await _mergeAndLinkResidentsUseCase.ExecuteAsync(request);
                 return Ok(result);
             }
             catch (BadRequestException ex)
