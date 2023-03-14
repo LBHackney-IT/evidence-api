@@ -80,7 +80,10 @@ namespace EvidenceApi.V1.Gateways
 
         public Resident CreateResident(Resident request)
         {
-            _databaseContext.Residents.Add(request);
+            if (request.Id == default)
+            {
+                _databaseContext.Residents.Add(request);
+            }
             _databaseContext.SaveChanges();
             return request;
         }

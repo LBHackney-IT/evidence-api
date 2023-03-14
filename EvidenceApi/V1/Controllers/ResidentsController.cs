@@ -19,19 +19,22 @@ namespace EvidenceApi.V1.Controllers
         private readonly IFindResidentsBySearchQueryUseCase _findResidentsBySearchQueryUseCase;
         private readonly ICreateResidentUseCase _createResidentUseCase;
         private readonly IAmendResidentGroupIdUseCase _amendResidentGroupIdUseCase;
+        private readonly IEditResidentUseCase _editResidentUseCase;
 
         public ResidentsController(
             IFindResidentByIdUseCase findByIdUseCase,
             IFindResidentsBySearchQueryUseCase findResidentsBySearchQueryUseCase,
             ICreateAuditUseCase createAuditUseCase,
             ICreateResidentUseCase createResidentUseCase,
-            IAmendResidentGroupIdUseCase amendResidentGroupIdUseCase
+            IAmendResidentGroupIdUseCase amendResidentGroupIdUseCase,
+            IEditResidentUseCase editResidentUseCase
         ) : base(createAuditUseCase)
         {
             _findByIdUseCase = findByIdUseCase;
             _findResidentsBySearchQueryUseCase = findResidentsBySearchQueryUseCase;
             _createResidentUseCase = createResidentUseCase;
             _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
+            _editResidentUseCase = editResidentUseCase;
         }
 
         /// <summary>
@@ -96,6 +99,25 @@ namespace EvidenceApi.V1.Controllers
             try
             {
                 var result = await _amendResidentGroupIdUseCase.Execute(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("{residentId}")]
+        public IActionResult EditResident([FromRoute][Required] Guid residentId, [FromBody] EditResidentRequest request)
+        {
+            try
+            {
+                var result = _editResidentUseCase.Execute(residentId, request);
                 return Ok(result);
             }
             catch (BadRequestException ex)

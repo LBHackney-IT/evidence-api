@@ -316,5 +316,56 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var response = await Client.PostAsync(uri, jsonString);
             response.StatusCode.Should().Be(404);
         }
+
+        [Test]
+        public async Task EditResidentReturns200()
+        {
+            var resident = TestDataHelper.Resident();
+            DatabaseContext.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            string body = "{" +
+                "\"name\": \"Test Name\"," +
+                "\"email\": \"some@email\"," +
+                "\"phoneNumber\": \"07000000\"" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/residents/{resident.Id}", UriKind.Relative);
+            var response = await Client.PatchAsync(uri, jsonString);
+            response.StatusCode.Should().Be(200);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var data = JsonConvert.DeserializeObject<ResidentResponse>(json);
+
+            data.Name.Should().Be("Test Name");
+            data.Email.Should().Be("some@email");
+            data.PhoneNumber.Should().Be("07000000");
+        }
+
+        [Test]
+        public async Task EditResidentReturns400WhenRequestIsEmpty()
+        {
+            string body = "";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/residents/{Guid.NewGuid()}", UriKind.Relative);
+            var response = await Client.PatchAsync(uri, jsonString);
+            response.StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task EditResidentReturns404WhenResidentIsNotFound()
+        {
+            string body = "{" +
+                "\"name\": \"Test Name\"," +
+                "\"email\": \"some@email\"," +
+                "\"phoneNumber\": \"07000000\"" +
+                "}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+            var uri = new Uri($"api/v1/residents/{Guid.NewGuid()}", UriKind.Relative);
+            var response = await Client.PatchAsync(uri, jsonString);
+            response.StatusCode.Should().Be(404);
+        }
     }
 }
