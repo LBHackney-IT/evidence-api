@@ -312,7 +312,9 @@ namespace EvidenceApi.Tests.V1.Gateways
         [Test]
         public void CreateResidentCreatesAResident()
         {
-            var request = _fixture.Create<Resident>();
+            var request = _fixture.Build<Resident>()
+                .Without(x => x.Id)
+                .Create();
 
             _classUnderTest.CreateResident(request);
 

@@ -19,6 +19,7 @@ namespace EvidenceApi.V1.Controllers
         private readonly ICreateResidentUseCase _createResidentUseCase;
         private readonly IAmendClaimsGroupIdUseCase _amendResidentGroupIdUseCase;
         private readonly IMergeAndLinkResidentsUseCase _mergeAndLinkResidentsUseCase;
+        private readonly IEditResidentUseCase _editResidentUseCase;
 
         public ResidentsController(
             IFindResidentByIdUseCase findByIdUseCase,
@@ -26,7 +27,8 @@ namespace EvidenceApi.V1.Controllers
             ICreateAuditUseCase createAuditUseCase,
             ICreateResidentUseCase createResidentUseCase,
             IAmendClaimsGroupIdUseCase amendResidentGroupIdUseCase,
-            IMergeAndLinkResidentsUseCase mergeAndLinkResidentsUseCase
+            IMergeAndLinkResidentsUseCase mergeAndLinkResidentsUseCase,
+            IEditResidentUseCase editResidentUseCase
         ) : base(createAuditUseCase)
         {
             _findByIdUseCase = findByIdUseCase;
@@ -34,6 +36,7 @@ namespace EvidenceApi.V1.Controllers
             _createResidentUseCase = createResidentUseCase;
             _amendResidentGroupIdUseCase = amendResidentGroupIdUseCase;
             _mergeAndLinkResidentsUseCase = mergeAndLinkResidentsUseCase;
+            _editResidentUseCase = editResidentUseCase;
         }
 
         /// <summary>
@@ -117,6 +120,25 @@ namespace EvidenceApi.V1.Controllers
             try
             {
                 var result = await _mergeAndLinkResidentsUseCase.ExecuteAsync(request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("{residentId}")]
+        public IActionResult EditResident([FromRoute][Required] Guid residentId, [FromBody] EditResidentRequest request)
+        {
+            try
+            {
+                var result = _editResidentUseCase.Execute(residentId, request);
                 return Ok(result);
             }
             catch (BadRequestException ex)

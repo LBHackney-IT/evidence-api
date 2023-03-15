@@ -183,6 +183,7 @@ namespace EvidenceApi
             services.AddScoped<IBackfillClaimTableWithResidentGroupIdUseCase, BackfillClaimTableWithResidentGroupIdUseCase>();
             services.AddScoped<IAmendClaimsGroupIdUseCase, AmendClaimsGroupIdUseCase>();
             services.AddScoped<IMergeAndLinkResidentsUseCase, MergeAndLinkResidentsUseCase>();
+            services.AddScoped<IEditResidentUseCase, EditResidentUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
