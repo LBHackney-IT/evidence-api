@@ -180,6 +180,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             resultResident2.Should().NotBeNull();
         }
 
+
         [Test]
         public void FindResidentsByEmail()
         {
