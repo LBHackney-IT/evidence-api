@@ -11,11 +11,6 @@ namespace EvidenceApi.V1.UseCase
 {
     public class MergeAndLinkResidentsUseCase : IMergeAndLinkResidentsUseCase
     {
-        // 1. delete residents by residentId provided in the request
-        // 2. create new resident based on info in the request - done
-        // 3. add entry groupId in ResidentsTeamGroupId, GroupId in claims table (doc api), add residentId in document_submissions table for each deleted resident - done
-        // 4. add entry in ResidentsTeamGroupId table for each pair of (resident, team) apart of the team that sent the request - done
-
         public ICreateMergedResidentUseCase _createMergedResidentUseCase;
         public IResidentsGateway _residentsGateway;
         public IEvidenceGateway _evidenceGateway;
