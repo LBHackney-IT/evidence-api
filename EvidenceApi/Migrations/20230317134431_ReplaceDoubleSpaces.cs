@@ -16,7 +16,7 @@ namespace EvidenceApi.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"Update residents SET name= replace(name, ' ', '  ');");
+
         }
     }
 }
