@@ -88,9 +88,9 @@ chmod 400 ./private-key.pem
 
 2. Create environment variables by retrieving properties from AWS SSM
 ```sh
-EVIDENCE_API_HOST=$(aws ssm get-parameter --name /evidence-api/production/postgres-hostname --query Parameter.Value)
-EVIDENCE_API_PORT=$(aws ssm get-parameter --name /evidence-api/production/postgres-port --query Parameter.Value)
-JUMP_BOX_NAME=$(aws ssm get-parameter --name /document-evidence-store-production-jump-box-instance-name --query Parameter.Value)
+EVIDENCE_API_HOST=$(aws ssm get-parameter --region eu-west-2 --name /evidence-api/production/postgres-hostname --query Parameter.Value)
+EVIDENCE_API_PORT=$(aws ssm get-parameter --region eu-west-2 --name /evidence-api/production/postgres-port --query Parameter.Value)
+JUMP_BOX_NAME=$(aws ssm get-parameter --region eu-west-2 --name /document-evidence-store-production-jump-box-instance-name --query Parameter.Value)
 ```
 3. Setup port forwarding which creates a tunnel between your local machine and the jump host. It will map `localhost:EVIDENCE_API_PORT` to `jumpboxhost:EVIDENCE_API_PORT`, so change the localhost if you've got something else running on `port 5502`.
 ```sh
@@ -106,9 +106,9 @@ chmod 400 ./private-key.pem
 
 2. Create environment variables by retrieving properties from AWS SSM
 ```sh
-DOCUMENTS_API_HOST=$(aws ssm get-parameter --name /documents-api/production/postgres-hostname --query Parameter.Value)
-DOCUMENTS_API_PORT=$(aws ssm get-parameter --name /documents-api/production/postgres-port --query Parameter.Value)
-JUMP_BOX_NAME=$(aws ssm get-parameter --name /document-evidence-store-production-jump-box-instance-name --query Parameter.Value)
+DOCUMENTS_API_HOST=$(aws ssm get-parameter --region eu-west-2 --name /documents-api/production/postgres-hostname --query Parameter.Value)
+DOCUMENTS_API_PORT=$(aws ssm get-parameter --region eu-west-2 --name /documents-api/production/postgres-port --query Parameter.Value)
+JUMP_BOX_NAME=$(aws ssm get-parameter --region eu-west-2 --name /document-evidence-store-production-jump-box-instance-name --query Parameter.Value)
 ```
 3. Setup port forwarding which creates a tunnel between your local machine and the jump host. It will map `localhost:EVIDENCE_API_PORT` to `jumpboxhost:EVIDENCE_API_PORT`, so change the localhost if you've got something else running on `port 5502`.
 ```sh
