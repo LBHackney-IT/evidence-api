@@ -1,8 +1,8 @@
 # Tracking requests through environments
 
 - This is documentation for how to track requests through staging and production environments.
-- Hopefully it will prove handy lookup for seasoned developers and folks new to the codebase.
-- Decided to put it in the `EvidenceAPI` code base but it also covers [document-evidence-store-frontend](https://github.com/LBHackney-IT/document-evidence-store-frontend) and [
+- Hopefully it will prove a handy lookup for seasoned developers and folks new to the codebase.
+- We decided to put it in the `EvidenceAPI` code base but it also covers [document-evidence-store-frontend](https://github.com/LBHackney-IT/document-evidence-store-frontend) and [
    documents-api](https://github.com/LBHackney-IT/documents-api).
 
 ## Index
