@@ -50,7 +50,7 @@ commands:
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
-          command: npm i -g serverless
+          command: npm i -g serverless@^3
       - run:
           name: Build lambda
           command: |
