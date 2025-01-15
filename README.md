@@ -1,6 +1,6 @@
 # Evidence API
 
-Evidence API is a Platform API to allow services to request and upload evidence from members of the borough.
+Evidence API is a Platform API to allow services to request and upload evidence from members of the borough.   
 
 ## Stack
 
