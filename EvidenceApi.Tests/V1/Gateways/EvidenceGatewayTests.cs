@@ -264,6 +264,19 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void WillReturnEmptyListIfOnlyTeamIsPassed()
+        {
+            var request = new EvidenceRequestsSearchQuery()
+            {
+                Team = "development-team-staging",
+                ResidentId = null,
+                State = null
+            };
+            var result = _classUnderTest.GetEvidenceRequests(request);
+            result.Should().BeEmpty();
+        }
+
+        [Test]
         public void CanGetEvidenceRequestsByServiceAndResidentId()
         {
             var resident = TestDataHelper.Resident();
@@ -279,19 +292,6 @@ namespace EvidenceApi.Tests.V1.Gateways
             var result = _classUnderTest.GetEvidenceRequests(request);
             result.Should().BeEquivalentTo(expected);
             request.ResidentId.Should().NotBeEmpty();
-        }
-
-        [Test]
-        public void CanGetEvidenceRequestsByServiceOnly()
-        {
-            var request = new EvidenceRequestsSearchQuery()
-            {
-                Team = "development-team-staging"
-            };
-            var expected = ExpectedEvidenceRequestsWithService(request);
-
-            var result = _classUnderTest.GetEvidenceRequests(request);
-            result.Should().BeEquivalentTo(expected);
         }
 
         [Test]

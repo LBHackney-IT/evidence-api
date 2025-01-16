@@ -64,6 +64,11 @@ namespace EvidenceApi.V1.Gateways
 
         public List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request)
         {
+            if (request.ResidentId == null && request.State == null && request.Team != null)
+            {
+                return new List<EvidenceRequest>();
+            }
+
             return _databaseContext.EvidenceRequests
                 .Where(x =>
                     x.Team.Equals(request.Team) &&
