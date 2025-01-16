@@ -64,12 +64,17 @@ namespace EvidenceApi.V1.Gateways
 
         public List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request)
         {
-            return _databaseContext.EvidenceRequests
-                .Where(x =>
-                    x.Team.Equals(request.Team) &&
-                    (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
-                    (request.State == null || x.State.Equals(request.State))
-                ).ToList();
+           if (request.ResidentId == null && request.State == null && request.Team != null) 
+           {
+                return new List<EvidenceRequest>();
+           }
+
+        return _databaseContext.EvidenceRequests
+            .Where(x =>
+                x.Team.Equals(request.Team) &&
+                (request.ResidentId == null || x.ResidentId.Equals(request.ResidentId)) &&
+                (request.State == null || x.State.Equals(request.State))
+            ).ToList();
         }
 
         public List<EvidenceRequest> GetEvidenceRequestsWithDocumentSubmissions(EvidenceRequestsSearchQuery request)
