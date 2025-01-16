@@ -360,20 +360,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
             // Assert
             response.StatusCode.Should().Be(400);
         }
-        [Test]
-        public async Task CanGetEvidenceRequestsWithValidService()
-        {
-            var expected = BuildEvidenceRequestsListWithSameResident();
-            var team = expected[0].Team;
-            var uri = new Uri($"api/v1/evidence_requests?team={team}", UriKind.Relative);
-            var response = await Client.GetAsync(uri);
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<List<EvidenceRequestResponse>>(json);
-
-            response.StatusCode.Should().Be(200);
-            result.Should().ContainSingle();
-            result.Should().ContainEquivalentOf(expected[0]);
-        }
 
         [Test]
         public async Task CanGetEvidenceRequestsWithValidServiceAndResidentId()

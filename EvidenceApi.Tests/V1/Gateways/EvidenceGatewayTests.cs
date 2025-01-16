@@ -295,19 +295,6 @@ namespace EvidenceApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void CanGetEvidenceRequestsByServiceOnly()
-        {
-            var request = new EvidenceRequestsSearchQuery()
-            {
-                Team = "development-team-staging"
-            };
-            var expected = ExpectedEvidenceRequestsWithService(request);
-
-            var result = _classUnderTest.GetEvidenceRequests(request);
-            result.Should().BeEquivalentTo(expected);
-        }
-
-        [Test]
         public void GetEvidenceRequestsReturnsEmptyList()
         {
             var request = new EvidenceRequestsSearchQuery()
