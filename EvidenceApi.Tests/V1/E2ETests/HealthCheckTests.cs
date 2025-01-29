@@ -19,7 +19,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             {
                 Status = StatusCodes.Status500InternalServerError,
                 Title = "An error occurred while processing your request.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.6.1"
             };
 
             var response = await Client.GetAsync(uri);
