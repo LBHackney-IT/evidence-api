@@ -105,6 +105,17 @@ namespace EvidenceApi.V1.Factories
             };
         }
 
+        public static DocumentSubmissionVisibilityResponse ToResponse(
+            this DocumentSubmission domain,
+            DocumentType staffSelectedDocumentType)
+        {
+            return new DocumentSubmissionVisibilityResponse()
+            {
+                Id = domain.Id,
+                IsHidden = domain.IsHidden,
+            };
+        }
+
         public static MergeAndLinkResidentsResponse ToResponse(this ResidentResponse resident, Guid groupId)
         {
             return new MergeAndLinkResidentsResponse()
