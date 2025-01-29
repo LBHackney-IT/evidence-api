@@ -92,7 +92,7 @@ namespace EvidenceApi.V1.Gateways
         public DocumentSubmission FindDocumentSubmission(Guid id)
         {
             var documentSubmission = _databaseContext.DocumentSubmissions.Find(id);
-            if (documentSubmission != null && documentSubmission.isHidden == true)
+            if (documentSubmission != null && documentSubmission.IsHidden == true)
             {
                 return null;
             }
@@ -129,7 +129,7 @@ namespace EvidenceApi.V1.Gateways
             var offset = (limit * page) - limit;
 
             IQueryable<DocumentSubmission> query = _databaseContext.DocumentSubmissions
-               .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team) && !x.isHidden);
+               .Where(x => x.ResidentId.Equals(id) && x.Team.Equals(team) && !x.IsHidden);
 
             if (state != null)
             {
