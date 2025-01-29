@@ -60,7 +60,8 @@ namespace EvidenceApi.V1.Factories
                 StaffSelectedDocumentType = staffSelectedDocumentType,
                 UploadPolicy = s3UploadPolicy,
                 Team = domain.Team,
-                ResidentId = domain.ResidentId
+                ResidentId = domain.ResidentId,
+                IsHidden = domain.IsHidden,
             } : new DocumentSubmissionResponse()
             {
                 Id = domain.Id,
@@ -79,7 +80,8 @@ namespace EvidenceApi.V1.Factories
                 ClaimValidUntil = claim.ValidUntil,
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 Team = domain.Team,
-                ResidentId = domain.ResidentId
+                ResidentId = domain.ResidentId,
+                IsHidden = domain.IsHidden,
             };
         }
 
@@ -102,17 +104,6 @@ namespace EvidenceApi.V1.Factories
                 Document = claim.Document,
                 ClaimValidUntil = claim.ValidUntil,
                 RetentionExpiresAt = claim.RetentionExpiresAt
-            };
-        }
-
-        public static DocumentSubmissionVisibilityResponse ToResponse(
-            this DocumentSubmission domain,
-            DocumentType staffSelectedDocumentType)
-        {
-            return new DocumentSubmissionVisibilityResponse()
-            {
-                Id = domain.Id,
-                IsHidden = domain.IsHidden,
             };
         }
 

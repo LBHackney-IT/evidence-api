@@ -17,20 +17,22 @@ namespace EvidenceApi.V1.UseCase
     public class UpdateDocumentSubmissionVisibilityUseCase : IUpdateDocumentSubmissionVisibiltyUseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
-        private readonly IDocumentTypeGateway _documentTypeGateway;
 
+        private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly ILogger<UpdateDocumentSubmissionVisibilityUseCase> _logger;
 
         public UpdateDocumentSubmissionVisibilityUseCase(
             IDocumentTypeGateway documentTypeGateway,
+            IEvidenceGateway evidenceGateway,
             ILogger<UpdateDocumentSubmissionVisibilityUseCase> logger
         )
         {
             _documentTypeGateway = documentTypeGateway;
+            _evidenceGateway = evidenceGateway;
             _logger = logger;
         }
 
-        public DocumentSubmissionVisibilityResponse ExecuteAsync(Guid id, DocumentSubmissionVisibilityUpdateRequest request)
+        public DocumentSubmissionResponse ExecuteAsync(Guid id, DocumentSubmissionVisibilityUpdateRequest request)
         {
             var documentSubmission = _evidenceGateway.FindDocumentSubmission(id);
 

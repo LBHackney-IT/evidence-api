@@ -7,6 +7,6 @@ namespace EvidenceApi.V1.UseCase.Interfaces
 {
     public interface IUpdateDocumentSubmissionVisibiltyUseCase
     {
-        DocumentSubmissionVisibilityResponse ExecuteAsync(Guid id, DocumentSubmissionVisibilityUpdateRequest request);
+        DocumentSubmissionResponse ExecuteAsync(Guid id, DocumentSubmissionVisibilityUpdateRequest request);
     }
 }

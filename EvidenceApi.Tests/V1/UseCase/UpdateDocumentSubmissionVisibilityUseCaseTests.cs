@@ -40,6 +40,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _logger = new Mock<ILogger<UpdateDocumentSubmissionVisibilityUseCase>>();
             _classUnderTest = new UpdateDocumentSubmissionVisibilityUseCase(
                 _documentTypeGateway.Object,
+                _evidenceGateway.Object,
                 _logger.Object);
         }
 
