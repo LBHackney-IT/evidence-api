@@ -164,6 +164,7 @@ namespace EvidenceApi
             services.AddScoped<IFindEvidenceRequestByIdUseCase, FindEvidenceRequestByIdUseCase>();
             services.AddScoped<ICreateDocumentSubmissionUseCase, CreateDocumentSubmissionUseCase>();
             services.AddScoped<IUpdateDocumentSubmissionStateUseCase, UpdateDocumentSubmissionStateUseCase>();
+            services.AddScoped<IUpdateDocumentSubmissionVisibiltyUseCase, UpdateDocumentSubmissionVisibilityUseCase>();
             services.AddScoped<IFindEvidenceRequestsUseCase, FindEvidenceRequestsUseCase>();
             services.AddScoped<IFindResidentByIdUseCase, FindResidentByIdUseCase>();
             services.AddScoped<IFindDocumentSubmissionByIdUseCase, FindDocumentSubmissionByIdUseCase>();
