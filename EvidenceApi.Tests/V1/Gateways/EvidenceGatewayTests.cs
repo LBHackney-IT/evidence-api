@@ -122,7 +122,7 @@ namespace EvidenceApi.Tests.V1.Gateways
             foundRecord.RejectionReason.Should().Be(request.RejectionReason);
             foundRecord.State.Should().Be(request.State);
             foundRecord.DocumentTypeId.Should().Be(request.DocumentTypeId);
-            foundRecord.isHidden.Should().Be(false);
+            foundRecord.IsHidden.Should().Be(false);
         }
 
         [Test]
@@ -234,7 +234,7 @@ namespace EvidenceApi.Tests.V1.Gateways
         public void FindReturnsNullWhenTheDocumentSubmissionShouldBeHidden()
         {
             var documentSubmission = TestDataHelper.DocumentSubmission(true);
-            documentSubmission.isHidden = true;
+            documentSubmission.IsHidden = true;
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
 
@@ -577,13 +577,13 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var documentSubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission1.Team = team;
-            documentSubmission1.isHidden = true;
+            documentSubmission1.IsHidden = true;
             var documentSubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission2.Team = team;
             var documentSubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
             documentSubmission3.Team = team;
             var documentSubmission4 = TestDataHelper.DocumentSubmissionWithResidentId(queryGuid, evidenceRequest);
-            documentSubmission4.isHidden = true;
+            documentSubmission4.IsHidden = true;
             documentSubmission4.Team = team;
 
             documentSubmission1.CreatedAt = currentDate.AddDays(1);

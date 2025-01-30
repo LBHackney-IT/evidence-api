@@ -4,7 +4,7 @@ Evidence API is a Platform API to allow services to request and upload evidence 
 
 ## Stack
 
--   .NET 6.0 as a web framework.
+-   .NET 8.0 as a web framework.
 -   nUnit v3.12 as a test framework.
 
 ## What does it do?

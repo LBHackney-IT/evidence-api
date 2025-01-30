@@ -54,6 +54,6 @@ namespace EvidenceApi.V1.Domain
         [Column("team")]
         public string Team { get; set; }
         [Column("is_hidden")]
-        public bool isHidden { get; set; } = false;
+        public bool IsHidden { get; set; } = false;
     }
 }

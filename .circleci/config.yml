@@ -1,7 +1,6 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.9
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -10,7 +9,7 @@ executors:
       - image: circleci/python:3.7
   docker-dotnet:
     docker:
-      - image: mcr.microsoft.com/dotnet/sdk:6.0
+      - image: mcr.microsoft.com/dotnet/sdk:8.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -210,6 +209,8 @@ workflows:
           requires:
             - assume-role-staging
       - deploy-to-staging:
+          context:
+            - "Serverless Framework"      
           requires:
             - migrate-database-staging
 
@@ -226,6 +227,8 @@ workflows:
           requires:
             - assume-role-production
       - deploy-to-production:
+          context:
+            - "Serverless Framework"        
           requires:
             - migrate-database-production
       - publish-to-swaggerhub:
