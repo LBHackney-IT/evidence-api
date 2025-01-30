@@ -2,7 +2,7 @@ service: evidence-api
 variablesResolutionMode: 20210326
 provider:
   name: aws
-  runtime: dot8
+  runtime: dotnet8
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
