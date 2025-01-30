@@ -298,6 +298,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "\"staffSelectedDocumentType\":null," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
                                $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\",\"description\":\"{_document.Description}\"" + "}" +
+                               "\"isHidden\":false," +
                                "}";
 
             json.Should().Be(expected);
