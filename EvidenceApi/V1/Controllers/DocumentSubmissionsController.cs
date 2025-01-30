@@ -15,6 +15,7 @@ namespace EvidenceApi.V1.Controllers
     public class DocumentSubmissionsController : BaseController
     {
         private readonly IUpdateDocumentSubmissionStateUseCase _updateDocumentSubmissionStateUseCase;
+        private readonly IUpdateDocumentSubmissionVisibiltyUseCase _updateDocumentSubmissionVisibilityUseCase;
         private readonly IFindDocumentSubmissionByIdUseCase _findDocumentSubmissionByIdUseCase;
         private readonly IFindDocumentSubmissionsByResidentIdUseCase _findDocumentSubmissionsByResidentIdUseCase;
         private readonly ICreateDocumentSubmissionWithoutEvidenceRequestUseCase _createDocumentSubmissionWithoutEvidenceRequestUseCase;
@@ -22,12 +23,14 @@ namespace EvidenceApi.V1.Controllers
         public DocumentSubmissionsController(
             ICreateAuditUseCase createAuditUseCase,
             IUpdateDocumentSubmissionStateUseCase updateDocumentSubmissionStateUseCase,
+            IUpdateDocumentSubmissionVisibiltyUseCase updateDocumentSubmissionVisibilityUseCase,
             IFindDocumentSubmissionByIdUseCase findDocumentSubmissionByIdUseCase,
             IFindDocumentSubmissionsByResidentIdUseCase findDocumentSubmissionsByResidentIdUseCase,
             ICreateDocumentSubmissionWithoutEvidenceRequestUseCase createDocumentSubmissionWithoutEvidenceRequestUseCase
         ) : base(createAuditUseCase)
         {
             _updateDocumentSubmissionStateUseCase = updateDocumentSubmissionStateUseCase;
+            _updateDocumentSubmissionVisibilityUseCase = updateDocumentSubmissionVisibilityUseCase;
             _findDocumentSubmissionByIdUseCase = findDocumentSubmissionByIdUseCase;
             _findDocumentSubmissionsByResidentIdUseCase = findDocumentSubmissionsByResidentIdUseCase;
             _createDocumentSubmissionWithoutEvidenceRequestUseCase = createDocumentSubmissionWithoutEvidenceRequestUseCase;
@@ -57,6 +60,32 @@ namespace EvidenceApi.V1.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Updates the visibility of a document submission
+        /// </summary>
+        /// <response code="200">Updated</response>
+        /// <response code="400">Request contains invalid parameters</response>
+        /// <response code="404">Document submission cannot be found</response>
+        [HttpPatch]
+        [Route("{id}/visibility")]
+        public IActionResult UpdateDocumentSubmissionVisibility([FromRoute][Required] Guid id, [FromBody] DocumentSubmissionVisibilityUpdateRequest request)
+        {
+            try
+            {
+                var result = _updateDocumentSubmissionVisibilityUseCase.ExecuteAsync(id, request);
+                return Ok(result);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// Finds a document submission by id

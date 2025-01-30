@@ -121,6 +121,54 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.Should().BeEquivalentTo(expected);
         }
 
+        [Test]
+        public async Task CanUpdateDocumentSubmissionVisibilityWithValidParameters()
+        {
+            // Arrange
+            var teamName = "Development Housing Team";
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            evidenceRequest.Team = teamName;
+
+            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
+            evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+
+            var documentSubmission = TestDataHelper.DocumentSubmission();
+            documentSubmission.EvidenceRequest = evidenceRequest;
+            documentSubmission.DocumentTypeId = "passport-scan";
+
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+
+            DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
+
+            var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}/visibility", UriKind.Relative);
+            string body = @"
+            {
+                ""documentHidden"": true
+            }";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+
+            // Assert
+            response.StatusCode.Should().Be(200);
+
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
+
+            var documentType = TestDataHelper.DocumentType("passport-scan");
+            var staffSelectedDocumentType = TestDataHelper.GetStaffSelectedDocumentTypeByTeamName("drivers-licence", teamName);
+            var expected = createdDocumentSubmission.ToResponse(documentType, createdDocumentSubmission.EvidenceRequestId, staffSelectedDocumentType);
+            result.Should().BeEquivalentTo(expected);
+        }
+
+
         [Ignore("Potential race conditions causing intermittent failure - need to be looked at")]
         [Test]
         public async Task CanUpdateDocumentSubmissionStateOnlyWhenRejected()

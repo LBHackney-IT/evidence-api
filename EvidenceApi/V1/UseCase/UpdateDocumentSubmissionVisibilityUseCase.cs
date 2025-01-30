@@ -17,7 +17,6 @@ namespace EvidenceApi.V1.UseCase
     public class UpdateDocumentSubmissionVisibilityUseCase : IUpdateDocumentSubmissionVisibiltyUseCase
     {
         private readonly IEvidenceGateway _evidenceGateway;
-
         private readonly IDocumentTypeGateway _documentTypeGateway;
         private readonly ILogger<UpdateDocumentSubmissionVisibilityUseCase> _logger;
 
