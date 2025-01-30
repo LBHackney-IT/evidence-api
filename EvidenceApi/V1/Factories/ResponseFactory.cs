@@ -61,7 +61,7 @@ namespace EvidenceApi.V1.Factories
                 UploadPolicy = s3UploadPolicy,
                 Team = domain.Team,
                 ResidentId = domain.ResidentId,
-                IsHidden = domain.IsHidden,
+                IsHidden = domain.IsHidden
             } : new DocumentSubmissionResponse()
             {
                 Id = domain.Id,
@@ -81,7 +81,7 @@ namespace EvidenceApi.V1.Factories
                 RetentionExpiresAt = claim.RetentionExpiresAt,
                 Team = domain.Team,
                 ResidentId = domain.ResidentId,
-                IsHidden = domain.IsHidden,
+                IsHidden = domain.IsHidden
             };
         }
 
