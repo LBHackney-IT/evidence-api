@@ -125,15 +125,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
         public async Task CanUpdateDocumentSubmissionVisibilityWithValidParameters()
         {
             // Arrange
-            var teamName = "Development Housing Team";
             var evidenceRequest = TestDataHelper.EvidenceRequest();
-            evidenceRequest.Team = teamName;
-            evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
-            evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
             var documentSubmission = TestDataHelper.DocumentSubmission();
             documentSubmission.EvidenceRequest = evidenceRequest;
-            documentSubmission.DocumentTypeId = "passport-scan";
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
             DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
