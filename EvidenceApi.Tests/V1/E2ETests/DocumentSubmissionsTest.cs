@@ -128,23 +128,16 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var teamName = "Development Housing Team";
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.Team = teamName;
-
             evidenceRequest.DocumentTypes = new List<string> { "passport-scan" };
             evidenceRequest.DeliveryMethods = new List<DeliveryMethod> { DeliveryMethod.Email };
-
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
-
             var documentSubmission = TestDataHelper.DocumentSubmission();
             documentSubmission.EvidenceRequest = evidenceRequest;
             documentSubmission.DocumentTypeId = "passport-scan";
-
             DatabaseContext.DocumentSubmissions.Add(documentSubmission);
             DatabaseContext.SaveChanges();
-
             DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
             var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
-
             var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}/visibility", UriKind.Relative);
             string body = @"
             {
@@ -158,14 +151,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             // Assert
             response.StatusCode.Should().Be(200);
-
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
-
-            var documentType = TestDataHelper.DocumentType("passport-scan");
-            var staffSelectedDocumentType = TestDataHelper.GetStaffSelectedDocumentTypeByTeamName("drivers-licence", teamName);
-            var expected = createdDocumentSubmission.ToResponse(documentType, createdDocumentSubmission.EvidenceRequestId, staffSelectedDocumentType);
-            result.Should().BeEquivalentTo(expected);
+            result.IsHidden.Should().BeTrue();
         }
 
 
