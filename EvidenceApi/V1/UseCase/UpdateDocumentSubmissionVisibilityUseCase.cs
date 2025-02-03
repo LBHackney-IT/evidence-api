@@ -41,6 +41,8 @@ namespace EvidenceApi.V1.UseCase
             }
 
             documentSubmission.IsHidden = request.DocumentHidden;
+            _evidenceGateway.UpdateVisibilityDocumentSubmission(documentSubmission.Id, request.DocumentHidden);
+
 
             var documentType = _documentTypeGateway.GetDocumentTypeByTeamNameAndDocumentTypeId(documentSubmission.EvidenceRequest.Team, documentSubmission.DocumentTypeId);
             return documentSubmission.ToResponse(documentType, documentSubmission.EvidenceRequestId);
