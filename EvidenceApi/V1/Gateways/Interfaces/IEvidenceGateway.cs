@@ -15,6 +15,7 @@ namespace EvidenceApi.V1.Gateways.Interfaces
         Communication CreateCommunication(Communication request);
         DocumentSubmission CreateDocumentSubmission(DocumentSubmission request);
         DocumentSubmission FindDocumentSubmission(Guid id);
+        DocumentSubmission FindAnyDocumentSubmission(Guid id);
         List<EvidenceRequest> GetEvidenceRequests(EvidenceRequestsSearchQuery request);
         List<EvidenceRequest> GetEvidenceRequestsWithDocumentSubmissions(EvidenceRequestsSearchQuery request);
         List<EvidenceRequest> FindEvidenceRequestsByResidentId(Guid id);

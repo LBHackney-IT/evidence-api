@@ -49,9 +49,8 @@ namespace EvidenceApi.Tests.V1.UseCase
         {
             var id = Guid.NewGuid();
             SetupMocks(id, _teamName);
-            DocumentSubmissionVisibilityUpdateRequest request = BuildDocumentSubmissionVisibilityUpdateRequest();
+            DocumentSubmissionVisibilityUpdateRequest request = BuildDocumentSubmissionVisibilityUpdateRequest(true);
             var result = _classUnderTest.ExecuteAsync(id, request);
-
             result.Id.Should().Be(_found.Id);
             result.IsHidden.Should().BeTrue();
         }
@@ -85,10 +84,10 @@ namespace EvidenceApi.Tests.V1.UseCase
                  .ReturnsAsync(claim).Verifiable();
         }
 
-        private DocumentSubmissionVisibilityUpdateRequest BuildDocumentSubmissionVisibilityUpdateRequest()
+        private DocumentSubmissionVisibilityUpdateRequest BuildDocumentSubmissionVisibilityUpdateRequest(bool visibility)
         {
             return _fixture.Build<DocumentSubmissionVisibilityUpdateRequest>()
-                .With(x => x.DocumentHidden, true)
+                .With(x => x.DocumentHidden, visibility)
                 .Create();
         }
     }
