@@ -67,6 +67,7 @@ namespace EvidenceApi.Tests.V1.UseCase
 
             _evidenceGateway.Setup(x => x.FindEvidenceRequest((Guid) _found.EvidenceRequestId)).Returns(_evidenceRequest);
             _evidenceGateway.Setup(x => x.FindDocumentSubmission(id)).Returns(_found);
+            _evidenceGateway.Setup(x => x.FindAnyDocumentSubmission(id)).Returns(_found);
             _evidenceGateway.Setup(x => x.CreateDocumentSubmission(It.Is<DocumentSubmission>(ds =>
                 ds.Id == id && ds.State == SubmissionState.Uploaded
             )));
