@@ -884,6 +884,7 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(resident.Id, team);
             result.Total.Should().Be(2);
+            result.DocumentSubmissions.Should().NotContain(documentsubmission2);
             result.DocumentSubmissions[0].IsHidden.Should().BeFalse();
             result.DocumentSubmissions[1].IsHidden.Should().BeFalse();
         }
