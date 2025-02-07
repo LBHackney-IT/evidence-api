@@ -135,10 +135,10 @@ namespace EvidenceApi.Tests.V1.E2ETests
             DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
             var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
             var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}/visibility", UriKind.Relative);
-            string body = @"
-            {
-                ""documentHidden"": requiredVisibility
-            }";
+            string body = $@"
+            {{
+                ""documentHidden"": {requiredVisibility.ToString().ToLower()}
+            }}";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -149,7 +149,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(200);
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
-            result.IsHidden.Should().BeTrue();
+            result.IsHidden.Should().Be(requiredVisibility);
         }
 
 
