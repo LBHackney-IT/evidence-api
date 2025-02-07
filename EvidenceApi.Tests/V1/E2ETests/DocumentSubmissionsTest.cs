@@ -121,8 +121,9 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.Should().BeEquivalentTo(expected);
         }
 
-        [Test]
-        public async Task CanUpdateDocumentSubmissionVisibilityWithValidParameters()
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task CanUpdateDocumentSubmissionVisibilityWithValidParameters(bool requiredVisibility)
         {
             // Arrange
             var evidenceRequest = TestDataHelper.EvidenceRequest();
@@ -136,7 +137,7 @@ namespace EvidenceApi.Tests.V1.E2ETests
             var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}/visibility", UriKind.Relative);
             string body = @"
             {
-                ""documentHidden"": true
+                ""documentHidden"": requiredVisibility
             }";
 
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
