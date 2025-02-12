@@ -121,6 +121,38 @@ namespace EvidenceApi.Tests.V1.E2ETests
             result.Should().BeEquivalentTo(expected);
         }
 
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task CanUpdateDocumentSubmissionVisibilityWithValidParameters(bool requiredVisibility)
+        {
+            // Arrange
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            var documentSubmission = TestDataHelper.DocumentSubmission();
+            documentSubmission.EvidenceRequest = evidenceRequest;
+            DatabaseContext.DocumentSubmissions.Add(documentSubmission);
+            DatabaseContext.SaveChanges();
+            DatabaseContext.Entry(documentSubmission).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+            var createdDocumentSubmission = DatabaseContext.DocumentSubmissions.First();
+            var uri = new Uri($"api/v1/document_submissions/{createdDocumentSubmission.Id}/visibility", UriKind.Relative);
+            string body = $@"
+            {{
+                ""documentHidden"": {requiredVisibility.ToString().ToLower()}
+            }}";
+
+            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await Client.PatchAsync(uri, jsonString).ConfigureAwait(true);
+
+            // Assert
+            response.StatusCode.Should().Be(200);
+            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
+            result.IsHidden.Should().Be(requiredVisibility);
+        }
+
+
         [Ignore("Potential race conditions causing intermittent failure - need to be looked at")]
         [Test]
         public async Task CanUpdateDocumentSubmissionStateOnlyWhenRejected()

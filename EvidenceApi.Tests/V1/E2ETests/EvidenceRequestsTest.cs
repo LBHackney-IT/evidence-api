@@ -297,7 +297,8 @@ namespace EvidenceApi.Tests.V1.E2ETests
                                "\"documentType\":{\"id\":\"proof-of-id\",\"title\":\"Proof of ID\",\"description\":\"A valid document that can be used to prove identity\",\"enabled\":true}," +
                                "\"staffSelectedDocumentType\":null," +
                                $"\"uploadPolicy\":{JsonConvert.SerializeObject(_createdUploadPolicy, Formatting.None)}," +
-                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\",\"description\":\"{_document.Description}\"" + "}" +
+                               $"\"document\":" + "{" + $"\"id\":\"{_document.Id}\",\"fileSize\":{_document.FileSize},\"fileType\":\"{_document.FileType}\",\"description\":\"{_document.Description}\"" + "}," +
+                               $"\"isHidden\":false" +
                                "}";
 
             json.Should().Be(expected);

@@ -857,6 +857,37 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Total.Should().Be(3);
 
         }
+        [Test]
+        public void UpdateVisibilityForDocumentSubmissionUpdatesDocumentSubmissionsCorrectly()
+        {
+            var resident = TestDataHelper.Resident();
+            var team = "Fake team";
+            DatabaseContext.Residents.Add(resident);
+            DatabaseContext.SaveChanges();
+
+            var evidenceRequest = TestDataHelper.EvidenceRequest();
+            var documentsubmission1 = TestDataHelper.DocumentSubmissionWithResidentId(resident.Id, evidenceRequest);
+            documentsubmission1.Team = team;
+            var documentsubmission2 = TestDataHelper.DocumentSubmissionWithResidentId(resident.Id, evidenceRequest);
+            documentsubmission2.Team = team;
+            var documentsubmission3 = TestDataHelper.DocumentSubmissionWithResidentId(resident.Id, evidenceRequest);
+            documentsubmission3.Team = team;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission1);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission2);
+            DatabaseContext.DocumentSubmissions.Add(documentsubmission3);
+
+            DatabaseContext.SaveChanges();
+
+            _classUnderTest.UpdateVisibilityDocumentSubmission(documentsubmission2.Id, true);
+
+            var result = _classUnderTest.GetPaginatedDocumentSubmissionsByResidentId(resident.Id, team);
+            result.Total.Should().Be(2);
+            result.DocumentSubmissions.Should().NotContain(documentsubmission2);
+            result.DocumentSubmissions[0].IsHidden.Should().BeFalse();
+            result.DocumentSubmissions[1].IsHidden.Should().BeFalse();
+        }
 
     }
 }
