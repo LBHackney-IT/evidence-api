@@ -467,26 +467,26 @@ namespace EvidenceApi.Tests.V1.E2ETests
         }
 
         [TestCase(true)]
-        [TestCase(false)]        
+        [TestCase(false)]
         public async Task CaUpdateDocumentSubmissionVisibilityWithValidParams(bool visibility)
         {
             var resident = TestDataHelper.Resident();
             DatabaseContext.Residents.Add(resident);
-            DatabaseContext.SaveChanges(); 
+            DatabaseContext.SaveChanges();
             var evidenceRequest = TestDataHelper.EvidenceRequest();
             evidenceRequest.ResidentId = resident.Id;
             DatabaseContext.EvidenceRequests.Add(evidenceRequest);
-            DatabaseContext.SaveChanges();                        
+            DatabaseContext.SaveChanges();
             var docSubmission = TestDataHelper.DocumentSubmission();
             docSubmission.EvidenceRequestId = evidenceRequest.Id;
             DatabaseContext.DocumentSubmissions.Add(docSubmission);
             DatabaseContext.SaveChanges();
-            var jsonObject = new { DocumentHidden = visibility }; 
-            string body = JsonConvert.SerializeObject(jsonObject);            
+            var jsonObject = new { DocumentHidden = visibility };
+            string body = JsonConvert.SerializeObject(jsonObject);
             var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/document_submissions/"+docSubmission.Id+"/visibility", UriKind.Relative);
+            var uri = new Uri($"api/v1/document_submissions/" + docSubmission.Id + "/visibility", UriKind.Relative);
             var response = await Client.PatchAsync(uri, jsonString);
             response.StatusCode.Should().Be(200);
-        }        
+        }
     }
 }
