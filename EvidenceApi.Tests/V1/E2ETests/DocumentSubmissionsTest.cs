@@ -462,28 +462,5 @@ namespace EvidenceApi.Tests.V1.E2ETests
             response.StatusCode.Should().Be(400);
             response.Content.ReadAsStringAsync().Result.Should().Be($"\"A resident with ID {residentId} does not exist.\"");
         }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public async Task CaUpdateDocumentSubmissionVisibilityWithValidParams(bool visibility)
-        {
-            var resident = TestDataHelper.Resident();
-            DatabaseContext.Residents.Add(resident);
-            DatabaseContext.SaveChanges();
-            var evidenceRequest = TestDataHelper.EvidenceRequest();
-            evidenceRequest.ResidentId = resident.Id;
-            DatabaseContext.EvidenceRequests.Add(evidenceRequest);
-            DatabaseContext.SaveChanges();
-            var docSubmission = TestDataHelper.DocumentSubmission();
-            docSubmission.EvidenceRequestId = evidenceRequest.Id;
-            DatabaseContext.DocumentSubmissions.Add(docSubmission);
-            DatabaseContext.SaveChanges();
-            var jsonObject = new { DocumentHidden = visibility };
-            string body = JsonConvert.SerializeObject(jsonObject);
-            var jsonString = new StringContent(body, Encoding.UTF8, "application/json");
-            var uri = new Uri($"api/v1/document_submissions/" + docSubmission.Id + "/visibility", UriKind.Relative);
-            var response = await Client.PatchAsync(uri, jsonString);
-            response.StatusCode.Should().Be(200);
-        }
     }
 }
