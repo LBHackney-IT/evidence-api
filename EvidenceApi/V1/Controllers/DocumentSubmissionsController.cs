@@ -73,8 +73,8 @@ namespace EvidenceApi.V1.Controllers
         {
             try
             {
-                var result = _updateDocumentSubmissionVisibilityUseCase.ExecuteAsync(id, request);
-                return Ok(result);
+                _updateDocumentSubmissionVisibilityUseCase.ExecuteAsync(id, request);
+                return Ok();
             }
             catch (BadRequestException ex)
             {
