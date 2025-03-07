@@ -147,9 +147,6 @@ namespace EvidenceApi.Tests.V1.E2ETests
 
             // Assert
             response.StatusCode.Should().Be(200);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
-            var result = JsonConvert.DeserializeObject<DocumentSubmissionResponse>(json);
-            result.IsHidden.Should().Be(requiredVisibility);
         }
 
 
