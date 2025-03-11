@@ -10,11 +10,6 @@ provider:
   tracing:
     apiGateway: true
     lambda: true
-  usagePlan:
-    - secureAccess:
-        throttle:
-          burstLimit: 200
-          rateLimit: 100
 
 package:
   artifact: ./bin/release/net8.0/evidence-api.zip
