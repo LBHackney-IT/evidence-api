@@ -29,5 +29,11 @@ services:
       service: db
     ports:
       - "3002:5432"
+    # volumes:
+    #   - ../database/data:/var/lib/postgresql/data
     volumes:
-      - ../database/data:/var/lib/postgresql/data
+      - evidence_api_db_data:/var/lib/postgresql/data
+      
+volumes:
+  evidence_api_db_data:
+    driver: local      
