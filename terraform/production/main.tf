@@ -58,3 +58,41 @@ resource "aws_db_subnet_group" "evidence_api_subnets" {
         create_before_destroy = true
     }
 }
+
+data "aws_ssm_parameter" "documents_postgres_port_security_group" {
+    name = "/documents-api/production/postgres-port"
+}
+
+resource "aws_security_group" "documents_api_db_traffic" {
+    vpc_id      = data.aws_vpc.dr_vpc.id
+    name_prefix = "allow_documents_api_db_traffic"
+
+    ingress {
+        description = "documents_api_db_dr"
+        from_port   = data.aws_ssm_parameter.documents_postgres_port_security_group.value
+        to_port     = data.aws_ssm_parameter.documents_postgres_port_security_group.value
+        protocol    = "tcp"
+
+        cidr_blocks = [data.aws_vpc.dr_vpc.cidr_block]
+    }
+
+    egress {
+        description = "allow outbound traffic"
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        "Name" = "documents_api_db_traffic-dr"
+    }
+}
+
+resource "aws_db_subnet_group" "documents_api_subnets" {
+    name       = "documents-api-subnet-group-dr"
+    subnet_ids = ["subnet-0e6bc9b4ac24493cc","subnet-05e595c59b7d6c8df"]
+    lifecycle {
+        create_before_destroy = true
+    }
+}
