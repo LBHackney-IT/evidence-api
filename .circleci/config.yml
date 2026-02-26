@@ -10,6 +10,9 @@ executors:
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:8.0
+  docker-terraform:
+    docker:
+      - image: "hashicorp/terraform:light"
 
 references:
   workspace_root: &workspace_root "~"
@@ -33,6 +36,44 @@ commands:
           root: *workspace_root
           paths:
             - .aws
+  terraform-init-then-preview:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: preview
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform plan
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -159,6 +200,27 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+  assume-role-disaster-recovery:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DISASTER_RECOVERY
+
+  preview-terraform-dr-changes:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-preview:
+          environment: "production"
+  terraform-init-and-apply-to-dr:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+  deploy-dr:
+    executor: docker-dotnet
+    steps:
+      - deploy-lambda:
+          stage: "production"
 
   deploy-to-staging:
     executor: docker-dotnet
@@ -196,6 +258,30 @@ workflows:
       - check-code-formatting
       - build-and-test
 
+      # DR deploy
+      - assume-role-disaster-recovery:
+          requires:
+            - build-and-test
+          context:
+            - api-assume-role-disaster-recovery-context
+          filters:
+            branches:
+              only:
+                - dr-system-testing
+
+      - preview-terraform-dr-changes:
+          requires:
+            - assume-role-disaster-recovery
+
+      - permit-terraform-dr-changes:
+          type: approval
+          requires:
+            - preview-terraform-dr-changes
+
+      - terraform-init-and-apply-to-dr:
+          requires:
+            - permit-terraform-dr-changes
+
       # Staging deploy
       - assume-role-staging:
           context: api-assume-role-document-evidence-store-staging-context
@@ -210,7 +296,7 @@ workflows:
             - assume-role-staging
       - deploy-to-staging:
           context:
-            - "Serverless Framework"      
+            - "Serverless Framework"
           requires:
             - migrate-database-staging
 
@@ -228,7 +314,7 @@ workflows:
             - assume-role-production
       - deploy-to-production:
           context:
-            - "Serverless Framework"        
+            - "Serverless Framework"
           requires:
             - migrate-database-production
       - publish-to-swaggerhub:
