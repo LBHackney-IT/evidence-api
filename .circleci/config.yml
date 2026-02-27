@@ -282,6 +282,17 @@ workflows:
           requires:
             - permit-terraform-dr-changes
 
+      - permit-release-dr:
+          type: approval
+          requires:
+            - terraform-init-and-apply-to-dr
+      - deploy-dr:
+          context:
+            - api-nuget-token-context
+            - 'Serverless Framework'
+          requires:
+            - permit-release-dr
+
       # Staging deploy
       - assume-role-staging:
           context: api-assume-role-document-evidence-store-staging-context
