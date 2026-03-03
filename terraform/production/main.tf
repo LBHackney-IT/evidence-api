@@ -25,6 +25,7 @@ data "aws_ssm_parameter" "evidence_postgres_port_security_group" {
     name = "/evidence-api/production/postgres-port"
 }
 
+# Evidence API
 resource "aws_security_group" "evidence_api_db_traffic" {
     vpc_id      = data.aws_vpc.dr_vpc.id
     name_prefix = "allow_evidence_api_db_traffic"
@@ -59,6 +60,7 @@ resource "aws_db_subnet_group" "evidence_api_subnets" {
     }
 }
 
+# Documents API
 data "aws_ssm_parameter" "documents_postgres_port_security_group" {
     name = "/documents-api/production/postgres-port"
 }
@@ -94,5 +96,19 @@ resource "aws_db_subnet_group" "documents_api_subnets" {
     subnet_ids = ["subnet-0e6bc9b4ac24493cc","subnet-05e595c59b7d6c8df"]
     lifecycle {
         create_before_destroy = true
+    }
+}
+
+# Front end
+resource "aws_security_group" "frontend_traffic" {
+    vpc_id      = data.aws_vpc.dr_vpc.id
+    name_prefix = "allow_frontend_traffic"
+
+    egress {
+        description = "allow outbound traffic"
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
     }
 }
