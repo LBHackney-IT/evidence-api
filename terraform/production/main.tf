@@ -2,6 +2,21 @@ provider "aws" {
     region  = "eu-west-2"
     version = "~> 3.0"
 }
+
+provider "aws" {
+    alias  = "certificate_manager"
+    region = "us-east-1"
+}
+
+provider "aws" {
+    alias  = "route_53"
+    region = "eu-west-2"
+
+    assume_role {
+        role_arn = "arn:aws:iam::846441805239:role/ce_oidc_acm_verification"
+    }
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
@@ -111,4 +126,36 @@ resource "aws_security_group" "frontend_traffic" {
         protocol    = "-1"
         cidr_blocks = ["0.0.0.0/0"]
     }
+}
+
+# Certificate
+module "acm_certificate" {
+    source = "github.com/LBHackney-IT/terraform-aws-acm"
+
+    providers = {
+        aws.acm = aws.certificate_manager
+        aws.r53 = aws.route_53
+    }
+    certificate_transparency_logging_preference = true
+    create_certificate                          = true
+    dns_ttl                                     = 60
+    domain_name                                 = "evidence-dr.hackney.gov.uk"
+    subject_alternative_names                   = []
+    validate_certificate                        = true
+    validation_allow_overwrite_records          = true
+    validation_method                           = "DNS"
+    wait_for_validation                         = true
+    zone_id                                     = "Z05689131LRP536POAGQN"
+
+
+    tags = {
+        Name        = "DES Frontend DR Certificate"
+        Environment = "DR"
+    }
+}
+
+# Output the certificate ARN
+output "acm_certificate_arn" {
+    description = "ACM Certificate ARN"
+    value       = module.acm_certificate.acm_certificate_arn
 }
