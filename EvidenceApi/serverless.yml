@@ -10,6 +10,12 @@ provider:
   tracing:
     apiGateway: true
     lambda: true
+  logs:
+    restApi:
+      accessLogging: true
+      executionLogging: true
+      fullExecutionData: true
+      level: INFO
 
 package:
   artifact: ./bin/release/net8.0/evidence-api.zip
@@ -45,7 +51,7 @@ functions:
           path: /{proxy+}
           method: ANY
           authorizer:
-            arn: ${ssm:/platform-apis-lambda-authorizer-arn}
+            arn: ${self:custom.authorizerArns.${opt:stage}}
             type: request
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
@@ -105,6 +111,8 @@ resources:
                   Resource: "*"
 
 custom:
+  authorizerArns:
+    production: arn:aws:lambda:eu-west-2:153306643385:function:api-auth-verify-token-new-production-apiauthverifytokennew
   vpc:
     staging:
       securityGroupIds:
