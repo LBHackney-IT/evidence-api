@@ -102,7 +102,7 @@ commands:
           command: |
             cd ./EvidenceApi/
             npm install --save-dev serverless-plugin-lambda-insights
-            sls deploy --stage <<parameters.stage>> --conceal
+            sls remove --stage <<parameters.stage>>
   publish-to-swaggerhub:
     description: "Publishes API docs to SwaggerHub"
     steps:

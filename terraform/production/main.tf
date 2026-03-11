@@ -129,33 +129,33 @@ resource "aws_security_group" "frontend_traffic" {
 }
 
 # Certificate
-module "acm_certificate" {
-    source = "github.com/LBHackney-IT/terraform-aws-acm"
-
-    providers = {
-        aws.acm = aws.certificate_manager
-        aws.r53 = aws.route_53
-    }
-    certificate_transparency_logging_preference = true
-    create_certificate                          = true
-    dns_ttl                                     = 60
-    domain_name                                 = "evidence-dr.hackney.gov.uk"
-    subject_alternative_names                   = []
-    validate_certificate                        = true
-    validation_allow_overwrite_records          = true
-    validation_method                           = "DNS"
-    wait_for_validation                         = true
-    zone_id                                     = "Z05689131LRP536POAGQN"
-
-
-    tags = {
-        Name        = "DES Frontend DR Certificate"
-        Environment = "DR"
-    }
-}
-
-# Output the certificate ARN
-output "acm_certificate_arn" {
-    description = "ACM Certificate ARN"
-    value       = module.acm_certificate.acm_certificate_arn
-}
+# module "acm_certificate" {
+#     source = "github.com/LBHackney-IT/terraform-aws-acm"
+#
+#     providers = {
+#         aws.acm = aws.certificate_manager
+#         aws.r53 = aws.route_53
+#     }
+#     certificate_transparency_logging_preference = true
+#     create_certificate                          = true
+#     dns_ttl                                     = 60
+#     domain_name                                 = "evidence-dr.hackney.gov.uk"
+#     subject_alternative_names                   = []
+#     validate_certificate                        = true
+#     validation_allow_overwrite_records          = true
+#     validation_method                           = "DNS"
+#     wait_for_validation                         = true
+#     zone_id                                     = "Z05689131LRP536POAGQN"
+#
+#
+#     tags = {
+#         Name        = "DES Frontend DR Certificate"
+#         Environment = "DR"
+#     }
+# }
+#
+# # Output the certificate ARN
+# output "acm_certificate_arn" {
+#     description = "ACM Certificate ARN"
+#     value       = module.acm_certificate.acm_certificate_arn
+# }
