@@ -269,23 +269,23 @@ workflows:
               only:
                 - dr-system-test
 
-      - preview-terraform-dr-changes:
-          requires:
-            - assume-role-disaster-recovery
-
-      - permit-terraform-dr-changes:
-          type: approval
-          requires:
-            - preview-terraform-dr-changes
-
-      - terraform-init-and-apply-to-dr:
-          requires:
-            - permit-terraform-dr-changes
+#      - preview-terraform-dr-changes:
+#          requires:
+#            - assume-role-disaster-recovery
+#
+#      - permit-terraform-dr-changes:
+#          type: approval
+#          requires:
+#            - preview-terraform-dr-changes
+#
+#      - terraform-init-and-apply-to-dr:
+#          requires:
+#            - permit-terraform-dr-changes
 
       - permit-release-dr:
           type: approval
           requires:
-            - terraform-init-and-apply-to-dr
+            - assume-role-disaster-recovery
       - deploy-dr:
           context:
             - api-nuget-token-context
