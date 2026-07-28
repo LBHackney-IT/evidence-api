@@ -1,6 +1,6 @@
 # Evidence API
 
-Evidence API is a Platform API to allow services to request and upload evidence from members of the borough.   
+Evidence API is a Platform API to allow services to request and upload evidence from members of the borough.
 
 ## Stack
 
@@ -219,18 +219,7 @@ To update the accepted MIME types on the server, navigate to [AcceptedMimeTypes.
 
 ### Active Maintainers
 
--   **Selwyn Preston**, Lead Developer at London Borough of Hackney (selwyn.preston@hackney.gov.uk)
--   **Mirela Georgieva**, Lead Developer at London Borough of Hackney (mirela.georgieva@hackney.gov.uk)
--   **Matt Keyworth**, Lead Developer at London Borough of Hackney (matthew.keyworth@hackney.gov.uk)
-
-### Contributors
-
--   **Neil Mendum**, Senior Engineer at Made Tech (neil.mendum@hackney.gov.uk)
--   **Bogdan Zaharia**, Engineer at Made Tech (bogdan.zaharia@hackney.gov.uk)
-
-### Other Contacts
-
--   **Rashmi Shetty**, Product Owner at London Borough of Hackney (rashmi.shetty@hackney.gov.uk)
+-   **Shared Services team**, Maintenance team (shared.services@hackney.gov.uk)
 
 [docker-download]: https://www.docker.com/products/docker-desktop
 [universal-housing-simulator]: https://github.com/LBHackney-IT/lbh-universal-housing-simulator
