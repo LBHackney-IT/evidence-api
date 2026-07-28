@@ -1,10 +1,10 @@
 .PHONY: build-local
 build-local:
-	docker-compose -f EvidenceApi/compose.yml build
+	docker compose -f EvidenceApi/compose.yml build
 
 .PHONY: build-test
 build-test:
-	docker-compose -f EvidenceApi.Tests/compose.yml build
+	docker compose -f EvidenceApi.Tests/compose.yml build
 
 .PHONY: serve-local
 serve-local:
@@ -16,7 +16,7 @@ serve-test:
 
 .PHONY: shell
 shell:
-	docker-compose run evidence-api bash
+	docker compose run evidence-api bash
 
 .PHONY: start-local
 start-local:
