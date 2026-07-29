@@ -107,7 +107,7 @@ resources:
 custom:
   authorizerArns:
     staging:    arn:aws:lambda:eu-west-2:715003523189:function:api-gateway-lambda-authorizer
-    production: arn:aws:lambda:eu-west-2:153306643385:function:api-auth-verify-token-new-production-apiauthverifytokennew
+    production: arn:aws:lambda:eu-west-2:153306643385:function:api-gateway-lambda-authorizer
   vpc:
     staging:
       securityGroupIds:
