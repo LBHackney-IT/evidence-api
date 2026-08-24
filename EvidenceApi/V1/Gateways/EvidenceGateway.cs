@@ -180,6 +180,12 @@ namespace EvidenceApi.V1.Gateways
             var existingDocSubmission = _databaseContext.DocumentSubmissions.Where(x => residentIds.Contains(x.ResidentId));
             existingDocSubmission.ExecuteUpdate(s => s.SetProperty(b => b.ResidentId, newResidentId));
         }
+
+        public void UpdateResidentIdForEvidenceRequest(Guid newResidentId, Guid[] residentIds)
+        {
+            var existingEvidenceRequests = _databaseContext.EvidenceRequests.Where(x => residentIds.Contains(x.ResidentId));
+            existingEvidenceRequests.ExecuteUpdate(s => s.SetProperty(b => b.ResidentId, newResidentId));
+        }
         public void UpdateVisibilityDocumentSubmission(Guid documentSubmissionId, bool visibility)
         {
             var documentSubmission = _databaseContext.DocumentSubmissions.Where(x => documentSubmissionId.Equals(x.Id));
