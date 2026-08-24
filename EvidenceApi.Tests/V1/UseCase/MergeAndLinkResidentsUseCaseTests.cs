@@ -56,6 +56,7 @@ namespace EvidenceApi.Tests.V1.UseCase
             _secondResidentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(_secondResidentToBeMerged.Id, team);
             _createMergedResidentUseCase.Setup(x => x.Execute(It.IsAny<ResidentRequest>())).Returns(residentResponse);
             _evidenceGateway.Setup(x => x.UpdateResidentIdForDocumentSubmission(It.IsAny<Guid>(), It.IsAny<Guid[]>()));
+            _evidenceGateway.Setup(x => x.UpdateResidentIdForEvidenceRequest(It.IsAny<Guid>(), It.IsAny<Guid[]>()));
             _amendClaimsGroupIdUseCase.Setup(x => x.Execute(It.IsAny<ResidentGroupIdRequest>()));
             _residentsGateway.Setup(x => x.FindResidentTeamGroupIdsByResidentId(It.IsAny<Guid>())).Returns(new List<ResidentsTeamGroupId> { _firstResidentTeamGroupId, _secondResidentTeamGroupId });
             _mergeAndLinkResidentRequest = new MergeAndLinkResidentsRequest
@@ -74,6 +75,42 @@ namespace EvidenceApi.Tests.V1.UseCase
             result.Resident.Name.Should().Be(_mergeAndLinkResidentRequest.NewResident.Name);
             result.Resident.Email.Should().Be(_mergeAndLinkResidentRequest.NewResident.Email);
             result.Resident.PhoneNumber.Should().Be(_mergeAndLinkResidentRequest.NewResident.PhoneNumber);
+        }
+
+        [Test]
+        public async Task MigratesEvidenceRequestsToNewResidentDuringMerge()
+        {
+            _finalResident = TestDataHelper.ResidentWithId(Guid.NewGuid());
+            var residentResponse = _finalResident.ToResponse();
+            var newGroupId = Guid.NewGuid();
+            var team = "Fake team";
+            _firstResidentToBeMerged = TestDataHelper.ResidentWithId(Guid.NewGuid());
+            _firstResidentTeamGroupId = TestDataHelper.ResidentsTeamGroupId(_firstResidentToBeMerged.Id, team);
+            _createMergedResidentUseCase.Setup(x => x.Execute(It.IsAny<ResidentRequest>())).Returns(residentResponse);
+            _evidenceGateway.Setup(x => x.UpdateResidentIdForDocumentSubmission(It.IsAny<Guid>(), It.IsAny<Guid[]>()));
+            _evidenceGateway.Setup(x => x.UpdateResidentIdForEvidenceRequest(It.IsAny<Guid>(), It.IsAny<Guid[]>()));
+            _amendClaimsGroupIdUseCase.Setup(x => x.Execute(It.IsAny<ResidentGroupIdRequest>()));
+            _residentsGateway.Setup(x => x.FindResidentTeamGroupIdsByResidentId(It.IsAny<Guid>())).Returns(new List<ResidentsTeamGroupId> { _firstResidentTeamGroupId });
+            _mergeAndLinkResidentRequest = new MergeAndLinkResidentsRequest
+            {
+                Team = team,
+                GroupId = newGroupId,
+                NewResident = new Resident
+                {
+                    Email = _finalResident.Email,
+                    Name = _finalResident.Name,
+                    PhoneNumber = _finalResident.PhoneNumber
+                },
+                ResidentsToDelete = new[] { _firstResidentToBeMerged.Id }
+            };
+
+            await _classUnderTest.ExecuteAsync(_mergeAndLinkResidentRequest).ConfigureAwait(true);
+
+            _evidenceGateway.Verify(
+                x => x.UpdateResidentIdForEvidenceRequest(
+                    _finalResident.Id,
+                    _mergeAndLinkResidentRequest.ResidentsToDelete),
+                Times.Once);
         }
     }
 }

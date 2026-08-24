@@ -857,6 +857,30 @@ namespace EvidenceApi.Tests.V1.Gateways
             result.Total.Should().Be(3);
 
         }
+
+        [Test]
+        public void UpdateResidentIdForEvidenceRequestUpdatesEvidenceRequestsCorrectly()
+        {
+            var newResident = TestDataHelper.Resident();
+            var originalResident = TestDataHelper.Resident();
+            DatabaseContext.Residents.Add(newResident);
+            DatabaseContext.Residents.Add(originalResident);
+            DatabaseContext.SaveChanges();
+
+            var evidenceRequest1 = TestDataHelper.EvidenceRequest();
+            evidenceRequest1.ResidentId = originalResident.Id;
+            var evidenceRequest2 = TestDataHelper.EvidenceRequest();
+            evidenceRequest2.ResidentId = originalResident.Id;
+
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest1);
+            DatabaseContext.EvidenceRequests.Add(evidenceRequest2);
+            DatabaseContext.SaveChanges();
+
+            _classUnderTest.UpdateResidentIdForEvidenceRequest(newResident.Id, new[] { originalResident.Id });
+
+            var result = _classUnderTest.FindEvidenceRequestsByResidentId(newResident.Id);
+            result.Should().HaveCount(2);
+        }
         [Test]
         public void UpdateVisibilityForDocumentSubmissionUpdatesDocumentSubmissionsCorrectly()
         {

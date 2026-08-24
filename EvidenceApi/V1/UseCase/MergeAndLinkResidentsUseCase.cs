@@ -39,6 +39,8 @@ namespace EvidenceApi.V1.UseCase
             };
             var resident = _createMergedResidentUseCase.Execute(residentRequest);
             _evidenceGateway.UpdateResidentIdForDocumentSubmission(resident.Id, request.ResidentsToDelete);
+            //update evidence requests too to avoid for documents uploaded after link/merge to not be visible on the merged resident page
+            _evidenceGateway.UpdateResidentIdForEvidenceRequest(resident.Id, request.ResidentsToDelete);
 
             foreach (Guid residentId in request.ResidentsToDelete)
             {
