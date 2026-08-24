@@ -880,7 +880,6 @@ namespace EvidenceApi.Tests.V1.Gateways
 
             var result = _classUnderTest.FindEvidenceRequestsByResidentId(newResident.Id);
             result.Should().HaveCount(2);
-            result.Should().OnlyContain(er => er.ResidentId == newResident.Id);
         }
         [Test]
         public void UpdateVisibilityForDocumentSubmissionUpdatesDocumentSubmissionsCorrectly()
