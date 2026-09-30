@@ -113,6 +113,9 @@ commands:
           name: Install dotnet ef core
           command: dotnet tool install dotnet-ef --version 10.0.12 --tool-path ./dotnet-ef-local/
       - run:
+          name: Restore dotnet packages
+          command: dotnet restore ./EvidenceApi/EvidenceApi.csproj
+      - run:
           name: SSH into RDS and migrate database
           command: |
             aws ssm get-parameter --name "/document-evidence-store-<<parameters.stage>>-jump-box-pem-key" --output text --query Parameter.Value > ./private-key.pem
