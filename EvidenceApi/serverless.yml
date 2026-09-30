@@ -2,7 +2,7 @@ service: evidence-api
 variablesResolutionMode: 20210326
 provider:
   name: aws
-  runtime: dotnet8
+  runtime: dotnet10
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
@@ -12,7 +12,7 @@ provider:
     lambda: true
 
 package:
-  artifact: ./bin/release/net8.0/evidence-api.zip
+  artifact: ./bin/release/net10.0/evidence-api.zip
 
 plugins:
   - serverless-plugin-lambda-insights

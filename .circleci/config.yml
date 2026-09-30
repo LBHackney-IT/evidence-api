@@ -9,7 +9,7 @@ executors:
       - image: circleci/python:3.7
   docker-dotnet:
     docker:
-      - image: mcr.microsoft.com/dotnet/sdk:8.0
+      - image: mcr.microsoft.com/dotnet/sdk:10.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -111,7 +111,7 @@ commands:
             dpkg -i session-manager-plugin.deb
       - run:
           name: Install dotnet ef core
-          command: dotnet tool install dotnet-ef --version 7.0.0 --tool-path ./dotnet-ef-local/
+          command: dotnet tool install dotnet-ef --version 10.0.12 --tool-path ./dotnet-ef-local/
       - run:
           name: SSH into RDS and migrate database
           command: |
@@ -210,7 +210,7 @@ workflows:
             - assume-role-staging
       - deploy-to-staging:
           context:
-            - "Serverless Framework"      
+            - "Serverless Framework"
           requires:
             - migrate-database-staging
 
@@ -228,7 +228,7 @@ workflows:
             - assume-role-production
       - deploy-to-production:
           context:
-            - "Serverless Framework"        
+            - "Serverless Framework"
           requires:
             - migrate-database-production
       - publish-to-swaggerhub:

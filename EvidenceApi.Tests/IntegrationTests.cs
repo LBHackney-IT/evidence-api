@@ -54,7 +54,7 @@ namespace EvidenceApi.Tests
             Client = _factory.CreateClient();
             // setting value for UserEmail HTTP header so BaseController passes the request to the controller
             Client.DefaultRequestHeaders.Add("UserEmail", "resident-dummy-value");
-            DatabaseContext = _factory.Server.Host.Services.GetRequiredService<EvidenceContext>();
+            DatabaseContext = _factory.Services.GetRequiredService<EvidenceContext>();
 
             _transaction = _connection.BeginTransaction(IsolationLevel.RepeatableRead);
             DatabaseContext.Database.UseTransaction(_transaction);
