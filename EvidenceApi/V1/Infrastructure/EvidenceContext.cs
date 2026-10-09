@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using EvidenceApi.V1.Domain;
+using EvidenceApi.V1.Helpers;
 using EvidenceApi.V1.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +31,7 @@ namespace EvidenceApi.V1.Infrastructure
             foreach (var entityEntry in entries)
             {
                 var entity = ((IEntity) entityEntry.Entity);
-                if (entity.CreatedAt == default) entity.CreatedAt = DateTime.UtcNow;
+                if (entity.CreatedAt == default) entity.CreatedAt = LondonDateTime.Now();
                 if (entity.Id == default) entity.Id = Guid.NewGuid();
             }
 

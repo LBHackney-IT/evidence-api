@@ -9,6 +9,7 @@ using EvidenceApi.V1.Boundary.Response.Exceptions;
 using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Helpers;
 using Notify.Exceptions;
 using Microsoft.Extensions.Logging;
 
@@ -78,12 +79,12 @@ namespace EvidenceApi.V1.UseCase
 
             if (IsApprovalRequest(documentSubmission))
             {
-                documentSubmission.AcceptedAt = DateTime.UtcNow;
+                documentSubmission.AcceptedAt = LondonDateTime.Now();
             }
 
             if (IsRejectRequest(request, documentSubmission))
             {
-                documentSubmission.RejectedAt = DateTime.UtcNow;
+                documentSubmission.RejectedAt = LondonDateTime.Now();
                 NotifyResident(documentSubmission, request);
             }
 
