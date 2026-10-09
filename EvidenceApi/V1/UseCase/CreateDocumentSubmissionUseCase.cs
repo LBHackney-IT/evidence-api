@@ -8,6 +8,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Helpers;
 
 namespace EvidenceApi.V1.UseCase
 {
@@ -90,8 +91,8 @@ namespace EvidenceApi.V1.UseCase
                 ServiceAreaCreatedBy = evidenceRequest.Team,
                 UserCreatedBy = evidenceRequest.UserRequestedBy,
                 ApiCreatedBy = "evidence_api",
-                RetentionExpiresAt = DateTime.UtcNow.AddMonths(3).Date,
-                ValidUntil = DateTime.UtcNow.AddMonths(3).Date,
+                RetentionExpiresAt = LondonDateTime.Now().AddMonths(3).Date,
+                ValidUntil = LondonDateTime.Now().AddMonths(3).Date,
                 GroupId = groupId
             };
             return claimRequest;

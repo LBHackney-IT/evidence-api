@@ -8,6 +8,7 @@ using EvidenceApi.V1.Domain;
 using EvidenceApi.V1.Factories;
 using System.Threading.Tasks;
 using EvidenceApi.V1.Domain.Enums;
+using EvidenceApi.V1.Helpers;
 using EvidenceApi.V1.Validators;
 using System.Linq;
 
@@ -89,8 +90,8 @@ namespace EvidenceApi.V1.UseCase
                 ServiceAreaCreatedBy = request.Team,
                 UserCreatedBy = request.UserCreatedBy,
                 ApiCreatedBy = "evidence_api",
-                RetentionExpiresAt = DateTime.UtcNow.AddMonths(3).Date,
-                ValidUntil = DateTime.UtcNow.AddMonths(3).Date,
+                RetentionExpiresAt = LondonDateTime.Now().AddMonths(3).Date,
+                ValidUntil = LondonDateTime.Now().AddMonths(3).Date,
                 DocumentDescription = request.DocumentDescription,
                 GroupId = groupId
             };
@@ -102,7 +103,7 @@ namespace EvidenceApi.V1.UseCase
             Claim claim
         )
         {
-            var currentDateTime = DateTime.UtcNow;
+            var currentDateTime = LondonDateTime.Now();
             var documentSubmission = new DocumentSubmission()
             {
                 CreatedAt = currentDateTime,
