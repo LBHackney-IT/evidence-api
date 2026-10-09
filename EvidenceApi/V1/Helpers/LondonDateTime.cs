@@ -9,7 +9,8 @@ namespace EvidenceApi.V1.Helpers
 
         public static DateTime Now()
         {
-            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, London);
+           var londonTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, London);
+           return DateTime.SpecifyKind(londonTime, DateTimeKind.Utc);
         }
     }
 }
